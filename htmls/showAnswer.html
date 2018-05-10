@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8" />
+    <title>Angular 1.4 IE8</title>
+	<link rel="stylesheet" href="css/simpleAlert.css">
+    <!--[if IE 8]>
+        <script src="js/es5-shim.min.js"></script>        
+    <![endif]-->
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/angular.min.js"></script>
+	<script src="js/echarts.js"></script>
+    <script src="js/app2.js"></script>
+	<script src="js/jquery.nicescroll.min.js"></script>
+	<script src="js/simpleAlert.js"></script>
+<style>
+		*{
+			margin:0;
+		}
+		body{		
+			font-family: "微软雅黑";
+			height:100%;
+			overflow:hidden;
+		}
+		.mainDiv{
+			position: relative;
+			overflow:hidden;
+		}
+		.menu{
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 25%;
+			text-align:center;
+			height: 100%;
+			bottom: 0;
+			background:#4368f1;
+			
+		}
+		.menu .menuTop{
+			width: 100%;
+			position: absolute;
+			left: 0;
+			height:40%;
+			background:rgba(55,174,242,.9);
+			text-align: center;
+			line-height: 40px;
+			vertical-align: middle;
+			padding: 5% 0;
+
+		}		
+		.menu .menuBottom{
+			position: absolute;
+			width:100%;
+			top:50%;
+			left: 0;
+			/*bottom: 18%;*/
+			background:#4368f1;
+			/*height:60%;*/
+			padding: 12% 0;
+			
+		}
+		.main{	
+			position: absolute;
+			top: 0;
+			bottom:0;
+			margin-left: 25%;
+			width: 75%;
+			height:100%;
+			overflow:hidden;
+		}
+		.mainTop{
+			position: absolute;
+			top: 0%;
+			width: 100%;
+			height: 100%;
+		}
+		.mainTop p{
+			margin: 20px 0;
+			height: 30px;
+			line-height: 30px;
+			margin-bottom: 30px;
+			vertical-align: middle;
+			padding-left: 25px;
+			padding-right: 25px;
+		}
+		.mainTop img.title{
+			float: left;
+			vertical-align: middle;
+			padding-top: 10px;
+		}
+		.mainTop img.close{
+			float: right;
+			vertical-align: middle;
+			cursor: pointer;
+			
+		}
+		.border-bottom{
+			border-bottom: 1px solid #cfcfcf;	
+		}
+		.mainTop .rank{
+			padding-left:25px;
+		}
+		.mainTop .rank >div{
+			width:45%;
+			float: left;
+			height: 40px;
+			line-height: 40px;
+			vertical-align: middle;
+			/*margin-bottom: 0px;*/
+			padding-right:20px ;
+			
+			
+		}	
+		.mainTop>div:nth-child(2){
+			margin-right:0 ;
+		}
+		.mainTop>div.second{
+			margin-right:0 ;
+		}
+		.mainTop>div img{
+			display: inline-block;
+			width: auto;
+			height: 100%;
+			vertical-align: middle;
+		}
+		.mainTop>div span{
+			color: #969696;
+			font-size: 18px;
+		}	
+		.answerType{
+			background-color:red;
+		}
+		.divbtn{
+			position: absolute;
+			top: 50%;
+			width:100%;
+			-webkit-transform:translateY(-50%);
+			-ms-transform:translateY(-50%);
+			-moz-transform:translateY(-50%);
+			-o-transform:translateY(-50%);
+			transform:translateY(-50%);
+			left: 0;
+			/*bottom: 8%;*/
+		}
+		button.startbtn{
+			border:0px;
+			color:#fff;
+			font-size:16px;
+			background:rgba(55,174,242,.9);
+			width:70%;
+			/*height:40px;
+			line-height:40px;*/
+			cursor: pointer;
+			border: 1px solid #9bc9f9;
+		}
+		button.startbtn:not(:last-child){
+			margin-bottom: 5%;
+		}
+		button.startbtn.active{
+			background: #3ad56a;
+			border: none;
+		}
+		button.tabsbtn{
+			border:0px;
+			color:#d4ddff;
+			font-size:26px;
+			width:80%;
+			height: 35px;
+			/*height: 25px;*/
+			cursor: pointer;
+
+		}
+		button.tabsbtn.one{
+			background: url(image/num01.png) no-repeat center;
+			background-size:100px ;
+		}
+		button.tabsbtn.two{
+			background: url(image/num02.png) no-repeat center;
+			background-size:100px ;
+		}
+		button.tabsbtn.three{
+			background: url(image/num03.png) no-repeat center;
+			background-size:100px ;
+		}
+		button.tabsbtn.active{
+			border-left: 9px solid #e6eaee;
+		}
+		button.save.active{
+			border:0px;
+			color:#b2b2b2;
+			font-size:16px;
+			background:#f5f5f5;
+			width:51px;
+			height:30px;
+			line-height:30px;
+			cursor: pointer;
+			border: 1px solid #c0c0c0;
+		}
+		button.save{
+			border:0px;
+			color:#dbdbdb;
+			font-size:16px;
+			background:#F5F5F5;
+			width:51px;
+			height:30px;
+			line-height:30px;
+			vertical-align: middle;
+			cursor: pointer;
+			border: 1px solid #e4e4e4;
+		}
+		
+		.mt20{
+			margin-top: 20px;
+		}
+		.ml20{
+			margin-left: 20px;
+		}
+		.ml35{
+			margin-left: 35px;
+		}
+		.mb20{
+			margin-bottom: 20px;
+		}
+		.bgf5{
+			background-color:#f5f5f5 ;
+		}
+		.nodata{
+			position: absolute;
+			top: 45%;
+			left: 0;
+			right: 0;
+			margin: auto;
+			text-align: center;
+		}
+		.nodata p{
+			margin-top: 20%;
+			font-size: 16px;
+			color: #969696;
+		}
+		.showHand:hover{background-color: #CFCFCF;cursor:pointer;}
+		.simpleAlertBodyContent{
+			top:50%;
+		}
+	</style>
+</head>
+<body  ng-app="someApp" ng-controller="someController" class="bgf5">
+	<div id = "mainDiv" >
+		<div class="menu">
+			<div class="menuTop">
+				<div class="divbtn">
+				<button id = "startAnswer" ng-show="projectType" ng-model="isAnswer" ng-class="{'active':isAnswer==1}" class="startbtn" ng-click="startAnswer(1)">START</button>
+				<button id = "stopAnswer" ng-show="projectType" ng-model="isAnswer" ng-class="{'active':isAnswer==0}" class="startbtn " ng-click="endAnswer(0)">STOP</button>
+				<button ng-show="!projectType" class="startbtn " ng-click="toImport()">快捷导入</button>
+				<button ng-show="projectType" class="startbtn " ng-click="toImport()">学生班级<tton>
+				</div>
+				</div>
+			
+			<div class="menuBottom">
+				<button id="answerType01" ng-model="answerType" class="tabsbtn mb20 one active" ng-class="{'active':answerType=='客观题'}" ng-click="selectType('客观题')"></button>
+				<button id="answerType02" ng-model="answerType" class="tabsbtn mb20 two" ng-class="{'active':answerType=='主观题'}" ng-click="selectType('主观题')"  ></button>
+				<button id="answerType03" ng-model="answerType" class="tabsbtn three" ng-class="{'active':answerType=='判断题'}" ng-click="selectType('判断题')" ></button>
+			</div>
+		</div>
+		<div class="main" >
+		<div class="mainTop border-bottom">
+			<p>
+				<img class="title" src="image/title.png"/>
+				<img class="close" ng-click="closeShell()" src="image/close.png" />
+			</p>
+			<div class="rank">
+			<div >
+				<img src="image/img01.png"/><span>{{1}}.{{rankings[0]}}</span>
+			</div>
+			<div >
+				<img src="image/img02.png"/><span>{{2}}.{{rankings[1]}}</span>
+				<span></span>
+			</div>
+			<div >
+				<img src="image/img03.png"/><span>{{3}}.{{rankings[2]}}</span>
+				<span></span>
+			</div>
+			</div>
+			<!--<div ng-repeat = "ranking in rankings track by $index">
+				<img ng-if="$index==0" src="image/img01.png"/>
+				<img ng-if="$index==1" src="image/img02.png"  />
+				<img ng-if="$index==2" src="image/img03.png"  />
+				<span>{{$index+1}}.{{ranking}}</span>
+			</div> -->
+		</div>
+		<div class="mainBottom" id="right" style="width:90%;height:60%;position: absolute;bottom: 0%;">
+			<!--<div ng-class="{'showHand':true}" style = "float:right;margin-top:10px;margin-right:10px;" ng-click="closeShell()">关闭</div>
+			-->
+		</div>
+		<div class="nodata text-center" ng-if="shownodata" >
+			<p>未开始答题！</p>
+		</div>
+		<!--<div style="width:10%;height:60%;position: absolute;bottom:-40%;right: 0;" ng-if="rankings.length>0">
+			<button class="save" ng-model="isSave" ng-class="{'active':isSave==true}" ng-click="startSave()">保存</button>
+		</div>-->
+		</div>
+	</div>
+	<div id= "chart" ng-click="chartClick()" style="display:none"></div>
+</body>
+<script>
+  $(document).ready(function() {
+  
+	var nice = $("html").niceScroll();  // The document page (body)
+	
+/*	$("userlist").html($("#userlist").html()+' '+nice.version);*/
+     $("#userlist").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable DIV
+    
+  });
+</script>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8" />
+    <title>Angular 1.4 IE8</title>
+    <!--[if IE 8]>
+        <script src="js/es5-shim.min.js"></script>        
+    <![endif]-->
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/config.js"></script>
+<style>
+		*{
+			margin:0;
+		}
+		body{		
+			font-family: "微软雅黑";
+			height:100%;
+			overflow:hidden;
+			color: #3e3e3e;
+		}
+		input,button,select,textarea{outline:none;}
+		.clearfix:before,
+		.clearfix:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+	
+		.clearfix {
+			zoom: 1;
+		}
+		.tab{
+			height:100%;
+			text-align: center;
+			
+		}
+		.tab a+a{
+			margin-left: -5px;
+		}
+		.tab a.tabbtn{
+			display: inline-block;
+			padding: 5% 0;	
+			width: 47.8%;		
+			text-align: center;
+			font-size: 14px;
+			color: #3e3e3e;
+			cursor: pointer;
+			border-bottom: 1px solid #e2e2e2;
+			border-right: 1px solid #e2e2e2;
+		}
+		.tab a.one.active{
+			border-top: 1px solid #e2e2e2;
+			border-left: 1px solid #e2e2e2;
+		}
+		.tab a.tabbtn.active{
+			background: #fff;
+			border-bottom:none;
+			border-top: 1px solid #e2e2e2;
+			
+		}
+		.mainDiv{
+			position: relative;
+			margin: 0 2%;
+			border-bottom: 1px solid #e2e2e2;
+			border-left: 1px solid #e2e2e2;
+			border-right: 1px solid #e2e2e2;
+		}
+		.configcon{
+			padding: 2% 0 5%;				
+			margin: -1px 2% 5px;
+			clear: both;
+			background: #fff;		
+			text-align: center;
+			border-bottom: 1px solid #e2e2e2;
+			border-left: 1px solid #e2e2e2;
+			border-right: 1px solid #e2e2e2;
+		}
+		.configcon label+label{
+			/*margin-left: -5px;*/
+		}
+		.configcon label{
+			display: inline-block;
+			padding: 3% 0;
+			width: 48%;
+			cursor: pointer;
+			vertical-align: middle;
+		}
+		.configcon label input{
+			border-radius:0% ;
+			margin-right: 5px;
+			vertical-align: middle;	
+			border: 1px solid #e2e2e2;	
+		}
+		.configIP{
+			height:100%;
+			text-align: center;
+			margin: 0 5%;
+		}
+		.configIP p{
+			text-align: left;
+			
+		}
+		.configIP label{
+			display: block;
+			height: 1px;
+			border-bottom:1px solid #e2e2e2 ;
+		}
+		.configIP input[type='text']{
+			width: 45px;
+			border: 1px solid #e2e2e2;
+			border-radius: 5px;
+			height: 30px;
+			line-height: 30px;
+			text-align: center;
+			/*margin-right: 20px;*/
+		}
+		.configIP input[type='text'].sm{
+			width: 45px;
+		}
+		.configIP input[type='text'].md{
+			width: 80px;
+		}
+		.configIP input[type='text'].lg{
+			width:73%;
+		}
+		.configIP .leftblock{
+			float: left;
+			margin-left: 5%;
+		}
+		.configIP .rightblock{
+			text-align: left;
+			float: right;
+			margin-right: 10%;
+		}
+		.footer{
+			position: fixed;
+			bottom: 5%;
+			left: 0;
+			right: 0;
+			margin: auto;
+		}
+		.footer button.btn{
+			width: 68px;
+			height: 36px;
+			line-height: 36px;
+			vertical-align: middle;
+			border:0px;
+
+			font-size:14px;			
+			cursor: pointer;
+
+			border-radius: 5px;
+		}
+		button.btn.save{
+			color:#fff;
+			background: #3793f2;
+		}
+		button.btn.save:hover{
+			 background: rgba(55,147,242,0.9);/*firefox、chrome*/          
+        	background: #3793f2\9;/*IE*/  
+	        filter: alpha(opacity=90);/*IE*/  
+		}
+		button.btn.cancel{
+			color:#a3a3a3;
+			background: #f5f5f5;
+			border: 1px solid #c8c8c8;
+		}
+		button.btn.cancel:hover{
+			background: rgba(212,210,210,0.1);/*firefox、chrome*/          
+        	background: #d4d2d2\9;/*IE*/  
+	        filter: alpha(opacity=10);/*IE*/  
+		}
+		.pt20{
+			padding-top: 20px;
+		}
+		.ml20{
+			margin-left: 20px;
+		}
+		.bgf5{
+			background-color:#f5f5f5 ;
+		}
+		.mt20{
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body  ng-app="someApp" ng-controller="configController" class="bgf5">
+	<!--<div class="mainDiv">-->		
+	<div class="tab" >
+		<a class="tabbtn one active " ng-model="addconfig.configType" ng-class="{'active':addconfig.configType==0}" ng-click="changetabs(0)">单机</a>
+		<a class="tabbtn two" ng-model="addconfig.configType" ng-class="{'active':addconfig.configType==1}" ng-click="changetabs(1)">联机</a>
+		<div class="configcon clearfix" >
+			<div ng-if="addconfig.configType==1">
+			<label>
+			<input type="radio" ng-model="addconfig.configUser" name="configType" value="0" ng-click="changeUser(0)"/>学生端
+			</label>
+			<label>
+			<input type="radio" ng-model="addconfig.configUser" name="configType" value="1" ng-click="changeUser(1)"/>老师端
+			</label>
+			</div>
+			<div class="configIP" ng-if="addconfig.configType==0">
+				<p style="text-align: center;padding-top: 8%;">无需配置</p>
+			</div>
+			<div class="configIP" ng-if="addconfig.configType==1&&addconfig.configUser==0">
+			<div class="clearfix">
+				<div class="leftblock">
+				<span>
+					IP
+				</span>
+				<input type="text"  class="sm" ng-model="addconfig.num1"/>
+				<input type="text" class="sm" ng-model="addconfig.num2"/>
+				<input type="text" class="sm" ng-model="addconfig.num3"/>
+				<input type="text" class="sm" ng-model="addconfig.num4"/>
+				</div>
+				<div class="rightblock">
+				<span>
+					端口
+				</span>
+				<input type="text" class="sm" ng-model="addconfig.port"/>
+				</div>
+			</div>
+			<div class="clearfix pt20">
+				<div class="leftblock">
+				<span>
+					连接超时
+				</span>
+				<input type="text" class="sm" ng-model="addconfig.timeOut"/>m
+				</div>
+				<div class="rightblock">
+				<span>
+					连接间隔
+				</span>
+				<input type="text" class="sm"  ng-model="addconfig.time"/>m
+				</div>
+			</div>
+
+			<p class="clearfix pt20 " style="text-align: left;">
+				<div style="float: left;width: 100%;">
+				<span style="width: 20%;margin-left: 0;">
+					班级名称
+				</span>
+				<input type="text" class="lg"  style="text-align: left;text-indent: 10px;"  ng-model="addconfig.className"/>
+			</div>
+			
+		</p>
+		
+		</div>
+			<div class="configIP" ng-if="addconfig.configType==1&&addconfig.configUser==1">
+			<div class="clearfix pt20">
+				<div class="leftblock">
+					<span>
+						IP
+					</span>
+					<input type="text" ng-model="addconfig.num1"/>
+					<input type="text" ng-model="addconfig.num2"/>
+					<input type="text" ng-model="addconfig.num3"/>
+					<input type="text" ng-model="addconfig.num4"/>
+					</div>
+					<div class="rightblock">
+					<span>
+						端口
+					</span>
+					<input type="text" ng-model="addconfig.port"/>
+					</div>
+			</div>
+			</div>
+		
+	</div>
+	
+	<!--</div>-->
+	
+	
+	<div class="footer mt20">
+		<button class="btn save" ng-click = "save()">确定</button>
+		<button class="btn cancel ml20" ng-click = "cancel()">重置</button>
+	</div>
+</body>
+</html>
