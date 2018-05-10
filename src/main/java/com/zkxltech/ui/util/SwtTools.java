@@ -1,4 +1,4 @@
-package com.ejet.core.util;
+package com.zkxltech.ui.util;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;

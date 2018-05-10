@@ -24,9 +24,9 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.config.util.Constant;
 import com.ejet.core.util.PropertyUtils;
-import com.ejet.core.util.SwtTools;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.domain.ConfigParams;
+import com.zkxltech.ui.util.SwtTools;
 
 import net.sf.json.JSONObject;
 

@@ -5,13 +5,13 @@ import com.zkxltech.domain.StudentInfo;
 
 public interface StudentInfoService {
 	/*学生名单导入*/
-	Result importStudentInfo(String fileName);
+	Result importStudentInfo(Object object);
 	/*保存学生*/
-	Result insertStudentInfo(StudentInfo studentInfo);
+	Result insertStudentInfo(Object object);
 	/*查询学生信息*/
-	Result selectStudentInfo(StudentInfo studentInfo);
+	Result selectStudentInfo(Object object);
 	/*删除学生*/
-	Result deleteStudentInfo(StudentInfo studentInfo);
+	Result deleteStudentInfo(Object object);
 	/*修改学生*/
-	Result updateStudentInfo(StudentInfo studentInfo);
+	Result updateStudentInfo(Object object);
 }

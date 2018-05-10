@@ -41,15 +41,6 @@ public class MainStart {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
-		//启动答题器通信等接口
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				App.startCommunication();
-			}
-		}).start();
-		
 		MainStart window = new MainStart();
 	}
 
@@ -128,7 +119,6 @@ public class MainStart {
          			mouse_X =e.getXOnScreen();
              		mouse_Y =e.getYOnScreen();
 				}
-         		
          	}
         	@Override
         	public void mouseReleased(MouseEvent e) {

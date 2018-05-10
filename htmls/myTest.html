@@ -11,9 +11,7 @@
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="js/angular.min.js"></script>
 	<script src="js/echarts.js"></script>
-    <script src="js/app2.js"></script>
-	<script src="js/jquery.nicescroll.min.js"></script>
-	<script src="js/simpleAlert.js"></script>
+    <script src="js/myTest.js"></script>
 <style>
 		*{
 			margin:0;
@@ -250,67 +248,14 @@
 		<div class="menu">
 			<div class="menuTop">
 				<div class="divbtn">
-				<button id = "startAnswer" ng-show="projectType" ng-model="isAnswer" ng-class="{'active':isAnswer==1}" class="startbtn" ng-click="startAnswer(1)">START</button>
-				<button id = "stopAnswer" ng-show="projectType" ng-model="isAnswer" ng-class="{'active':isAnswer==0}" class="startbtn " ng-click="endAnswer(0)">STOP</button>
-				<button ng-show="!projectType" class="startbtn " ng-click="toImport()">快捷导入</button>
-				<button ng-show="projectType" class="startbtn " ng-click="toImport()">学生班级<tton>
+				<button id = "startAnswer" ng-model="isAnswer" ng-class="{'active':isAnswer==1}" class="startbtn" ng-click="startAnswer(1)">执行方法</button>
+				<button id = "stopAnswer" ng-model="isAnswer" ng-class="{'active':isAnswer==0}" class="startbtn " ng-click="endAnswer(0)">跳转页面</button>
 				</div>
-				</div>
-			
-			<div class="menuBottom">
-				<button id="answerType01" ng-model="answerType" class="tabsbtn mb20 one active" ng-class="{'active':answerType=='客观题'}" ng-click="selectType('客观题')"></button>
-				<button id="answerType02" ng-model="answerType" class="tabsbtn mb20 two" ng-class="{'active':answerType=='主观题'}" ng-click="selectType('主观题')"  ></button>
-				<button id="answerType03" ng-model="answerType" class="tabsbtn three" ng-class="{'active':answerType=='判断题'}" ng-click="selectType('判断题')" ></button>
 			</div>
 		</div>
-		<div class="main" >
-		<div class="mainTop border-bottom">
-			<p>
-				<img class="title" src="image/title.png"/>
-				<img class="close" ng-click="closeShell()" src="image/close.png" />
-			</p>
-			<div class="rank">
-			<div >
-				<img src="image/img01.png"/><span>{{1}}.{{rankings[0]}}</span>
-			</div>
-			<div >
-				<img src="image/img02.png"/><span>{{2}}.{{rankings[1]}}</span>
-				<span></span>
-			</div>
-			<div >
-				<img src="image/img03.png"/><span>{{3}}.{{rankings[2]}}</span>
-				<span></span>
-			</div>
-			</div>
-			<!--<div ng-repeat = "ranking in rankings track by $index">
-				<img ng-if="$index==0" src="image/img01.png"/>
-				<img ng-if="$index==1" src="image/img02.png"  />
-				<img ng-if="$index==2" src="image/img03.png"  />
-				<span>{{$index+1}}.{{ranking}}</span>
-			</div> -->
-		</div>
-		<div class="mainBottom" id="right" style="width:90%;height:60%;position: absolute;bottom: 0%;">
-			<!--<div ng-class="{'showHand':true}" style = "float:right;margin-top:10px;margin-right:10px;" ng-click="closeShell()">关闭</div>
-			-->
-		</div>
-		<div class="nodata text-center" ng-if="shownodata" >
-			<p>未开始答题！</p>
-		</div>
-		<!--<div style="width:10%;height:60%;position: absolute;bottom:-40%;right: 0;" ng-if="rankings.length>0">
-			<button class="save" ng-model="isSave" ng-class="{'active':isSave==true}" ng-click="startSave()">保存</button>
-		</div>-->
+		<div class="main">
+				{{message}}
 		</div>
 	</div>
-	<div id= "chart" ng-click="chartClick()" style="display:none"></div>
 </body>
-<script>
-  $(document).ready(function() {
-  
-	var nice = $("html").niceScroll();  // The document page (body)
-	
-/*	$("userlist").html($("#userlist").html()+' '+nice.version);*/
-     $("#userlist").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable DIV
-    
-  });
-</script>
 </html>

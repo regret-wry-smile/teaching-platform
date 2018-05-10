@@ -12,13 +12,16 @@ import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.teaching.service.StudentInfoService;
 import com.zkxltech.teaching.sql.StudentInfoSql;
 
+import net.sf.json.JSONObject;
+
 public class StudentInfoServiceImpl implements StudentInfoService{
 	private Result result = new Result();
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
 	
 	@Override
-	public Result importStudentInfo(String fileName) {
+	public Result importStudentInfo(Object object) {
 		try {
+			String fileName = String.valueOf(object);
 			studentInfoSql.deleteStudent(new StudentInfo());
 			List<List<Object>> list = ImportExcelUtils.getBankListByExcel(new FileInputStream(new File(fileName)), fileName);
 			result = studentInfoSql.importStudent(list);
@@ -38,8 +41,9 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	}
 
 	@Override
-	public Result selectStudentInfo(StudentInfo studentInfo) {
+	public Result selectStudentInfo(Object param) {
 		try {
+			StudentInfo studentInfo =  (StudentInfo) JSONObject.toBean(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.selectStudentInfo(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("查询学生信息成功!");
@@ -56,8 +60,9 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	}
 
 	@Override
-	public Result insertStudentInfo(StudentInfo studentInfo) {
+	public Result insertStudentInfo(Object param) {
 		try {
+			StudentInfo studentInfo =  (StudentInfo) JSONObject.toBean(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.insertStudentInfo(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("新增学生信息成功!");
@@ -74,8 +79,9 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	}
 
 	@Override
-	public Result deleteStudentInfo(StudentInfo studentInfo) {
+	public Result deleteStudentInfo(Object param) {
 		try {
+			StudentInfo studentInfo =  (StudentInfo) JSONObject.toBean(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.deleteStudent(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("删除学生信息成功!");
@@ -92,8 +98,9 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	}
 
 	@Override
-	public Result updateStudentInfo(StudentInfo studentInfo) {
+	public Result updateStudentInfo(Object param) {
 		try {
+			StudentInfo studentInfo =  (StudentInfo) JSONObject.toBean(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.updateStudent(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("修改学生信息成功!");

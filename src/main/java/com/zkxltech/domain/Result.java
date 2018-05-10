@@ -1,8 +1,5 @@
 package com.zkxltech.domain;
 
-import java.util.List;
-import java.util.Map;
-
 public class Result {
 	/*返回执行结果*/
 	private String ret;
