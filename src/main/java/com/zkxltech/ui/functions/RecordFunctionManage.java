@@ -15,13 +15,13 @@ import net.sf.json.JSONObject;
  *
  */
 public class RecordFunctionManage extends BrowserFunction{
-private Result result = new Result();
 	
 	public RecordFunctionManage(Browser browser, String name) {
 		super(browser, name);
 	}
 	@Override
 	public Object function(Object[] params) {
+		Result result = new Result();
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
 			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数

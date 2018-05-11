@@ -21,13 +21,13 @@ import net.sf.json.JSONObject;
  *	set_default 默认设置
  */
 public class SetFunctionManage extends BrowserFunction{
-	private Result result = new Result();
 	private SettingService settingService = new SettingServiceImpl();
 	public SetFunctionManage(Browser browser, String name) {
 		super(browser, name);
 	}
 	@Override
 	public Object function(Object[] params) {
+		Result result = new Result();
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
 			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数

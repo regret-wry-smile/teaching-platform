@@ -15,11 +15,12 @@ import com.zkxltech.teaching.sql.StudentInfoSql;
 import net.sf.json.JSONObject;
 
 public class StudentInfoServiceImpl implements StudentInfoService{
-	private Result result = new Result();
+	private Result result;
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
 	
 	@Override
 	public Result importStudentInfo(Object object) {
+		result = new Result();
 		try {
 			String fileName = String.valueOf(object);
 			studentInfoSql.deleteStudent(new StudentInfo());
@@ -42,6 +43,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 
 	@Override
 	public Result selectStudentInfo(Object param) {
+		result = new Result();
 		try {
 			StudentInfo studentInfo =  (StudentInfo) JSONObject.toBean(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.selectStudentInfo(studentInfo);

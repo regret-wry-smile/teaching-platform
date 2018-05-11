@@ -12,23 +12,24 @@ import net.sf.json.JSONObject;
 
 /**
  * 【学生模块页面调用方法】
- *  selectStudentInfo 查询学生信息
+ *  select_student 查询学生信息
  *
  */
 public class StudentFunctionManage extends BrowserFunction{
-	private Result result = new Result();
+	private StudentInfoService service = new StudentInfoServiceImpl();
 	
 	public StudentFunctionManage(Browser browser, String name) {
 		super(browser, name);
 	}
+	
 	@Override
 	public Object function(Object[] params) {
+		Result result = new Result();
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
 			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数
 			switch (method) {
-			case "selectStudentInfo":
-				StudentInfoService service = new StudentInfoServiceImpl();
+			case "select_student":
 				result = service.selectStudentInfo(param);
 				break;
 			default:
