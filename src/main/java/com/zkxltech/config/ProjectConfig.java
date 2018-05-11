@@ -15,10 +15,31 @@ public class ProjectConfig {
 	 * 本地数据是否同步到服务端
 	 */
 	private String app_sync;
-	
+	/**
+	 * 测试模式
+	 *  true:是 false:否
+	 */
 	private String app_test;
-	
-	private String file_name;
+	/**
+	 * 登录id
+	 */
+	private String login_id;
+	/**
+	 * 密码
+	 */
+	private String password;
+	/**
+	 * 默认发送信道
+	 */
+	private Integer tx_ch;
+	/**
+	 * 默认接收信道
+	 */
+	private Integer rx_ch;
+	/**
+	 * 默认发送功率
+	 */
+	private Integer power;
 
 	public String getApp_type() {
 		return app_type;
@@ -44,12 +65,44 @@ public class ProjectConfig {
 		this.app_test = app_test;
 	}
 
-	public String getFile_name() {
-		return file_name;
+	public String getLogin_id() {
+		return login_id;
 	}
 
-	public void setFile_name(String file_name) {
-		this.file_name = file_name;
+	public void setLogin_id(String login_id) {
+		this.login_id = login_id;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Integer getTx_ch() {
+		return tx_ch;
+	}
+
+	public void setTx_ch(Integer tx_ch) {
+		this.tx_ch = tx_ch;
+	}
+
+	public Integer getRx_ch() {
+		return rx_ch;
+	}
+
+	public void setRx_ch(Integer rx_ch) {
+		this.rx_ch = rx_ch;
+	}
+
+	public Integer getPower() {
+		return power;
+	}
+
+	public void setPower(Integer power) {
+		this.power = power;
 	}
 	
 	

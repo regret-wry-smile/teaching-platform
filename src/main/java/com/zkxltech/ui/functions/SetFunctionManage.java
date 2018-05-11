@@ -5,18 +5,24 @@ import org.eclipse.swt.browser.BrowserFunction;
 
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
+import com.zkxltech.teaching.service.SettingService;
 import com.zkxltech.teaching.service.StudentInfoService;
+import com.zkxltech.teaching.service.impl.SettingServiceImpl;
 import com.zkxltech.teaching.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
 
 /**
  * 【设置模块页面调用方法】
- *
+ * 	get_all_name 获取所有组名
+ *	login 登录
+ *	read_setting 读取设置
+ *	set	设置
+ *	set_default 默认设置
  */
 public class SetFunctionManage extends BrowserFunction{
-private Result result = new Result();
-	
+	private Result result = new Result();
+	private SettingService settingService = new SettingServiceImpl();
 	public SetFunctionManage(Browser browser, String name) {
 		super(browser, name);
 	}
@@ -26,9 +32,20 @@ private Result result = new Result();
 			String method = (String) params[0]; //页面要调用的方法
 			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数
 			switch (method) {
-			case "import_paper":
-				StudentInfoService service = new StudentInfoServiceImpl();
-				result = service.selectStudentInfo(param);
+			case "get_all_name":
+				result = settingService.getAllName();
+				break;
+			case "login":
+				result = settingService.login(param);
+				break;
+			case "read_setting":
+				result = settingService.readSetting();
+				break;
+			case "set":
+				result = settingService.set(param);
+				break;
+			case "set_default":
+				result = settingService.setDefault();
 				break;
 			default:
 				result.setRet(Constant.ERROR);
