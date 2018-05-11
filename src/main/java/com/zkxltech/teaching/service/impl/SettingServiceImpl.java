@@ -13,10 +13,11 @@ import com.zkxltech.ui.enums.SettingEnum;
 import com.zkxltech.ui.util.StringUtils;
 
 public class SettingServiceImpl implements SettingService{
-	private Result result = new Result();
+	private Result result;
 	
 	@Override
 	public Result getAllName() {
+		result = new Result();
 		result.setItem(SettingEnum.getAllName());
 		result.setRet(Constant.SUCCESS);
 		return result;
@@ -25,6 +26,7 @@ public class SettingServiceImpl implements SettingService{
 	@Override
 	public Result login(Object object) {
 		try {
+			result = new Result();
 			User user = StringUtils.stringToBean(object, User.class);
 			String loginId = ConfigConstant.projectConf.getLogin_id();
 			String password = ConfigConstant.projectConf.getPassword();
@@ -45,12 +47,15 @@ public class SettingServiceImpl implements SettingService{
 	@Override
 	public Result readSetting() {
 		try {
+			result = new Result();
 			//TODO 1创建线程向硬件发送请求2页面显示正在执行提示（无法进行其他操作）3返回执行结果
 			//发送信道
 			//接收信道
 			//发送功率
 			Setting setting = new Setting();
-			
+			//FIXME 
+			setting.setName("第二组");
+			setting.setPower(4);
 			result.setItem(setting);
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("读取成功！");
@@ -65,6 +70,7 @@ public class SettingServiceImpl implements SettingService{
 	@Override
 	public Result set(Object object) {
 		try {
+			result = new Result();
 			Setting setting = StringUtils.stringToBean(object, Setting.class);
 			String name = setting.getName();
 			//发送信道
@@ -89,12 +95,13 @@ public class SettingServiceImpl implements SettingService{
 	@Override
 	public Result setDefault() {
 		try {
+			result = new Result();
 			//默认发送信道
-			Integer tx_ch = ConfigConstant.projectConf.getTx_ch();
+			Integer tx_ch =Integer.parseInt(ConfigConstant.projectConf.getTx_ch());
 			//默认接收信道
-			Integer rx_ch =ConfigConstant.projectConf.getRx_ch();
+			Integer rx_ch =Integer.parseInt(ConfigConstant.projectConf.getRx_ch());
 			//默认发送功率
-			Integer power = ConfigConstant.projectConf.getPower();
+			Integer power = Integer.parseInt(ConfigConstant.projectConf.getPower());
 			//TODO 创建线程向硬件发送请求
 			
 			result.setRet(Constant.SUCCESS);

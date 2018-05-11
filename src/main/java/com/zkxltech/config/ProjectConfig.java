@@ -31,15 +31,15 @@ public class ProjectConfig {
 	/**
 	 * 默认发送信道
 	 */
-	private Integer tx_ch;
+	private String tx_ch;
 	/**
 	 * 默认接收信道
 	 */
-	private Integer rx_ch;
+	private String rx_ch;
 	/**
 	 * 默认发送功率
 	 */
-	private Integer power;
+	private String power;
 
 	public String getApp_type() {
 		return app_type;
@@ -81,27 +81,27 @@ public class ProjectConfig {
 		this.password = password;
 	}
 
-	public Integer getTx_ch() {
+	public String getTx_ch() {
 		return tx_ch;
 	}
 
-	public void setTx_ch(Integer tx_ch) {
+	public void setTx_ch(String tx_ch) {
 		this.tx_ch = tx_ch;
 	}
 
-	public Integer getRx_ch() {
+	public String getRx_ch() {
 		return rx_ch;
 	}
 
-	public void setRx_ch(Integer rx_ch) {
+	public void setRx_ch(String rx_ch) {
 		this.rx_ch = rx_ch;
 	}
 
-	public Integer getPower() {
+	public String getPower() {
 		return power;
 	}
 
-	public void setPower(Integer power) {
+	public void setPower(String power) {
 		this.power = power;
 	}
 	
