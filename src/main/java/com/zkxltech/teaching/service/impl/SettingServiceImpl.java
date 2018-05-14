@@ -1,7 +1,5 @@
 package com.zkxltech.teaching.service.impl;
 
-import org.apache.poi.ss.formula.functions.T;
-
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
@@ -27,7 +25,7 @@ public class SettingServiceImpl implements SettingService{
 	public Result login(Object object) {
 		try {
 			result = new Result();
-			User user = StringUtils.stringToBean(object, User.class);
+			User user = StringUtils.parseJSON(object, User.class);
 			String loginId = ConfigConstant.projectConf.getLogin_id();
 			String password = ConfigConstant.projectConf.getPassword();
 			if (loginId.equals(user.getLoginId())&& password.equals(user.getPassword())) {
@@ -71,7 +69,7 @@ public class SettingServiceImpl implements SettingService{
 	public Result set(Object object) {
 		try {
 			result = new Result();
-			Setting setting = StringUtils.stringToBean(object, Setting.class);
+			Setting setting = StringUtils.parseJSON(object, Setting.class);
 			String name = setting.getName();
 			//发送信道
 			Integer tx_ch = SettingEnum.getRxchByName(name);

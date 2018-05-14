@@ -14,6 +14,7 @@ import java.util.Map;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Result;
+import com.zkxltech.ui.util.StringUtils;
 
 public class DBHelper<T> {
 	private static String dbNameStr = "answer.db";
@@ -49,7 +50,7 @@ public class DBHelper<T> {
 				int index = 0;
 				for (int i = 0; i < getFields(clazz).length; i++) {
 					Object obj = getFiledValues(getFields(clazz)[i], clazz);
-					if (obj != null) {
+					if (!StringUtils.isEmpty(obj)) {
 						index++;
 						stmt.setObject(index, obj);
 					}
@@ -115,7 +116,7 @@ public class DBHelper<T> {
 				int index = 0;
 				for (int i = 0; i < getFields(clazz).length; i++) {
 					Object obj = getFiledValues(getFields(clazz)[i], clazz);
-					if (obj != null) {
+					if (!StringUtils.isEmpty(obj)) {
 						index++;
 						stmt.setObject(index, obj);
 					}

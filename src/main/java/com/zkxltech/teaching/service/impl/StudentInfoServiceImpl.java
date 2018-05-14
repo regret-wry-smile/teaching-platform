@@ -11,6 +11,7 @@ import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.teaching.service.StudentInfoService;
 import com.zkxltech.teaching.sql.StudentInfoSql;
+import com.zkxltech.ui.util.StringUtils;
 
 import net.sf.json.JSONObject;
 
@@ -45,7 +46,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	public Result selectStudentInfo(Object param) {
 		result = new Result();
 		try {
-			StudentInfo studentInfo =  (StudentInfo) JSONObject.toBean(JSONObject.fromObject(param), StudentInfo.class);
+			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseJSON(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.selectStudentInfo(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("查询学生信息成功!");
@@ -64,7 +65,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	@Override
 	public Result insertStudentInfo(Object param) {
 		try {
-			StudentInfo studentInfo =  (StudentInfo) JSONObject.toBean(JSONObject.fromObject(param), StudentInfo.class);
+			
+			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseJSON(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.insertStudentInfo(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("新增学生信息成功!");
@@ -83,7 +85,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	@Override
 	public Result deleteStudentInfo(Object param) {
 		try {
-			StudentInfo studentInfo =  (StudentInfo) JSONObject.toBean(JSONObject.fromObject(param), StudentInfo.class);
+			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseJSON(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.deleteStudent(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("删除学生信息成功!");
@@ -102,7 +104,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	@Override
 	public Result updateStudentInfo(Object param) {
 		try {
-			StudentInfo studentInfo =  (StudentInfo) JSONObject.toBean(JSONObject.fromObject(param), StudentInfo.class);
+			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseJSON(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.updateStudent(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("修改学生信息成功!");

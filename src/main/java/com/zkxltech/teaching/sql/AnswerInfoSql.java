@@ -7,6 +7,7 @@ import java.util.List;
 import com.zkxltech.domain.AnswerInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.jdbc.DBHelper;
+import com.zkxltech.ui.util.StringUtils;
 
 
 
@@ -24,7 +25,7 @@ public class AnswerInfoSql {
 			Field[] files = dbHelper.getFields(answerInfo);
 			for (int j = 0; j < files.length; j++) {
 				Object obj = dbHelper.getFiledValues(files[j], answerInfo);
-				if (obj != null) {
+				if (!StringUtils.isEmpty(obj)) {
 					sqlBuilder.append(dbHelper.HumpToUnderline(files[j].getName())+",");
 				}
 			}
@@ -32,7 +33,7 @@ public class AnswerInfoSql {
 			sqlBuilder.append(") values (");
 			for (int  j= 0; j < files.length; j++) {
 				Object obj = dbHelper.getFiledValues(files[j], answerInfo);
-				if (obj != null) {
+				if (!StringUtils.isEmpty(obj)) {
 					sqlBuilder.append("'"+dbHelper.getFiledValues(dbHelper.getFields(answerInfo)[j], answerInfo)+"'");
 					sqlBuilder.append(",");
 				}
@@ -52,7 +53,7 @@ public class AnswerInfoSql {
 		int index = 0;
 		for (int i = 0; i < files.length; i++) {
 			Object obj = dbHelper.getFiledValues(files[i], answerInfo);
-			if (obj != null) {
+			if (!StringUtils.isEmpty(obj)) {
 				if (index == 0) {
 					sqlBuilder.append(" where ");
 				}else {
@@ -74,7 +75,7 @@ public class AnswerInfoSql {
 		int index = 0;
 		for (int i = 0; i < files.length; i++) {
 			Object obj = dbHelper.getFiledValues(files[i], answerInfo);
-			if (obj != null) {
+			if (!StringUtils.isEmpty(obj)) {
 				if (index == 0) {
 					sqlBuilder.append(" where ");
 				}else {
