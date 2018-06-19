@@ -202,6 +202,23 @@ public class MainPage extends Dialog {
 		});
 		changeMin.addMouseTrackListener(SwtTools.showHand(changeMin));
 		
+		if(isTest){
+			//FIXME /*测试部分*/
+			CLabel refresh = new CLabel(shell, SWT.NONE);
+			FormData fd_refresh = new FormData();
+			fd_refresh.left = new FormAttachment(50);
+			fd_refresh.top = new FormAttachment(50);
+			refresh.setLayoutData(fd_refresh);
+			refresh.setText("刷新");
+			//FIXME /*测试部分*/
+			refresh.addMouseListener(new MouseAdapter() {
+				 @Override
+				 public void mouseDown(MouseEvent e) {
+					 PageConstant.browser.refresh();
+				 }
+			});
+		}
+		
 		Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayout(new FormLayout());
 		FormData fd_composite = new FormData();
@@ -240,24 +257,7 @@ public class MainPage extends Dialog {
 		new TestPaperFunctionManage(PageConstant.browser, "execute_testPaper");//试卷模块
 		new RecordFunctionManage(PageConstant.browser, "execute_record");//记录模块
 		new VoteFunctionManage(PageConstant.browser, "execute_vote");//投票模块
-		
-		if(isTest){
-			//FIXME /*测试部分*/
-			 CLabel refresh = new CLabel(shell, SWT.NONE);
-			 FormData fd_refresh = new FormData();
-			 fd_refresh.left = new FormAttachment(50);
-			 fd_refresh.top = new FormAttachment(50);
-			 refresh.setLayoutData(fd_refresh);
-			 refresh.setText("刷新");
-			
-			 //FIXME /*测试部分*/
-			 refresh.addMouseListener(new MouseAdapter() {
-				 @Override
-				 public void mouseDown(MouseEvent e) {
-					 PageConstant.browser.refresh();
-				 }
-			 });
-		}
+	
 		 
 	}
 }

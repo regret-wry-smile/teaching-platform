@@ -7,6 +7,7 @@ import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseMotionListener;
+import java.text.SimpleDateFormat;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -18,6 +19,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -265,7 +267,16 @@ public class MainStart {
 		cLabel01.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-
+				if(e.button == 1){
+					MessageBox messageBox = new MessageBox(new Shell(),SWT.ICON_QUESTION|SWT.YES|SWT.NO);
+	        		messageBox.setMessage("确定要退出？");
+	        		if (messageBox.open() == SWT.YES) {
+	        			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//	        			 ClassHourSql classHourSql = new ClassHourSql();
+//	                     classHourSql.updateClassHourById(classHourSql.getId(ClassSelection. classHour), simpleDateFormat.format(new Date()));
+	                     System.exit(0); 
+					}; 
+				}
 			}
 		});
 		
@@ -277,9 +288,11 @@ public class MainStart {
 		cLabel02.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				frame.setVisible(false);
-				shell.setVisible(false);
-				new MainPage(shell,mianStart).open();
+				if(e.button == 1){
+					frame.setVisible(false);
+					shell.setVisible(false);
+					new MainPage(shell,mianStart).open();
+				}
 			}
 		});
 		
@@ -291,7 +304,9 @@ public class MainStart {
 		cLabel03.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				
+				if(e.button == 1){
+					
+				}
 			}
 		});
 		
@@ -303,7 +318,9 @@ public class MainStart {
 		cLabel04.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-
+				if(e.button == 1){
+					
+				}
 			}
 		});
 		
