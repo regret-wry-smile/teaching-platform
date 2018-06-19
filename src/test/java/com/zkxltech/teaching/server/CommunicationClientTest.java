@@ -50,7 +50,7 @@ public class CommunicationClientTest {
 			}
 		}).start();
 		
-		MainStart window = new MainStart();
+//		MainStart window = new MainStart();
 		
 	}
 	

@@ -53,7 +53,7 @@ public class CommunicationServerTest {
 			}
 		}).start();
 		
-		MainStart window = new MainStart();
+//		MainStart window = new MainStart();
 		
 	}
 	
