@@ -11,25 +11,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Result;
-import com.zkxltech.ui.util.StringUtils;
 
 public class DBHelper<T> {
+	private static final Logger logger = LoggerFactory.getLogger(DBHelper.class);
 	private static String dbNameStr = "answer.db";
 
 	/**
-	 * 查询
 	 * 
-	 * @param dbNameStr
-	 *            数据库名
 	 * @param sql
-	 *            查询的SQL语句
-	 * @param key
-	 *            查询结果对应的key
+	 * @param clazz 实体类对象
 	 * @return
-	 * @throws SQLException
 	 */
 	public synchronized Result onQuery(String sql, T clazz) {
 		Result result = new Result();
@@ -38,7 +36,7 @@ public class DBHelper<T> {
 		ResultSet rs = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:" + dbNameStr.trim());
+			conn = getConnection(dbNameStr.trim());
 			conn.setAutoCommit(false);
 
 			stmt = conn.prepareStatement(sql);
@@ -63,8 +61,10 @@ public class DBHelper<T> {
 				T t = (T) clazz.getClass().newInstance();
 				Map<String, Object> map = new HashMap<String, Object>();
 				for (int i = 0; i < property.length; i++) {
-					Object object = rs.getObject(HumpToUnderline(property[i]));
-					setMethodValue(property[i], object, t);
+					if (isExistColumn(rs,HumpToUnderline(property[i]))) {
+						Object object = rs.getObject(HumpToUnderline(property[i]));
+						setMethodValue(property[i], object, t);
+					}
 				}
 				retList.add(t);
 			}
@@ -74,6 +74,7 @@ public class DBHelper<T> {
 			result.setRet(Constant.SUCCESS);
 			result.setItem(retList);
 		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
 			result.setRet(Constant.ERROR);
 			result.setDetail(IOUtils.getError(e));
 		} finally {
@@ -85,31 +86,80 @@ public class DBHelper<T> {
 					conn.close();
 				}
 			} catch (Exception e2) {
+				logger.error(IOUtils.getError(e2));
 			}
 		}
 		return result;
 	}
+	
+	/**
+	 * 查询
+	 * @param dbNameStr 数据库名
+	 * @param sql 查询的SQL语句
+	 * @param key 查询结果对应的key
+	 * @return
+	 * @throws SQLException 
+	 */
+	public static synchronized List<Map<String, Object>> onQuery(String sql,String[] key,List<Object> param){
+		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = getConnection(dbNameStr.trim());
+			conn.setAutoCommit(false);
+			stmt = conn.prepareStatement(sql);
+		    if(param == null){
+		    	 rs = stmt.executeQuery();
+		    }else {
+		    	 for(int i=0; i< param.size(); i++){
+		    		 stmt.setObject(i+1, param.get(i));
+				    }
+				 rs = stmt.executeQuery();
+			}
+		   
+		    while ( rs.next() ) {
+		    	Map<String, Object> map = new HashMap<String, Object>();
+		    	for(int i=0;i<key.length;i++){
+		    		Object object = rs.getObject(key[i]);
+		    		map.put(key[i], object);
+		    	}
+		    	list.add(map);
+		    }
+		    rs.close();
+		    stmt.close();
+		    conn.close(); 
+		  } catch ( Exception e ) {
+			  logger.error(IOUtils.getError(e));
+		  }finally {
+			  try {
+				  if (stmt != null && !stmt.isClosed()) {
+			    		stmt.close();
+					}
+			    	if (conn != null && !conn.isClosed()) {
+						conn.close();
+					}
+				} catch (Exception e2) {
+					logger.error(IOUtils.getError(e2));
+				}
+		}
+		  return list;
+	}
 
 	/**
-	 * 增加 删除 修改
-	 * 
-	 * @param dbNameStr
-	 *            数据库名
+	 * 单条数据 增加 删除 修改
 	 * @param sql
-	 *            sql语句
-	 * @param param
-	 *            插入的参数
-	 * @throws SQLException
+	 *			 sql语句
+	 * @param clazz 实体类
+	 * @return
 	 */
 	public synchronized Result onUpdate(String sql, T clazz) {
 		Result result = new Result();
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:" + dbNameStr.trim());
+			conn = getConnection(dbNameStr.trim());
 			conn.setAutoCommit(false);
-
 			stmt = conn.prepareStatement(sql);
 			
 			if (clazz != null) {
@@ -129,6 +179,7 @@ public class DBHelper<T> {
 			result.setRet(Constant.SUCCESS);
 			return result;
 		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
 			result.setRet(Constant.ERROR);
 			result.setDetail(IOUtils.getError(e));
 			return result;
@@ -141,6 +192,7 @@ public class DBHelper<T> {
 					conn.close();
 				}
 			} catch (Exception e2) {
+				logger.error(IOUtils.getError(e2));
 			}
 		}
 	}
@@ -148,34 +200,30 @@ public class DBHelper<T> {
 	/**
 	 * 批量增加 删除 修改
 	 * 
-	 * @param dbNameStr
-	 *            数据库名
-	 * @param sql
+	 * @param sqls
 	 *            sql语句
-	 * @param param
-	 *            插入的参数
-	 * @throws ClassNotFoundException
-	 * @throws SQLException
 	 */
-	public synchronized Result onUpdateByGroup(List<String> sqls) {
+	public static synchronized Result onUpdateByGroup(List<String> sqls) {
 		Result result = new Result();
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:" + dbNameStr.trim());
+			conn = getConnection(dbNameStr.trim());
 			conn.setAutoCommit(false);
 
 			for (int i = 0; i < sqls.size(); i++) {
 				stmt = conn.prepareStatement(sqls.get(i));
 				stmt.executeUpdate();
 			}
-			stmt.close();
+			if (stmt != null) {
+				stmt.close();
+			}
 			conn.commit();
 			conn.close();
 			result.setRet(Constant.SUCCESS);
 			return result;
 		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
 			result.setRet(Constant.ERROR);
 			result.setDetail(IOUtils.getError(e));
 			return result;
@@ -188,19 +236,21 @@ public class DBHelper<T> {
 					conn.close();
 				}
 			} catch (Exception e2) {
+				logger.error(IOUtils.getError(e2));
 			}
 
 		}
 
 	}
 
-	public synchronized Connection getConnection(String dbNameStr) {
+	public synchronized static Connection getConnection(String dbNameStr) {
 		Connection conn = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
 			conn = DriverManager.getConnection("jdbc:sqlite:" + dbNameStr.trim());
 			return conn;
 		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
 		}
 		return null;
 		// DBCP2Config config = new DBCP2Config();
@@ -269,5 +319,24 @@ public class DBHelper<T> {
 
 	public Field[] getFields(T clazz) {
 		return clazz.getClass().getDeclaredFields();
+	}
+	
+	/**
+	 * 判断查询结果集中是否存在某列
+	 * @param rs 查询结果集
+	 * @param columnName 列名
+	 * @return true 存在; false 不存咋
+	 */
+	public boolean isExistColumn(ResultSet rs, String columnName) {
+	    try {
+	        if (rs.findColumn(columnName) > 0 ) {
+	            return true;
+	        }
+	    }
+	    catch (SQLException e) {
+	        return false;
+	    }
+	     
+	    return false;
 	}
 }

@@ -1,99 +1,116 @@
 package com.ejet.core.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
+
+import org.apache.poi.ss.formula.functions.T;
+
+import com.ejet.core.util.constant.Constant;
+
+import net.sf.json.JSONObject;
+
 public class StringUtils {
-	/**
-	 * (硬件上的)答题类型转换  中文转对应类型编号
-	 * @param type
-	 * @return
-	 *  * 题目类型
-	 * 1：单题单选
-	 * 2: 是非判断
-	 * 3: 抢红包
-	 * 4: 单题多选
-	 * 5: 多题单选
-	 * 6: 通用数据类型（所有按键都可以按，按下之后立刻提交）
-	 * 7: 6键单选题（对错键复⽤EF键）
-	 */
-	public static String changeQusetionTypeToNum(String type){
-		String retString = "";
-		switch (type) {
-		case "主观题":
-			retString = "2";
-			break;
-		case "客观题":
-			retString = "1";
-			break;
-		case "判断题":
-			retString = "2";
-			break;
+	
+	/**  
+     * 自动生成32位的UUid，对应数据库的主键id进行插入用。  
+     * @return  
+     */  
+    public static String getUUID() {  
+        return UUID.randomUUID().toString().replace("-", "");  
+    }  
+    
+    /**  
+     * json转换对象  
+     * @return  
+     */  
+    public static  <T>  T parseToBean(Object json,Class<T> clazz) {  
+    	if (json == null || "".equals(json)) {
+    		json = "{}";
 		}
-		return retString;
+        return (T)JSONObject.toBean(JSONObject.fromObject(json), clazz);  
+    } 
+    
+    /**  
+     * int 转换 boolean
+     * 1 返回true
+     * 其它值为false
+     * @return  
+     */  
+    public static  boolean intToBoolen(int data) {  
+        return data == 1;  
+    } 
+    
+    /**  
+     * int 转换 boolean
+     * SUCCESS 返回 1
+     * 其它值为 0
+     * @return  
+     */  
+    public static int StringToInt(String str) {  
+        return Constant.SUCCESS.equals(str) ? 1 : 0;  
+    } 
+    
+    /**  
+     * int 转换 boolean
+     * SUCCESS 返回 true
+     * 其它值为 false
+     * @return  
+     */  
+    public static boolean StringToBoolen(String str) {  
+        return Constant.SUCCESS.equals(str);  
+    } 
+    /**
+     * 字符串是否为空
+     */
+    public static boolean isEmpty(String str){
+		return str == null || str.length() == 0;
 	}
-	/**
-	 * (业务上的)答题类型转换  中文转对应类型编号
-	 * @param type
-	 * @return
-	 *  * 题目类型
-	 * 1:客观题
-	 * 2:主观题
-	 * 3:判断题
-	 */
-	public static String changeBusinessQusetionTypeToNum(String type){
-		String retString = "";
-		switch (type) {
-		case "客观题":
-			retString = "1";
-			break;
-		case "主观题":
-			retString = "2";
-			break;
-		case "判断题":
-			retString = "3";
-			break;
-		}
-		return retString;
+    
+    /**
+     * 字符串是否为空
+     */
+    public static boolean isEmpty(Integer num){
+		return num == null;
 	}
-	/**
-	 * 将页面选中的答案转换为缓存中对应的答案类型
-	 * @param type
-	 * @return
-	 * 选A --->A
-	 * 选B --->B
-	 * 选C --->C
-	 * 选D --->D
-	 * 懂     --->Y
-	 * 不懂 --->N
-	 * 对     --->Y
-	 * 错     --->N
-	 */
-	public static String changeAnswer(String type){
-		String retString = "";
-		switch (type) {
-		case "选A":
-			retString = "A";
-			break;
-		case "选B":
-			retString = "B";
-			break;
-		case "选C":
-			retString = "C";
-			break;
-		case "选D":
-			retString = "D";
-			break;
-		case "懂":
-			retString = "Y";
-			break;
-		case "不懂":
-			retString = "N";
-			break;
-		case "对":
-			retString = "Y";
-			break;
-		case "错":
-			retString = "N";
-			break;
+    
+    /**
+     * object是否为空
+     */
+    public static boolean isEmpty(Object obj){
+    	if(obj == null) return true;
+    	if (obj instanceof String) {
+    		return isEmpty((String) obj);
 		}
-		return retString;
+    	if (obj instanceof Integer) {
+    		return isEmpty((Integer) obj);
+		}
+    	return false;
+	}
+    
+    /**
+     * 时间转换string格式
+     */
+    public static String formatDateTime(Date date){
+    	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return simpleDateFormat.format(date);
+	}
+    
+    /**
+     * 时间转换string格式
+     */
+    public static String formatDateTime(Date date,String pattern){
+    	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		return simpleDateFormat.format(date);
+	}
+    /**
+     * string转换时间格式
+     * @throws ParseException 
+     */
+    public static Date parseDateTime(String str) throws ParseException{
+    	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+    	
+		return simpleDateFormat.parse(str);
 	}
 }
