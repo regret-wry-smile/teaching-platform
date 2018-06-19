@@ -28,6 +28,7 @@ import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
 import com.zkxltech.ui.util.PageConstant;
 import com.zkxltech.ui.util.SwtTools;
+import org.eclipse.swt.events.MouseTrackAdapter;
 /*
  * 	页面回调指令
  * 	start_answer 开始作答
@@ -58,6 +59,9 @@ public class MainStart {
 	
 	private static MainStart mianStart;
 	private boolean isTest;
+	
+	private static boolean isOver = false;
+	private Thread thread;
 
 	public MainStart(Shell parent) {
 		shell = parent;
@@ -98,13 +102,12 @@ public class MainStart {
 	
 	public void closeShell() {
 		shell.setVisible(false);
-		changeImage();
-		frame.repaint();
 	}
 
 	public void showShell() {
 		shell.setLocation(shellX, shellY-shellMaxHeight);
 		shell.setVisible(true);
+		
 	}
 	
 	
@@ -190,7 +193,7 @@ public class MainStart {
         	}
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
-				frame.setBounds(shellX, shellY, Frame_Width, Frame_Height);
+//				frame.setBounds(shellX, shellY, Frame_Width, Frame_Height);
 //				x = shellX;
 //				y = shellY;
 //				x1 =shellX;
@@ -208,10 +211,28 @@ public class MainStart {
 					    	}
 					    }); 
 				}
-				isShow = !isShow;
-				changeImage();
-				frame.repaint();
 			}
+			
+			@Override
+			public void mouseEntered(java.awt.event.MouseEvent e) {
+				Display.getDefault().syncExec(new Runnable() {
+				    public void run() {
+				    	showShell();
+				    	}
+				    });
+			}
+			@Override
+			public void mouseExited(java.awt.event.MouseEvent e) {
+				if(!isOver){
+					Display.getDefault().syncExec(new Runnable() {
+					    public void run() {
+					    	closeShell();
+					    	}
+					    }); 
+				}
+			}
+			
+			
         });
 		panel.addMouseMotionListener(new MouseMotionListener() {
 			
@@ -224,6 +245,11 @@ public class MainStart {
 			@Override
 			public void mouseDragged(java.awt.event.MouseEvent e) {
 				if (!isShow) {
+					Display.getDefault().syncExec(new Runnable() {
+					    public void run() {
+					    	closeShell();
+					    	}
+					    });
 					shellX=x1 + e.getXOnScreen()-mouse_X;
 					shellY=y1 +e.getYOnScreen()-mouse_Y;
 					frame.setBounds(shellX, shellY, Frame_Width, Frame_Height);
@@ -323,8 +349,127 @@ public class MainStart {
 				}
 			}
 		});
-		
-		
+		cLabel01.addMouseTrackListener(new MouseTrackAdapter() {
+			@Override
+			public void mouseEnter(MouseEvent e) {
+				isOver = true;
+				if(thread != null){
+					thread.stop();
+				}
+			}
+			@Override
+			public void mouseExit(MouseEvent e) {
+				thread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(200);
+							isOver = false;
+							Display.getDefault().syncExec(new Runnable() {
+							    public void run() {
+							    	closeShell();
+							    	}
+							    });
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				thread.start();
+			}
+		});
+		cLabel02.addMouseTrackListener(new MouseTrackAdapter() {
+			@Override
+			public void mouseEnter(MouseEvent e) {
+				isOver = true;
+				if(thread != null){
+					thread.stop();
+				}
+			}
+			@Override
+			public void mouseExit(MouseEvent e) {
+				thread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(200);
+							isOver = false;
+							Display.getDefault().syncExec(new Runnable() {
+							    public void run() {
+							    	closeShell();
+							    	}
+							    });
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				thread.start();
+			}
+		});
+		cLabel03.addMouseTrackListener(new MouseTrackAdapter() {
+			@Override
+			public void mouseEnter(MouseEvent e) {
+				isOver = true;
+				if(thread != null){
+					thread.stop();
+				}
+			}
+			@Override
+			public void mouseExit(MouseEvent e) {
+				thread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(200);
+							isOver = false;
+							Display.getDefault().syncExec(new Runnable() {
+							    public void run() {
+							    	closeShell();
+							    	}
+							    });
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				thread.start();
+			}
+		});
+		cLabel04.addMouseTrackListener(new MouseTrackAdapter() {
+			@Override
+			public void mouseEnter(MouseEvent e) {
+				isOver = true;
+				if(thread != null){
+					thread.stop();
+				}
+			}
+			@Override
+			public void mouseExit(MouseEvent e) {
+				thread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(200);
+							isOver = false;
+							Display.getDefault().syncExec(new Runnable() {
+							    public void run() {
+							    	System.out.println(123);
+							    	closeShell();
+							    	}
+							    });
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				thread.start();
+			}
+		});
 		
 		cLabel01.addMouseTrackListener(SwtTools.showHand(cLabel01));
 		cLabel02.addMouseTrackListener(SwtTools.showHand(cLabel02));
