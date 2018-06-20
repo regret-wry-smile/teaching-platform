@@ -21,7 +21,7 @@ public class ImportExcelUtils {
     private final static String excel2007U =".xlsx";   //2007+ 版本的excel  
       
     /** 
-     * 描述：获取IO流中的数据，组装成List<List<Object>>对象 
+     * 描述：获取IO流中的数据，组装成List<List<Object>>对象 (忽略第一行)
      * @param in,fileName 
      * @return 
      * @throws IOException  
@@ -55,6 +55,57 @@ public class ImportExcelUtils {
                 	cols = row.getLastCellNum();
                 	continue;
                 }  
+                //遍历所有的列  
+                List<Object> li = new ArrayList<Object>();  
+                for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {  
+                    cell = row.getCell(y);
+                    
+                    li.add(getCellValue(cell));  
+                }  
+                if (li.size()==cols) {
+                	list.add(li);  
+				}
+            }  
+        }  
+        work.close();  
+        return list;  
+    }  
+    
+    /** 
+     * 描述：获取IO流中的数据，组装成List<List<Object>>对象 
+     * @param in,fileName 
+     * @return 
+     * @throws IOException  
+     */  
+    public static List<List<Object>> getBankListByExcel2(InputStream in,String fileName) throws Exception{  
+        List<List<Object>> list = null;  
+          
+        //创建Excel工作薄  
+        Workbook work = getWorkbook(in,fileName);  
+        if(null == work){  
+            throw new Exception("创建Excel工作薄为空！");  
+        }  
+        Sheet sheet = null;  
+        Row row = null;  
+        Cell cell = null;  
+          
+        list = new ArrayList<List<Object>>();  
+        //遍历Excel中所有的sheet  
+        for (int i = 0; i < work.getNumberOfSheets(); i++) {  
+            sheet = work.getSheetAt(i);  
+            if(sheet==null){continue;}  
+              
+            //遍历当前sheet中的所有行 
+            int cols =  0; //第一行的列数
+            for (int j = sheet.getFirstRowNum(); j <= sheet.getLastRowNum(); j++) {  
+                row = sheet.getRow(j);
+                if (row == null) {
+                	continue;
+				}
+//                if(row.getFirstCellNum()==j){
+                	cols = row.getLastCellNum();
+//                	continue;
+//                }  
                 //遍历所有的列  
                 List<Object> li = new ArrayList<Object>();  
                 for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {  

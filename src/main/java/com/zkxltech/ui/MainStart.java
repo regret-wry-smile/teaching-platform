@@ -6,6 +6,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,7 +64,6 @@ public class MainStart {
 	private static MainStart mianStart;
 	private boolean isTest;
 	
-	private static boolean isOver = false;/*鼠标是否悬浮在图标上*/
 	private static boolean isShow = false;
 	private static boolean flag = false;
 	
@@ -91,7 +91,6 @@ public class MainStart {
 	 * 重置变量值
 	 */
 	public void resetValue(){
-		isOver = false;
 		isShow = false;
 		flag = true;
 	}
@@ -205,38 +204,25 @@ public class MainStart {
         		if (!isShow) {
             		x1 =shellX;
             		y1 =shellY;
+            		Display.getDefault().syncExec(new Runnable() {
+					    public void run() {
+							flag = false;
+					    	showShell();
+					    	}
+					    });
         		}
         	}
-			@Override
-			public void mouseClicked(java.awt.event.MouseEvent e) {
-//				frame.setBounds(shellX, shellY, Frame_Width, Frame_Height);
-//				x = shellX;
-//				y = shellY;
-//				x1 =shellX;
-//				y1 =shellY;
-//				if (!isShow) {
-//					Display.getDefault().syncExec(new Runnable() {
-//					    public void run() {
-//					    	showShell();
-//					    	}
-//					    });
-//				}else {
-//					Display.getDefault().syncExec(new Runnable() {
-//					    public void run() {
-//					    	closeShell();
-//					    	}
-//					    }); 
-//				}
-			}
 			
 			@Override
 			public void mouseEntered(java.awt.event.MouseEvent e) {
-				Display.getDefault().syncExec(new Runnable() {
-				    public void run() {
-						flag = false;
-				    	showShell();
-				    	}
-				    });
+				if(e.getX() >= 0 && e.getX() <= Frame_Width){
+					Display.getDefault().syncExec(new Runnable() {
+					    public void run() {
+							flag = false;
+					    	showShell();
+					    	}
+					    });
+				}
 			}
 			@Override
 			public void mouseExited(java.awt.event.MouseEvent e) {
@@ -252,22 +238,25 @@ public class MainStart {
 			
 			
         });
-		panel.addMouseMotionListener(new MouseMotionListener() {
+		panel.addMouseMotionListener(new MouseMotionAdapter() {
 			
-			@Override
-			public void mouseMoved(java.awt.event.MouseEvent e) {
-			}
-			
+//			@Override
+//			public void mouseMoved(java.awt.event.MouseEvent e) {
+//				shellX=x1 + e.getXOnScreen()-mouse_X;
+//				shellY=y1 +e.getYOnScreen()-mouse_Y;
+//				frame.setBounds(shellX, shellY, Frame_Width, Frame_Height);
+//			}
+
 			@Override
 			public void mouseDragged(java.awt.event.MouseEvent e) {
-				
 				Display.getDefault().syncExec(new Runnable() {
 				    public void run() {
 				    	if(shell.isVisible()){
 					    	closeShell();
+					    	flag = false;
 				    	}
-				    	}
-				    });
+				    }
+				});
 				if (!isShow) {
 					shellX=x1 + e.getXOnScreen()-mouse_X;
 					shellY=y1 +e.getYOnScreen()-mouse_Y;

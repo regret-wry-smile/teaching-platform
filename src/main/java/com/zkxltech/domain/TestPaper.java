@@ -6,6 +6,10 @@ public class TestPaper {
 	 */
 	private Integer id;
 	/**
+	 * 科目
+	 */
+	private String subject;
+	/**
 	 * 试卷id
 	 */
 	private String testId;
@@ -62,6 +66,12 @@ public class TestPaper {
 	}
 	public void setAtype(String atype) {
 		this.atype = atype;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 	
 }

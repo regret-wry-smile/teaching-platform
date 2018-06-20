@@ -1,7 +1,6 @@
 package com.zkxltech.teaching.service;
 
 import com.zkxltech.domain.Result;
-import com.zkxltech.domain.StudentInfo;
 
 public interface QuestionService {
 	/*题目导入*/

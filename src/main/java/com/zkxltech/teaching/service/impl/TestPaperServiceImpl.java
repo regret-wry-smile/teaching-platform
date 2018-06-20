@@ -28,11 +28,6 @@ public class TestPaperServiceImpl implements TestPaperService{
 				result.setMessage("添加试卷信息失败！");
 				return result;
 			}
-			//TODO 插入题目信息
-			if (Constant.ERROR.equals(result.getRet())) {
-				result.setMessage("添加题目信息失败！");
-				return result;
-			}
 			result.setMessage("添加试卷成功！");
 			return result;
 		} catch (Exception e) {
