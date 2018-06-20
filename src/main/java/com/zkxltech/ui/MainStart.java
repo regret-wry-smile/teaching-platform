@@ -26,6 +26,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import com.sun.awt.AWTUtilities;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
+import com.zkxltech.ui.util.Colors;
 import com.zkxltech.ui.util.PageConstant;
 import com.zkxltech.ui.util.StringConstant;
 import com.zkxltech.ui.util.SwtTools;
@@ -45,8 +46,8 @@ public class MainStart {
 	private String title = Global.VERSION; //窗口标题
 	int Window_Width = Toolkit.getDefaultToolkit().getScreenSize().width;
 	int Window_Height = Toolkit.getDefaultToolkit().getScreenSize().height;
-	int Frame_Width = 50;
-	int Frame_Height = 50;
+	int Frame_Width = 60;
+	int Frame_Height = 60;
 	int shellX,shellY;/* 悬浮窗口坐标 */
 	int x1, y1;// 鼠标释放位置
 	int mouse_X = 0, mouse_Y = 0;
@@ -56,7 +57,7 @@ public class MainStart {
 	private int shellMainX;/* 窗口x坐标 */
 	private int shellMainY;/* 窗口y坐标 */
 	public static boolean isShow = false;
-	private ImageIcon imageIcon, icon, backgroundIcon; 
+	private ImageIcon imageIcon, icon; 
 	
 	private static MainStart mianStart;
 	private boolean isTest;
@@ -89,26 +90,28 @@ public class MainStart {
 		imageIcon = new ImageIcon(this.getClass().getResource(PageConstant.image01));
 		/*默认背景图片*/
 		icon = new ImageIcon(this.getClass().getResource(PageConstant.image01));
-		/*背景颜色图片*/
-		backgroundIcon = new ImageIcon(this.getClass().getResource(PageConstant.image02));
 	}
 	
 	public void changeImage(){
 		if (isShow) {
 			icon = new ImageIcon(this.getClass().getResource(PageConstant.image01));
 		}else {
-			icon = new ImageIcon(this.getClass().getResource(PageConstant.image01));
+			icon = new ImageIcon(this.getClass().getResource(PageConstant.image02));
 		}
 	}
 	
 	public void closeShell() {
+		changeImage();
 		shell.setVisible(false);
+		changeImage();
+		frame.repaint();
 	}
 
 	public void showShell() {
 		shell.setLocation(shellX, shellY-shellMaxHeight);
 		shell.setVisible(true);
-		
+		changeImage();
+		frame.repaint();
 	}
 	
 	
@@ -170,8 +173,7 @@ public class MainStart {
 			public void paint(Graphics g) {
 				super.paint(g);
 				Graphics2D g2d = (Graphics2D) g;
-				backgroundIcon.paintIcon(this, g2d, -15, -15);
-				icon.paintIcon(this, g2d, 3, 3);
+				icon.paintIcon(this, g2d, 0, 0);
 				g.dispose();
 			}
 		};
@@ -293,7 +295,7 @@ public class MainStart {
 		CLabel cLabel01 = new CLabel(shell, SWT.NONE);
 		cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.close_white));
 		cLabel01.setText("关闭");
-		cLabel01.setBounds(0, 0, 50, 40);
+		cLabel01.setBounds(0, 0, 60, 40);
 		cLabel01.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -312,8 +314,9 @@ public class MainStart {
 		
 		//答题
 		CLabel cLabel02 = new CLabel(shell, SWT.NONE);
-		cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.close_white));
-		cLabel02.setBounds(0, 40, 50, 40);
+		cLabel02.setBackground(Colors.color_blue);
+		cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.answer_img));
+		cLabel02.setBounds(0, 40, 37, 38);
 		cLabel02.setText("答题");
 		cLabel02.addMouseListener(new MouseAdapter() {
 			@Override
@@ -321,7 +324,6 @@ public class MainStart {
 				if(e.button == 1){
 					frame.setVisible(false);
 					shell.setVisible(false);
-					/*920,600*/
 					new MainPage(shell,mianStart,StringConstant.PAGE_ANSWER_TYPE).open();
 				}
 			}
@@ -330,7 +332,7 @@ public class MainStart {
 		//设置
 		CLabel cLabel03 = new CLabel(shell, SWT.NONE);
 		cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.close_white));
-		cLabel03.setBounds(0, 80, 50, 40);
+		cLabel03.setBounds(0, 80, 60, 40);
 		cLabel03.setText("设置");
 		cLabel03.addMouseListener(new MouseAdapter() {
 			@Override
@@ -346,7 +348,7 @@ public class MainStart {
 		//记录
 		CLabel cLabel04 = new CLabel(shell, SWT.NONE);
 		cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.close_white));
-		cLabel04.setBounds(0, 120, 50, 40);
+		cLabel04.setBounds(0, 120, 60, 40);
 		cLabel04.setText("记录");
 		cLabel04.addMouseListener(new MouseAdapter() {
 			@Override

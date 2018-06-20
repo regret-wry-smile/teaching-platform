@@ -73,11 +73,17 @@ public class MainPage extends Dialog {
 	private void initData(){
 		/*屏幕宽高*/
 		Window_Width = Toolkit.getDefaultToolkit().getScreenSize().width;  
-	    Window_Height = Toolkit.getDefaultToolkit().getScreenSize().height; 
+	    Window_Height = Toolkit.getDefaultToolkit().getScreenSize().height;
+	    shellWidth = (int) (Window_Width * 0.48);
+	    shellHeight = shellWidth * 600 / 920;
+
+	    System.out.println(shellWidth+"======"+shellHeight);
 	    /*窗口宽高*/
-		shellWidth = 820;
-		shellHeight = 500;
-		
+	    if(shellWidth <= 920 || shellHeight <= 600){
+	    	shellWidth = 920;
+			shellHeight = 600;
+	    }
+	    System.out.println(shellWidth+"======"+shellHeight);
 		isTest = Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test());
 	}
 

@@ -36,12 +36,15 @@ public class PageConstant {
 	/**
 	 * 悬浮框默认图片
 	 */
-	public static String image01 = imagePack + "/desktop_preview_03.png";
-	
+	public static String image01 = imagePack + "/答题-悬浮控件_23.png";
 	/**
-	 * 背景颜色图片
+	 * 悬浮后图片
 	 */
-	public static String image02 = imagePack + "/desktop_preview_03_bg.png";
+	public static String image02 = imagePack + "/答题-悬浮控件_13-23.png";
+	/**
+	 * 答题图片
+	 */
+	public static String answer_img = imagePack + "/答题-悬浮控件_13-16.png";
 	
 	/**
 	 * 白色框关闭图片

@@ -125,7 +125,7 @@ public class MainPage2 {
 		shell.setLocation(Display.getCurrent().getClientArea().width / 2 - shell.getShell().getSize().x/2, Display.getCurrent()  
                 .getClientArea().height / 2 - shell.getSize().y/2);  
 		shell.setLayout(new FormLayout());
-		shell.setBackground(Colors.SLIGHT_WHITE);
+//		shell.setBackground(Colors.SLIGHT_WHITE);
 		
 		//中间内容
 		Composite compositeAll = new Composite(shell, SWT.NONE);
@@ -134,7 +134,7 @@ public class MainPage2 {
 		fd_compositeAll.left = new FormAttachment(0,2);
 		fd_compositeAll.top = new FormAttachment(0,2);
 		compositeAll.setLayoutData(fd_compositeAll);
-		compositeAll.setBackground(Colors.SLIGHT_BLUE);
+//		compositeAll.setBackground(Colors.SLIGHT_BLUE);
 		
 //		//上面部分
 //		Composite composite = new Composite(shell, SWT.NONE);
