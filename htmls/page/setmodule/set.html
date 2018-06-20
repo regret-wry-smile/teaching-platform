@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html ng-app="app">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>答题页面</title>
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="viewport" content="user-scalable=no,width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="css/common.css" />
+		<!--<link rel="stylesheet" type="text/css" href="css/admin.css" />
+		<link rel="stylesheet" type="text/css" href="css/oa.css" />
+		<!--拖拽-->
+		<!--<link rel="stylesheet" type="text/css" href="vendor/jquery/UI/jquery-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="vendor/jquery/fullcalendar/calendar.css" />
+		<!--toastr-->
+		<link rel="stylesheet" type="text/css" href="vendor/modules/angular-toastr/angular-toastr.css" />
+		<!--z-tree-->
+		<link rel="stylesheet" href="bootstrapStyle/bootstrapStyle.css" />
+
+		<link rel="stylesheet" type="text/css" href="vendor/angular/loading-bar/loading-bar.css" />
+		<link rel="stylesheet" href="css/font-awesome.min.css" />
+		<script src="vendor/jquery/daterangepicker/moment.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="vendor/modules/angular-multi-select-tree/angular-multi-select-tree-0.1.0.css" />
+		<link rel="shortcut icon" href="favicon.ico" />
+		  <!--[if IE 8]>
+        <script src="js/es5-shim.min.js"></script>        
+    	<![endif]-->
+	</head>
+
+	<body class="bg">
+		<div ui-view class="main"></div>
+		<div ng-spinner-loader class="loading">
+			<div class="spinner">
+				<div class="bounce1"></div>
+				<div class="bounce2"></div>
+				<div class="bounce3"></div>
+			</div>
+		</div>
+	</body>
+
+</html>
+<!-- jQuery -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/jquery/jquery-migrate-1.2.1.js"></script>
+
+<!-- Angular -->
+<script src="vendor/angular/angular.min.js"></script>
+
+<script src="vendor/angular/angular-animate/angular-animate.js"></script>
+<script src="vendor/angular/angular-cookies/angular-cookies.js"></script>
+<script src="vendor/angular/angular-resource/angular-resource.js"></script>
+<script src="vendor/angular/angular-sanitize/angular-sanitize.js"></script>
+<script src="vendor/angular/angular-touch/angular-touch.js"></script>
+<!-- Vendor -->
+<script src="vendor/angular/angular-ui-router/angular-ui-router.js"></script>
+<script src="vendor/angular/ngstorage/ngStorage.js"></script>
+
+<!-- bootstrap -->
+<script src="vendor/angular/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<!-- lazyload -->
+<script src="vendor/angular/oclazyload/ocLazyLoad.js"></script>
+<!-- translate -->
+<script src="vendor/angular/angular-translate/angular-translate.js"></script>
+<script src="vendor/angular/angular-translate/loader-static-files.js"></script>
+<script src="vendor/angular/angular-translate/storage-cookie.js"></script>
+<script src="vendor/angular/angular-translate/storage-local.js"></script>
+<!--toastr-->
+<!--<script src="vendor/modules/angular-toastr/angular-toastr.js" type="text/javascript" charset="utf-8"></script>
+<script src="vendor/modules/angular-toastr/angular-toastr.tpls.js" type="text/javascript" charset="utf-8"></script>-->
+<!-- App -->
+<script src="js/app.js"></script>
+<script src="js/config.js"></script>
+<script src="js/config.lazyload.js"></script>
+<script src="js/config.router.js"></script>
+<script src="js/services/ui-load.js"></script>
+<script src="js/directives/ui-jq.js"></script>
+<script src="js/directives/ui-validate.js"></script>
+<script src="js/filters/fromNow.js" type="text/javascript" charset="utf-8"></script>
+<script src="vendor/angular/loading-bar/loading-bar.js" type="text/javascript" charset="utf-8"></script>
+<!--公共控制器-->
+<script src="js/controllers/controller.js"></script>
+<!--拖拽-->
+<script src="vendor/jquery/UI/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+<!--控制台日历-->
+<script src="vendor/jquery/fullcalendar/jquery.easyui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="vendor/jquery/fullcalendar/calendar.js" type="text/javascript" charset="utf-8"></script>
+<!--factory-->
+<script src="js/services/factory.js" type="text/javascript" charset="utf-8"></script>
+<!--指令-->
+<script src="js/directives/directives.js"></script>
+<!--筛选器-->
+<script type="text/javascript" src="js/filters/fromNow.js"></script>
+<!--z-tree-->
+<script type="text/javascript" src="vendor/jquery/z-tree/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="vendor/jquery/z-tree/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="vendor/jquery/z-tree/jquery.ztree.exedit.js"></script>
+<script src="vendor/modules/angular-toastr/toastr.min.js" type="text/javascript" charset="utf-8"></script>
+<!--<script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>-->
+<script src="vendor/jquery/charts/echarts.min.js"></script>
+<script type="text/javascript" src="vendor/modules/angular-multi-select-tree/angular-multi-select-tree-0.1.0.js"></script>
+<script type="text/javascript" src="vendor/modules/angular-multi-select-tree/angular-multi-select-tree-0.1.0.tpl.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script src="js/directives/applyform.js" type="text/javascript" charset="utf-8"></script>
+<!--<script src="js/directives/silder.js" type="text/javascript" charset="utf-8"></script>-->
+<script src="vendor/jquery/download.min.js" type="text/javascript" charset="utf-8"></script>
+

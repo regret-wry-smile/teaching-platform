@@ -1,0 +1,222 @@
+treecontrol {
+    /* prevent user selection */
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    /* default */
+   /* font-family: Verdana, Helvetica, Arial, sans-serif;*/
+    font-size:14px;
+    color: #555;
+    text-decoration: none;
+}
+
+treecontrol ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: none;
+    overflow: hidden;
+}
+
+treecontrol li {
+    position: relative;
+    padding: 0 0 0 20px;
+    line-height: 20px;
+}
+
+treecontrol li.tree-expanded i.tree-leaf-head, treecontrol li.tree-collapsed i.tree-leaf-head {display:none;}
+treecontrol li.tree-expanded i.tree-branch-head, treecontrol li.tree-collapsed i.tree-branch-head {display:inline;}
+treecontrol li.tree-leaf i.tree-branch-head {display:none;}
+treecontrol li.tree-leaf i.tree-leaf-head {display:inline;}
+
+treecontrol li i.tree-branch-head {
+    cursor: pointer;
+}
+
+treecontrol li .tree-label {
+    cursor: pointer;
+    display: inline;
+}
+
+
+treecontrol.tree-classic li.tree-expanded i.tree-branch-head {
+    padding: 1px 10px;
+    /*background: url("../images/folder.png") no-repeat;*/
+}
+
+treecontrol.tree-classic li.tree-collapsed i.tree-branch-head {
+    padding: 1px 10px;
+    /*background: url("../images/folder-closed.png") no-repeat;*/
+}
+
+treecontrol.tree-classic li.tree-leaf i.tree-leaf-head {
+    padding: 1px 10px;
+   /* background: url("../images/file.png") no-repeat;*/
+}
+
+treecontrol.tree-classic li .tree-selected {
+    background-color: #aaddff;
+    font-weight: bold;
+}
+
+
+treecontrol.tree-light li.tree-expanded i.tree-branch-head {
+    padding: 1px 10px;
+    background: url("../images/node-opened-2.png") no-repeat;
+}
+
+treecontrol.tree-light li.tree-collapsed i.tree-branch-head {
+    padding: 1px 10px;
+    background: url("../images/node-closed-2.png") no-repeat;
+}
+
+treecontrol.tree-light li.tree-leaf i.tree-leaf-head {
+    padding: 1px 10px;
+    width: 16px; height: 16px;
+    background: none no-repeat;
+}
+
+treecontrol.tree-light li .tree-selected {
+    font-weight: bold;
+}
+
+
+treecontrol.tree-dark li.tree-expanded i.tree-branch-head {
+    padding: 1px 10px;
+    background: url("../images/node-opened-light.png") no-repeat;
+}
+
+treecontrol.tree-dark li.tree-collapsed i.tree-branch-head {
+    padding: 1px 10px;
+    background: url("../images/node-closed-light.png") no-repeat;
+}
+
+treecontrol.tree-dark li.tree-leaf i.tree-leaf-head {
+    padding: 1px 10px;
+    width: 16px; height: 16px;
+    background: none no-repeat;
+}
+
+treecontrol.tree-dark li .tree-selected {
+    font-weight: bold;
+}
+
+treecontrol.tree-dark {
+    color: #ddd;
+}
+.treemenu ul.depart-list li> a {
+	color: #959595;
+	display: block;
+	height: 38px;
+	line-height: 38px;
+	text-indent: 20px;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 100%;
+	position: relative;
+}
+
+.treemenu ul.depart-list li> a:hover {
+	background: #dcdcdc;
+}
+
+.depart-list a {
+	text-indent: 20px !important;
+}
+
+.depart-list .depart-list a {
+	text-indent: 40px !important;
+}
+
+.depart-list .depart-list .depart-list a {
+	text-indent: 60px !important;
+}
+
+treecontrol li {
+	padding: 0;
+	overflow: hidden;
+}
+
+treecontrol.tree-classic li .tree-selected {
+	background: #1575c6 !important;
+	color: #fff !important;
+	font-weight: normal !important;
+}
+
+treecontrol.tree-classic li.tree-expanded i.tree-branch-head,
+treecontrol.tree-classic li.tree-collapsed i.tree-branch-head {
+	margin-right: 5px;
+	border-top: 2px solid #959595;
+	border-left: 2px solid #959595;
+	height: 10px;
+	width: 10px;
+	padding: 0;
+}
+
+treecontrol.tree-classic li.tree-expanded i.tree-branch-head.a3 {
+	-webkit-transform: rotate(-135deg);
+	display: inline-block;
+}
+
+treecontrol.tree-classic li.tree-collapsed i.tree-branch-head.a4 {
+	display: inline-block;
+	-webkit-transform: rotate(135deg);
+}
+
+treecontrol.tree-classic li .tree-selected i {
+	border-color: #fff !important;
+}
+
+treecontrol li .tree-label {
+	display: inline-block;
+	text-indent: 0;
+	width: 200px;
+}
+
+.treemenu .search-result-list {
+	padding: 0 10px;
+	color: #8f8f8f;
+	display: none;
+}
+
+.treemenu .search-result-list a {
+	color: #8f8f8f;
+	font-size: 14px;
+}
+
+.treemenu .search-result-list .hd {
+	font-size: 14px;
+	line-height: 30px;
+}
+
+.treemenu .search-result-list .hd span {
+	float: left;
+}
+
+.treemenu .search-result-list .hd a {
+	font-size: 30px;
+	float: right;
+}
+
+.treemenu .search-result-list .bd a {
+	line-height: 30px;
+	display: block;
+	color: #8f8f8f;
+}
+
+.treemenu .search-result-list .bd a i {
+	color: #d1d1d1;
+	margin-right: 10px;
+}
+
+.treemenu .search-result-list .bd a span:nth-child(2) {
+	width: 90px;
+	display: inline-block;
+}
+
+.treemenu .search-result-list .bd a span+ span {
+	margin-left: 10px;
+}
