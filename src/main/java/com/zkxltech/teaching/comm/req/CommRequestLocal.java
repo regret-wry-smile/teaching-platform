@@ -28,8 +28,6 @@ public class CommRequestLocal extends CommBase  implements CommRequestInterface 
 	public void startAnswer(AnswerRequest req) {
 		logger.info("【本地端请求答题】{} " , format(req.getQuestionType()) );
 		DeviceComm.startAnswer(req);
-		//答题类型，切换界面
-		BrowserManager.selectAnswerType(req.getBusinessQusetionType());
 		//清空缓存
 		TeachingCache.cleanAnswerCache();
 		Global.setStopAnswer(false);
@@ -43,10 +41,6 @@ public class CommRequestLocal extends CommBase  implements CommRequestInterface 
 	@Override
 	public void stopAnswer() {
 		logger.info("【本地端请求停止答题】" );
-		//如果需要同步
-		if(Global.isSynToTeacher()) { //只有本地需要同步时，才需要同步界面
-			BrowserManager.stopAnswer();
-		}
 		Global.setStopAnswer(true);
 		//本地待发送缓存清空
 		LiveNettyClientHelper.cleanSendFailedCache();
@@ -54,8 +48,6 @@ public class CommRequestLocal extends CommBase  implements CommRequestInterface 
 
 	@Override
 	public void selectAnswer(String answer) {
-		// TODO Auto-generated method stub
-		BrowserManager.chartClick(answer);
 	}
 	
 	

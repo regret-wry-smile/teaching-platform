@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.BrowserManager;
 import com.ejet.cache.TeachingCache;
+import com.ejet.core.util.constant.Constant;
 import com.ejet.netty.client.LiveNettyClientHelper;
 import com.ejet.netty.message.LiveAnswerMsg;
 import com.ejet.netty.message.LiveMsgType;
@@ -17,6 +18,8 @@ import com.zkxltech.teaching.msg.AnswerRequest;
 import com.zkxltech.teaching.msg.AnswerResponse;
 import com.zkxltech.teaching.msg.DeviceBindResponse;
 import com.zkxltech.teaching.msg.EchoRequest;
+import com.zkxltech.teaching.service.StudentInfoService;
+import com.zkxltech.teaching.service.impl.StudentInfoServiceImpl;
 
 /**
  * 通信返回总接口
@@ -81,7 +84,12 @@ public class CommResponseLocal extends CommBase implements CommResponseInterface
         logger.info("学生端绑卡: 答题器ID：{},  主键id： {}, 学生名字：{} " , 
         		stu.getIclickerId(),  stu.getId(), stu.getStudentName());
         
-        BrowserManager.bindCard(req);
+        StudentInfoService studentInfoService = new StudentInfoServiceImpl();
+		StudentInfo studentInfo = new StudentInfo();
+		studentInfo.setId(Integer.parseInt(req.getId()));
+		studentInfo.setIclickerId(req.getIclickerId());
+		studentInfo.setStatus(Constant.BING_YES);
+		studentInfoService.updateStudentInfo(studentInfo);
         
 	}
 

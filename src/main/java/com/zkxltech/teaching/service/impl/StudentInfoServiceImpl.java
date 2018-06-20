@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
 
+import com.ejet.cache.BrowserManager;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
@@ -108,6 +109,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result = studentInfoSql.updateStudent(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("修改学生信息成功!");
+				BrowserManager.refreshBindCard();
 			}else {
 				result.setMessage("修改学生信息失败！");
 			}
