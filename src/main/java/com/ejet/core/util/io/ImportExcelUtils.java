@@ -47,11 +47,14 @@ public class ImportExcelUtils {
             //遍历当前sheet中的所有行 
             int cols =  0; //第一行的列数
             for (int j = sheet.getFirstRowNum(); j <= sheet.getLastRowNum(); j++) {  
-                row = sheet.getRow(j);  
-                if(row==null||row.getFirstCellNum()==j){
+                row = sheet.getRow(j);
+                if (row == null) {
+                	continue;
+				}
+                if(row.getFirstCellNum()==j){
                 	cols = row.getLastCellNum();
-                	continue;}  
-                  
+                	continue;
+                }  
                 //遍历所有的列  
                 List<Object> li = new ArrayList<Object>();  
                 for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {  

@@ -20,7 +20,7 @@ public class StudentInfoServiceTest {
 	/*学生名单导入*/
 	@Test
 	public void testImportStudent(){
-		String fileName = "D:/Users/zkxl/Desktop/excel表/双师答题器模板/双师学生导入模板.xlsx";
+		String fileName = "D:\\Users\\zkxl\\Desktop\\excel表\\中科答题器模板\\学生模板.xlsx";
 		Result result = studentInfoService.importStudentInfo(fileName);
 		System.out.println(JSONObject.fromObject(result));
 	}
@@ -62,7 +62,7 @@ public class StudentInfoServiceTest {
 		studentInfo.setStudentName("张三");
 		studentInfo.setStatus("0");
 		studentInfo.setIclickerId("99999999");
-		Result result = studentInfoService.deleteStudentInfo(studentInfo);
+		Result result = studentInfoService.deleteStudentById(studentInfo);
 		System.out.println(JSONObject.fromObject(result));
 	}
 }

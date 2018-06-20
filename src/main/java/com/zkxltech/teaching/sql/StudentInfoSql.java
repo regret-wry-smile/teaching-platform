@@ -19,8 +19,11 @@ public class StudentInfoSql {
 		List<String> sqls = new ArrayList<String>();
 		String sql = "";
 		for (int i = 0; i < rowList.size(); i++) {
-			sql = "insert into student_info (class_id,class_name,student_id,student_name,status) values('"+rowList.get(i).get(0)+"','"+
-					rowList.get(i).get(1)+"','"+rowList.get(i).get(2)+"','"+rowList.get(i).get(3)+"','0')";
+			if(i == 0){
+				sqls.add("delete from student_info where class_id = '" + rowList.get(i).get(0)+"'"); //删除原来的班级学生
+			}
+			sql = "insert into student_info (class_id,class_name,student_id,student_name,iclicker_id,status) values('"+rowList.get(i).get(0)+"','"+
+					rowList.get(i).get(1)+"','"+rowList.get(i).get(2)+"','"+rowList.get(i).get(3)+"','"+rowList.get(i).get(4)+"','0')";
 			sqls.add(sql);
 		}
 		return dbHelper.onUpdateByGroup(sqls);
@@ -75,6 +78,21 @@ public class StudentInfoSql {
 		return dbHelper.onUpdate(sqlBuilder.toString(), studentInfo);
 	}
 	
+	/**
+	 * 主键删除学生
+	 * @param studentInfo
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public Result deleteStudentById(List<Integer> ids) throws IllegalArgumentException, IllegalAccessException{
+		List<String> sqls = new ArrayList<String>();
+		for (int i = 0; i < ids.size(); i++) {
+			sqls.add("delete from student_info where id = "+ids.get(i));
+		}
+		return DBHelper.onUpdateByGroup(sqls);
+	}
+	
 	/*删除学生*/
 	public Result deleteStudent(StudentInfo studentInfo) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder();
@@ -97,7 +115,7 @@ public class StudentInfoSql {
 	}
 	
 	/*根据主键更新学生*/
-	public Result updateStudent(StudentInfo studentInfo) throws IllegalArgumentException, IllegalAccessException{
+	public Result updateStudentById(StudentInfo studentInfo) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder();
 		sqlBuilder.append("update student_info");
 		Field[] files = dbHelper.getFields(studentInfo);

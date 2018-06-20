@@ -84,10 +84,9 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	}
 
 	@Override
-	public Result deleteStudentInfo(Object param) {
+	public Result deleteStudentById(Object param) {
 		try {
-			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseJSON(JSONObject.fromObject(param), StudentInfo.class);
-			result = studentInfoSql.deleteStudent(studentInfo);
+			result = studentInfoSql.deleteStudentById((List<Integer>) param);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("删除学生信息成功!");
 			}else {
@@ -103,10 +102,10 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	}
 
 	@Override
-	public Result updateStudentInfo(Object param) {
+	public Result updateStudentById(Object param) {
 		try {
 			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseJSON(JSONObject.fromObject(param), StudentInfo.class);
-			result = studentInfoSql.updateStudent(studentInfo);
+			result = studentInfoSql.updateStudentById(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("修改学生信息成功!");
 				BrowserManager.refreshBindCard();

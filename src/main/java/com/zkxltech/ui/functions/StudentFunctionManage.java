@@ -29,6 +29,18 @@ public class StudentFunctionManage extends BrowserFunction{
 			String method = (String) params[0]; //页面要调用的方法
 			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数
 			switch (method) {
+			case "insert_student":
+				result = service.insertStudentInfo(param);
+				break;
+			case "import_student":
+				result = service.importStudentInfo(param);
+				break;
+			case "delete_student":
+				result = service.deleteStudentById(param);
+				break;
+			case "update_student":
+				result = service.updateStudentById(param);
+				break;
 			case "select_student":
 				result = service.selectStudentInfo(param);
 				break;

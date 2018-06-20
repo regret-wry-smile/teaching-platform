@@ -89,7 +89,7 @@ public class CommResponseLocal extends CommBase implements CommResponseInterface
 		studentInfo.setId(Integer.parseInt(req.getId()));
 		studentInfo.setIclickerId(req.getIclickerId());
 		studentInfo.setStatus(Constant.BING_YES);
-		studentInfoService.updateStudentInfo(studentInfo);
+		studentInfoService.updateStudentById(studentInfo);
         
 	}
 
