@@ -53,10 +53,16 @@ angular.module('someApp', []).controller('someController', function($scope, $int
 	/*获取学生*/
 	$scope.select_student = function(val) {
 		var param = {
-				className:'601班'
+				classId:'BJ1001'
 		}
 		param =JSON.stringify(param);
-		var result = JSON.parse(execute_student("select_student"),param);
+		var result = JSON.parse(execute_student("select_student",param));
+		alert(JSON.stringify(result));
+	};
+	/*导入学生*/
+	$scope.import_student = function() {
+		var param = "D:/Users/zkxl/Desktop/excel表/中科答题器模板/学生模板.xlsx"
+		var result = JSON.parse(execute_student("import_student",param));
 		alert(JSON.stringify(result));
 	};
 });

@@ -38,10 +38,6 @@ public class LocalClientTest {
 			stu3.setStudentId("123456789");
 			stu3.setStudentName("段国斌");
 			
-			TeachingCache.addNoBindStudent(stu1);
-			TeachingCache.addNoBindStudent(stu2);
-			TeachingCache.addNoBindStudent(stu3);
-			
 			
 		} catch (Exception e) {
 			logger.error("程序启动异常", e);

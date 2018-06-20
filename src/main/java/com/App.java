@@ -81,7 +81,7 @@ public class App {
 		    	Result rs = service.selectStudentInfo(query);
 		    	List<StudentInfo> list = (List<StudentInfo>) rs.getItem();
 		    	//放入到缓存中。
-		    	if(list!=null && list.size()>0) {
+		    	/*if(list!=null && list.size()>0) {
 		    		for(StudentInfo item : list) {
 		    			if(item.getStatus()!=null && item.getStatus().equals("1")) { //已经绑定
 		    				TeachingCache.addBindStudent(item);
@@ -90,7 +90,7 @@ public class App {
 		    			}
 		    		}
 		    	}
-		    	logger.info("人员绑定信息：已经绑定{}, 未绑定:{}",  TeachingCache.getBindSize(), TeachingCache.getUnBindSize());
+		    	logger.info("人员绑定信息：已经绑定{}, 未绑定:{}",  TeachingCache.getBindSize(), TeachingCache.getUnBindSize());*/
 			}
 		}).start();
 	}

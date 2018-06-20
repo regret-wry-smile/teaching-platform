@@ -27,12 +27,7 @@ public class CommRequestLocal extends CommBase  implements CommRequestInterface 
 	@Override
 	public void startAnswer(AnswerRequest req) {
 		logger.info("【本地端请求答题】{} " , format(req.getQuestionType()) );
-		DeviceComm.startAnswer(req);
-		//清空缓存
-		TeachingCache.cleanAnswerCache();
-		Global.setStopAnswer(false);
-		//本地待发送缓存清空
-		LiveNettyClientHelper.cleanSendFailedCache();
+		
 	}
 	
 	/**
@@ -41,9 +36,7 @@ public class CommRequestLocal extends CommBase  implements CommRequestInterface 
 	@Override
 	public void stopAnswer() {
 		logger.info("【本地端请求停止答题】" );
-		Global.setStopAnswer(true);
-		//本地待发送缓存清空
-		LiveNettyClientHelper.cleanSendFailedCache();
+		
 	}
 
 	@Override

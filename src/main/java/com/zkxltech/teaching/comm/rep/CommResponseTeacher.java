@@ -45,51 +45,7 @@ public class CommResponseTeacher extends CommBase implements CommResponseInterfa
 	 */
 	@Override
 	public void bindCardRep(DeviceBindResponse rep) {
-		//首先从已经绑定名单查询
-		String ichickerId = rep.getIclickerId();
 		
-		//获取缓存中已经绑定的名单
-		StudentInfo stu = TeachingCache.getBindStudentByIchickerId(ichickerId);
-		if(stu!=null) {
-			logger.info("教师端答题器已经绑定:{}", ichickerId);
-			//可以页面弹窗提示
-			
-		} else {//从未绑定缓存中顺序取
-			stu = TeachingCache.getStudentForBind();
-		}
-		if(stu==null) { //测试用
-			BrowserManager.retResult("教师端未找学生信息， 请导入学生名单!");
-			return;
-		}
-		stu.setIclickerId(rep.getIclickerId());
-		EchoRequest req = new EchoRequest();
-		req.setId(stu.getId()+"");
-        req.setIclickerId(stu.getIclickerId()); //答题ID
-        req.setStudentName(stu.getStudentName()); //名字
-        req.setClassId(stu.getClassId());  //班级
-        
-        //回显答题器对应名字信息
-		echoName(req);
-		
-		//消息是否需要同步到远端
-        if(Global.isSynToTeacher()) {
-        	LiveAnswerMsg msg = new LiveAnswerMsg();
-	    	msg.setType(LiveMsgType.BIND_CARD_REP);
-	    	msg.setContent(rep);
-	    	LiveNettyClientHelper.send(msg);
-	    }
-        
-        //添加到帮卡缓存
-        TeachingCache.addBindStudent(stu);
-        logger.info("教师端绑卡: 答题器ID：{},  主键id： {}, 学生名字：{} " , 
-        		stu.getIclickerId(),  stu.getId(), stu.getStudentName());
-        
-        StudentInfoService studentInfoService = new StudentInfoServiceImpl();
-		StudentInfo studentInfo = new StudentInfo();
-		studentInfo.setId(Integer.parseInt(req.getId()));
-		studentInfo.setIclickerId(req.getIclickerId());
-		studentInfo.setStatus(Constant.BING_YES);
-		studentInfoService.updateStudentById(studentInfo);
         
 	}
 
@@ -114,17 +70,7 @@ public class CommResponseTeacher extends CommBase implements CommResponseInterfa
 
 	@Override
 	public void answerUpload(AnswerVO vo) {
-		if(Global.isStopAnswer()) {
-			logger.info("【教师端已经停止答题，请求无效】");
-			return;
-		}
-		//保存答题信息
-		try {
-			//添加答题信息到缓存，成功后才同步
-			boolean ret = TeachingCache.addAnswerRep(vo);
-		} catch (Exception e) {
-			logger.error("【教师端上报保存答题信息】", e);
-		}
+		
 	}
 	
 
