@@ -1,32 +1,16 @@
-angular.module('someApp', []).controller('someController', function($scope,$interval) {
-    //定时器
-		var myTimer = $interval(function(){
-			var data = JSON.parse(myCallJava('abc'));
-			var body = document.getElementsByTagName('body')[0];
-			body.style.height = data["bodyHeight"] +"px";
-			body.style.width = data["bodyWidth"] +"px";
-			$scope.isEnd = data["isEnd"];
-			$scope.items=data["list"]; 
-			$scope.questionSum = data["questionSum"];
-			/*  var string = "[{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"50\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"10\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"10\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"10\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"10\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"10\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"10\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"10\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"10\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"10\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"10\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1001\",\"name\":\"周丹\",\"count\":\"10\"},{\"user_id\":\"1002\",\"name\":\"张三\",\"count\":\"7\"},{\"user_id\":\"1003\",\"name\":\"刘兴\",\"count\":\"11\"},{\"user_id\":\"1004\",\"name\":\"王权\",\"count\":\"6\"},{\"user_id\":\"1005\",\"name\":\"张淼\",\"count\":\"9\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"},{\"user_id\":\"1006\",\"name\":\"王二虎\",\"count\":\"10\"}]";
-					console.log(JSON.parse(string));
-					$scope.items=JSON.parse(string);  
-					$scope.questionSum = 50; */
-			if($scope.isEnd){
-				$scope.stopTimer;
-			}
-					
-		},500);
-	
-		//关闭定时器
-		$scope.stopTimer = function(){  
-		   $interval.cancel(myTimer);  
-		}; 
-		
-		//查看详情
-		$scope.showDetail = function(student_id){
-			if($scope.isEnd){
-				showDetail(student_id) ; 
-			}
-		}
-});
+'use strict';
+
+angular.module('app', [
+    'ngAnimate',
+    'ui.router',
+    'ui.bootstrap',
+    'ui.load',
+    'ui.jq',
+    'ui.validate',
+    'oc.lazyLoad',
+    'ngSanitize'
+  
+  
+   
+   
+]);
