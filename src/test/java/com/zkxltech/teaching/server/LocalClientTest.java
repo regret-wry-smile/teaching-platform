@@ -7,12 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.App;
-import com.ejet.cache.TeachingCache;
 import com.ejet.netty.client.LiveNettyClient;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
-import com.zkxltech.teaching.device.DeviceComm;
 import com.zkxltech.teaching.service.impl.StudentInfoServiceImpl;
 
 public class LocalClientTest {

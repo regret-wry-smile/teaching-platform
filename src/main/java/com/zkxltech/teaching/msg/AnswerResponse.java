@@ -29,20 +29,6 @@ public class AnswerResponse extends BaseRequestMessage {
 	 * 7: 6键单选题（对错键复⽤EF键）
 	 *  */
 	private String answerType;
-	/** 
-	 * 答题信息 
-	 * 1：单题单选：  对应A\B\C\D其中一个（根据范围来）
-	 * 2: 是非判断：  对应Y\N（Y：对、懂  N：错、不懂）
-	 * 3: 抢红包：
-	 * 4: 单题多选: 多选用逗号","进行分割。
-	 * 5: 多题单选：
-	 * 6: 通用数据类型（所有按键都可以按，按下之后立刻提交）
-	 * 7: 6键单选题（对错键复⽤EF键）
-	 * 
-	 * 1单选题：对应A\B\C\D
-	 * 是非判断：对应Y\N
-	 * 
-	 * */
 	/** 答题器时间 （指令接收器时间）*/
 	private String answerDateTime;
 	/**

@@ -3,13 +3,8 @@ package com.zkxltech.teaching.comm.req;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ejet.cache.BrowserManager;
-import com.ejet.cache.TeachingCache;
-import com.ejet.netty.client.LiveNettyClientHelper;
-import com.zkxltech.config.Global;
 import com.zkxltech.teaching.comm.CommBase;
 import com.zkxltech.teaching.comm.CommRequestInterface;
-import com.zkxltech.teaching.device.DeviceComm;
 import com.zkxltech.teaching.msg.AnswerRequest;
 
 /**
