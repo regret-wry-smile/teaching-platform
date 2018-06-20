@@ -40,18 +40,20 @@ public class MainPage extends Dialog {
 	protected Display display;
 	protected Shell shell;
 	private MainStart mainStart;
-	private boolean isMax = false;/*是否最大化*/
 	
-	int Window_Width;  
-    int Window_Height; 
-    int shellWidth;
-    int shellHeight;
+	private int Window_Width; /*屏幕宽度*/ 
+	private int Window_Height; /*屏幕高度*/ 
+	private int shellWidth;/*窗口宽度*/ 
+	private int shellHeight;/*窗口高度*/ 
     
-    private boolean isTest; //是否为调试模式
+    private boolean isTest; /*是否为调试模式*/
+	private boolean isMax = false;/*是否最大化*/
+	private String pageType; /*页面类型1答题2设置3记录*/
     
-	public MainPage(Shell parent,MainStart mainStart) {
+	public MainPage(Shell parent,MainStart mainStart,String pageType) {
 		super(parent);
 		this.mainStart = mainStart;
+		this.pageType = pageType;
 	}
 
 	public Object open() {
@@ -239,7 +241,17 @@ public class MainPage extends Dialog {
 		if (isTest) {
 			PageConstant.browser.setUrl(PageConstant.TEST_PAGE_URL);
 		}else {
-			PageConstant.browser.setUrl(PageConstant.MAIN_PAGE_URL);
+			switch (pageType) {
+			case "1":
+				PageConstant.browser.setUrl(PageConstant.PAGE_ANSWER_URL);
+				break;
+			case "2":
+				PageConstant.browser.setUrl(PageConstant.PAGE_SET_URL);
+				break;
+			case "3":
+				PageConstant.browser.setUrl(PageConstant.PAGE_RECORD_URL);
+				break;
+			}
 		}
 		
 		

@@ -7,20 +7,27 @@ public class PageConstant {
 	 * 浏览器对象
 	 */
 	public static Browser browser;
-	
+	/********页面路径常量*******/
 	private final static String COMMON_URL = System.getProperty("user.dir").replaceAll("\\\\", "/") + "/" + "htmls";
-	/**
-	 * 主页面路径
-	 */
-	public final static String MAIN_PAGE_URL = COMMON_URL+"/showAnswer.html";
-	
 	/**
 	 * 调试页面路径
 	 */
 	public final static String TEST_PAGE_URL = COMMON_URL+"/myTest.html";
+	/**
+	 * 答题页面类型
+	 */
+	public static String PAGE_ANSWER_URL = COMMON_URL+"/answer.html";
+	/**
+	 * 设置页面类型
+	 */
+	public static String PAGE_SET_URL = COMMON_URL+"/set.html";
+	/**
+	 * 记录页面类型
+	 */
+	public static String PAGE_RECORD_URL = COMMON_URL+"/record.html";
 	
+	/********图片路径常量*******/
 	public static String imagePack = "/com/zkxltech/image";
-	
 	/**
 	 * 头部左上角图片
 	 */
@@ -54,4 +61,5 @@ public class PageConstant {
 	 * 最小化——黑色
 	 */
 	public static String min_black = imagePack + "/min_black.png";
+	
 }

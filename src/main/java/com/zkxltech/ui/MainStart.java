@@ -27,6 +27,7 @@ import com.sun.awt.AWTUtilities;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
 import com.zkxltech.ui.util.PageConstant;
+import com.zkxltech.ui.util.StringConstant;
 import com.zkxltech.ui.util.SwtTools;
 import org.eclipse.swt.events.MouseTrackAdapter;
 /*
@@ -38,7 +39,7 @@ public class MainStart {
 	protected Object result;
 	public static Shell shell;
 	
-	/*悬浮框对应参数*/
+	/*悬浮框对应参数--图标部分*/
 	public static JFrame frame;
 	private Panel panel;
 	private String title = Global.VERSION; //窗口标题
@@ -49,7 +50,7 @@ public class MainStart {
 	int shellX,shellY;/* 悬浮窗口坐标 */
 	int x1, y1;// 鼠标释放位置
 	int mouse_X = 0, mouse_Y = 0;
-	
+	/*悬浮框对应参数--图标上方部分*/
 	private int shellMaxWidth;/* 窗口最大宽度 */
 	private int shellMaxHeight;/* 窗口最大高度 */
 	private int shellMainX;/* 窗口x坐标 */
@@ -60,9 +61,9 @@ public class MainStart {
 	private static MainStart mianStart;
 	private boolean isTest;
 	
-	private static boolean isOver = false;
+	private static boolean isOver = false;/*鼠标是否悬浮在图标上*/
 	private Thread thread;
-
+	
 	public MainStart(Shell parent) {
 		shell = parent;
 	}
@@ -215,11 +216,13 @@ public class MainStart {
 			
 			@Override
 			public void mouseEntered(java.awt.event.MouseEvent e) {
-				Display.getDefault().syncExec(new Runnable() {
-				    public void run() {
-				    	showShell();
-				    	}
-				    });
+				if(!isOver){
+					Display.getDefault().syncExec(new Runnable() {
+					    public void run() {
+					    	showShell();
+					    	}
+					    });
+				}
 			}
 			@Override
 			public void mouseExited(java.awt.event.MouseEvent e) {
@@ -238,18 +241,19 @@ public class MainStart {
 			
 			@Override
 			public void mouseMoved(java.awt.event.MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mouseDragged(java.awt.event.MouseEvent e) {
-				if (!isShow) {
-					Display.getDefault().syncExec(new Runnable() {
-					    public void run() {
+				
+				Display.getDefault().syncExec(new Runnable() {
+				    public void run() {
+				    	if(shell.isVisible()){
 					    	closeShell();
-					    	}
-					    });
+				    	}
+				    	}
+				    });
+				if (!isShow) {
 					shellX=x1 + e.getXOnScreen()-mouse_X;
 					shellY=y1 +e.getYOnScreen()-mouse_Y;
 					frame.setBounds(shellX, shellY, Frame_Width, Frame_Height);
@@ -317,7 +321,8 @@ public class MainStart {
 				if(e.button == 1){
 					frame.setVisible(false);
 					shell.setVisible(false);
-					new MainPage(shell,mianStart).open();
+					/*920,600*/
+					new MainPage(shell,mianStart,StringConstant.PAGE_ANSWER_TYPE).open();
 				}
 			}
 		});
@@ -331,7 +336,9 @@ public class MainStart {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				if(e.button == 1){
-					
+					frame.setVisible(false);
+					shell.setVisible(false);
+					new MainPage(shell,mianStart,StringConstant.PAGE_SET_TYPE).open();
 				}
 			}
 		});
@@ -345,7 +352,9 @@ public class MainStart {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				if(e.button == 1){
-					
+					frame.setVisible(false);
+					shell.setVisible(false);
+					new MainPage(shell,mianStart,StringConstant.PAGE_RECORD_TYPE).open();
 				}
 			}
 		});
@@ -457,7 +466,6 @@ public class MainStart {
 							isOver = false;
 							Display.getDefault().syncExec(new Runnable() {
 							    public void run() {
-							    	System.out.println(123);
 							    	closeShell();
 							    	}
 							    });

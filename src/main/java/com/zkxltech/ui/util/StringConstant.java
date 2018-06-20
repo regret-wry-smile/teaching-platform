@@ -13,4 +13,16 @@ public class StringConstant {
 	 * 服务器类型(服务器获取)
 	 */
 	public static String ATYPE_SERVER = "1";
+	/**
+	 * 答题页面类型
+	 */
+	public static String PAGE_ANSWER_TYPE = "1";
+	/**
+	 * 设置页面类型
+	 */
+	public static String PAGE_SET_TYPE = "2";
+	/**
+	 * 记录页面类型
+	 */
+	public static String PAGE_RECORD_TYPE = "3";
 }
