@@ -49,7 +49,7 @@ public class MainStart {
 	int Window_Width = Toolkit.getDefaultToolkit().getScreenSize().width;
 	int Window_Height = Toolkit.getDefaultToolkit().getScreenSize().height;
 	int Frame_Width = 59;
-	int Frame_Height = 60;
+	int Frame_Height = 59;
 	int shellX,shellY;/* 悬浮窗口坐标 */
 	int x1, y1;// 鼠标释放位置
 	int mouse_X = 0, mouse_Y = 0;
@@ -67,7 +67,6 @@ public class MainStart {
 	private static boolean isShow = false;
 	private static boolean flag = false;
 	
-	List<CLabel> selectCLabels = new ArrayList<CLabel>();
 	
 	public MainStart(Shell parent) {
 		shell = parent;
@@ -94,7 +93,7 @@ public class MainStart {
 	public void resetValue(){
 		isOver = false;
 		isShow = false;
-		flag = false;
+		flag = true;
 	}
 	
 	public void initImage() {
@@ -132,6 +131,8 @@ public class MainStart {
 		resetValue();
 		frame.setVisible(true);
 		shell.setVisible(false);
+		changeImage();
+		frame.repaint();
 	}
 	
 	/* 初始化配置 */
@@ -213,19 +214,19 @@ public class MainStart {
 //				y = shellY;
 //				x1 =shellX;
 //				y1 =shellY;
-				if (!isShow) {
-					Display.getDefault().syncExec(new Runnable() {
-					    public void run() {
-					    	showShell();
-					    	}
-					    });
-				}else {
-					Display.getDefault().syncExec(new Runnable() {
-					    public void run() {
-					    	closeShell();
-					    	}
-					    }); 
-				}
+//				if (!isShow) {
+//					Display.getDefault().syncExec(new Runnable() {
+//					    public void run() {
+//					    	showShell();
+//					    	}
+//					    });
+//				}else {
+//					Display.getDefault().syncExec(new Runnable() {
+//					    public void run() {
+//					    	closeShell();
+//					    	}
+//					    }); 
+//				}
 			}
 			
 			@Override
@@ -308,7 +309,6 @@ public class MainStart {
 		CLabel cLabel01 = new CLabel(shell, SWT.NONE);
 		cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
 		cLabel01.setBounds(0, 0, 60, 38);
-		cLabel01.setData("select", "close");
 		cLabel01.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -324,12 +324,10 @@ public class MainStart {
 				}
 			}
 		});
-		selectCLabels.add(cLabel01);
 		//答题
 		CLabel cLabel02 = new CLabel(shell, SWT.NONE);
 		cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
 		cLabel02.setBounds(0, 38, 59, 38);
-		cLabel02.setData("select", "answer");
 		cLabel02.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -340,12 +338,10 @@ public class MainStart {
 				}
 			}
 		});
-		selectCLabels.add(cLabel02);
 		//设置
 		CLabel cLabel03 = new CLabel(shell, SWT.NONE);
 		cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
 		cLabel03.setBounds(0, 76, 60, 40);
-		cLabel03.setData("select", "set");
 		cLabel03.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -356,12 +352,10 @@ public class MainStart {
 				}
 			}
 		});
-		selectCLabels.add(cLabel03);
 		//记录
 		CLabel cLabel04 = new CLabel(shell, SWT.NONE);
 		cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
 		cLabel04.setBounds(0, 114, 60, 40);
-		cLabel04.setData("select", "record");
 		cLabel04.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -372,7 +366,6 @@ public class MainStart {
 				}
 			}
 		});
-		selectCLabels.add(cLabel04);
 		cLabel01.addMouseTrackListener(new MouseTrackAdapter() {
 		
 			@Override
