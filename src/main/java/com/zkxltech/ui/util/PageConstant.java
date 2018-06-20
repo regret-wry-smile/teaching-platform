@@ -42,10 +42,38 @@ public class PageConstant {
 	 */
 	public static String image02 = imagePack + "/答题-悬浮控件_13-23.png";
 	/**
-	 * 答题图片
+	 * 关闭图片(未选中)
 	 */
-	public static String answer_img = imagePack + "/答题-悬浮控件_13-16.png";
-	
+	public static String select_close = imagePack + "/答题-悬浮控件_13.png";
+	/**
+	 * 答题图片(未选中)
+	 */
+	public static String select_answer = imagePack + "/答题-悬浮控件_13-16.png";
+	/**
+	 * 设置图片(未选中)
+	 */
+	public static String select_set = imagePack + "/答题-悬浮控件_13-18.png";
+	/**
+	 * 记录图片(未选中)
+	 */
+	public static String select_record = imagePack + "/答题-悬浮控件_13-20.png";
+	/**
+	 * 关闭图片(选中)
+	 */
+	public static String select_close02 = imagePack + "/答题-悬浮控件_13(2).png";
+	/**
+	 * 答题图片(选中)
+	 */
+	public static String select_answer02 = imagePack + "/答题-悬浮控件_13-16(2).png";
+	/**
+	 * 设置图片(选中)
+	 */
+	public static String select_set02 = imagePack + "/答题-悬浮控件_13-18(2).png";
+	/**
+	 * 记录图片(选中)
+	 */
+	public static String select_record02 = imagePack + "/答题-悬浮控件_13-20(2).png";
+	/**
 	/**
 	 * 白色框关闭图片
 	 */

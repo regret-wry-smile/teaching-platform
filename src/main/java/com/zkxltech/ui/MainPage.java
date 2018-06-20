@@ -77,13 +77,11 @@ public class MainPage extends Dialog {
 	    shellWidth = (int) (Window_Width * 0.48);
 	    shellHeight = shellWidth * 600 / 920;
 
-	    System.out.println(shellWidth+"======"+shellHeight);
 	    /*窗口宽高*/
 	    if(shellWidth <= 920 || shellHeight <= 600){
 	    	shellWidth = 920;
 			shellHeight = 600;
 	    }
-	    System.out.println(shellWidth+"======"+shellHeight);
 		isTest = Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test());
 	}
 
