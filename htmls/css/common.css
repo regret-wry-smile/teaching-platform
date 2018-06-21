@@ -2,16 +2,12 @@ body,
 html {
 	height: 100%;
 	width: 100%;
-	font-size: 16px;
 }
-
+html{
+	font-size: 100px;
+}
 body {
 	font-family: "Helvetica Neue", "Helvetica", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Arial", "sans-serif";
-	font-size: 16px;
-}
-.bg{
-	background: url(../image/bg.png) no-repeat center ;
-	background-size: 100% 100%;
 }
 ul,
 li {
@@ -60,4 +56,228 @@ textarea {
 
 p {
 	margin: 0;
+}
+/*左右浮动*/
+.pull-left{
+	float: left;
+}
+.pull-right{
+	float: right;
+}
+
+/*清楚浮动*/
+.clearfix:before,
+.clearfix:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
+.clearfix {
+	zoom: 1;
+}
+
+.bg{
+	background: url(../image/bg.png) no-repeat center ;
+	background-size: 100% 100%;
+}
+.bgf5{
+	background-color: #f5f5f5;
+}	
+.header {
+   /* height: 1.10rem;*/
+    line-height: 1.10rem;
+    vertical-align: middle;
+    padding:0.0rem  0.15rem;
+}
+ 
+ .header img{
+    display: inline-block;
+    width:auto ;
+    margin-right: 0.25rem;
+}
+ .header span{
+    font-size: 0.27rem;
+    color: #fff;
+    display: inline-block;
+}
+
+.content{
+	margin:0 0.15rem 0.15rem;
+	padding: 0.25rem;
+	
+	color: #3e3e3e;
+} 
+
+.form-group label{
+	font-size: 0.16rem;
+	text-align: left !important;
+}
+.ro-switch {
+	display: inline-block;
+	cursor: pointer;
+}
+
+.ro-switch input {
+	display: none;
+}
+
+.ro-switch .slider {
+	margin: 0.08rem 0;
+	padding: 0.01rem 0.30rem 0.01rem 0.00rem;
+	border-radius: 10px;
+	background: #e2e2e2;
+	transition: padding 0.2s ease-in-out, background 0.2s ease-in-out;
+}
+
+.ro-switch .slider .slider-thumb {
+	width: 0.20rem;
+	height: 0.20rem;
+	background: #FFF;
+	border-radius: 45px;
+	margin: 0 -0.01rem;
+}
+
+.ro-switch input:checked+ .slider {
+	background: #e2e2e2;
+	padding: 0.01rem 0.00rem 0.01rem 0.30rem;
+}
+.ro-switch input:checked + .slider .slider-thumb{
+	background: #4cbf40;
+}
+
+/*操作按钮*/
+.opbtn a{
+	display: inline-block;
+	width: 0.80rem;
+	font-size: 0.14rem;
+	text-align: left;
+}
+.opbtn a.warning{
+	color: #ca4d4d;
+}
+button.btn-lg{
+	width: 1.68rem;
+	font-size: 0.16rem;
+	padding:0.08rem ;
+	background: #3c96ff;
+	border-radius: 10px;
+}
+button{
+	font-size: 0.16rem;
+	padding:0.08rem ;
+	background: #3c96ff;
+	border-radius: 10px;
+}
+button:hover{
+	background: #297fe4;	
+}
+
+.mt5{
+	margin-top: 0.05rem;
+}
+.mt10{
+	margin-top: 0.10rem;
+}
+.mt20{
+	margin-top: 0.20rem;
+}
+.mt30{
+	margin-top: 0.30rem;
+}
+.mt40{
+	margin-top: 0.40rem;
+}
+.ml5{
+	margin-left: 0.05rem;
+}
+.ml10{
+	margin-left: 0.10rem;
+}
+.ml20{
+	margin-left: 0.20rem;
+}
+.ml25{
+	margin-left: 0.25rem;
+}
+.ml30{
+	margin-left: 0.30rem;
+}
+.ml32{
+	margin-left: 0.32rem;;
+}
+.ml40{
+	margin-left: 0.40rem;
+}
+.mr5{
+	margin-right: 0.05rem;
+}
+.mb10{
+	margin-bottom: 0.10rem;
+}
+.mb20{
+	margin-bottom: 0.20rem;
+}
+.pr5{
+	padding-right: 0.05rem;
+}
+.wd60{
+	width: 0.60rem;
+}
+.wd80{
+	width: 0.80rem;
+}
+.wd100{
+	width: 1rem;
+}
+a.del{
+	color: #ca4d4d;
+}
+a:active{
+	color: #ff6600;
+}
+/*.form-group input.md{
+	width: 1.55rem !important;
+}*/
+
+
+/*学生管理*/
+/*.pannel table.table thead tr th{
+	height:0.24rem;
+	line-height: 0.24rem ;
+	padding: 0.08rem ;
+	vertical-align: middle;
+}*/
+table.classlist tbody tr:hover,
+table.userlist tbody tr:hover{
+	background: #eaeaea;
+}
+table tbody tr td a.del,
+table tbody tr td a.edit {
+	visibility: hidden;
+}
+table  tbody tr:hover td a.del,table  tbody tr:hover td a.edit{
+	visibility: visible;
+}
+table.classlist thead tr th{
+	height: 0.25rem;
+	line-height: 0.25rem;
+	padding: 0.08rem ;
+	vertical-align: middle;
+}
+
+table.classlist tbody tr td{
+	height: 0.26rem;
+	line-height: 0.26rem;
+	padding: 0.06rem ;
+}
+table.userlist thead tr th{
+	height: 0.20rem;
+	line-height: 0.20rem;
+	padding: 0.08rem ;
+	vertical-align: middle;
+}
+table.userlist thead tr th input[type='checkbox']{
+	margin-top: -0.03rem;
+	vertical-align: middle;
 }
