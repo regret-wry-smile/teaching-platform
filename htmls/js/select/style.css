@@ -50,7 +50,8 @@ li{
 
 .newSelect .arrow{
 	float: right;
-	margin: 10px 10px 0px 0px;
+	/*margin: 10px 10px 0px 0px;*/
+	margin: 14px 10px 0px 0px;
 	width:0;
 	height:0;
 	border-left:8px solid transparent;

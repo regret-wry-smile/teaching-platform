@@ -32,24 +32,40 @@
 	<body class="bg" ng-controller="setStuManageCtrl">
 		<script type="text/ng-template" id="addClassModal.html">
 			<!--新增班级start-->
-				<form name="myForm" novalidate="novalidate">
+				<form name="myForm"  class="form-horizontal clearfix" role="form" novalidate="novalidate">
 					<div class="modal-header">
 						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
 						<h4 class="modal-title">添加班级</h4>
 					</div>
-					<div class="modal-body" id="addDepartModal">
-						<div class="greygroup clearfix">
+					<div class="modal-body" >
+						<div class="form-group">
+					  	<label for="firstname" class="col-sm-2 control-label">名称</label>
+					    <div class="col-sm-10">
+				    	<input type="number" autocomplete="off" name="stunum" id="" value=""  class="form-control" ng-model="classes.name" required maxlength="10" placeholder="长度不能超过10位"/>			
+						</div>
+						</div>
+						<div class="form-group">
+					  	<label for="firstname" class="col-sm-2 control-label">选择状态</label>
+					    <div class="col-sm-10">
+					    	<select class="single"  ng-model="classes.type">
+					   			<option value="本地">本地</option>
+								<option value="在线">在线</option>
+							</select>
+							</div>
+						</div>
+						
+						<!--<div class="greygroup clearfix">
 							<label class="pull-left">名称</label>
 							<input type="text" autocomplete="off" name="name" id="" value="" class="lg pull-left" ng-model="classes.name" required maxlength="10" placeholder="长度不能超过10位"/>
 							<span ng-show="myForm.name.$invalid" class="warning"><b>*</b></span>
-						</div>
-						<div class="greygroup clearfix">
+						</div>-->
+						<!--<div class="greygroup clearfix">
 							<label class="pull-left">选择状态</label>
 							<select class="pull-left sm" ng-model="classes.type">
 								<option value="本地">本地</option>
 								<option value="在线">在线</option>
 							</select>
-						</div>
+						</div>-->
 					</div>
 					<div class="modal-footer text-center">
 						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>

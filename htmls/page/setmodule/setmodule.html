@@ -14,6 +14,7 @@
 		<link rel="stylesheet" href="../../css/common.css" />
 		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
 		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
 		<script src="../../js/angular-toastr/angular-toastr.min.js"></script>
 		<script src="../../js/angular-toastr/angular-toastr.tpls.min.js"></script>
 		
@@ -49,8 +50,8 @@
 				  <div class="form-group">
 				    <label for="firstname" class="col-sm-2 control-label">系统信道设置</label>
 				    <div class="col-sm-3">
-			    	<select class="single" >
-						<option value="">第一组</option>
+			    	<select class="single" ng-model="chain">
+						<option value="{{item}}" ng-repeat="item in infoAllNameList track by $index">{{item}}</option>
 					</select>
 			    	<!--<select class="mySelect" id="mySelect" >
 			            <option value="1">第一组</option>
@@ -63,8 +64,12 @@
 				  <div class="form-group">
 				    <label for="lastname" class="col-sm-2 control-label">答题器发送功率</label>
 				   	<div class="col-sm-3">
-				   		<select class="single" >
-						<option value="">5</option>
+				   		<select class="single"  ng-model="sendpower">
+				   			<option value="1">1</option>
+				   			<option value="2">2</option>
+				   			<option value="3">3</option>
+				   			<option value="4">4</option>
+				   			<option value="5">5</option>
 					</select>
 				   <!-- <select class="mySelect"  >
 			            <option value="1">7</option>
@@ -90,7 +95,7 @@
 				<div class="opbtn clearfix">
 				  	<a href="javascript:;" ng-click="readSet()">读取</a>
 				  	<a href="javascript:;" ng-click="set()">设置</a>
-				  	<a href="javascript:;" ng-click="setDefalut()">设为默认值</a>
+				  	<a href="javascript:;" ng-click="setDefault()">设为默认值</a>
 			  	</div>
 			  	<div class="operatebtn mt20 clearfix">
 			  		<button class="btn btn-primary btn-lg" ng-click="stuManage()">学生管理</button>

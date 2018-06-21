@@ -1,6 +1,20 @@
 //定义模块时引入依赖  
 var app=angular.module('app',['ui.bootstrap','toastr']);
 	app.controller('setStuManageCtrl', function($rootScope,$scope,$modal) {
+	$scope.studenList=[];//学生列表数组
+		/*获取学生*/
+	var _select_student = function(val) {
+		var param = {
+				classId:'BJ1001'
+		}
+		param =JSON.stringify(param);
+		$scope.result = JSON.parse(execute_student("select_student",param));
+		$scope.studenList=$scope.result.item;
+		alert(JSON.stringify($scope.result))
+	};
+	var _init=function(){
+		_select_student();
+	}();
 		//批量导入学生
 		$scope.patchImport = function() {
 			var modalInstance = $modal.open({
@@ -104,6 +118,103 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		});
 		
 	}
+	//全选
+	$scope.selectAll = function(data) {
+		if($scope.selected) {
+			$scope.onechecked = [];
+			angular.forEach($scope.studentList, function(i) {
+				i.checked = true;
+				var item = i;
+				$scope.checkedId.push(i.id.toString());
+				$scope.onechecked.push(item);
+
+			})
+		} else {
+			angular.forEach($scope.studentList, function(i) {
+				i.checked = false;
+				$scope.onechecked = [];
+				$scope.checkedId = [];
+			})
+		}
+
+	};
+	//单选
+	$scope.selectOne = function(param) {
+		$scope.onechecked = [];
+		$scope.checkedId = [];
+		angular.forEach($scope.studentList, function(i) {
+			var index = $scope.checkedId.indexOf(i.id);
+			//console.log(JSON.stringify(index));
+			if(i.checked && index === -1) {
+				var item = i;
+				$scope.onechecked.push(item);
+				$scope.checkedId.push(i.id.toString());
+
+			} else if(!i.checked && index !== -1) {
+				$scope.selected = false;
+				$scope.onechecked.splice(index, 1);
+				$scope.checkedId.splice(index, 1);
+			};
+		})
+
+		if($scope.studentList.length === $scope.onechecked.length) {
+			$scope.selected = true;
+		} else {
+			$scope.selected = false;
+		}
+		console.log($scope.onechecked);
+	}
+	
+	//删除学生
+	$scope.deleteStudent=function(){
+		/*if($scope.checkedId.length>0){*/
+			var content="删除选中学生";
+			var modalInstance = $modal.open({
+				templateUrl: 'sureModal.html',
+				controller: 'sureModalCtrl',
+				size: 'sm',
+				resolve: {
+					content: function() {
+						return content;
+					}
+				}
+			});
+
+			modalInstance.result.then(function(info) {
+				//student_manage("delete_student",$rootScope.className,$scope.checkedId);
+				$scope.onechecked = [];
+				$scope.checkedId = [];
+				$scope.selected=false;
+			}, function() {
+
+				//$log.info('Modal dismissed at: ' + new Date());
+			});
+		/*}else{
+			toastr.warning("请选择学生");
+		}*/
+		
+	}
+	//清除白名单
+	$scope.clearStu=function(){
+		var content="清除白名单";
+		var modalInstance = $modal.open({
+			templateUrl: 'sureModal.html',
+			controller: 'sureModalCtrl',
+			size: 'sm',
+			resolve: {
+				content: function() {
+					return content;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(info) {
+			//发送指令
+			student_manage("clear_bind",$rootScope.className);
+		}, function() {
+			//$log.info('Modal dismissed at: ' + new Date());
+		});
+	}
 	})
 	
 	app.controller('uploadfileModalCtrl', function($scope,$modalInstance) {
@@ -125,12 +236,12 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		}
 	})
 	//匹配绑定
-	app.controller('findBindModalCtrl',function($scope,info,$modalInstance,$interval){
+	app.controller('findBindModalCtrl',function($scope,$modalInstance,$interval){
 		//student_manage("start_bind",info);
 		//定时器
 		$scope.ok = function() {
 			/*关闭定时器*/
-			$interval.cancel(myTimer);
+			/*$interval.cancel(myTimer);*/
 			$modalInstance.close();
 		}
 	})
