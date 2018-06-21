@@ -7,14 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.core.util.io.IOUtils;
-import com.ejet.netty.client.LiveNettyClientHelper;
-import com.ejet.netty.server.LiveNettyServer;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
-import com.zkxltech.teaching.device.DeviceComm;
-import com.zkxltech.teaching.service.impl.StudentInfoServiceImpl;
+import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 /**
  *
@@ -29,11 +26,11 @@ public class App {
 	 */
 	public static void startNettyServer() throws Exception {
 		//Netty默认调用启动方法
-		logger.info("服务端启动{}:{}........", ConfigConstant.teacherServerConf.getServer_bind_ip(),
-				ConfigConstant.teacherServerConf.getServer_bind_port());
-		LiveNettyServer server = new LiveNettyServer(ConfigConstant.teacherServerConf.getServer_bind_ip(),
-				ConfigConstant.teacherServerConf.getServer_bind_port());
-		server.bind();
+//		logger.info("服务端启动{}:{}........", ConfigConstant.teacherServerConf.getServer_bind_ip(),
+//				ConfigConstant.teacherServerConf.getServer_bind_port());
+//		LiveNettyServer server = new LiveNettyServer(ConfigConstant.teacherServerConf.getServer_bind_ip(),
+//				ConfigConstant.teacherServerConf.getServer_bind_port());
+//		server.bind();
 		
 	}
 	
@@ -47,22 +44,22 @@ public class App {
     		PropertyConfigurator.configure(ConfigConstant.log4jFile);
     		logger.info("系统启动 {} =======================", Global.VERSION );
 			//程序启动模式，服务端还是客户端
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						if(Global.isTeacher()) { //作为教师端启动
-							startNettyServer();
-						} else  {
-							LiveNettyClientHelper.startNettyClient();
-							//启动设备通信
-					    	DeviceComm.init();
-						}
-					} catch (Exception e) {
-						logger.error("启动Netty服务错误", e);
-					}
-				}
-			}).start();
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					try {
+//						if(Global.isTeacher()) { //作为教师端启动
+//							startNettyServer();
+//						} else  {
+//							LiveNettyClientHelper.startNettyClient();
+//							//启动设备通信
+//					    	DeviceComm.init();
+//						}
+//					} catch (Exception e) {
+//						logger.error("启动Netty服务错误", e);
+//					}
+//				}
+//			}).start();
 			
         } catch (Exception e) {
 			logger.error("程序启动异常", e);

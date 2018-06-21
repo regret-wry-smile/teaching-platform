@@ -5,10 +5,10 @@ import org.eclipse.swt.browser.BrowserFunction;
 
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
-import com.zkxltech.teaching.service.SettingService;
-import com.zkxltech.teaching.service.StudentInfoService;
-import com.zkxltech.teaching.service.impl.SettingServiceImpl;
-import com.zkxltech.teaching.service.impl.StudentInfoServiceImpl;
+import com.zkxltech.service.SettingService;
+import com.zkxltech.service.StudentInfoService;
+import com.zkxltech.service.impl.SettingServiceImpl;
+import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
 

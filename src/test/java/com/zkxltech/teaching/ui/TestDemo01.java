@@ -3,8 +3,8 @@ package com.zkxltech.teaching.ui;
 import org.junit.Test;
 
 import com.zkxltech.domain.Result;
-import com.zkxltech.teaching.service.SettingService;
-import com.zkxltech.teaching.service.impl.SettingServiceImpl;
+import com.zkxltech.service.SettingService;
+import com.zkxltech.service.impl.SettingServiceImpl;
 import com.zkxltech.ui.enums.SettingEnum;
 
 import net.sf.json.JSONObject;

@@ -39,12 +39,12 @@
 		</dependency>
 
 		<!-- usb通信 -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.zkxltech.teaching</groupId>
 			<artifactId>teaching-receiver</artifactId>
 			<version>1.0.1</version>
 			<scope>compile</scope>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>commons-collections</groupId>

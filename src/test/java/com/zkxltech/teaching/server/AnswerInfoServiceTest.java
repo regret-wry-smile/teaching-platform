@@ -8,8 +8,8 @@ import org.junit.Test;
 
 import com.zkxltech.domain.AnswerInfo;
 import com.zkxltech.domain.Result;
-import com.zkxltech.teaching.service.AnswerInfoService;
-import com.zkxltech.teaching.service.impl.AnswerInfoServiceImpl;
+import com.zkxltech.service.AnswerInfoService;
+import com.zkxltech.service.impl.AnswerInfoServiceImpl;
 
 import net.sf.json.JSONObject;
 

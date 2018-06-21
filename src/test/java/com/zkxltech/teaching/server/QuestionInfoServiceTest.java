@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import com.zkxltech.domain.AnswerInfo;
 import com.zkxltech.domain.Result;
-import com.zkxltech.teaching.service.QuestionService;
-import com.zkxltech.teaching.service.impl.QuestionServiceImpl;
+import com.zkxltech.service.QuestionService;
+import com.zkxltech.service.impl.QuestionServiceImpl;
 
 import net.sf.json.JSONObject;
 

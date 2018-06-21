@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.core.util.RedisMapUtil;
-import com.zkxltech.teaching.AnswerVO;
-import com.zkxltech.teaching.msg.AnswerResponse;
 /**
  * 随堂检测相关缓存
  * @author zkxl
@@ -35,14 +33,14 @@ public class RedisMapClassTest {
 	 */
 	private static String[] keyClassTestAnswerMap = {"iclickerId","questionId"};
 	
-	public static void addAnswer(AnswerResponse answerResponse){
-		keyClassTestAnswerMap[0] = answerResponse.getIclickerId();
-		keyClassTestAnswerMap[1] = answerResponse.getQuestionId();
+//	public static void addAnswer(AnswerResponse answerResponse){
+//		keyClassTestAnswerMap[0] = answerResponse.getIclickerId();
+//		keyClassTestAnswerMap[1] = answerResponse.getQuestionId();
 //		List<AnswerResponse> list = (List<AnswerResponse>) RedisMapUtil.getRedisMap(classTestAnswerMap, keyAnswerMap, 0);
 //		if(list==null) {
 //			list = new ArrayList<AnswerResponse>();
 //		}
 //		list.add(answerResponse);
-		RedisMapUtil.setRedisMap(classTestAnswerMap, keyClassTestAnswerMap, 0, answerResponse);
-	}
+//		RedisMapUtil.setRedisMap(classTestAnswerMap, keyClassTestAnswerMap, 0, answerResponse);
+//	}
 }
