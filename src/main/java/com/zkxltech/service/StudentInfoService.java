@@ -11,6 +11,12 @@ public interface StudentInfoService {
 	 */
 	Result importStudentInfo(Object object);
 	/**
+	 * 服务器导入
+	 * @param object 班级名称
+	 * @return
+	 */
+	Result importStudentInfoByServer(Object object);
+	/**
 	 * 新增学生
 	 * @param object StudentInfo对象
 	 * @return

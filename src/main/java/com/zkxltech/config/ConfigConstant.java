@@ -24,26 +24,18 @@ public final class ConfigConstant {
 	 */
 	private static final String projectFile = USER_DIR +"/conf/project.properties";
 	/**
-	 * 教师端配置文件
+	 * 服务器数据库配置文件
 	 */
-	private static final String teacherServerFile = USER_DIR +"/conf/techer_server.properties";
-	/**
-	 * 学生本地端配置文件
-	 */
-	private static final String clientLocalFile = USER_DIR +"/conf/client_local.properties";
-	
+	private static final String serverDbFile = USER_DIR +"/conf/server_db.properties";
 	public static ProjectConfig projectConf = null;
-	public static TeacherServerConfig teacherServerConf = null;
-	public static ClientLocalConfig clientLocalConf = null;
+	public static ServerDbConfig serverDbConfig = null;
 	
 	static  {
 		projectConf = new ProjectConfig();
-		teacherServerConf = new TeacherServerConfig();
-		clientLocalConf = new ClientLocalConfig();
+		serverDbConfig = new ServerDbConfig();
 		try {
 			projectConf = PropertyUtils.loadProperty(projectFile, ProjectConfig.class);
-			teacherServerConf = PropertyUtils.loadProperty(teacherServerFile, TeacherServerConfig.class);
-			clientLocalConf = PropertyUtils.loadProperty(clientLocalFile, ClientLocalConfig.class);
+			serverDbConfig = PropertyUtils.loadProperty(serverDbFile, ServerDbConfig.class);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -54,31 +46,10 @@ public final class ConfigConstant {
 		return projectFile;
 	}
 
-	public static String getTeacherserverfile() {
-		return teacherServerFile;
+	public static String getServerdbfile() {
+		return serverDbFile;
 	}
+	
 
-	public static String getClientlocalfile() {
-		return clientLocalFile;
-	}
-	
-	
-	
-//	/*
-//	 *	重新加载配置文件 
-//	 */
-//	public static void reLoadConfig(){
-//		projectConf = new ProjectConfig();
-//		teacherServerConf = new TeacherServerConfig();
-//		clientLocalConf = new ClientLocalConfig();
-//		try {
-//			projectConf = PropertyUtils.loadProperty(projectFile, ProjectConfig.class);
-//			teacherServerConf = PropertyUtils.loadProperty(teacherServerFile, TeacherServerConfig.class);
-//			clientLocalConf = PropertyUtils.loadProperty(clientLocalFile, ClientLocalConfig.class);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-	
 	
 }
