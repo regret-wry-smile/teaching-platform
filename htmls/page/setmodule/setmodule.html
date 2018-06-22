@@ -29,6 +29,7 @@
 		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
 		<!--<script src="../../js/select/jquery.select.js"></script>-->
 		<script src="../../js/common.js"></script>
+		<script src="../../js/vconsole.min.js"></script>
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<script type="text/javascript" src="../../js/app.js" ></script>
 		<script src="../../js/controllers/setmoduleController.js"></script>
@@ -50,8 +51,8 @@
 				  <div class="form-group">
 				    <label for="firstname" class="col-sm-2 control-label">系统信道设置</label>
 				    <div class="col-sm-3">
-			    	<select class="single" ng-model="chain">
-						<option value="{{item}}" ng-repeat="item in infoAllNameList track by $index">{{item}}</option>
+			    	<select class="single" select ng-model="chain" defalutvalue='chain1' ng-change="changeChain(chain)" >
+						<option ng-repeat="item in infoAllNameList track by $index" value="{{item}}">{{item}}</option>
 					</select>
 			    	<!--<select class="mySelect" id="mySelect" >
 			            <option value="1">第一组</option>
@@ -64,7 +65,7 @@
 				  <div class="form-group">
 				    <label for="lastname" class="col-sm-2 control-label">答题器发送功率</label>
 				   	<div class="col-sm-3">
-				   		<select class="single"  ng-model="sendpower">
+				   		<select class="single" select ng-model="sendpower" defalutvalue='sendpower1' ng-change="changeSendPower(sendpower)" >
 				   			<option value="1">1</option>
 				   			<option value="2">2</option>
 				   			<option value="3">3</option>
@@ -83,7 +84,7 @@
 				    <label for="lastname" class="col-sm-2 control-label">远距离考勤开启</label>
 				   	<div class="col-sm-3">
 				    <label class="ro-switch pull-left">
-                        <input type="checkbox" ng-model="item.status" ng-true-value="'1'" ng-false-value="'0'" ng-disabled="item.authTag=='0'" ng-change="switchstate(item)" >
+                        <input type="checkbox" ng-model="attendstatus" ng-true-value="'1'" ng-false-value="'0'"  ng-change="switchstate(attendstatus)" >
                         <div class="slider">
                             <div class="slider-thumb"></div>
                         </div>

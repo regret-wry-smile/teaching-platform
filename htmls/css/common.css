@@ -230,6 +230,25 @@ button:hover{
 .mb30{
 	margin-bottom: 0.30rem;
 }
+.pt5{
+	padding-top: 0.05rem;
+}
+.pt10{
+	padding-top: 0.10rem;
+}
+.pt20{
+	padding-top: 0.20rem;
+}
+.pt25{
+	padding-top: 0.25rem;
+}
+.pt30{
+	padding-top: 0.30rem;
+}
+.pt40{
+	padding-top: 0.40rem;
+}
+
 .pr5{
 	padding-right: 0.05rem;
 }
@@ -290,17 +309,40 @@ table  tbody tr:hover td a.del,table  tbody tr:hover td a.edit{
 	visibility: visible;
 }
 table.classlist thead tr th{
-	height: 0.25rem;
-	line-height: 0.25rem;
+	/*height: 0.25rem;
+	line-height: 0.25rem;*/
 	padding: 0.08rem ;
 	vertical-align: middle;
 }
-
+span.sub{
+	display: inline-block;
+	width: 0.05rem;
+	height: 0.05rem;
+	line-height: 0.05rem;
+	margin-top: -0.03rem;
+	vertical-align: middle;
+	margin-right: 0.02rem;
+	
+	border-radius: 100%;
+}
+.green{
+	background: #04be02;
+}
+.blue{
+	background: #27bfff;
+}
+table.classlist tbody tr{
+	cursor: pointer;
+}
 table.classlist tbody tr td{
 	height: 0.26rem;
 	line-height: 0.26rem;
 	padding: 0.06rem ;
 }
+table.classlist tbody tr span.name.active{
+	color: #3d95ff;
+}
+
 table.userlist thead tr th{
 	height: 0.20rem;
 	line-height: 0.20rem;
@@ -310,6 +352,13 @@ table.userlist thead tr th{
 table.userlist thead tr th input[type='checkbox']{
 	margin-top: -0.03rem;
 	vertical-align: middle;
+}
+table.subject tbody tr{
+	background: #eaeaea;
+	border-bottom: 2px solid #f5f5f5;
+}
+table.subject tbody tr td{
+	border-top:none;	
 }
 .modal-title{
 	color: #000;

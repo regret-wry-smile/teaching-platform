@@ -22,5 +22,5 @@
             //fontHoverColor: "#fff",   //移动选择时，每一行的字体hover颜色
             //mainContent: "请选择",    //选择显示框的默认文字
             //searchContent: "关键词搜索"   //搜索框的默认提示文字  
-            $('.single').multiselect({multiple:false,selectedHtmlValue:'单选'});
+           /* $('.single').multiselect({multiple:false,selectedHtmlValue:'请选择'});*/
         });

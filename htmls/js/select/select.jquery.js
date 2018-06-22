@@ -11,9 +11,14 @@
 			multiple: true,
 			setWidth: '200px',
 			setMaxOptionNum: 8,
+			defalutvalue:'',
 			optionsHoverStyle: 'newOptions_hover',      
-			change: function(){},
-			mutiConfEvent:function(){}
+			change: function(){
+				
+			},
+			mutiConfEvent:function(){
+				
+			}
 		};
 		
 		var options = $.extend(defaults,options);
@@ -29,11 +34,16 @@
 			
 			//遍历原来select中option标签
 			_t.find('option').each(function(i){
+				
 				var _this = $(this);
 				_thisHtmlValue = _this.html().substr(0,options.setMaxOptionNum);
 				_thisValue = _this.val();
 				
 				if(_t.attr('data-default') == _thisValue){
+					
+					_this.attr(options.selectedProperty,true);
+				}
+				if(options.defalutvalue==_thisValue){
 					_this.attr(options.selectedProperty,true);
 				}
 				//_t.after(_t.attr(options.selectedProperty));

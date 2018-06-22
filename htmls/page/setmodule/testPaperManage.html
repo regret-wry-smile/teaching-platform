@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html ng-app="app">
-
 	<head>
 		<meta charset="utf-8" />
 		<title>答题页面</title>
@@ -14,6 +13,7 @@
 		<link rel="stylesheet" href="../../css/common.css" />
 		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
 		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
 		<script src="../../js/angular-toastr/angular-toastr.min.js"></script>
 		<script src="../../js/angular-toastr/angular-toastr.tpls.min.js"></script>
 		<script src="../../js/jquery-1.11.1.min.js"></script>
@@ -31,7 +31,24 @@
         <script src="js/es5-shim.min.js"></script>        
     	<![endif]-->
 	</head>
-	<body class="bg" ng-controller="setPaperManageCtrl">		
+	<body class="bg" ng-controller="setPaperManageCtrl">	
+		<!--确认弹框-->
+			<script type="text/ng-template" id="sureModal.html">
+				<form name="myForm" novalidate="novalidate">
+					<div class="modal-header">
+						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+						<h4 class="modal-title">确认</h4>
+					</div>
+					<div class="modal-body">
+						{{content}}
+					</div>
+					<div class="modal-footer text-center">
+						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
+						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+			
+					</div>
+			</form>
+			</script>
 		<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/set.png" class="ml25" />
@@ -57,7 +74,13 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+							<tr ng-repeat="item in PaperInfo track by $index">
+								<td>1</td>
+								<td>八年级生物第一单元自测试卷</td>
+								<td>1、检测单细胞繁殖知识点</td>
+								<td><a href= "../../page/setmodule/edittestPage.html" class="edit mr5" ng-click="editPaper(item)">编辑</a><a href="javascript:;" class="del" ng-click="delPaper()">删除</a></td>
+							</tr>
+							<!--<tr>
 								<td>1</td>
 								<td>八年级生物第一单元自测试卷</td>
 								<td>1、检测单细胞繁殖知识点</td>
@@ -104,13 +127,7 @@
 								<td>八年级生物第一单元自测试卷</td>
 								<td>1、检测单细胞繁殖知识点</td>
 								<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td>八年级生物第一单元自测试卷</td>
-								<td>1、检测单细胞繁殖知识点</td>
-								<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							</tr>
+							</tr>-->
 							
 							</tbody>
 						</table>
@@ -120,6 +137,10 @@
 </html>
 <script src="../../js/jquery.nicescroll.min.js"></script>
 <script>
+	function editPaper(){
+		alert(777)
+		window.location.href="../../page/setmodule/edittestPage.html";
+	}
 	 $(document).ready(function() { 
 	var nice = $("html").niceScroll();  // The document page (body)
 	 $("#testlist").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable 	

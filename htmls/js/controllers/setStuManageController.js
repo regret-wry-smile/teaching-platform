@@ -1,20 +1,47 @@
 //定义模块时引入依赖  
 var app=angular.module('app',['ui.bootstrap','toastr']);
-	app.controller('setStuManageCtrl', function($rootScope,$scope,$modal) {
+	app.controller('setStuManageCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.studenList=[];//学生列表数组
 	$scope.checkedId=[];
 	$scope.onechecked = [];
-		/*获取学生*/
-	var _select_student = function(val) {
-		var param = {
-			classId:'9999'
+	$scope.classList=[];//班级列表数组
+	$scope.isActive = 0;
+	/*查询班级列表*/
+	var _selectClass = function() {
+		$scope.result = JSON.parse(execute_student("select_class"));
+		if($scope.result.ret=='success'){
+			$scope.classList=$scope.result.item;
+			console.log("班级"+JSON.stringify($scope.classList))
+			if($scope.classList.length>0){
+				$scope.classId=$scope.classList[0].classId;
+				$scope.studentList=[];
+				_selectStudent();
+			}else{
+				$scope.studentList=[];
+			}
+		}else{
+			toastr.error($scope.result.message);
 		}
+	};
+	/*查询学生列表*/
+	var _selectStudent = function() {
+		var param = {
+			classId:$scope.classId
+		}
+		console.log(JSON.stringify(param))
 		param =JSON.stringify(param);
 		$scope.result = JSON.parse(execute_student("select_student",param));
-		$scope.studentList=$scope.result.item;
+		if($scope.result.ret=='success'){
+			$scope.studentList=[];
+			$scope.studentList=$scope.result.item;
+		}else{
+			toastr.error($scope.result.message);
+		}
+		
 	};
+	
 	var _init=function(){
-		_select_student();
+		_selectClass();
 	}();
 	//批量导入学生
 	$scope.patchImport = function() {
@@ -22,6 +49,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		templateUrl: 'importFile.html',
 		controller: 'uploadfileModalCtrl',
 		size: 'md',
+		backdrop:false,
 		/*resolve: {
 			infos: function() {
 				return items;
@@ -34,17 +62,21 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	});
 		//$state.go('setmodule.set')
 	}
-	//返回设置页面
-	$scope.returnPage=function(){
-		 window.location.href="../../page/setmodule/setmodule.html"; 
-	}
-		
+	
+	/*切换班级*/
+	$scope.changeClass=function(item,$index){	
+		$scope.isActive = $index; 
+		$scope.classId=item.classId;
+		console.log(JSON.stringify(item))
+		_selectStudent();
+	}	
 	//打开添加班级弹框
 	$scope.addClass = function() {
 		var modalInstance = $modal.open({
 			templateUrl: 'addClassModal.html',
 			controller: 'addClassModalCtrl',
 			size: 'md',
+			backdrop:false,
 			/*resolve: {
 				infos: function() {
 					return $scope.classes.length;
@@ -52,45 +84,113 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			}*/
 		});
 		modalInstance.result.then(function(info) {
+			_selectClass();
 		}, function() {
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
 	};
+	//打开编辑班级弹框
+	$scope.editClass = function(item) {
+		var modalInstance = $modal.open({
+			templateUrl: 'addClassModal.html',
+			controller: 'editClassModalCtrl',
+			size: 'md',
+			backdrop:false,
+			resolve: {
+				infos: function() {
+					return item;
+				}
+			}
+		});
+		modalInstance.result.then(function(info) {
+			_selectClass();
+		}, function() {
+			//$log.info('Modal dismissed at: ' + new Date());
+		});
+	};
+	
+	// 删除班级	 
+	$scope.deleteClass=function(item){
+		var content="删除班级";
+		var modalInstance = $modal.open({
+			templateUrl: 'sureModal.html',
+			controller: 'sureModalCtrl',
+			size: 'sm',
+			backdrop:false,
+			resolve: {
+				content: function() {
+					return content;
+				}
+			}
+		});
+		modalInstance.result.then(function(info) {
+			//如果要删除的班级就是当前选中的班级，就默认选择第一个
+			/*if(val == $rootScope.className){
+				if($scope.isActive == 0){ //如果删除的是第一个班级，就刷新第二个班的学生
+					if($scope.classes.length>2){
+						$rootScope.className = $scope.classes[1].class_name;
+					}else{
+						$rootScope.className="";
+					}
+				}else{
+					$rootScope.className = $scope.classes[0].class_name;
+				}
+				$scope.isActive = 0
+			}*/
+			var param={
+				id:item.id
+			}
+			console.log(JSON.stringify(param))
+			param=JSON.stringify(param)			
+			$scope.result=JSON.parse(execute_student("delete_class",param));
+			if($scope.result.ret=='success'){
+				toastr.success($scope.result.message);
+				$scope.isActive = 0;
+				_selectClass();
+			}else{
+				toastr.error($scope.result.message);
+			}
+		}, function() {
+			//$log.info('Modal dismissed at: ' + new Date());
+		});
+	}
 	//打开新增学生弹框
 	$scope.addStudent = function() {
 		var modalInstance = $modal.open({
 			templateUrl: 'addStudentModal.html',
 			controller: 'addStudentModalCtrl',
 			size: 'md',
-			/*resolve: {
+			backdrop:false,
+			resolve: {
 				infos: function() {
-					return $rootScope.className;
+					return $scope.classId;
 				}
-			}*/
+			}
 		});
 
 		modalInstance.result.then(function(info) {
-
+			_selectStudent();
 		}, function() {
 
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
 	};
 	//编辑学生
-	$scope.updateStdent=function(items){
+	$scope.updateStdent=function(item){
 		var modalInstance = $modal.open({
 			templateUrl: 'addStudentModal.html',
 			controller: 'editStudentModalCtrl',
 			size: 'md',
-			/*resolve: {
+			backdrop:false,
+			resolve: {
 				infos: function() {
-					return items;
+					return item;
 				}
-			}*/
+			}
 		});
 
 		modalInstance.result.then(function(info) {
-
+			_selectStudent();
 		}, function() {
 
 			//$log.info('Modal dismissed at: ' + new Date());
@@ -179,12 +279,21 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			});
 
 			modalInstance.result.then(function(info) {
-				student_manage("delete_student",$rootScope.className,$scope.checkedId);
-				$scope.result = JSON.parse(student_manage("delete_student",$rootScope.className,$scope.checkedId));
-				alert($scope.result)
-				$scope.onechecked = [];
-				$scope.checkedId = [];
-				$scope.selected=false;
+				var param={
+					ids:$scope.checkedId
+				}
+				console.log(JSON.stringify(param))
+				$scope.result = JSON.parse(execute_student("delete_student",JSON.stringify(param)));
+				if($scope.result.ret=='success'){					
+					toastr.success($scope.result.message);
+					_selectStudent();
+					$scope.onechecked = [];
+					$scope.checkedId = [];
+					$scope.selected=false;
+				}else{
+					toastr.error($scope.result.message);
+				}
+				
 			}, function() {
 
 				//$log.info('Modal dismissed at: ' + new Date());
@@ -193,6 +302,40 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			toastr.warning("请选择学生");
 		}
 		
+	}
+	//解绑
+	$scope.unbindStu=function(){
+		if($scope.checkedId.length>0){
+			var content="解绑";
+			var modalInstance = $modal.open({
+				templateUrl: 'sureModal.html',
+				controller: 'sureModalCtrl',
+				size: 'sm',
+				resolve: {
+					content: function() {
+						return content;
+					}
+				}
+			});
+			modalInstance.result.then(function(info) {
+				var param={
+					ids:$scope.checkedId
+				}
+				console.log(JSON.stringify(param))
+				$scope.result = JSON.parse(execute_student("clear",JSON.stringify(param)));
+				if($scope.result.ret=='success'){
+					toastr.success($scope.result.message);
+					$scope.onechecked = [];
+					$scope.checkedId = [];
+					$scope.selected=false;
+				}else{
+					toastr.error($scope.result.message);
+				}
+			}, function() {
+			});
+		}else{
+			toastr.warning("请选择学生");
+		}
 	}
 	//清除白名单
 	$scope.clearStu=function(){
@@ -210,85 +353,130 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 
 		modalInstance.result.then(function(info) {
 			//发送指令
-			student_manage("clear_bind",$rootScope.className);
+			$scope.result = JSON.parse(execute_student("clear_bind"));
+			if($scope.result.ret=='success'){
+				toastr.success($scope.result.message);
+			}else{
+				toastr.error($scope.result.message);
+			}
 		}, function() {
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
 	}
-	})
-	
-	app.controller('uploadfileModalCtrl', function($scope,$modalInstance) {
-		$scope.ok = function() {
-			$modalInstance.close();
-		}
-		$scope.cancel=function(){
-			$modalInstance.dismiss('cancel');
-		}
-	})
-	//确认弹出框
-	app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
-		$scope.content='是否进行'+angular.copy(content)+'操作？';
-		$scope.ok = function() {
-			$modalInstance.close('success');
-		}
-		$scope.cancel = function() {
-			$modalInstance.dismiss('cancel');
-		}
-	})
-	//匹配绑定
-	app.controller('findBindModalCtrl',function($scope,$modalInstance){
-		//student_manage("start_bind",info);
-		//定时器
-		$scope.ok = function() {
-			/*关闭定时器*/
-			/*$interval.cancel(myTimer);*/
-			$modalInstance.close();
-		}
-	})
-	app.controller('findBindModalCtrl1',function($scope,$modalInstance){
-		$scope.ok = function() {
-			/*关闭定时器*/
-			$modalInstance.close();
-		}
-	})
-	//添加学生控制器
-	app.controller('addStudentModalCtrl',function($scope,$modalInstance){
-	$scope.title="添加学生";
-	$scope.student={
-		num:'',
-		stuNum:'',
-		stuName:'',
-		deviceNum:''
+	//返回设置页面
+	$scope.returnPage=function(){
+		 window.location.href="../../page/setmodule/setmodule.html"; 
 	}
+})
 	
-	//$scope.blurStunum=function(){
-		//var reg="/^[0-9]*/";
-		/*if(!reg.test($scope.student.stuNum)){
-		
-			toastr.warning("数字长度不能超过10位");
-		}else 
-		if($scope.student.stuNum==undidined){
-			toastr.warning("数字长度不能超过10位");
-		}
-	}
-	$scope.blurStuname=function(){		
-		if(!$scope.student.stuName.length>10){
-			toastr.warning("长度不能超过10位");
-		}
-	}
-	$scope.blurDevicenum=function(){
-		
-	}*/
-	
+app.controller('uploadfileModalCtrl', function($scope,$modalInstance) {
 	$scope.ok = function() {
-		var param = $scope.student;
-		//student_manage("add_student",infos,param.stuNum.toString(),param.stuName,param.deviceNum.toString());
+		$modalInstance.close();
+	}
+	$scope.cancel=function(){
+		$modalInstance.dismiss('cancel');
+	}
+})
+//确认弹出框
+app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
+	$scope.content='是否进行'+angular.copy(content)+'操作？';
+	$scope.ok = function() {
 		$modalInstance.close('success');
 	}
 	$scope.cancel = function() {
 		$modalInstance.dismiss('cancel');
 	}
 })
+//匹配绑定
+app.controller('findBindModalCtrl',function($scope,$modalInstance){
+	//student_manage("start_bind",info);
+	//定时器
+	$scope.ok = function() {
+		/*关闭定时器*/
+		/*$interval.cancel(myTimer);*/
+		$modalInstance.close();
+	}
+})
+app.controller('findBindModalCtrl1',function($scope,$modalInstance){
+	$scope.ok = function() {
+		/*关闭定时器*/
+		$modalInstance.close();
+	}
+})
+//添加学生控制器
+app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos){
+	$scope.title="添加学生";
+	if(infos){
+		$scope.classId=infos;
+	}
+	$scope.student={		
+//		studentId:'',
+		studentName:'',
+//		iclickerId:'',
+		classId:$scope.classId
+	}
+	if(typeof $scope.student.studentId=='string'){
+			$scope.student.studentId=parseInt($scope.student.studentId)
+		}
+		if(typeof $scope.student.iclickerId=='string'){
+			$scope.student.iclickerId=parseInt($scope.student.iclickerId)
+		}
+	$scope.ok = function() {
+		if(typeof $scope.student.studentId=='number'){
+			$scope.student.studentId=JSON.stringify($scope.student.studentId)
+		}
+		if(typeof $scope.student.iclickerId=='number'){
+			$scope.student.iclickerId=JSON.stringify($scope.student.iclickerId)
+		}
+		var param = $scope.student;
+		console.log(JSON.stringify(param))
+		$scope.result=JSON.parse(execute_student("insert_student",JSON.stringify(param)));
+		if($scope.result.ret=='success'){
+			toastr.success($scope.result.message);
+			$modalInstance.close('success');
+		}else{
+			toastr.error($scope.result.message);
+		}
+	}
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	}
+})
+	//编辑学生控制器
+app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,infos){
+	$scope.title="编辑学生";
+	if(infos){
+		$scope.student=angular.copy(infos);
+		console.log(JSON.stringify(infos))
+		if(typeof infos.studentId=='string'){
+			$scope.student.studentId=parseInt(infos.studentId)
+		}
+		if(typeof infos.iclickerId=='string'){
+			$scope.student.iclickerId=parseInt(infos.iclickerId)
+		}
+	}
+	$scope.ok = function() {
+		if(typeof $scope.student.studentId=='number'){
+			$scope.student.studentId=JSON.stringify($scope.student.studentId)
+		}
+		if(typeof $scope.student.iclickerId=='number'){
+			$scope.student.iclickerId=JSON.stringify($scope.student.iclickerId)
+		}
+		var param = $scope.student;
+		console.log(JSON.stringify(param))
+		$scope.result=JSON.parse(execute_student("update_student",JSON.stringify(param)));
+		if($scope.result.ret=='success'){
+			toastr.success($scope.result.message);
+			$modalInstance.close('success');
+		}else{
+			toastr.error($scope.result.message);
+		}
+	}
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	}
+})
+
 //匹配绑定
 app.controller('findBindModalCtrl',function($scope,info,$modalInstance,$interval){
 	//student_manage("start_bind",info);
@@ -299,20 +487,82 @@ app.controller('findBindModalCtrl',function($scope,info,$modalInstance,$interval
 	}
 })
 //添加班级
-app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope){
-	$scope.classes = {
-		type:"本地",
-		name:""
+app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toastr){
+	$scope.classInfo = {
+		atype:"0",//班级类型,默认本地
+		className:"",//班级名称
+		classId:"" //班级id
 	}
+	$scope.classInfo.atype1=angular.copy($scope.classInfo.atype);
+	$scope.title="添加班级";
 	$scope.ok = function() {
-		var param = $scope.classes;
-		//student_manage("add_class",param.name,param.type,$rootScope.className);
-		if(infos==0){
-			$rootScope.className = param.name;
-		}
-		$modalInstance.close('success');
+		var param = $scope.classInfo;
+		$scope.result= JSON.parse(execute_student("insert_class",JSON.stringify(param)));
+		console.log(JSON.stringify($scope.result))
+		if($scope.result.ret=='success'){
+			toastr.success($scope.result.message);
+			$modalInstance.close('success');
+		}else{
+			toastr.error($scope.result.message);
+		}		
 	}
 	$scope.cancel = function() {
 		$modalInstance.dismiss('cancel');
+	}
+})
+//编辑班级
+app.controller('editClassModalCtrl',function($scope,$modalInstance,$rootScope,toastr,infos){
+	if(infos){
+		$scope.classInfo=angular.copy(infos);
+	}
+	$scope.classInfo.atype1=angular.copy($scope.classInfo.atype);
+	$scope.title="编辑班级";
+	$scope.noedit=true;
+	$scope.ok = function() {
+		var param = $scope.classInfo;
+		$scope.result= JSON.parse(execute_student("update_class",JSON.stringify(param)));
+		console.log(JSON.stringify($scope.result))
+		if($scope.result.ret=='success'){
+			toastr.success($scope.result.message);
+			$modalInstance.close('success');
+		}else{
+			toastr.error($scope.result.message);
+		}		
+	}
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	}
+})
+app.directive('select', function() {
+	return {
+		restrict: 'A',
+		require: 'ngModel',
+		scope:{
+			defalutvalue:'=?'
+		},
+		link: function(scope, element, attrs, ngModelCtr) {
+		scope.$watch('defalutvalue',function(){
+			if(scope.defalutvalue){
+				$(element).multiselect({
+				multiple: false,
+				selectedHtmlValue: '请选择',
+				defalutvalue:scope.defalutvalue,
+				change: function() {
+					$(element).val($(this).val());
+					scope.$apply();
+					if(ngModelCtr) {
+						ngModelCtr.$setViewValue($(element).val());
+						if(!scope.$root.$$phase) {
+							scope.$apply();
+						}
+					}
+				}
+			});
+			}
+		})
+			
+			
+			
+		}
 	}
 })
