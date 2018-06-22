@@ -2,10 +2,14 @@ package com.zkxltech.ui.functions;
 
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
+import com.zkxltech.service.ClassInfoService;
 import com.zkxltech.service.StudentInfoService;
+import com.zkxltech.service.impl.ClassInfoServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
@@ -16,7 +20,10 @@ import net.sf.json.JSONObject;
  *
  */
 public class StudentFunctionManage extends BrowserFunction{
-	private StudentInfoService service = new StudentInfoServiceImpl();
+	private static final Logger logger = LoggerFactory.getLogger(StudentFunctionManage.class);
+	
+	private ClassInfoService classInfoService = new ClassInfoServiceImpl();
+	private StudentInfoService studentInfoservice = new StudentInfoServiceImpl();
 	
 	public StudentFunctionManage(Browser browser, String name) {
 		super(browser, name);
@@ -30,28 +37,41 @@ public class StudentFunctionManage extends BrowserFunction{
 			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数
 			switch (method) {
 			case "insert_student":
-				result = service.insertStudentInfo(param);
+				result = studentInfoservice.insertStudentInfo(param);
 				break;
 			case "import_student":
-				result = service.importStudentInfo(param);
+				result = studentInfoservice.importStudentInfo(param);
 				break;
 			case "import_server":
-				result = service.selectStudentInfo(param);
+				result = studentInfoservice.selectStudentInfo(param);
 				break;
 			case "delete_student":
-				result = service.deleteStudentById(param);
+				result = studentInfoservice.deleteStudentById(param);
 				break;
 			case "update_student":
-				result = service.updateStudentById(param);
+				result = studentInfoservice.updateStudentById(param);
 				break;
 			case "select_student":
-				result = service.selectStudentInfo(param);
+				result = studentInfoservice.selectStudentInfo(param);
+				break;
+			case "select_class":
+				result = classInfoService.selectClassInfo(param);
+				break;
+			case "insert_class":
+				result = classInfoService.insertClassInfo(param);
+				break;
+			case "delete_class":
+				result = classInfoService.deleteClassInfo(param);
+				break;
+			case "update_class":
+				result = classInfoService.updateClassInfo(param);
 				break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");
 			}
 		}else {
+			logger.error("页面传递的参数为空");
 			result.setRet(Constant.ERROR);
 			result.setMessage("参数不能为空！");
 		}
