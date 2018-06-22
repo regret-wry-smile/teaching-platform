@@ -1,0 +1,272 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.zkxltech.teaching</groupId>
+	<artifactId>teaching-platform</artifactId>
+	<version>v1.0.RELEASE</version>
+	<packaging>jar</packaging>
+
+	<name>teaching-platform</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+	    <skipTests>true</skipTests>
+	</properties>
+
+	<dependencies>
+		<!-- log包 -->
+	    <dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>1.7.21</version>
+		</dependency>
+	
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-log4j12</artifactId>
+		    <version>1.7.21</version>
+		</dependency>
+	    
+	    <!-- netty包 -->
+		<dependency>
+		    <groupId>io.netty</groupId>
+		    <artifactId>netty-all</artifactId>
+		    <version>4.1.22.Final</version>
+		</dependency>
+
+		<!-- usb通信 -->
+		<dependency>
+			<groupId>com.zkxltech.teaching</groupId>
+			<artifactId>teaching-receiver</artifactId>
+			<version>1.0.1</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2.1</version>
+		</dependency>  
+	
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<version>3.19.3</version>
+		</dependency>
+		
+		<!-- <dependency>
+		    <groupId>com.zkxl.answers</groupId>  
+			<artifactId>swing2swt</artifactId>  
+			<version>swing2swt</version>  
+			<scope>system</scope>  
+			<systemPath>${project.basedir}/lib/swing2swt.jar  
+			</systemPath> 
+		</dependency>
+		<dependency>
+		    <groupId>com.zkxl.answers</groupId>  
+			<artifactId>SWTResourceManager</artifactId>  
+			<version>SWTResourceManager</version>  
+			<scope>system</scope>  
+			<systemPath>${project.basedir}/lib/SWTResourceManager.jar  
+			</systemPath> 
+		</dependency>
+		<dependency>
+		    <groupId>com.zkxl.answers</groupId>  
+			<artifactId>swt</artifactId>  
+			<version>swt</version>  
+			<scope>system</scope>  
+			<systemPath>${project.basedir}/lib/swt.jar  
+			</systemPath> 
+		</dependency> -->
+		
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.15-beta1</version>
+		</dependency>
+	
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.15-beta1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml-schemas -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>3.8</version>
+		</dependency>
+	
+		
+		<dependency>
+            <groupId>net.sf.json-lib</groupId>
+            <artifactId>json-lib</artifactId>
+            <version>2.3</version>
+            <classifier>jdk15</classifier>
+        </dependency>
+        <dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.34</version>
+		</dependency>
+	
+	
+		<!-- 本地依赖包 -->
+		<dependency>
+		    <groupId>com.zkxl.teaching</groupId>  
+			<artifactId>swt</artifactId>  
+			<version>swt</version>  
+			<scope>system</scope>  
+			<systemPath>${project.basedir}/lib/org.eclipse.swt.win32.win32.x86_64_3.104.1.v20150825-0743.jar
+			</systemPath> 
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		
+	</dependencies>
+	
+	
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<resources>
+			<!-- 把src/main/resources目录下所有的文件拷贝到conf目录中 -->
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+				<include>**/*.properties</include>
+				<include>**/*.png</include>
+				</includes>
+				<filtering>false</filtering>
+				</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+	            <targetPath>${project.build.directory}/conf</targetPath>
+			</resource>
+			<!-- 把lib目录下所有的文件拷贝到lib目录中
+            		（可能有些jar包没有办法在maven中找到，需要放在lib目录中） -->
+            <resource>
+                <directory>lib</directory>
+                <targetPath>${project.build.directory}/lib</targetPath>
+            </resource>
+		</resources>
+	
+		<plugins>
+			<!-- 用于编译的plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-compiler-plugin</artifactId>
+	            <configuration>
+	                <source>1.8</source>
+	                <target>1.8</target>
+	            </configuration>
+			</plugin>
+			
+			<!-- 用于生成jar包的plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <!-- 把生成的jar包放在lib目录下（和其他所有jar包一起） -->
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <!-- <archive>
+                        <manifest>
+                        	<mainClass>com.zkxltech.ui.Mainstart</mainClass>
+                        	<useUniqueVersions>false</useUniqueVersions>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                        <manifestEntries>  
+                            <Class-Path>.</Class-Path>  
+                        </manifestEntries> 
+                    </archive> -->
+                    <!-- <excludes>
+                    排除掉一些文件,不要放到jar包中，
+                    	 这里是为了排除掉src/main/resources中的文件（它们应该放到conf目录）
+                    	这里只能指定要排除的目标文件，而不能指定源文件。
+                        <exclude>*.xml</exclude>
+                        <exclude>*.properties</exclude>
+                    </excludes> -->
+                </configuration>
+            </plugin>
+            
+            <!-- 用于拷贝maven依赖的plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <!-- <version>2.10</version> -->
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                        	<!-- 把依赖的所有maven jar包拷贝到lib目录中（这样所有的jar包都在lib目录中） -->
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- 用于拷贝resource的plugin -->
+            <!-- <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin> -->
+
+            <!-- 配置生成源代码jar的plugin -->
+            <!-- <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <attach>true</attach>
+                    <encoding>UTF-8</encoding>
+                    配置源代码jar文件的存放路径，和其他jar文件一起放在lib目录
+                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin> -->
+		
+		</plugins>
+	
+	
+	</build>
+	
+	
+	
+</project>
