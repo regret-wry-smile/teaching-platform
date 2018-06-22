@@ -20,6 +20,7 @@
 		<link rel="stylesheet" href="../../js/select/style.css" />
 		<link href="../../js/select/font-awesome.min.css" />
 		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
+		<!--<script src="../../js/select/jquery.select.js"></script>-->
 		<script src="../../js/common.js"></script>
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<script type="text/javascript" src="../../js/app.js" ></script>
@@ -39,15 +40,16 @@
 					</div>
 					<div class="modal-body" >
 						<div class="form-group">
-					  	<label for="firstname" class="col-sm-2 control-label">名称</label>
-					    <div class="col-sm-10">
-				    	<input type="number" autocomplete="off" name="stunum" id="" value=""  class="form-control" ng-model="classes.name" required maxlength="10" placeholder="长度不能超过10位"/>			
+					  	<label for="firstname" class="col-sm-3 control-label">名称</label>
+					    <div class="col-sm-8">
+				    	<input type="text" autocomplete="off" name="name" id="" value=""  class="form-control" ng-model="classes.name" required maxlength="10" placeholder="长度不能超过10位"/>			
 						</div>
+						<span ng-show="myForm.name.$invalid" class="warning">*</span>
 						</div>
 						<div class="form-group">
-					  	<label for="firstname" class="col-sm-2 control-label">选择状态</label>
-					    <div class="col-sm-10">
-					    	<select class="single"  ng-model="classes.type">
+					  	<label for="firstname" class="col-sm-3 control-label">选择状态</label>
+					    <div class="col-sm-8">
+					    	<select class="single form-control"  ng-model="classes.type">
 					   			<option value="本地">本地</option>
 								<option value="在线">在线</option>
 							</select>
@@ -76,18 +78,18 @@
 			</script>
 		<!--导入-->
 		<script type="text/ng-template" id="importFile.html">
-			<form name="myForm" novalidate="novalidate">
+			<form name="myForm" class="form-horizontal clearfix" role="form" novalidate="novalidate">
 				<div class="modal-header">
 					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
 					<h4 class="modal-title">导入学生</h4>
 				</div>
-				<div class="modal-body" id="addDepartModal">
-					<div class="greygroup clearfix">
-						<label class="pull-left">选择文件</label>
-						<div class="pull-left pt1" > 
-						<input type="file" class="pull-left" name="" id="uploadFile" value="" ng-model="filepath"  onchange='angular.element(this).scope().fileChanged(this)' />
+				<div class="modal-body" >
+					<div class="form-group">
+					  	<label for="firstname" class="col-sm-3 control-label">选择文件</label>
+					    <div class="col-sm-8">
+				    	<input type="file" class="form-control" name="file" id="uploadFile" value="" ng-model="filepath"  onchange='angular.element(this).scope().fileChanged(this)' required/>				
 						</div>
-					</div>
+						<span ng-show="myForm.file.$invalid" class="warning">*</span>
 				</div>
 				<div class="modal-footer text-center">
 					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
@@ -103,7 +105,7 @@
 						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
 						<h4 class="modal-title">确认</h4>
 					</div>
-					<div class="modal-body" id="addDepartModal">
+					<div class="modal-body">
 						{{content}}
 					</div>
 					<div class="modal-footer text-center">
@@ -117,12 +119,12 @@
 			<script type="text/ng-template" id="findBindModal.html">
 				<form name="myForm" novalidate="novalidate">
 					<div class="modal-header">
-						<button type="button" class="close" ng-click="ok()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+						<button type="button" class="close" style="margin-top: -0.10rem;" ng-click="ok()"><span aria-hidden="true" >×</span><span class="sr-only">关闭</span></button>
 					</div>
 					<div class="modal-body" id="Modal">
 						<p class="clearfix">
 							<span class="tip pull-left">正在匹配...</span>
-							<span class="pull-right pr10" >识别码{{bindInfo.code}}</span>
+							<span class="pull-right pr20 mb20" >识别码{{bindInfo.code}}</span>
 						</p>
 						<div class="clearfix pt5">
 							<div class="pull-left">
@@ -149,24 +151,25 @@
 					</div>
 					<div class="modal-body">						
 						<div class="form-group">
-					  	<label for="firstname" class="col-sm-2 control-label">学号</label>
-					    <div class="col-sm-10">
-				    	<input type="number" autocomplete="off" name="stunum" id="" value=""  class="form-control" ng-model="student.stuNum" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurStunum()"/>
-						
+					  	<label for="firstname" class="col-sm-3 control-label">学号</label>
+					    <div class="col-sm-8">
+				    	<input type="number" autocomplete="off" name="stunum" id="" value=""  class="form-control" ng-model="student.stuNum" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurStunum()"/>					
 						</div>
+						<span ng-show="myForm.stunum.$invalid" class="warning">*</span>
 						</div>
 						<div class="form-group">
-					  	<label for="firstname" class="col-sm-2 control-label">姓名</label>
-					    <div class="col-sm-10">
+					  	<label for="firstname" class="col-sm-3 control-label">姓名</label>
+					    <div class="col-sm-8">
 				    	<input type="text" autocomplete="off" name="stuname" id="" value=""  class="form-control" ng-model="student.stuName" required maxlength="10" placeholder="请输入长度不能超过10位字符" ng-blur="blurStuname()"/>
-						
 						</div>
+						<span ng-show="myForm.stuname.$invalid" class="warning">*</span>
 						</div>
 						<div class="form-group">
-					  	<label for="firstname" class="col-sm-2 control-label">答题器编号</label>
-					    <div class="col-sm-10">
+					  	<label for="firstname" class="col-sm-3 control-label">答题器编号</label>
+					    <div class="col-sm-8">
 				    	<input type="number" autocomplete="off" name="devicenum" id="" value=""  class="form-control" ng-model="student.deviceNum" required ng-pattern="/^\d{10}$/" placeholder="请输入长度为10位的数字" ng-blur="blurDevicenum()"/>
 						</div>
+						<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>
 						</div>
 						<!--<div class="greygroup clearfix">
 							<label class="pull-left">学号</label>

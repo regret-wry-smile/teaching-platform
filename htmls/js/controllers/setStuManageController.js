@@ -15,32 +15,31 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	var _init=function(){
 		_select_student();
 	}();
-		//批量导入学生
-		$scope.patchImport = function() {
-			var modalInstance = $modal.open({
-			templateUrl: 'importFile.html',
-			controller: 'uploadfileModalCtrl',
-			size: 'md',
-			/*resolve: {
-				infos: function() {
-					return items;
-				}
-			}*/
-		});
+	//批量导入学生
+	$scope.patchImport = function() {
+		var modalInstance = $modal.open({
+		templateUrl: 'importFile.html',
+		controller: 'uploadfileModalCtrl',
+		size: 'md',
+		/*resolve: {
+			infos: function() {
+				return items;
+			}
+		}*/
+	});
 
-		modalInstance.result.then(function(info) {
-		}, function() {
-		});
-			//$state.go('setmodule.set')
-		}
-		//返回
-		$scope.returnPage=function(){
-			 window.location.href="../../page/setmodule/setmodule.html"; 
-		}
+	modalInstance.result.then(function(info) {
+	}, function() {
+	});
+		//$state.go('setmodule.set')
+	}
+	//返回设置页面
+	$scope.returnPage=function(){
+		 window.location.href="../../page/setmodule/setmodule.html"; 
+	}
 		
 		//打开添加班级弹框
 	$scope.addClass = function() {
-		alert(777)
 		var modalInstance = $modal.open({
 			templateUrl: 'addClassModal.html',
 			controller: 'addClassModalCtrl',
@@ -102,8 +101,8 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		var content="一键配对";
 		var modalInstance = $modal.open({
 			templateUrl: 'findBindModal.html',
-			controller: 'findBindModalCtrl',
-			size: 'sm',
+			controller: 'findBindModalCtrl1',
+			size: 'md',
 			backdrop:false,
 			/*resolve: {
 				info: function() {
@@ -236,12 +235,18 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		}
 	})
 	//匹配绑定
-	app.controller('findBindModalCtrl',function($scope,$modalInstance,$interval){
+	app.controller('findBindModalCtrl',function($scope,$modalInstance){
 		//student_manage("start_bind",info);
 		//定时器
 		$scope.ok = function() {
 			/*关闭定时器*/
 			/*$interval.cancel(myTimer);*/
+			$modalInstance.close();
+		}
+	})
+	app.controller('findBindModalCtrl1',function($scope,$modalInstance){
+		$scope.ok = function() {
+			/*关闭定时器*/
 			$modalInstance.close();
 		}
 	})
