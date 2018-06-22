@@ -196,50 +196,6 @@ public class DBHelper<T> {
 			}
 		}
 	}
-	
-	/**
-	 * 增加 删除 修改
-	 * 
-	 * @param sqls
-	 *            sql语句
-	 */
-	public static synchronized Result onUpdate(String sql) {
-		Result result = new Result();
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			conn = getConnection(dbNameStr.trim());
-			conn.setAutoCommit(false);
-
-			stmt = conn.prepareStatement(sql);
-			stmt.executeUpdate();
-			if (stmt != null) {
-				stmt.close();
-			}
-			conn.commit();
-			conn.close();
-			result.setRet(Constant.SUCCESS);
-			return result;
-		} catch (Exception e) {
-			logger.error(IOUtils.getError(e));
-			result.setRet(Constant.ERROR);
-			result.setDetail(IOUtils.getError(e));
-			return result;
-		} finally {
-			try {
-				if (stmt != null && !stmt.isClosed()) {
-					stmt.close();
-				}
-				if (conn != null && !conn.isClosed()) {
-					conn.close();
-				}
-			} catch (Exception e2) {
-				logger.error(IOUtils.getError(e2));
-			}
-
-		}
-
-	}
 
 	/**
 	 * 批量增加 删除 修改

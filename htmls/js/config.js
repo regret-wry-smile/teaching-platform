@@ -5,7 +5,7 @@ angular.module('app')
   .config(
     [        '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', '$httpProvider',
     function ($controllerProvider,   $compileProvider,   $filterProvider,   $provide,  $httpProvider) {
-       /* $httpProvider.interceptors.push('UserInterceptor');*/
+        $httpProvider.interceptors.push('UserInterceptor');
         // lazy controller, directive and service
         app.controller = $controllerProvider.register;
         app.directive  = $compileProvider.directive;

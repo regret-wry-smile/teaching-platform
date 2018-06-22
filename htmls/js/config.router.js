@@ -46,43 +46,26 @@ app.run(
 	]
 ).config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
-/*	$httpProvider.interceptors.push('UserInterceptor');
+	$httpProvider.interceptors.push('UserInterceptor');
 	$httpProvider.defaults.headers.post = {
 		'Content-Type': 'application/x-www-form-urlencoded'
-	}*/
-	//$urlRouterProvider.otherwise('/setmodule');
-	$urlRouterProvider.otherwise('setmodule');
+	}
+	$urlRouterProvider.otherwise('/login');
+	//$urlRouterProvider.otherwise('/index');
 	 /*主页面*/
-		$stateProvider.state('/setmodule', {
-			url: '/setmodule',
+		.state('setting', {
+			url: '/setting',
 			views: {
 				'': {
-					templateUrl: 'setmodule.html',
-				/*	controller: 'setmoduleCtrl',*/
-					/*resolve: {
-						deps: ['$ocLazyLoad',
-							function($ocLazyLoad) {
-								return $ocLazyLoad.load('js/controllers/setmoduleController.js').then(function() {
-								
-								})
-							}
-						]
-					}*/
-
-				}
-			}
-		})
-		.state('set', {
-			url: '/set',
-			views: {
-				'': {
-					templateUrl: 'page/setmodule/set.html',
-					controller: 'setmoduleCtrl',
+					templateUrl: 'set.html',
+//					controller: 'reimburseCtrl',
 					resolve: {
 						deps: ['$ocLazyLoad',
 							function($ocLazyLoad) {
-								return $ocLazyLoad.load('js/controllers/setmoduleController.js').then(function() {
-									
+								return $ocLazyLoad.load('js/controllers/reimburseController.js').then(function() {
+									return $ocLazyLoad.load('treeControl').then(function() {
+										return $ocLazyLoad.load(['multi-select-tree', 'js/directives/silder.js']);
+									})
 								})
 							}
 						]
@@ -90,8 +73,7 @@ app.run(
 
 				}
 			}
-		})
-		/*报销-申请记录*/
+		}) /*报销-申请记录*/
 		/*.state('oa.reimbursemoudle.reimbursemanage', {
 			url: '/reimbursemanage/:state',
 			views: {

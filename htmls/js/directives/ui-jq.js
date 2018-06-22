@@ -56,9 +56,7 @@ angular.module('ui.jq', ['ui.load']).
         // Call jQuery method and pass relevant options
         function callPlugin() {
           $timeout(function() {
-          
             elm[attrs.uiJq].apply(elm, getOptions());
-         
           }, 0, false);
         }
 

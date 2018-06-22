@@ -1,15 +1,12 @@
 package com.zkxltech.sql;
 
 import java.lang.reflect.Field;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.jdbc.DBHelper;
-import com.zkxltech.jdbc.DBHelper2;
 import com.zkxltech.ui.util.StringUtils;
 
 
@@ -139,36 +136,19 @@ public class StudentInfoSql {
 		return dbHelper.onUpdate(sqlBuilder.toString(), null);
 	}
 	
-	/**
-	 * 根据班级名称获取服务器上的学生
-	 * @param className 班级id
-	 * @return
-	 */
-	public static Result getServerStudent(String classId){
-		List<Object> params = new ArrayList<Object>();
-		String sql = "select * from hz_student t1 LEFT JOIN  hz_student_keybroad t2 ON t1.sid = t2.sid where t1.bjid = ?";
-		String[] key = {"xm","sid","kh","sex","bjid","id","KID"};
-		params.add(classId);
-		return DBHelper2.onQuery(sql, key, params);
-	}
-	
-	/**
-	 * 批量保存学生信息
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 */
-	public Result saveStudentByGroup(List<Map<String, Object>> listMaps) throws ClassNotFoundException, SQLException{
-		List<String> sqls = new ArrayList<String>();
-		for (int i = 0; i < listMaps.size(); i++) {
-			int id = Integer.parseInt((String) listMaps.get(i).get("id"));
-			String classId = String.valueOf((int) listMaps.get(i).get("bjid"));
-			String studentId = (String) listMaps.get(i).get("kh");
-			String studentName = (String) listMaps.get(i).get("xm");
-			String kid = (String) listMaps.get(i).get("KID");
-			String string = "insert into student_info (id,class_id,class_name,student_id,student_name,iclicker_id) values('"+id+"','"+classId+"','"
-					+classId+"','"+studentId+"','"+studentName+"','"+kid+"');";
-			sqls.add(string);
-		}
-		return DBHelper.onUpdateByGroup(sqls);
-	}
+//	public static void main(String[] args) {
+//		StudentInfo studentInfo = new StudentInfo();
+//		studentInfo.setId(104320);
+//		studentInfo.setStatus("1");
+//		studentInfo.setIclickerId("9999999");
+//		try {
+//			new StudentInfoSql().updateStudent(studentInfo);
+//		} catch (IllegalArgumentException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 }

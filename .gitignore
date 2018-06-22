@@ -15,6 +15,7 @@ logs/
 /.classpath
 /target
 target
+/answer.db
 
 /.start.bat
 /.MANIFEST.MF

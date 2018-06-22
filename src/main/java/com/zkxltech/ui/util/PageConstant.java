@@ -20,7 +20,7 @@ public class PageConstant {
 	/**
 	 * 设置页面类型
 	 */
-	public static String PAGE_SET_URL = COMMON_URL+"/page/setmodule/setmodule.html";
+	public static String PAGE_SET_URL = COMMON_URL+"/page/setmodule/set.html";
 	/**
 	 * 记录页面类型
 	 */

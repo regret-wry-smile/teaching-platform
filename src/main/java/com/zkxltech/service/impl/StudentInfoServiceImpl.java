@@ -3,10 +3,6 @@ package com.zkxltech.service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.BrowserManager;
 import com.ejet.core.util.constant.Constant;
@@ -21,8 +17,6 @@ import com.zkxltech.ui.util.StringUtils;
 import net.sf.json.JSONObject;
 
 public class StudentInfoServiceImpl implements StudentInfoService{
-	private static final Logger log = LoggerFactory.getLogger(StudentInfoServiceImpl.class);
-	
 	private Result result;
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
 	
@@ -48,26 +42,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			return result;
 		}
 	}
-	@Override
-	public Result importStudentInfoByServer(Object object) {
-		result = new Result();
-		try {
-			String classId = (String) object;
-			result = copeServerStudentData(classId);
-			if(Constant.SUCCESS.equals(result.getRet())){
-//				BrowserManager.refreshStudent(className);
-//				BrowserManager.showMessage(true,"从服务器中获取学生信息成功！");
-//				getBindInfoAndRefresh(className);
-			}else{
-//				BrowserManager.showMessage(false,"从服务器中获取学生信息失败！");
-			}
-		} catch (Exception e) {
-//			BrowserManager.showMessage(false,"从服务器中获取学生信息失败！");
-		}finally {
-//			BrowserManager.removeLoading();
-		}
-		return result;
-	}
+
 	@Override
 	public Result selectStudentInfo(Object param) {
 		result = new Result();
@@ -146,32 +121,4 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 		}
 	}
 
-	/**
-	 * 服务器中获取学生
-	 */
-	public Result copeServerStudentData(String classId) {
-		Result result = new Result();
-		try {
-			result = studentInfoSql.getServerStudent(classId);//获取服务器学生
-			if ("ERROR".equals(result.getRet())) {
-				return result;
-			}
-			List<Map<String, Object>> listMaps = (List<Map<String, Object>>) result.getItem();
-			StudentInfo studentInfo = new StudentInfo();
-			studentInfo.setClassId(classId);
-			studentInfoSql.deleteStudent(studentInfo); //清除本地该班学生信息
-			result = studentInfoSql.saveStudentByGroup(listMaps); //保存服务器上该班的学生信息
-			result.setMessage("服务器中获取学生成功！");
-			return result;
-		} catch (Exception e) {
-			log.error(IOUtils.getError(e));
-			result.setRet(Constant.ERROR);
-			result.setDetail(IOUtils.getError(e));
-			result.setMessage("服务器中获取学生失败！");
-			return result;
-		}
-	}
-	public static void main(String[] args) {
-		System.out.println(JSONObject.fromObject(new StudentInfoServiceImpl().importStudentInfoByServer("9999")));
-	}
 }

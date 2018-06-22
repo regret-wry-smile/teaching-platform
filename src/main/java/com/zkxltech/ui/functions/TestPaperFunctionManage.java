@@ -6,9 +6,7 @@ import org.eclipse.swt.browser.BrowserFunction;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.StudentInfoService;
-import com.zkxltech.service.TestPaperService;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
-import com.zkxltech.service.impl.TestPaperServiceImpl;
 
 import net.sf.json.JSONObject;
 
@@ -18,7 +16,6 @@ import net.sf.json.JSONObject;
  */
 public class TestPaperFunctionManage extends BrowserFunction{
 	
-	private TestPaperService testPaperService = new TestPaperServiceImpl();
 	public TestPaperFunctionManage(Browser browser, String name) {
 		super(browser, name);
 	}
@@ -27,16 +24,11 @@ public class TestPaperFunctionManage extends BrowserFunction{
 		Result result = new Result();
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
+			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数
 			switch (method) {
 			case "import_paper":
-				if (params.length != 2) {
-					result.setRet(Constant.ERROR);
-					result.setMessage("参数个数有误！");
-				}
-				result = testPaperService.importTestPaper(params[1]);
-				break;
-			case "insert_paper":
-				result = testPaperService.insertTestPaper(params[1],params[2]);
+				StudentInfoService service = new StudentInfoServiceImpl();
+				result = service.selectStudentInfo(param);
 				break;
 			default:
 				result.setRet(Constant.ERROR);
