@@ -50,7 +50,13 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	var _init=function(){		
 		_getAllName();
 	}();
-		$scope.stuManage = function() {
-			  window.location.href="../../page/setmodule/setStuManage.html?backurl="+window.location.href; 
-		}
+	//跳转到学生管理页面
+	$scope.stuManage = function() {
+	  	window.location.href="../../page/setmodule/setStuManage.html?backurl="+window.location.href; 
+	}
+	//跳转到试卷管理页面
+	$scope.paperManage = function() {
+	  	window.location.href="../../page/setmodule/testPaperManage.html?backurl="+window.location.href; 
+	}
+		
 	})

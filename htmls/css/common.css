@@ -100,6 +100,7 @@ p {
     font-size: 0.27rem;
     color: #fff;
     display: inline-block;
+    vertical-align: middle;
 }
 
 .content{
@@ -155,6 +156,11 @@ p {
 }
 .opbtn a.warning{
 	color: #ca4d4d;
+}
+span.warning{
+	color: #ca4d4d;
+	font-weight: bold;
+	font-size: 0.18rem;
 }
 button.btn-lg{
 	width: 1.68rem;
@@ -218,8 +224,29 @@ button:hover{
 .mb20{
 	margin-bottom: 0.20rem;
 }
+.mb25{
+	margin-bottom: 0.25rem;
+}
+.mb30{
+	margin-bottom: 0.30rem;
+}
 .pr5{
 	padding-right: 0.05rem;
+}
+.pr10{
+	padding-right: 0.10rem;
+}
+.pr20{
+	padding-right: 0.20rem;
+}
+.pr25{
+	padding-right: 0.25rem;
+}
+.pr30{
+	padding-right: 0.30rem;
+}
+.wd20{
+	width: 0.20rem;
 }
 .wd60{
 	width: 0.60rem;
@@ -228,7 +255,10 @@ button:hover{
 	width: 0.80rem;
 }
 .wd100{
-	width: 1rem;
+	width: 1.0rem;
+}
+.wd130{
+	width: 1.30rem;
 }
 a.del{
 	color: #ca4d4d;
@@ -280,4 +310,10 @@ table.userlist thead tr th{
 table.userlist thead tr th input[type='checkbox']{
 	margin-top: -0.03rem;
 	vertical-align: middle;
+}
+.modal-title{
+	color: #000;
+}
+.modal-body .form-group label{
+	text-align: right !important;
 }
