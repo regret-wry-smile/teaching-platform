@@ -143,8 +143,7 @@
 			</script>
 			<!--新增学生start-->
 			<script type="text/ng-template" id="addStudentModal.html">
-				<form class="form-horizontal clearfix" role="form" name="myForm">
-				<!--<form name="myForm" novalidate="novalidate">-->
+				<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
 					<div class="modal-header">
 						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
 						<h4 class="modal-title">{{title}}</h4>
@@ -171,21 +170,6 @@
 						</div>
 						<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>
 						</div>
-						<!--<div class="greygroup clearfix">
-							<label class="pull-left">学号</label>
-							<input type="number" autocomplete="off" name="stunum" id="" value=""  class="lg pull-left" ng-model="student.stuNum" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurStunum()"/>
-							<span ng-show="myForm.stunum.$invalid" class="warning"><b>*</b></span>
-						</div>
-						<div class="greygroup clearfix">
-							<label class="pull-left">姓名</label>
-							<input type="text" autocomplete="off" name="stuname" id="" value="" class="lg pull-left" ng-model="student.stuName" required maxlength="10" placeholder="请输入长度不能超过10位字符" ng-blur="blurStuname()"/>
-							<span ng-show="myForm.stuname.$invalid" class="warning"><b>*</b></span>
-						</div>
-						<div class="greygroup clearfix">
-							<label class="pull-left">答题器编号</label>
-							<input type="number" autocomplete="off" name="devicenum" id="" value="" class="lg pull-left" ng-model="student.deviceNum" required ng-pattern="/^\d{10}$/" placeholder="请输入长度为10位的数字" ng-blur="blurDevicenum()"/>
-							<span ng-show="myForm.devicenum.$invalid" class="warning"><b>*</b></span>
-						</div>-->
 					</div>
 					<div class="modal-footer text-center">
 						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
@@ -214,7 +198,7 @@
 			  		<a href="javascript:;" class="warning" ng-click="clearStu()">清除白名单</a>
 			  	</div>
 			  	<div class="pannel clearfix">
-				<div class="col-sub pull-left" id="classlist" style="overflow-x: auto; overflow-y: auto; height:310px; width:20%;">
+				<div class="col-sub pull-left" id="classlist" style="overflow-x: auto; overflow-y: auto; height:3.1rem; width:20%;">
 					<table class="table table-stripe classlist" >
 						<thead>
 							<tr>
@@ -240,8 +224,7 @@
 						</li>
 					</ul>-->
 				</div>
-		<!--	<div class="col-main pull-left"  id="userlist" style="overflow-x: auto; overflow-y: auto; height:300px; width:80%;padding-right: 2%;">-->
-				<div class="col-main pull-left"  id="userlist" style="overflow-x: auto; overflow-y: auto; height:310px; width:80%;padding-right: 2%;">
+				<div class="col-main pull-left"  id="userlist" style="overflow-x: auto; overflow-y: auto; height:3.1rem; width:80%;padding-right: 0.2rem;">
 				<table class="table table-stripe userlist">
 					<thead>
 						<tr >
@@ -252,120 +235,19 @@
 							<th class="wd100">配对情况</th>
 							<th class="wd80">操作</th>
 							<th class="wd80" class="pr1">全选
-							<label><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>						
+							<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>						
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td>已配对</td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
+						<tr ng-repeat="item in studentList track by $index" ng-click="$event.stopPropagation();">
+							<td>{{$index+1}}</td>
+							<td>{{item.studentId}}</td>
+							<td>{{item.studentName}}</td>
+							<td>{{item.iclickerId}}</td>
+							<td>{{item.status=='1'?'已绑定':'未绑定'}}</td>
+							<td><a href="javascript:;" class="edit" ng-click="updateStdent(item)">编辑</a></td>
 							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
 						</tr>
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td></td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td></td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td></td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td></td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td></td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td></td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-						
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td></td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td></td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td></td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td></td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-						<tr>
-							<td>1</td>
-							<td>05601321</td>
-							<td>周丹</td>
-							<td>0005749219</td>
-							<td></td>
-							<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-						
 						<!--<tr ng-repeat="item in studentList track by $index"
 							ng-click="$event.stopPropagation();">
 							<td>{{$index+1}}</td>

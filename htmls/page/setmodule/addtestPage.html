@@ -20,33 +20,79 @@
 		<link rel="stylesheet" href="../../js/select/style.css" />
 		<link href="../../js/select/font-awesome.min.css" />
 		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
-		<!--<script src="../../js/select/jquery.select.js"></script>-->
 		<script src="../../js/common.js"></script>
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<script type="text/javascript" src="../../js/app.js" ></script>
-		<script src="../../js/vconsole.min.js"></script>
 		<script src="../../js/controllers/setPaperManageController.js"></script>
 		<!--<script src="../../js/controllers/uploadfileModalCtrl.js"></script>-->
 		  <!--[if IE 8]>
         <script src="js/es5-shim.min.js"></script>        
     	<![endif]-->
 	</head>
-	<body class="bg" ng-controller="setPaperManageCtrl">		
-		<div class="header clearfix">
+	<body class="bg" ng-controller="addPaperManageCtrl">
+		<!--添加题目start-->
+			<script type="text/ng-template" id="addStudentModal.html">
+				<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
+					<div class="modal-header">
+						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+						<h4 class="modal-title">{{title}}</h4>
+					</div>
+					<div class="modal-body">						
+						<div class="form-group">
+					  	<label for="firstname" class="col-sm-3 control-label">学号</label>
+					    <div class="col-sm-8">
+				    	<input type="number" autocomplete="off" name="stunum" id="" value=""  class="form-control" ng-model="student.stuNum" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurStunum()"/>					
+						</div>
+						<span ng-show="myForm.stunum.$invalid" class="warning">*</span>
+						</div>
+						<div class="form-group">
+					  	<label for="firstname" class="col-sm-3 control-label">姓名</label>
+					    <div class="col-sm-8">
+				    	<input type="text" autocomplete="off" name="stuname" id="" value=""  class="form-control" ng-model="student.stuName" required maxlength="10" placeholder="请输入长度不能超过10位字符" ng-blur="blurStuname()"/>
+						</div>
+						<span ng-show="myForm.stuname.$invalid" class="warning">*</span>
+						</div>
+						<div class="form-group">
+					  	<label for="firstname" class="col-sm-3 control-label">答题器编号</label>
+					    <div class="col-sm-8">
+				    	<input type="number" autocomplete="off" name="devicenum" id="" value=""  class="form-control" ng-model="student.deviceNum" required ng-pattern="/^\d{10}$/" placeholder="请输入长度为10位的数字" ng-blur="blurDevicenum()"/>
+						</div>
+						<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>
+						</div>
+					</div>
+					<div class="modal-footer text-center">
+						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
+						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+		
+					</div>
+				</form>
+			</script>
+			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/set.png" class="ml25" />
-					<span>试卷管理</span>
+					<span>添加试卷</span>
 				</div>
 				<div class="pull-right">
 					<img src="../../image/return.png" ng-click="returnPage()"/>
 				</div>
 			</div>
-			<div class="content bgf5 clearfix">
-				<div class="opbtn clearfix mb20">
-				  	<a href="../../page/setmodule/addtestPage.html" >添加试卷</a>
-			  	</div>
+			<div class="content bgf5 clearfix">		
+				<form class="form-horizontal clearfix">
+			  			<div class="form-group">
+					  	<label for="firstname" class="col-sm-2 control-label">试卷名称</label>
+					    <div class="col-sm-10">
+				    	<input type="number" autocomplete="off" name="stunum" id="" value=""  class="form-control" ng-model="student.stuNum" required />					
+						</div>
+						</div>
+						<div class="form-group">
+					  	<label for="firstname" class="col-sm-2 control-label">试卷描述</label>
+					    <div class="col-sm-10">
+					    	<textarea  class="form-control" rows="3" ></textarea>
+						</div>
+						</div>
+			  		</form>
 			  	<div class="pannel clearfix">
-			  		<div class="col-main"  id="testlist" style="overflow-x: auto; overflow-y: auto; height:310px; width:100%;padding-right: 2%;">
+			  		<div class="col-main"  id="testlist" style="overflow-x: auto; overflow-y: auto; height:2.0rem; width:100%;padding-right: 2%;">
 					<table class="table table-stripe userlist">
 						<thead>
 							<tr >
@@ -116,6 +162,10 @@
 						</table>
 					</div>
 			  	</div>
+			  	<div class="opbtn clearfix pt10">
+				  	<a href="javascript:;" ng-click="addTest()">添加试卷</a>
+			  	</div>
+			  </div>
 	</body>
 </html>
 <script src="../../js/jquery.nicescroll.min.js"></script>

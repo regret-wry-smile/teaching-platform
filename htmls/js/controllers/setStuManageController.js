@@ -2,15 +2,16 @@
 var app=angular.module('app',['ui.bootstrap','toastr']);
 	app.controller('setStuManageCtrl', function($rootScope,$scope,$modal) {
 	$scope.studenList=[];//学生列表数组
+	$scope.checkedId=[];
+	$scope.onechecked = [];
 		/*获取学生*/
 	var _select_student = function(val) {
 		var param = {
-				classId:'BJ1001'
+			classId:'BJ1001'
 		}
 		param =JSON.stringify(param);
 		$scope.result = JSON.parse(execute_student("select_student",param));
-		$scope.studenList=$scope.result.item;
-		alert(JSON.stringify($scope.result))
+		$scope.studentList=$scope.result.item;
 	};
 	var _init=function(){
 		_select_student();
@@ -38,7 +39,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		 window.location.href="../../page/setmodule/setmodule.html"; 
 	}
 		
-		//打开添加班级弹框
+	//打开添加班级弹框
 	$scope.addClass = function() {
 		var modalInstance = $modal.open({
 			templateUrl: 'addClassModal.html',
@@ -143,7 +144,6 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		$scope.checkedId = [];
 		angular.forEach($scope.studentList, function(i) {
 			var index = $scope.checkedId.indexOf(i.id);
-			//console.log(JSON.stringify(index));
 			if(i.checked && index === -1) {
 				var item = i;
 				$scope.onechecked.push(item);
@@ -161,12 +161,11 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		} else {
 			$scope.selected = false;
 		}
-		console.log($scope.onechecked);
 	}
 	
 	//删除学生
 	$scope.deleteStudent=function(){
-		/*if($scope.checkedId.length>0){*/
+		if($scope.checkedId.length>0){
 			var content="删除选中学生";
 			var modalInstance = $modal.open({
 				templateUrl: 'sureModal.html',
@@ -180,7 +179,9 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			});
 
 			modalInstance.result.then(function(info) {
-				//student_manage("delete_student",$rootScope.className,$scope.checkedId);
+				student_manage("delete_student",$rootScope.className,$scope.checkedId);
+				$scope.result = JSON.parse(student_manage("delete_student",$rootScope.className,$scope.checkedId));
+				alert($scope.result)
 				$scope.onechecked = [];
 				$scope.checkedId = [];
 				$scope.selected=false;
@@ -188,9 +189,9 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 
 				//$log.info('Modal dismissed at: ' + new Date());
 			});
-		/*}else{
+		}else{
 			toastr.warning("请选择学生");
-		}*/
+		}
 		
 	}
 	//清除白名单
