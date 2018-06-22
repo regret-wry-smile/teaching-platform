@@ -10,6 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.core.util.RedisMapUtil;
+import com.zkxltech.domain.Answer;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 /**
  * 随堂检测相关缓存
  * @author zkxl
@@ -31,16 +35,22 @@ public class RedisMapClassTest {
 	 *		第一题：AnswerResponse
 	 * 		第二题：AnswerResponse
 	 */
-	private static String[] keyClassTestAnswerMap = {"iclickerId","questionId"};
+//	private static String[] keyClassTestAnswerMap = {"iclickerId","questionId"};
 	
-//	public static void addAnswer(AnswerResponse answerResponse){
-//		keyClassTestAnswerMap[0] = answerResponse.getIclickerId();
-//		keyClassTestAnswerMap[1] = answerResponse.getQuestionId();
-//		List<AnswerResponse> list = (List<AnswerResponse>) RedisMapUtil.getRedisMap(classTestAnswerMap, keyAnswerMap, 0);
-//		if(list==null) {
-//			list = new ArrayList<AnswerResponse>();
-//		}
-//		list.add(answerResponse);
-//		RedisMapUtil.setRedisMap(classTestAnswerMap, keyClassTestAnswerMap, 0, answerResponse);
-//	}
+	public static void addAnswer(String jsonData){
+        // Map<String, Map<String, Answer>> cardAnswerMap = new HashMap<>();
+        JSONArray jsonArray = JSONArray.fromObject(jsonData);
+        for (int j = 0; j < jsonArray.size(); j++) {
+            JSONObject jo = (JSONObject) jsonArray.get(j);
+            String card_id = jo.getString("card_id");
+            String answers = jo.getString("answers");
+            JSONArray array = JSONArray.fromObject(answers);
+            Map<String, Answer> answerMap = new HashMap<>();
+            for (Object object : array) {
+                Answer answer = (Answer) com.zkxltech.ui.util.StringUtils.parseJSON(object, Answer.class);
+                answerMap.put(answer.getId(), answer);
+            }
+            classTestAnswerMap.put(card_id, answerMap);
+        }
+    }
 }
