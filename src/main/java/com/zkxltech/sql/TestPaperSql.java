@@ -91,6 +91,17 @@ public class TestPaperSql {
 		return dbHelper.onUpdate(sqlBuilder.toString(), testPaper);
 	}
 	
+	/**
+	 * 删除最新添加的试卷
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public Result deleteTestPaper() throws IllegalArgumentException, IllegalAccessException{
+		String sql = "delete from " + tableName + "where id = (select max(id) from student_info)";
+		return dbHelper.onUpdate(sql);
+	}
+	
 	/*根据主键更新试卷*/
 	public Result updateTestPaper(TestPaper testPaper) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder();

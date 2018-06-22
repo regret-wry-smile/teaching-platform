@@ -45,7 +45,7 @@ public class QuestionInfoSql {
 		return dbHelper.onUpdateByGroup(sqls);
 	}
 	
-	/*查询学生*/
+	/*查询试卷*/
 	public Result selectStudentInfo(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder();
 		sqlBuilder.append("select * from question_info");
@@ -67,8 +67,14 @@ public class QuestionInfoSql {
 		return dbHelper.onQuery(sqlBuilder.toString(), questionInfo);
 	}
 	
-	/*新增学生*/
-	public Result insertStudentInfo(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
+	/**
+	 * 新增题目(单题添加)
+	 * @param questionInfo
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public Result insertQuestionInfo(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder(0);
 		sqlBuilder.append("insert into question_info ");
 		Field[] files = dbHelper.getFields(questionInfo);
@@ -93,6 +99,27 @@ public class QuestionInfoSql {
 		sqlBuilder.append(")");
 		return dbHelper.onUpdate(sqlBuilder.toString(), questionInfo);
 	}
+	
+	
+	/**
+	 * 新增题目(多题添加)
+	 * @param questionInfos
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public Result insertQuestionInfo(List<QuestionInfo> questionInfos) throws IllegalArgumentException, IllegalAccessException{
+		List<String> sqls = new ArrayList<String>();
+		for (int i = 0; i < questionInfos.size(); i++) {
+			QuestionInfo questionInfo = questionInfos.get(i);
+			//插入题目信息
+			String sql = "insert into question_info (test_id,question_id,question,question_type,true_answer,range) values('"+questionInfo.getTestId()+"','"+
+					questionInfo.getQuestionId()+"','"+questionInfo.getQuestion()+"','"+questionInfo.getQuestionType()+"','"+questionInfo.getTrueAnswer()+"','"+questionInfo.getRange()+"')";	
+			sqls.add(sql);
+		}
+		return dbHelper.onUpdateByGroup(sqls);
+	}
+	
 	
 	/**
 	 * 主键删除学生

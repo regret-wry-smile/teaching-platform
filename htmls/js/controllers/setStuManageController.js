@@ -7,7 +7,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		/*获取学生*/
 	var _select_student = function(val) {
 		var param = {
-			classId:'BJ1001'
+			classId:'9999'
 		}
 		param =JSON.stringify(param);
 		$scope.result = JSON.parse(execute_student("select_student",param));
