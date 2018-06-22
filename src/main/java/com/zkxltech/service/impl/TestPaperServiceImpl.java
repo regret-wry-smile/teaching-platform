@@ -1,22 +1,22 @@
 package com.zkxltech.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
-import com.zkxltech.domain.ClassInfo;
+import com.ejet.core.util.io.ImportExcelUtils;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.TestPaper;
-import com.zkxltech.service.ClassInfoService;
 import com.zkxltech.service.TestPaperService;
-import com.zkxltech.sql.ClassInfoSql;
+import com.zkxltech.sql.QuestionInfoSql;
 import com.zkxltech.sql.TestPaperSql;
 import com.zkxltech.ui.util.StringUtils;
 
-import net.sf.json.JSONObject;
-
 public class TestPaperServiceImpl implements TestPaperService{
 	private Result result;
-	private TestPaperSql testPaperSql = new TestPaperSql();;
-	
+	private TestPaperSql testPaperSql = new TestPaperSql();
+	private QuestionInfoSql questionInfoSql = new QuestionInfoSql();
 	@Override
 	public Result insertTestPaper(Object object) {
 		result = new Result();
@@ -37,7 +37,25 @@ public class TestPaperServiceImpl implements TestPaperService{
 			return result;
 		}
 	}
-
+	@Override
+	public Result importTestPaper(Object object) {
+		result = new Result();
+		try {
+			String fileName = String.valueOf(object);
+			result = questionInfoSql.importQuestion(ImportExcelUtils.getBankListByExcel2(new FileInputStream(new File(fileName)), fileName));
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("添加试卷信息失败！");
+				return result;
+			}
+			result.setMessage("添加试卷成功！");
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("添加试卷失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
+	}
 	@Override
 	public Result selectTestPaper(Object object) {
 		result = new Result();

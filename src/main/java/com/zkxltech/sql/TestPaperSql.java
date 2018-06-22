@@ -113,16 +113,5 @@ public class TestPaperSql {
 		return dbHelper.onUpdate(sqlBuilder.toString(), null);
 	}
 	
-	public static void main(String[] args){
-		try {
-			TestPaper testPaper = new TestPaper();
-			testPaper.setTestId("99999");
-			testPaper.setTestName("二年级英语测试");
-			Result result = new TestPaperServiceImpl().insertTestPaper(testPaper);
-			System.out.println(JSONObject.fromObject(testPaper,StringUtils.IntegerIsNull()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
+	
 }

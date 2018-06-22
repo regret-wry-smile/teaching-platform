@@ -7,10 +7,7 @@ import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -19,8 +16,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -33,7 +36,6 @@ import com.zkxltech.ui.util.Colors;
 import com.zkxltech.ui.util.PageConstant;
 import com.zkxltech.ui.util.StringConstant;
 import com.zkxltech.ui.util.SwtTools;
-import org.eclipse.swt.events.MouseTrackAdapter;
 /*
  * 	页面回调指令
  * 	start_answer 开始作答
@@ -293,7 +295,26 @@ public class MainStart {
 				}
 			}
 		});
-		
+		shell.addPaintListener(new PaintListener() {
+			
+			@Override
+			public void paintControl(PaintEvent e) {
+				 org.eclipse.swt.graphics.Rectangle recttmp = shell.getBounds();
+	                Point size = new Point(recttmp.width,recttmp.height);
+	                Region region = new Region();
+	                final int[] r1 = new int[]{0,0,59,155};
+	                final int[] r2 = new int[]{0,2,2,0,size.x-2,0,size.x,2,size.x,size.y-2,size.x-2,size.y,2,size.y,0,size.y-2,0,2};
+	        		region.add(r1);
+	        		region.add(r2);
+	        		shell.setRegion(region);
+	                GC gc = e.gc;
+	                final int[] pointArray2 = new int[]{recttmp.x-1,recttmp.y+2,2+recttmp.x,0+recttmp.y-1,recttmp.x+size.x-2,0+recttmp.y-1,size.x+recttmp.x,2+recttmp.y,size.x+recttmp.x,size.y-2+recttmp.y,size.x-2+recttmp.x-1,size.y+recttmp.y,2+recttmp.x-1,size.y+recttmp.y,0+recttmp.x-1,size.y-2+recttmp.y,0+recttmp.x-1,2+recttmp.y};
+	                gc.drawPolyline(pointArray2);
+	                //释放静态资源
+	                gc.dispose();
+	                region.dispose();
+			}
+		}); 
 		//关闭
 		CLabel cLabel01 = new CLabel(shell, SWT.NONE);
 		cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
