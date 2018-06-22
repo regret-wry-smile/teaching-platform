@@ -75,14 +75,14 @@ public class TestPaperServiceImpl implements TestPaperService{
 			TestPaper testPaper =  (TestPaper) StringUtils.parseJSON(object, TestPaper.class);
 			result = testPaperSql.selectTestPaper(testPaper);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("查询班级成功!");
+				result.setMessage("查询试卷成功!");
 			}else {
-				result.setMessage("查询班级失败！");
+				result.setMessage("查询试卷失败！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("查询班级失败！");
+			result.setMessage("查询试卷失败！");
 			result.setDetail(IOUtils.getError(e));
 			return result;
 		}
@@ -93,11 +93,19 @@ public class TestPaperServiceImpl implements TestPaperService{
 		result = new Result();
 		try {
 			TestPaper testPaper =  (TestPaper) StringUtils.parseJSON(object, TestPaper.class);
+			/*根据试卷id删除题目*/
+			QuestionInfo questionInfo = new QuestionInfo();
+			questionInfo.setTestId(testPaper.getTestId());
+			result = questionInfoSql.deleteQuestionInfo(questionInfo);
+			if(Constant.ERROR.equals(result.getRet())){
+				result.setMessage("删除题目失败!");
+				return result;
+			}
 			result = testPaperSql.deleteTestPaper(testPaper);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("删除班级成功!");
+				result.setMessage("删除试卷成功!");
 			}else {
-				result.setMessage("删除班级失败！");
+				result.setMessage("删除试卷失败！");
 			}
 			return result;
 		} catch (Exception e) {
@@ -109,20 +117,26 @@ public class TestPaperServiceImpl implements TestPaperService{
 	}
 
 	@Override
-	public Result updateTestPaper(Object object) {
+	public Result updateTestPaper(Object object, Object questionInfos) {
 		result = new Result();
 		try {
 			TestPaper testPaper =  (TestPaper) StringUtils.parseJSON(object, TestPaper.class);
+			List<QuestionInfo> questionInfos1  = (List<QuestionInfo>) JSONArray.toCollection(JSONArray.fromObject(questionInfos), QuestionInfo.class);
+			Result result = questionInfoSql.updateStudentsById(questionInfos1);
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("修改题目信息成功!");
+				return result;
+			}
 			result = testPaperSql.updateTestPaper(testPaper);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("修改班级成功!");
+				result.setMessage("修改成功!");
 			}else {
-				result.setMessage("修改班级失败！");
+				result.setMessage("修改失败！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("修改班级失败！");
+			result.setMessage("修改失败！");
 			result.setDetail(IOUtils.getError(e));
 			return result;
 		}

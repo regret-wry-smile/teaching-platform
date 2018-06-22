@@ -32,11 +32,25 @@ public class TestPaperFunctionManage extends BrowserFunction{
 				if (params.length != 2) {
 					result.setRet(Constant.ERROR);
 					result.setMessage("参数个数有误！");
+					break;
 				}
 				result = testPaperService.importTestPaper(params[1]);
 				break;
 			case "insert_paper":
+				if (params.length != 3) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("参数个数有误！");
+					break;
+				}
 				result = testPaperService.insertTestPaper(params[1],params[2]);
+				break;
+			case "update_paper":
+				if (params.length != 3) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("参数个数有误！");
+					break;
+				}
+				result = testPaperService.updateTestPaper(params[1],params[2]);
 				break;
 			default:
 				result.setRet(Constant.ERROR);
