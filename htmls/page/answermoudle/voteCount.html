@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html ng-app="app">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>答题页面</title>
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="viewport" content="user-scalable=no,width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<link rel="stylesheet" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
+		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
+		<script src="../../js/angular-toastr/angular-toastr.min.js"></script>
+		<script src="../../js/angular-toastr/angular-toastr.tpls.min.js"></script>
+		<script src="../../js/jquery-1.11.1.min.js"></script>
+		<link rel="stylesheet" href="../../js/select/style.css" />
+		<link href="../../js/select/font-awesome.min.css" />
+		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
+		<script src="../../js/jquery.nicescroll.min.js"></script>
+		<script src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
+		<script type="text/javascript" src="../../js/app.js" ></script>
+		<script src="../../js/controllers/setquickMarkController.js"></script>
+		<!--<script src="../../js/controllers/uploadfileModalCtrl.js"></script>-->
+		  <!--[if IE 8]>
+        <script src="js/es5-shim.min.js"></script>        
+    	<![endif]-->
+	</head>
+	<style type="text/css">
+		body{
+			position: relative;
+		}
+		.operatebtn{
+			position: absolute;
+			bottom: 0.50rem;
+			left: 0;
+			right: 0;
+		}
+		.operatebtn span{
+			font-size: 0.38rem;
+			color: #fff;
+			margin-right: 0.10rem;
+		}
+	</style>
+	<body class="bg" ng-controller="quickMarkCountCtrl">
+			<div class="header clearfix">
+				<div class="pull-left">
+					<img src="../../image/stars.png" class="ml25 pt20" />
+					<span>投票统计</span>
+				</div>
+				<div class="pull-right">
+					<img src="../../image/return.png" ng-click="returnPage()"/>
+				</div>
+			</div>
+			<div class="content  clearfix">	
+				<div class="pannel clearfix" style="height: 100%;">
+				<div class="col-sub pull-left" style="width: 48%;">
+					<div class="text clearfix">
+						<label class="pull-left">投票主题:</label>
+						<div class="pull-left" style="width: 80%; vertical-align: middle;margin-top: 0.07rem;">
+							<p class="con">哈哈哈啊哈哈哈哈啊哈哈哈哈啊哈哈哈哈啊哈</p>
+						</div>
+					</div>
+					<div class="text clearfix">
+						<label class="pull-left">投票内容:</label>
+						<div class="pull-left" style="width: 80%; vertical-align: middle;margin-top: 0.07rem;">
+							<p class="con">哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈啊哈哈哈哈啊哈哈哈哈啊哈</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-main pull-left" style="width: 52%;height: 3.0rem;margin-top: -0.5rem;">
+				<div id="coutbar" class="clearfix" style="height: 100%;"></div>
+				</div>
+				</div>
+			</div>
+			<div class="operatebtn text-center pt20">
+				<span>反对:100</span>
+				<span>赞成:52人</span>
+				<span>弃权:80</span>
+			</div>
+	</body>
+</html>
+
+<script src="../../js/echarts.simple.min.js"></script>
+<script type="text/javascript">
+	var dom = document.getElementById("coutbar");
+	var myChart = echarts.init(dom);
+	var colors = ['#5793f3', '#d14a61', '#675bba'];
+	option = {
+    color: ['#fff'],
+    tooltip : {
+        trigger: 'axis',
+        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
+    },
+  	toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            data : ['反对', '赞成', '弃权'],
+            axisTick: {
+                alignWithLabel: true
+            },
+            axisLine: {
+				lineStyle: {
+					color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
+					show: false
+				}
+			},
+			axisLabel: {        
+                show: true,
+                textStyle: {
+                    color: '#fff',
+                    fontSize:'16'
+                }
+            },
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value',
+          	splitLine: false, //是否显示网格线
+          	/*axisTick:{
+		        show:false
+		    },*/
+			axisLine: {
+				lineStyle: {
+					color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
+					show: false
+				}
+			},
+			axisLabel: {        
+                show: true,
+                textStyle: {
+                    color: '#fff',
+                    fontSize:'16'
+                }
+            },
+        }
+    ],
+    series : [
+        {
+            name:'评分统计',
+            type:'bar',
+            barWidth: '50%',
+            data:[100, 52, 80],
+            itemStyle: {
+	    		normal: {
+			        label: {
+			            show: true,
+			            position: 'top',
+			            textStyle: {
+			                color: '#fff',
+		                    fontSize:'16'
+			            },
+		            }
+	       		}
+    		}
+        }
+    ]
+    
+};
+if(option && typeof option === "object") {
+	myChart.setOption(option, true);
+}
+</script>

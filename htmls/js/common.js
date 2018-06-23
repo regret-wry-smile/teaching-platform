@@ -1,5 +1,4 @@
-
-    $(function() {
+$(function() {
            // $("#mySelect").select(); 不传参数可以这样写
            /* $(".mySelect").select({
                 width: "3rem",
@@ -23,4 +22,6 @@
             //mainContent: "请选择",    //选择显示框的默认文字
             //searchContent: "关键词搜索"   //搜索框的默认提示文字  
            /* $('.single').multiselect({multiple:false,selectedHtmlValue:'请选择'});*/
-        });
+          	var nice = $("html").niceScroll();  // The document page (body)
+      		$('body').niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable 
+    });

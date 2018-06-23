@@ -16,15 +16,15 @@ public class PageConstant {
 	/**
 	 * 答题页面类型
 	 */
-	public static String PAGE_ANSWER_URL = COMMON_URL+"/answer.html";
+	public static String PAGE_ANSWER_URL = COMMON_URL+"/page/answermoudle/startAnswer.html";
 	/**
 	 * 设置页面类型
 	 */
-	public static String PAGE_SET_URL = COMMON_URL+"/page/setmodule/set.html";
+	public static String PAGE_SET_URL = COMMON_URL+"/page/setmodule/setmodule.html";
 	/**
 	 * 记录页面类型
 	 */
-	public static String PAGE_RECORD_URL = COMMON_URL+"/record.html";
+	public static String PAGE_RECORD_URL = COMMON_URL+"/page/resultmoudle/answerCount.html";
 	
 	/********图片路径常量*******/
 	public static String imagePack = "/com/zkxltech/image";
