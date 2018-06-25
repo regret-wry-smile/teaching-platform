@@ -75,12 +75,12 @@ public class EquipmentServiceImpl implements EquipmentService{
             //FIXME
             /**查询学生信息*/
             StudentInfoServiceImpl sis= new StudentInfoServiceImpl();
-            StudentInfo si =  (StudentInfo) com.zkxltech.ui.util.StringUtils.parseJSON(param, StudentInfo.class);
-            if (StringUtils.isBlank(si.getClassId())) {
-                r.setMessage("参数为空:班级id");
-                return r;
-            }
-            Result result = sis.selectStudentInfo(si);
+//            StudentInfo si =  (StudentInfo) com.zkxltech.ui.util.StringUtils.parseJSON(param, StudentInfo.class);
+//            if (StringUtils.isBlank(si.getClassId())) {
+//                r.setMessage("参数为空:班级id");
+//                return r;
+//            }
+            Result result = sis.selectStudentInfo(param);
             List<StudentInfo> studentInfos = (List)result.getItem();
             if (result== null || ListUtils.isEmpty(studentInfos)) {
                 r.setMessage("您还未上传学生信息");
