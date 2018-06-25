@@ -5,7 +5,8 @@ import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.EquipmentParam;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.EquipmentService;
-import com.zkxlteck.scdll.MachineThread;
+import com.zkxlteck.scdll.AnswerThread;
+import com.zkxlteck.scdll.CardInfoThread;
 import com.zkxlteck.scdll.ScDll;
 
 /**
@@ -63,7 +64,7 @@ public class EquipmentServiceImpl implements EquipmentService{
             int bind_start = ScDll.intance.wireless_bind_start(ep.getModel(), ep.getUidStr() == null ? "" : ep.getUidStr()) ;
             if (bind_start > 0) {
                 //FIXME
-                t = new MachineThread(MachineThread.GET_CARD_INFO);
+                t = new CardInfoThread();
                 t.start();
                 r.setItem(bind_start);
                 r.setRet(Constant.SUCCESS);
@@ -95,7 +96,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         Result r = new Result();
         int answer_start = ScDll.intance.answer_start(is_quick_response, answer_str);
         if (answer_start == SUCCESS) {
-            t = new MachineThread(MachineThread.GET_ANSWER);
+            t = new AnswerThread();
             t.start();
             r.setRet(Constant.SUCCESS);
             r.setMessage("发送成功");
@@ -110,7 +111,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         Result r = new Result();
         int answer_start_with_raise_hand = ScDll.intance.answer_start_with_raise_hand(is_quick_response, raise_hand, answer_str);
         if (answer_start_with_raise_hand == SUCCESS) {
-            t = new MachineThread(MachineThread.GET_ANSWER);
+            t = new AnswerThread();
             t.start();
             r.setRet(Constant.SUCCESS);
             r.setMessage("发送成功");
@@ -161,7 +162,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         if (answer_stop == SUCCESS) {
             //FIXME
             if (t != null) {
-                MachineThread m = (MachineThread)t;
+                AnswerThread m = (AnswerThread)t;
                 m.setFLAG(false);
             }
             r.setRet(Constant.SUCCESS);

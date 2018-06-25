@@ -122,7 +122,7 @@ public class QuestionInfoSql {
 	
 	
 	/**
-	 * 主键批量删除学生
+	 * 主键批量删除题目
 	 * @param studentInfo
 	 * @return
 	 * @throws IllegalArgumentException
