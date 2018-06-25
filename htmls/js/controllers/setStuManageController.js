@@ -373,9 +373,47 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	}
 })
 	
-app.controller('uploadfileModalCtrl', function($scope,$modalInstance) {
+app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr) {
+	$scope.fileType='0';//0:本地导入;1:服务导入
+	$scope.fileType1=angular.copy($scope.fileType);
+	//切换文件类型
+	$scope.changefileType=function(fileType){
+		$scope.fileType=fileType;
+	}
+	$scope.filepath='';	
+	$scope.fileChanged=function(){
+		if(document.querySelector('#uploadFile').value){
+			$scope.filepath= document.querySelector('#uploadFile').value;
+			
+		}
+	}
 	$scope.ok = function() {
-		$modalInstance.close();
+		if($scope.fileType=='0'){
+			if($scope.filepath){
+				var extStart = $scope.filepath.lastIndexOf(".");
+				var ext = $scope.filepath.substring(extStart, $scope.filepath.length).toUpperCase();
+				if(ext != ".XLS" && ext != ".XLSX") {
+					toastr.warning("只能导入.XLSX、.XLS类型文件");
+					return ;
+				}else{
+					console.log(JSON.stringify($scope.filepath))
+					$scope.result=JSON.parse(execute_student("import_student",$scope.filepath));
+					if($scope.result.ret=='success'){
+						toastr.success($scope.result.message);
+					}else{
+						toastr.error($scope.result.message);
+					}
+					
+					//$('#myModal').modal('show');
+				}
+			}else{
+				toastr.warning("请选择文件");
+			}
+		}else{
+			execute_student("import_server");
+		}
+		
+		
 	}
 	$scope.cancel=function(){
 		$modalInstance.dismiss('cancel');
@@ -486,7 +524,6 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 			iclickerId:$scope.student.iclickerIdint,
 			status:$scope.student.status//班級类型
 		}
-		/*var param = $scope.student;*/
 		console.log(JSON.stringify(param))
 		$scope.result=JSON.parse(execute_student("update_student",JSON.stringify(param)));
 		if($scope.result.ret=='success'){
@@ -589,4 +626,18 @@ app.directive('select', function() {
 			
 		}
 	}
-})
+})/*上传文件校验*/
+app.directive('validFile', function() {
+	return {
+		require: 'ngModel',
+		link: function(scope, el, attrs, ngModel) {
+			//change event is fired when file is selected
+			el.bind('change', function() {
+				scope.$apply(function() {
+					ngModel.$setViewValue(el.val());
+					ngModel.$render();
+				});
+			});
+		}
+	}
+});

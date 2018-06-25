@@ -97,8 +97,9 @@ p {
 .bgf5{
 	background-color: #f5f5f5;
 }
+
 .bggreen{
-	background-color:#5ed6be ;
+	background-color:#5ed6be;
 }	
 .header {
    /* height: 1.10rem;*/
@@ -489,6 +490,9 @@ span.sub{
 .blue{
 	background: #27bfff;
 }
+.grey{
+	background:#abacac;
+} 
 table.classlist tbody tr{
 	cursor: pointer;
 }
