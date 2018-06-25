@@ -52,8 +52,20 @@ public class QuestionServiceImpl implements QuestionService{
 	
 	@Override
 	public Result insertQuestion(Object object) {
-		// TODO Auto-generated method stub
-		return null;
+		result = new Result();
+		try {
+			QuestionInfo questionInfo =  (QuestionInfo) StringUtils.parseJSON(object, QuestionInfo.class);
+			RedisMapPaper.addQuestion(questionInfo);
+			result.setMessage("添加题目成功!");
+			result.setRet(Constant.SUCCESS);
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("添加题目失败！");
+			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
+			return result;
+		}
 	}
 
 	@Override
@@ -99,18 +111,30 @@ public class QuestionServiceImpl implements QuestionService{
 			return result;
 		}
 	}
+	
+	@Override
+	public Result deleteQuestionRedis(Object object) {
+		try {
+			QuestionInfo questionInfo =  (QuestionInfo) StringUtils.parseJSON(object, QuestionInfo.class);
+			RedisMapPaper.deleteQuestion(questionInfo);
+			result.setRet(Constant.SUCCESS);
+			result.setMessage("删除题目成功!");
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("删除题目失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
+	}
 
 	@Override
 	public Result updateQuestion(Object object) {
 		try {
 			QuestionInfo questionInfo =  (QuestionInfo)  StringUtils.parseJSON(JSONObject.fromObject(object), QuestionInfo.class);
-			result = questionInfoSql.updateStudentById(questionInfo);
-			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("修改题目成功!");
-				BrowserManager.refreshBindCard();
-			}else {
-				result.setMessage("修改题目失败！");
-			}
+			RedisMapPaper.updateQuestion(questionInfo);
+			result.setRet(Constant.SUCCESS);
+			result.setMessage("修改题目成功!");
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);

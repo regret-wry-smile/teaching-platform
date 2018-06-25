@@ -29,8 +29,7 @@ public class RedisMapPaper {
 	 * 添加题目缓存
 	 * @param obj
 	 */
-	public static void addQuestion(Object obj){
-		QuestionInfo questionInfo = StringUtils.parseToBean(obj, QuestionInfo.class);
+	public static void addQuestion(QuestionInfo questionInfo){
 		keyQuestionList[0] = String.valueOf(questionList.size()+1);
 		RedisMapUtil.setRedisMap(questionList, keyQuestionList, 0, questionInfo);
     }
@@ -47,8 +46,7 @@ public class RedisMapPaper {
 	 * 删除题目信息
 	 * @return
 	 */
-	public static void deleteQuestion(Object obj){
-		QuestionInfo questionInfo = StringUtils.parseToBean(obj, QuestionInfo.class);
+	public static void deleteQuestion(QuestionInfo questionInfo){
 		questionList.remove(String.valueOf(questionInfo.getId()));
     }
 	
@@ -56,15 +54,20 @@ public class RedisMapPaper {
 	 * 修改题目信息
 	 * @return
 	 */
-	public static void updateQuestion(Object obj){
-		QuestionInfo questionInfo = StringUtils.parseToBean(obj, QuestionInfo.class);
+	public static void updateQuestion(QuestionInfo questionInfo){
 		if (questionList.containsKey(String.valueOf(questionInfo.getId()))) {
 			keyQuestionList[0] = String.valueOf(questionInfo.getId());
 			RedisMapUtil.setRedisMap(questionList, keyQuestionList, 0, questionInfo);
 		}
     }
 	
-	
+	/**
+	 * 清空题目信息缓存
+	 * @return
+	 */
+	public static void clearRedis(){
+		questionList.clear();
+    }
 //	public static void main(String[] args) {
 //		QuestionInfo questionInfo = new QuestionInfo();
 //		questionInfo.setQuestion("第一题");

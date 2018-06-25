@@ -3,6 +3,7 @@ package com.zkxltech.ui.functions;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 
+import com.ejet.cache.RedisMapPaper;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.QuestionService;
@@ -79,9 +80,25 @@ public class TestPaperFunctionManage extends BrowserFunction{
 				}
 				result = questionService.selectQuestion(params[1]);
 				break;
+			case "clear_question_redis":
+				/*清空题目缓存*/
+				RedisMapPaper.clearRedis();
+				break;
 			case "select_question_redis":
 				/*从缓存中查询*/
 				result = questionService.selectQuestion();
+				break;
+			case "add_question_redis":
+				/*添加题目到缓存*/
+				result = questionService.insertQuestion(params[1]);
+				break;
+			case "update_question_redis":
+				/*修改缓存中题目*/
+				result = questionService.updateQuestion(params[1]);
+				break;
+			case "delete_question_redis":
+				/*修改缓存中题目*/
+				result = questionService.deleteQuestionRedis(params[1]);
 				break;
 			case "delete_question":
 				if (params.length != 2) {
