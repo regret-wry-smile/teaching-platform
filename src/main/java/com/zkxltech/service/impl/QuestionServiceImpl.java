@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.BrowserManager;
+import com.ejet.cache.RedisMapPaper;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
@@ -115,6 +116,23 @@ public class QuestionServiceImpl implements QuestionService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("修改题目失败！");
 			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
+	}
+
+	@Override
+	public Result selectQuestion() {
+		result = new Result();
+		try {
+			result.setItem(RedisMapPaper.getQuestions());
+			result.setMessage("查询题目成功!");
+			result.setRet(Constant.SUCCESS);
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("查询题目失败！");
+			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}

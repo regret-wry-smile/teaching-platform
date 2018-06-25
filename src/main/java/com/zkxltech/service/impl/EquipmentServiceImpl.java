@@ -1,9 +1,15 @@
 package com.zkxltech.service.impl;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.ejet.cache.RedisMapBind;
+import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
-import com.zkxltech.domain.EquipmentParam;
 import com.zkxltech.domain.Result;
+import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.EquipmentService;
 import com.zkxlteck.scdll.AnswerThread;
 import com.zkxlteck.scdll.CardInfoThread;
@@ -56,22 +62,47 @@ public class EquipmentServiceImpl implements EquipmentService{
         Result r = new Result();
         r.setRet(Constant.ERROR);
         try {
-            EquipmentParam ep =  (EquipmentParam) com.zkxltech.ui.util.StringUtils.parseJSON(param, EquipmentParam.class);
-            if (ep.getModel()== null) {
-                r.setMessage("缺少参数");
+            //EquipmentParam ep =  (EquipmentParam) com.zkxltech.ui.util.StringUtils.parseJSON(param, EquipmentParam.class);
+//            if (ep.getModel()== null) {
+//                r.setMessage("缺少参数");
+//                return r;
+//            }
+            int bind_start = ScDll.intance.wireless_bind_start(1,"") ;
+            if (bind_start < 1) {
+                r.setMessage("操作失败");
                 return r;
             }
-            int bind_start = ScDll.intance.wireless_bind_start(ep.getModel(), ep.getUidStr() == null ? "" : ep.getUidStr()) ;
-            if (bind_start > 0) {
-                //FIXME
-                t = new CardInfoThread();
-                t.start();
-                r.setItem(bind_start);
-                r.setRet(Constant.SUCCESS);
-                r.setMessage("操作成功");
-            }else{
-                r.setMessage("操作失败");
+            //FIXME
+            /**查询学生信息*/
+            StudentInfoServiceImpl sis= new StudentInfoServiceImpl();
+//            StudentInfo si =  (StudentInfo) com.zkxltech.ui.util.StringUtils.parseJSON(param, StudentInfo.class);
+//            if (StringUtils.isBlank(si.getClassId())) {
+//                r.setMessage("参数为空:班级id");
+//                return r;
+//            }
+            Result result = sis.selectStudentInfo(param);
+            List<StudentInfo> studentInfos = (List)result.getItem();
+            if (result== null || ListUtils.isEmpty(studentInfos)) {
+                r.setMessage("您还未上传学生信息");
+                return r;
             }
+            /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+            Map<Object, List<StudentInfo>> studentInfoMap = ListUtils.getClassificationMap(studentInfos, "iclickerId");
+            //检查数据
+            Set<Object> keySet = studentInfoMap.keySet();
+            for (Object key : keySet) {
+                List<StudentInfo> list = studentInfoMap.get(key);
+                if (list.size() > 1) {
+                    r.setMessage("答题器编号:"+key+",绑定了多个学生");
+                    return r;
+                }
+            }
+            RedisMapBind.studentInfoMap = studentInfoMap;
+            t = new CardInfoThread();
+            t.start();
+            r.setItem(bind_start);
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("操作成功");
         } catch (Exception e) {
             r.setMessage("操作失败");
             r.setDetail(e.getMessage());

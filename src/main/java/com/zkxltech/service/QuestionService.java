@@ -7,7 +7,16 @@ public interface QuestionService {
 	Result importQuestion(Object object);
 	/*新增题目*/
 	Result insertQuestion(Object object);
-	/*查询题目*/
+	/**
+	 * 从缓存中查询所有题目信息
+	 * @return
+	 */
+	Result selectQuestion();
+	/**
+	 * 从数据库中查询题目信息
+	 * @param object question对象
+	 * @return
+	 */
 	Result selectQuestion(Object object);
 	/**
 	 * 删除题目

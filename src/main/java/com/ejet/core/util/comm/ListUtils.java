@@ -1,7 +1,11 @@
 package com.ejet.core.util.comm;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -283,5 +287,57 @@ public class ListUtils {
             invertList.add(sourceList.get(i));
         }
         return invertList;
+    }
+    
+    /**
+     * @author zhouwei
+     * 
+     * @param param 集合
+     * @param fieldKey  将集合中的参数按哪个字段作为key进行分类 
+     * @return
+     * @throws SecurityException 
+     * @throws NoSuchMethodException 
+     * @throws InvocationTargetException 
+     * @throws IllegalArgumentException 
+     * @throws IllegalAccessException 
+     */
+    public static <T> Map<Object, List<T>> getClassificationMap(List<T> param,String fieldKey) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+        if (isEmpty(param)) {
+            return null ;
+        }
+        if (StringUtils.isBlank(fieldKey)) {
+            return null ;
+        }
+        Map<Object, List<T>> map = new HashMap<>();
+        for (T fpt : param) {
+            Method method = fpt.getClass().getMethod("get" + ListUtils.change(fieldKey),
+                            null);
+            if (method == null) {
+            }
+            Object invoke = method.invoke(fpt, null);
+            List<T> list = map.get(invoke);
+            if (isEmpty(list)) {
+                list = new ArrayList<>();
+                map.put(invoke, list);
+            }
+            list.add(fpt);
+        }
+        return map;
+    }
+    /**
+     * @author zhouwei
+     * 
+     * @param src
+     *            源字符串
+     * @return 字符串，将src的第一个字母转换为大写，src为空时返回null
+     */
+    public static String change(String src) {
+        if (src != null) {
+            StringBuffer sb = new StringBuffer(src);
+            sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+            return sb.toString();
+        } else {
+            return null;
+        }
     }
 }
