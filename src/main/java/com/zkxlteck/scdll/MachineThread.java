@@ -28,7 +28,7 @@ public class MachineThread extends Thread {
         while(FLAG){
             if (GET_ANSWER.equals(method)) {
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(50);
                     } catch (InterruptedException e) {
                         logger.error(" Thread sleep failure ");
                     }
@@ -40,7 +40,7 @@ public class MachineThread extends Thread {
             }
             if (GET_CARD_INFO.equals(method)) {
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(50);
                     } catch (InterruptedException e) {
                         logger.error(" Thread sleep failure ");
                     }
