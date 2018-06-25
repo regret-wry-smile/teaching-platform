@@ -279,11 +279,9 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			});
 
 			modalInstance.result.then(function(info) {
-				var param={
-					ids:$scope.checkedId
-				}
+				var param=$scope.checkedId;
 				console.log(JSON.stringify(param))
-				$scope.result = JSON.parse(execute_student("delete_student",JSON.stringify(param)));
+				$scope.result = JSON.parse(execute_student("delete_student",param));
 				if($scope.result.ret=='success'){					
 					toastr.success($scope.result.message);
 					_selectStudent();

@@ -2,6 +2,7 @@ package com.zkxltech.service.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ejet.cache.BrowserManager;
@@ -14,6 +15,7 @@ import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.ui.util.StringUtils;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class StudentInfoServiceImpl implements StudentInfoService{
@@ -86,7 +88,12 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	@Override
 	public Result deleteStudentById(Object param) {
 		try {
-			result = studentInfoSql.deleteStudentById((List<Integer>) param);
+			JSONArray jsonArray = JSONArray.fromObject(param);
+			List<Integer> ids = new ArrayList<Integer>();
+			for (int i = 0; i < jsonArray.size(); i++) {
+				ids.add(jsonArray.getInt(i));
+			}
+			result = studentInfoSql.deleteStudentById(ids);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("删除学生信息成功!");
 			}else {
