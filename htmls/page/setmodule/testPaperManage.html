@@ -74,60 +74,12 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="item in PaperInfo track by $index">
-								<td>1</td>
-								<td>八年级生物第一单元自测试卷</td>
-								<td>1、检测单细胞繁殖知识点</td>
+							<tr ng-repeat="paperInfo in paperInfoList track by $index">
+								<td>{{$index+1}}</td>
+								<td>{{paperInfo.testName}}</td>
+								<td>{{paperInfo.describe}}</td>
 								<td><a href= "../../page/setmodule/edittestPage.html" class="edit mr5" ng-click="editPaper(item)">编辑</a><a href="javascript:;" class="del" ng-click="delPaper()">删除</a></td>
 							</tr>
-							<!--<tr>
-								<td>1</td>
-								<td>八年级生物第一单元自测试卷</td>
-								<td>1、检测单细胞繁殖知识点</td>
-								<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td>八年级生物第一单元自测试卷</td>
-								<td>1、检测单细胞繁殖知识点</td>
-								<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td>八年级生物第一单元自测试卷</td>
-								<td>1、检测单细胞繁殖知识点</td>
-								<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td>八年级生物第一单元自测试卷</td>
-								<td>1、检测单细胞繁殖知识点</td>
-								<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td>八年级生物第一单元自测试卷</td>
-								<td>1、检测单细胞繁殖知识点</td>
-								<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td>八年级生物第一单元自测试卷</td>
-								<td>1、检测单细胞繁殖知识点</td>
-								<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td>八年级生物第一单元自测试卷</td>
-								<td>1、检测单细胞繁殖知识点</td>
-								<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							</tr>
-							<tr>
-								<td>1</td>
-								<td>八年级生物第一单元自测试卷</td>
-								<td>1、检测单细胞繁殖知识点</td>
-								<td><a href="javascript:;" class="edit mr5">编辑</a><a href="javascript:;" class="del">删除</a></td>
-							</tr>-->
 							
 							</tbody>
 						</table>
