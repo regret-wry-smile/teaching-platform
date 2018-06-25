@@ -5,8 +5,12 @@ import org.eclipse.swt.browser.BrowserFunction;
 
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
+import com.zkxltech.service.QuestionService;
+import com.zkxltech.service.ServerService;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.service.TestPaperService;
+import com.zkxltech.service.impl.QuestionServiceImpl;
+import com.zkxltech.service.impl.ServerServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 import com.zkxltech.service.impl.TestPaperServiceImpl;
 
@@ -19,6 +23,8 @@ import net.sf.json.JSONObject;
 public class TestPaperFunctionManage extends BrowserFunction{
 	
 	private TestPaperService testPaperService = new TestPaperServiceImpl();
+	private QuestionService questionService = new QuestionServiceImpl();
+	private ServerService serverService = new ServerServiceImpl();
 	public TestPaperFunctionManage(Browser browser, String name) {
 		super(browser, name);
 	}
@@ -30,6 +36,15 @@ public class TestPaperFunctionManage extends BrowserFunction{
 			switch (method) {
 			case "select_paper":
 				result = testPaperService.selectTestPaper(params[1]);
+				break;
+			case "select_paper_server":
+				/*服务器查询试卷列表*/
+				if (params.length != 3) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("参数个数有误！");
+					break;
+				}
+				result = serverService.getTestInfoFromServer((String)params[1], (String)params[2]);
 				break;
 			case "import_paper":
 				if (params.length != 2) {
@@ -54,6 +69,22 @@ public class TestPaperFunctionManage extends BrowserFunction{
 					break;
 				}
 				result = testPaperService.updateTestPaper(params[1],params[2]);
+				break;
+			case "select_question":
+				if (params.length != 2) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("参数个数有误！");
+					break;
+				}
+				result = questionService.selectQuestion(params[1]);
+				break;
+			case "delete_question":
+				if (params.length != 2) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("参数个数有误！");
+					break;
+				}
+				result = questionService.deleteQuestionByIds(params[1]);
 				break;
 			default:
 				result.setRet(Constant.ERROR);

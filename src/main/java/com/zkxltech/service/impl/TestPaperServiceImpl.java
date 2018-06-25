@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
@@ -18,6 +21,7 @@ import com.zkxltech.ui.util.StringUtils;
 import net.sf.json.JSONArray;
 
 public class TestPaperServiceImpl implements TestPaperService{
+	private static final Logger log = LoggerFactory.getLogger(TestPaperServiceImpl.class);
 	private Result result;
 	private TestPaperSql testPaperSql = new TestPaperSql();
 	private QuestionInfoSql questionInfoSql = new QuestionInfoSql();
@@ -46,6 +50,7 @@ public class TestPaperServiceImpl implements TestPaperService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("添加试卷失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -65,6 +70,7 @@ public class TestPaperServiceImpl implements TestPaperService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("添加试卷失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -84,6 +90,7 @@ public class TestPaperServiceImpl implements TestPaperService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("查询试卷失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -112,6 +119,7 @@ public class TestPaperServiceImpl implements TestPaperService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("删除班级失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -138,6 +146,7 @@ public class TestPaperServiceImpl implements TestPaperService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("修改失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}

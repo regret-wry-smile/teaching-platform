@@ -9,8 +9,12 @@ public interface QuestionService {
 	Result insertQuestion(Object object);
 	/*查询题目*/
 	Result selectQuestion(Object object);
-	/*删除题目*/
-	Result deleteQuestion(Object object);
+	/**
+	 * 删除题目
+	 * @param object 主键id集合
+	 * @return
+	 */
+	Result deleteQuestionByIds(Object object);
 	/*修改题目*/
 	Result updateQuestion(Object object);
 }
