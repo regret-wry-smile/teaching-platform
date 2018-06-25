@@ -11,8 +11,10 @@ import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.ClassInfoService;
+import com.zkxltech.service.EquipmentService;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.service.impl.ClassInfoServiceImpl;
+import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
@@ -27,7 +29,7 @@ public class StudentFunctionManage extends BrowserFunction{
 	
 	private ClassInfoService classInfoService = new ClassInfoServiceImpl();
 	private StudentInfoService studentInfoservice = new StudentInfoServiceImpl();
-	
+	private EquipmentService equipmentService = EquipmentServiceImpl.getInstance();
 	public StudentFunctionManage(Browser browser, String name) {
 		super(browser, name);
 	}
@@ -86,6 +88,10 @@ public class StudentFunctionManage extends BrowserFunction{
 			case "update_class":
 				result = classInfoService.updateClassInfo(param);
 				break;
+				/**清除白名单位(解绑)*/
+			case "clear_bind":
+			    result = equipmentService.clear_wl();
+			    break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");
