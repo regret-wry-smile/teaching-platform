@@ -3,6 +3,7 @@ package com.zkxltech.service.impl;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
+import com.zkxltech.service.EquipmentService;
 import com.zkxlteck.scdll.MachineThread;
 import com.zkxlteck.scdll.ScDll;
 
@@ -10,7 +11,7 @@ import com.zkxlteck.scdll.ScDll;
  * @author: ZhouWei
  * @date:2018年6月21日 下午2:55:17
  */
-public class EquipmentServiceImpl  {
+public class EquipmentServiceImpl implements EquipmentService{
     //private ExecutorService threadPool = Executors.newSingleThreadExecutor(); //单线程池
     public static final int SUCCESS = 0 ;//
     public static final int ERROR = -1 ; //
@@ -22,7 +23,7 @@ public class EquipmentServiceImpl  {
     public static EquipmentServiceImpl getInstance() {  
         return SINGLE;  
     }
-    
+    @Override
     public Result get_device_info() {
         Result r = new Result();
         String get_device_info = ScDll.intance.get_device_info();
@@ -35,7 +36,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("查询失败");
         return r;
     }
-
+    @Override
     public Result clear_wl() {
         Result r = new Result();
         int clear_wl = ScDll.intance.clear_wl();
@@ -48,7 +49,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("清除失败");
         return r;
     }
-
+    @Override
     public Result bind_start(Integer model,String data) {
         Result r = new Result();
         int bind_start = ScDll.intance.wireless_bind_start(model, data) ;
@@ -64,7 +65,7 @@ public class EquipmentServiceImpl  {
         }
         return r;
     }
-    
+    @Override
     public Result bind_stop() {
         Result r = new Result();
         int bind_stop = ScDll.intance.wireless_bind_stop();
@@ -77,7 +78,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("停止失败");
         return r;
     }
-
+    @Override
     public Result answer_start(int is_quick_response, String answer_str) {
         Result r = new Result();
         int answer_start = ScDll.intance.answer_start(is_quick_response, answer_str);
@@ -92,7 +93,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("发送失败");
         return r;
     }
-
+    @Override
     public Result answer_start_with_raise_hand(int is_quick_response, int raise_hand, String answer_str) {
         Result r = new Result();
         int answer_start_with_raise_hand = ScDll.intance.answer_start_with_raise_hand(is_quick_response, raise_hand, answer_str);
@@ -107,7 +108,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("发送失败");
         return r;
     }
-
+    @Override
     public Result set_raise_hand(int raise_hand) {
         Result r = new Result();
         int set_raise_hand = ScDll.intance.set_raise_hand(raise_hand);
@@ -120,7 +121,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("设置失败");
         return r;
     }
-
+    @Override
     public Result set_sign_in(int attendance) {
         Result r = new Result();
         int set_sign_in = ScDll.intance.set_sign_in(attendance);
@@ -141,7 +142,7 @@ public class EquipmentServiceImpl  {
 //        map.put("thread", t);
 //        return r;
 //    }
-
+    @Override
     public Result answer_stop() {
         Result r = new Result();
         int answer_stop = ScDll.intance.answer_stop();
@@ -159,7 +160,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("停止失败");
         return r;
     }
-
+    @Override
     public Result set_student_id(String student_id_str) {
         Result r = new Result();
         int set_student_id = ScDll.intance.set_student_id(student_id_str);
@@ -172,7 +173,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("操作失败");
         return r;
     }
-
+    @Override
     public Result get_student_id_info() {
         Result r = new Result();
         String get_student_id_info = ScDll.intance.get_student_id_info();
@@ -186,7 +187,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("操作失败");
         return r;
     }
-
+    @Override
     public Result set_channel(int tx_ch, int rx_ch) {
         Result r = new Result();
         int set_channel = ScDll.intance.set_channel(tx_ch,rx_ch);
@@ -199,7 +200,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("操作失败");
         return r;
     }
-
+    @Override
     public Result set_tx_power(int tx_power) {
         Result r = new Result();
         int set_tx_power = ScDll.intance.set_tx_power(tx_power);
@@ -225,7 +226,7 @@ public class EquipmentServiceImpl  {
 //        r.setMessage("操作失败");
 //        return r;
 //    }
-
+    @Override
     public Result read_card_uid_start() {
         Result r = new Result();
         int read_card_uid_start = ScDll.intance.read_card_uid_start();
@@ -239,7 +240,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("操作失败");
         return r;
     }
-
+    @Override
     public Result get_card_uid_Info() {
         Result r = new Result();
         String get_card_uid_Info = ScDll.intance.get_card_uid_Info();
@@ -254,7 +255,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("读取失败");
         return r;
     }
-
+    @Override
     public Result read_card_uid_stop() {
         Result r = new Result();
         int read_card_uid_stop = ScDll.intance.read_card_uid_stop();
@@ -267,7 +268,7 @@ public class EquipmentServiceImpl  {
         r.setMessage("停止失败");
         return r;
     }
-
+    @Override
     public Result get_wireless_bind_info() {
         Result r = new Result();
         String get_wireless_bind_info = ScDll.intance.get_wireless_bind_info();
@@ -282,7 +283,7 @@ public class EquipmentServiceImpl  {
         return r;
     }
 
-    
+    @Override  
     public Result raise_hand_start() {
         Result r = new Result();
         int raise_hand_start = ScDll.intance.raise_hand_start();
@@ -297,7 +298,7 @@ public class EquipmentServiceImpl  {
         return r;
     }
 
-    
+    @Override    
     public Result raise_hand_stop() {
         Result r = new Result();
         int raise_hand_stop = ScDll.intance.raise_hand_stop();
@@ -311,7 +312,7 @@ public class EquipmentServiceImpl  {
         return r;
     }
 
-    
+    @Override
     public Result get_raise_hand_list() {
         Result r = new Result();
         String get_raise_hand_list = ScDll.intance.get_raise_hand_list();
@@ -326,7 +327,7 @@ public class EquipmentServiceImpl  {
         return r;
     }
 
-    
+    @Override
     public Result sign_in_start() {
         Result r = new Result();
         int sign_in_start = ScDll.intance.sign_in_start();
@@ -340,7 +341,7 @@ public class EquipmentServiceImpl  {
         return r;
     }
 
-    
+    @Override
     public Result sign_in_stop() {
         Result r = new Result();
         int sign_in_stop = ScDll.intance.sign_in_stop();
@@ -354,7 +355,7 @@ public class EquipmentServiceImpl  {
         return r;
     }
 
-    
+    @Override
     public Result get_sign_in_list() {
         Result r = new Result();
         String get_sign_in_list = ScDll.intance.get_sign_in_list();
@@ -369,7 +370,7 @@ public class EquipmentServiceImpl  {
         return r;
     }
 
-    
+    @Override
     public Result set_attendance_24g(int is_open, int pro_index) {
       Result r = new Result();
       int set_attendance_24g = ScDll.intance.set_attendance_24g(is_open,pro_index);
@@ -383,7 +384,7 @@ public class EquipmentServiceImpl  {
       return r;
     }
 
-    
+    @Override
     public Result set_wireless_student_id(String uid_str, String student_id_str) {
         Result r = new Result();
         int set_wireless_student_id = ScDll.intance.set_wireless_student_id(uid_str,student_id_str);
@@ -397,7 +398,7 @@ public class EquipmentServiceImpl  {
         return r;
     }
 
-    
+    @Override
     public Result get_wireless_student_id_info() {
         Result r = new Result();
         String get_wireless_student_id_info = ScDll.intance.get_wireless_student_id_info();

@@ -14,7 +14,7 @@ public interface EquipmentService {
     /** 开始绑定  */
     public Result bind_start(Integer model, String data) ;
     /** 停止绑定 */
-    public Result wireless_bind_stop() ;
+    public Result bind_stop() ;
     /** 开始答题 */
     public Result answer_start( int is_quick_response, String answer_str );
     /**  开始答题 */
