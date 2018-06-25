@@ -68,7 +68,7 @@ public class StudentFunctionManage extends BrowserFunction{
 				result =  studentInfoservice.importStudentInfo(param);
 				break;
 			case "import_server":
-				result = studentInfoservice.selectStudentInfo(param);
+				result = studentInfoservice.importStudentInfoByServer(param);
 				break;
 			case "delete_student":
 				result = studentInfoservice.deleteStudentById(param);
