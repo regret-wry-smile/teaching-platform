@@ -24,6 +24,14 @@ public interface QuestionService {
 	 * @return
 	 */
 	Result deleteQuestionByIds(Object object);
-	/*修改题目*/
+	/**
+	 * 删除缓存中题目
+	 */
+	Result deleteQuestionRedis(Object object);
+	/**
+	 * 修改缓存题目
+	 * @param object
+	 * @return
+	 */
 	Result updateQuestion(Object object);
 }
