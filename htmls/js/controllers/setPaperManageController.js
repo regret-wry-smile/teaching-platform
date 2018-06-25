@@ -1,6 +1,6 @@
 //定义模块时引入依赖  
 var app=angular.module('app',['ui.bootstrap','toastr']);
-app.controller('setPaperManageCtrl', function($rootScope,$scope,$modal) {
+app.controller('setPaperManageCtrl', function($rootScope,$scope,$modal,toastr) {
 	//返回设置页面
 	$scope.returnPage=function(){
 		 window.location.href="../../page/setmodule/setmodule.html"; 
@@ -10,7 +10,21 @@ app.controller('setPaperManageCtrl', function($rootScope,$scope,$modal) {
 		window.location.href="../../page/setmodule/addtestPage.html";
 	}
 	
-	$scope.PaperInfo=[{id:1,name:"哈哈哈哈"}]
+	//查询所有试卷
+	var _selectPaper = function(){
+		var param = {};
+		var result = JSON.parse(execute_testPaper("select_paper",JSON.stringify(param)));
+		console.log(JSON.stringify(result));
+		if(result.ret == 'success'){
+			$scope.paperInfoList = result.item;
+		}else{
+			toastr.error(result.message);
+		}
+		
+	};
+	_selectPaper();
+	
+	$scope.paperInfoList=[{id:1,name:"哈哈哈哈"}]
 	
 	//编辑试卷
 	$scope.editPaper=function(item){

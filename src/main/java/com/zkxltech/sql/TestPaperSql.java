@@ -39,7 +39,7 @@ public class TestPaperSql {
 				index++;
 			}
 		}
-		sqlBuilder.append(" order by status desc");
+		sqlBuilder.append(" order by atype desc");
 		return dbHelper.onQuery(sqlBuilder.toString(), testPaper);
 	}
 	
