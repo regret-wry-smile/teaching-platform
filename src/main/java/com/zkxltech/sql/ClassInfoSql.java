@@ -34,7 +34,7 @@ public class ClassInfoSql {
 				index++;
 			}
 		}
-		sqlBuilder.append(" order by status desc");
+		sqlBuilder.append(" order by id asc");
 		return dbHelper.onQuery(sqlBuilder.toString(), classInfo);
 	}
 	

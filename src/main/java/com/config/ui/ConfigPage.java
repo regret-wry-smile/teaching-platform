@@ -179,39 +179,7 @@ public class ConfigPage extends Dialog {
 			public Object function(Object[] params) {
 				try {
 					if (params.length>0) {
-						ConfigParams configParams = (ConfigParams) JSONObject.toBean(JSONObject.fromObject(params[0]), ConfigParams.class);
-						if (Constant.CONFIG_TYPE_STANDALONE.equals(configParams.getConfigType())) {
-							//如果是单机版 修改project文件
-							PropertyUtils.WriteProperties(ConfigConstant.getProjectfile(), Constant.APP_TYPE, "T");
-							PropertyUtils.WriteProperties(ConfigConstant.getProjectfile(), Constant.APP_SYNC, "false");
-							PropertyUtils.WriteProperties(ConfigConstant.getProjectfile(), Constant.APP_TEST, Constant.IS_NO_TEST);
-						}else {
-							//如果是联机版 
-							if (Constant.TYPE_STUDENT.equals(configParams.getConfigUser())) { //学生端
-								//修改project配置文件
-								PropertyUtils.WriteProperties(ConfigConstant.getProjectfile(), Constant.APP_TYPE, "S");
-								PropertyUtils.WriteProperties(ConfigConstant.getProjectfile(), Constant.APP_SYNC, "true");
-								PropertyUtils.WriteProperties(ConfigConstant.getProjectfile(), Constant.APP_TEST, Constant.IS_NO_TEST);
-								//修改clien_local配置文件
-								PropertyUtils.WriteProperties(ConfigConstant.getClientlocalfile(), Constant.REMOTE_SERVER_IP, configParams.getNum1()+"."
-										+configParams.getNum2()+"."+configParams.getNum3()+"."+configParams.getNum4());
-								PropertyUtils.WriteProperties(ConfigConstant.getClientlocalfile(), Constant.REMOTE_SERVER_PORT, configParams.getPort());
-								PropertyUtils.WriteProperties(ConfigConstant.getClientlocalfile(), Constant.RECONNECT_INTERVAL_TIME, configParams.getTime());
-								PropertyUtils.WriteProperties(ConfigConstant.getClientlocalfile(), Constant.CONNECT_TIMEOUT, configParams.getTimeOut());
-								PropertyUtils.WriteProperties(ConfigConstant.getClientlocalfile(), Constant.CLASS_NAME, configParams.getClassName());
-								
-							}else { //老师端
-								//修改project配置文件
-								PropertyUtils.WriteProperties(ConfigConstant.getProjectfile(), Constant.APP_TYPE, "T");
-								PropertyUtils.WriteProperties(ConfigConstant.getProjectfile(), Constant.APP_SYNC, "false");
-								PropertyUtils.WriteProperties(ConfigConstant.getProjectfile(), Constant.APP_TEST, Constant.IS_NO_TEST);
-								//修改tech_server配置文件
-								PropertyUtils.WriteProperties(ConfigConstant.getTeacherserverfile(), Constant.SERVER_BIND_IP, configParams.getNum1()+"."
-										+configParams.getNum2()+"."+configParams.getNum3()+"."+configParams.getNum4());
-								PropertyUtils.WriteProperties(ConfigConstant.getTeacherserverfile(), Constant.SERVER_BIND_PORT, configParams.getPort());
-							}
-							browser.execute("alert('设置成功！')");
-						}
+					
 					}else {
 						browser.execute("alert('参数错误！')");
 					}

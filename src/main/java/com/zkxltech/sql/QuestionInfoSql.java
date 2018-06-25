@@ -42,10 +42,10 @@ public class QuestionInfoSql {
 				sqls.add(sql);
 			}
 		}
-		return dbHelper.onUpdateByGroup(sqls);
+		return DBHelper.onUpdateByGroup(sqls);
 	}
 	
-	/*查询学生*/
+	/*查询试卷*/
 	public Result selectStudentInfo(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder();
 		sqlBuilder.append("select * from question_info");
@@ -67,8 +67,14 @@ public class QuestionInfoSql {
 		return dbHelper.onQuery(sqlBuilder.toString(), questionInfo);
 	}
 	
-	/*新增学生*/
-	public Result insertStudentInfo(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
+	/**
+	 * 新增题目(单题添加)
+	 * @param questionInfo
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public Result insertQuestionInfo(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder(0);
 		sqlBuilder.append("insert into question_info ");
 		Field[] files = dbHelper.getFields(questionInfo);
@@ -94,14 +100,35 @@ public class QuestionInfoSql {
 		return dbHelper.onUpdate(sqlBuilder.toString(), questionInfo);
 	}
 	
+	
 	/**
-	 * 主键删除学生
+	 * 新增题目(多题添加)
+	 * @param questionInfos
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public Result insertQuestionInfo(List<QuestionInfo> questionInfos) throws IllegalArgumentException, IllegalAccessException{
+		List<String> sqls = new ArrayList<String>();
+		for (int i = 0; i < questionInfos.size(); i++) {
+			QuestionInfo questionInfo = questionInfos.get(i);
+			//插入题目信息
+			String sql = "insert into question_info (test_id,question_id,question,question_type,true_answer,range) values('"+questionInfo.getTestId()+"','"+
+					questionInfo.getQuestionId()+"','"+questionInfo.getQuestion()+"','"+questionInfo.getQuestionType()+"','"+questionInfo.getTrueAnswer()+"','"+questionInfo.getRange()+"')";	
+			sqls.add(sql);
+		}
+		return dbHelper.onUpdateByGroup(sqls);
+	}
+	
+	
+	/**
+	 * 主键批量删除学生
 	 * @param studentInfo
 	 * @return
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	public Result deleteStudentById(List<Integer> ids) throws IllegalArgumentException, IllegalAccessException{
+	public Result deleteQuestionInfoById(List<Integer> ids) throws IllegalArgumentException, IllegalAccessException{
 		List<String> sqls = new ArrayList<String>();
 		for (int i = 0; i < ids.size(); i++) {
 			sqls.add("delete from question_info where id = "+ids.get(i));
@@ -109,8 +136,11 @@ public class QuestionInfoSql {
 		return DBHelper.onUpdateByGroup(sqls);
 	}
 	
-	/*删除学生*/
-	public Result deleteStudent(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
+	/**
+	 * 删除题目
+	 * 
+	 * */
+	public Result deleteQuestionInfo(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder();
 		sqlBuilder.append("delete from question_info");
 		Field[] files = dbHelper.getFields(questionInfo);
@@ -130,7 +160,10 @@ public class QuestionInfoSql {
 		return dbHelper.onUpdate(sqlBuilder.toString(), questionInfo);
 	}
 	
-	/*根据主键更新学生*/
+	/**
+	 * 根据主键更新学生
+	 * 
+	 * */
 	public Result updateStudentById(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder();
 		sqlBuilder.append("update question_info");
@@ -150,6 +183,23 @@ public class QuestionInfoSql {
 		}
 		sqlBuilder.append(" where id = '"+questionInfo.getId()+"'");
 		return dbHelper.onUpdate(sqlBuilder.toString(), null);
+	}
+	
+	/**
+	 * 根据主键批量更新学生
+	 * 
+	 * */
+	public Result updateStudentsById(List<QuestionInfo> questionInfos) throws IllegalArgumentException, IllegalAccessException{
+		//testId,questionId,question,questionType,trueAnswer,range,score,partScore,highScore,downScore
+		List<String> sqls = new ArrayList<String>();
+		for (int i = 0; i < questionInfos.size(); i++) {
+			QuestionInfo questionInfo = questionInfos.get(i);
+			StringBuilder sqlBuilder = new StringBuilder();
+			sqlBuilder.append("update question_info set question = '"+questionInfo.getQuestion()+"',questionType = '"+questionInfo.getQuestionType()+"',trueAnswer ='"+
+					questionInfo.getTrueAnswer()+"',range = '"+questionInfo.getRange()+"' where id = '" +questionInfo.getId()+"'");
+			sqls.add(sqlBuilder.toString());
+		}
+		return DBHelper.onUpdateByGroup(sqls);
 	}
 	
 //	public static void main(String[] args) {
