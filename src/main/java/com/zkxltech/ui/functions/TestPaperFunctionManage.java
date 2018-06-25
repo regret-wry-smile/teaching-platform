@@ -28,6 +28,9 @@ public class TestPaperFunctionManage extends BrowserFunction{
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
 			switch (method) {
+			case "select_paper":
+				result = testPaperService.selectTestPaper(params[1]);
+				break;
 			case "import_paper":
 				if (params.length != 2) {
 					result.setRet(Constant.ERROR);
