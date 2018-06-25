@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.App;
 import com.sun.awt.AWTUtilities;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
@@ -73,6 +74,14 @@ public class MainStart {
 	}
 	
 	public static void main(String[] args) {
+		//启动答题器通信等接口
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				App.startCommunication();
+			}
+		}).start();
+		
 		mianStart = new MainStart(new Shell());
 		mianStart.initialize();
 		mianStart.open();

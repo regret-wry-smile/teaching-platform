@@ -1,15 +1,29 @@
 package com.zkxltech.service;
 
+import com.ejet.core.util.ICallBack;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 
 public interface StudentInfoService {
 	/**
-	 * 学生名单导入
+	 * 学生名单导入(异步)
+	 * @param object excel文件路径
+	 * @return
+	 */
+	Result importStudentInfo2(Object object,ICallBack icallback);
+	/**
+	 * 学生名单导入(同步)
 	 * @param object excel文件路径
 	 * @return
 	 */
 	Result importStudentInfo(Object object);
+	
+	/**
+	 * 服务器导入
+	 * @param object 班级名称
+	 * @return
+	 */
+	Result importStudentInfoByServer(Object object);
 	/**
 	 * 新增学生
 	 * @param object StudentInfo对象

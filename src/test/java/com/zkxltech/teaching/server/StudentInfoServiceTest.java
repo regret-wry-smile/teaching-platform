@@ -21,8 +21,8 @@ public class StudentInfoServiceTest {
 	@Test
 	public void testImportStudent(){
 		String fileName = "D:\\Users\\zkxl\\Desktop\\excel表\\中科答题器模板\\学生模板.xlsx";
-		Result result = studentInfoService.importStudentInfo(fileName);
-		System.out.println(JSONObject.fromObject(result));
+//		Result result = studentInfoService.importStudentInfo(fileName);
+//		System.out.println(JSONObject.fromObject(result));
 	}
 	
 	/*查询学生*/

@@ -10,6 +10,8 @@ public class Result {
 	private String detail;
 	/*返回查询结果*/
 	private Object item;
+	/*备用字段*/
+	private Object remak;
 	public String getRet() {
 		return ret;
 	}
@@ -40,9 +42,11 @@ public class Result {
 	public void setCode(Integer code) {
 		this.code = code;
 	}
-    @Override
-    public String toString() {
-        return "Result [code=" + code + ", ret=" + ret + ", message=" + message + ", detail=" + detail + ", item="
-                + item + "]";
-    }
+	public Object getRemak() {
+		return remak;
+	}
+	public void setRemak(Object remak) {
+		this.remak = remak;
+	}
+ 
 }

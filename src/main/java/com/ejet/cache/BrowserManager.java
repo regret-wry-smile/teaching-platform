@@ -4,6 +4,9 @@ import java.lang.ref.WeakReference;
 
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * 
@@ -11,7 +14,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  */
 public class BrowserManager {
-	
+	private static final Logger log = LoggerFactory.getLogger(BrowserManager.class);
 	private static WeakReference<Browser> browerManager = null; 
 	private static Shell shell = null;
 	
@@ -35,7 +38,7 @@ public class BrowserManager {
 			shell.getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					b.execute("document.getElementById('refreshBindCard').click();");
+					boolean  doRet = b.execute("document.getElementById('refreshBindCard').click();");
 				}
 			});
 		}
@@ -49,29 +52,56 @@ public class BrowserManager {
 			shell.getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					b.execute("document.getElementById('refreshBindCard').click();");
+					boolean  doRet = b.execute("var classId = '"+classId+"';document.getElementById('selectClass').click();");
+				}
+			});
+		}
+	}
+	
+	/**
+	 * 刷新班级
+	 */
+	public static void refreshClass() {
+		Browser b  = browerManager.get();
+		if (b!=null) {
+			shell.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					boolean  doRet = b.execute("document.getElementById('refreshClass').click();");
+					log.info("刷新班级："+doRet);
 				}
 			});
 		}
 	}
 	/**
-	 * 调用页面弹出相关提示
-	 * @param message 提示信息
+	 * 刷新学生
 	 */
-	public static void retResult(String message) {
+	public static void refreshStudent(String classId) {
 		Browser b  = browerManager.get();
 		if (b!=null) {
-			new Thread(new Runnable() {
+			shell.getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					shell.getDisplay().syncExec(new Runnable() {
-						@Override
-						public void run() {
-							b.execute("var message ='"+message+"';document.getElementById('getTip').click();");
-						}
-					});
+					boolean  doRet = b.execute("var classId = '"+classId+"';document.getElementById('refreshStudent').click();");
+					log.info("刷新学生："+doRet);
 				}
-			}).start();
+			});
+		}
+	}
+	/**
+	 * 调用页面弹出相关提示(不需要回调)
+	 * @param message 提示信息
+	 */
+	public static void showMessage(boolean ret,String message) {
+		Browser b  = browerManager.get();
+		if (b!=null) {
+			shell.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					boolean  doRet = b.execute("var ret = '"+ret+"';var message ='"+message+"';document.getElementById('getTip').click();");
+					log.info("调用页面提示框："+doRet);
+				}
+			});
 		}
 	}
 	
@@ -83,7 +113,7 @@ public class BrowserManager {
 			shell.getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					b.execute("var message = '正在导入';document.getElementById('showLoading').click();");
+					boolean  doRet = b.execute("var message = '正在导入';document.getElementById('showLoading').click();");
 				}
 			});
 				
@@ -97,7 +127,7 @@ public class BrowserManager {
 			shell.getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					b.execute("document.getElementById('removeLoading').click();");
+					boolean  doRet = b.execute("document.getElementById('removeLoading').click();");
 				}
 			});
 				
