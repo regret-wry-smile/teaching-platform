@@ -58,6 +58,18 @@ app.controller('addPaperManageCtrl',function($rootScope,$scope,$modal){
 	$scope.returnPage=function(){
 		 window.location.href="../../page/setmodule/testPaperManage.html"; 
 	}
+	$scope.importSubject=function(){
+		var modalInstance = $modal.open({
+		templateUrl: 'importFile.html',
+		controller: 'uploadfileModalCtrl',
+		size: 'md',
+		backdrop:false
+	});
+
+	modalInstance.result.then(function(info) {
+	}, function() {
+	});
+	}
 	
 })
 //编辑试卷控制器
@@ -181,5 +193,94 @@ app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
 	}
 	$scope.cancel = function() {
 		$modalInstance.dismiss('cancel');
+	}
+})
+//导入试卷控制器
+app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr) {
+	$scope.fileType='0';//0:本地导入;1:服务获取
+	$scope.fileType1=angular.copy($scope.fileType);
+	//切换文件类型
+	$scope.changefileType=function(fileType){
+		$scope.fileType=fileType;
+	}
+	$scope.filepath='';	
+	$scope.fileChanged=function(){
+		if(document.querySelector('#uploadFile').value){
+			$scope.filepath= document.querySelector('#uploadFile').value;
+			
+		}
+	}
+	$scope.ok = function() {
+		if($scope.fileType=='0'){
+			if($scope.filepath){
+				var extStart = $scope.filepath.lastIndexOf(".");
+				var ext = $scope.filepath.substring(extStart, $scope.filepath.length).toUpperCase();
+				if(ext != ".XLS" && ext != ".XLSX") {
+					toastr.warning("只能导入.XLSX、.XLS类型文件");
+					return ;
+				}else{
+					console.log("参数"+JSON.stringify($scope.filepath))
+					$scope.result=JSON.parse(execute_testPaper("import_paper",$scope.filepath));
+					if($scope.result.ret=='success'){
+						toastr.success($scope.result.message);
+						$modalInstance.close('success');
+					}else{
+						console.log($scope.result.detail);
+						toastr.error($scope.result.message);
+					}
+					
+					//$('#myModal').modal('show');
+				}
+			}else{
+				toastr.warning("请选择文件");
+			}
+		}else{
+			$scope.result=JSON.parse(execute_testPaper("import_server",$scope.filepath));
+					if($scope.result.ret=='success'){
+						toastr.success($scope.result.message);
+						$modalInstance.close('success');
+					}else{
+						toastr.error($scope.result.message);
+					}
+		}
+		
+		
+	}
+	$scope.cancel=function(){
+		$modalInstance.dismiss('cancel');
+	}
+
+})
+app.directive('select', function() {
+	return {
+		restrict: 'A',
+		require: 'ngModel',
+		scope:{
+			defalutvalue:'=?'
+		},
+		link: function(scope, element, attrs, ngModelCtr) {
+		scope.$watch('defalutvalue',function(){
+			if(scope.defalutvalue){
+				$(element).multiselect({
+				multiple: false,
+				selectedHtmlValue: '请选择',
+				defalutvalue:scope.defalutvalue,
+				change: function() {
+					$(element).val($(this).val());
+					scope.$apply();
+					if(ngModelCtr) {
+						ngModelCtr.$setViewValue($(element).val());
+						if(!scope.$root.$$phase) {
+							scope.$apply();
+						}
+					}
+				}
+			});
+			}
+		})
+			
+			
+			
+		}
 	}
 })

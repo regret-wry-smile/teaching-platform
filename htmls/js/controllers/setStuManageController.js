@@ -6,6 +6,9 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	$scope.onechecked = [];
 	$scope.classList=[];//班级列表数组
 	$scope.isActive = 0;
+	$scope.refreshStudent = function(){
+		alert(calssId);
+	}
 	/*查询班级列表*/
 	var _selectClass = function() {
 		$scope.result = JSON.parse(execute_student("select_class"));
@@ -24,6 +27,9 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			toastr.error($scope.result.message);
 		}
 	};
+	$scope.refreshClass = function(){
+		_selectClass();
+	}
 	/*查询学生列表*/
 	var _selectStudent = function() {
 		var param = {
@@ -45,26 +51,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	var _init=function(){
 		_selectClass();
 	}();
-	//批量导入学生
-	$scope.patchImport = function() {
-		var modalInstance = $modal.open({
-		templateUrl: 'importFile.html',
-		controller: 'uploadfileModalCtrl',
-		size: 'md',
-		backdrop:false,
-		/*resolve: {
-			infos: function() {
-				return items;
-			}
-		}*/
-	});
 
-	modalInstance.result.then(function(info) {
-	}, function() {
-	});
-		//$state.go('setmodule.set')
-	}
-	
 	/*切换班级*/
 	$scope.changeClass=function(item,$index){	
 		$scope.isActive = $index; 
@@ -72,7 +59,42 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		$scope.classobject=item;
 		console.log(JSON.stringify(item))
 		_selectStudent();
-	}	
+	}
+	//导入学生
+	$scope.patchImport = function() {
+		if($scope.classList.length>0){
+			if($scope.classobject.atype=='0'){
+				var modalInstance = $modal.open({
+					templateUrl: 'importFile.html',
+					controller: 'uploadfileModalCtrl',
+					size: 'md',
+					backdrop:false,
+					/*resolve: {
+						infos: function() {
+							return $scope.classobject;
+						}
+					}*/
+				});
+			
+				modalInstance.result.then(function(info) {
+					_selectStudent();
+				}, function() {
+			});
+			}else{
+				$scope.result=JSON.parse(execute_student("import_server"));
+				if($scope.result.ret=='success'){
+					toastr.success($scope.result.message);
+					_selectStudent();
+				}else{
+					toastr.error($scope.result.message);
+				}
+			}
+		}else{
+			toastr.warning('当前没有班级，请先添加学生');
+		}
+		
+			
+	}
 	//打开添加班级弹框
 	$scope.addClass = function() {
 		var modalInstance = $modal.open({
@@ -372,23 +394,22 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		 window.location.href="../../page/setmodule/setmodule.html"; 
 	}
 })
-	
+//导入学生控制器	
 app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr) {
-	$scope.fileType='0';//0:本地导入;1:服务导入
+	/*$scope.fileType='0';//0:本地导入;1:服务导入
 	$scope.fileType1=angular.copy($scope.fileType);
 	//切换文件类型
 	$scope.changefileType=function(fileType){
 		$scope.fileType=fileType;
-	}
+	}*/
 	$scope.filepath='';	
 	$scope.fileChanged=function(){
 		if(document.querySelector('#uploadFile').value){
-			$scope.filepath= document.querySelector('#uploadFile').value;
-			
+			$scope.filepath= document.querySelector('#uploadFile').value;			
 		}
 	}
 	$scope.ok = function() {
-		if($scope.fileType=='0'){
+	/*	if($scope.fileType=='0'){*/
 			if($scope.filepath){
 				var extStart = $scope.filepath.lastIndexOf(".");
 				var ext = $scope.filepath.substring(extStart, $scope.filepath.length).toUpperCase();
@@ -400,6 +421,7 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr) {
 					$scope.result=JSON.parse(execute_student("import_student",$scope.filepath));
 					if($scope.result.ret=='success'){
 						toastr.success($scope.result.message);
+						$modalInstance.close('success');
 					}else{
 						toastr.error($scope.result.message);
 					}
@@ -409,11 +431,7 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr) {
 			}else{
 				toastr.warning("请选择文件");
 			}
-		}else{
-			execute_student("import_server");
-		}
-		
-		
+		/*}	*/	
 	}
 	$scope.cancel=function(){
 		$modalInstance.dismiss('cancel');
@@ -517,6 +535,7 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 			$scope.student.iclickerIdint=JSON.stringify($scope.student.iclickerId)
 		}
 		var param = {
+			id:$scope.student.id,
 			studentName:$scope.student.studentName,
 			classId:$scope.student.classId,
 			className:$scope.student.className,
@@ -548,7 +567,7 @@ app.controller('findBindModalCtrl',function($scope,info,$modalInstance,$interval
 	}
 })
 //添加班级
-app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toastr){
+app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toastr,$timeout){
 	$scope.classInfo = {
 		atype:"0",//班级类型,默认本地
 		className:"",//班级名称
@@ -556,6 +575,24 @@ app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toa
 	}
 	$scope.classInfo.atype1=angular.copy($scope.classInfo.atype);
 	$scope.title="添加班级";
+	//班级查重
+	$scope.selectClass=function(){
+		var param={
+			classId:$scope.classInfo.classId
+		}		
+		$scope.result= JSON.parse(execute_student("select_class",JSON.stringify(param)));
+		console.log(JSON.stringify($scope.result))
+		if($scope.result.ret=='success'){
+			if($scope.result.item.length>0){
+				toastr.success('该班级已存在，请重新输入');
+				 $timeout(function () {
+				  $scope.classInfo.classId='';
+			   	}, 2000);
+			} 
+		}else{
+			toastr.error($scope.result.message);
+		}		
+	}
 	$scope.ok = function() {
 		var param = $scope.classInfo;
 		$scope.result= JSON.parse(execute_student("insert_class",JSON.stringify(param)));
@@ -626,18 +663,4 @@ app.directive('select', function() {
 			
 		}
 	}
-})/*上传文件校验*/
-app.directive('validFile', function() {
-	return {
-		require: 'ngModel',
-		link: function(scope, el, attrs, ngModel) {
-			//change event is fired when file is selected
-			el.bind('change', function() {
-				scope.$apply(function() {
-					ngModel.$setViewValue(el.val());
-					ngModel.$render();
-				});
-			});
-		}
-	}
-});
+})
