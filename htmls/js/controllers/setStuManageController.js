@@ -240,23 +240,33 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	
 	//一键配对
 	$scope.quickBind=function(){
-		var content="一键配对";
-		var modalInstance = $modal.open({
-			templateUrl: 'findBindModal.html',
-			controller: 'findBindModalCtrl1',
-			size: 'md',
-			backdrop:false,
-			/*resolve: {
-				info: function() {
-					return $rootScope.className;
-				}
-			}*/
-		});
-		modalInstance.result.then(function(info) {
-			//_SELECTSTUDENT($rootScope.className);
-		}, function() {
-			//$log.info('Modal dismissed at: ' + new Date());
-		});
+		//调用配对指令
+		var param = {
+				classId:$scope.classobject.classId
+		}
+		var result = execute_student("bind_start",JSON.stringify(param));
+		if(result.ret == "success"){
+			var content="一键配对";
+			var modalInstance = $modal.open({
+				templateUrl: 'findBindModal.html',
+				controller: 'findBindModalCtrl1',
+				size: 'md',
+				backdrop:false,
+				/*resolve: {
+					info: function() {
+						return $rootScope.className;
+					}
+				}*/
+			});
+			modalInstance.result.then(function(info) {
+				//_SELECTSTUDENT($rootScope.className);
+			}, function() {
+				//$log.info('Modal dismissed at: ' + new Date());
+			});
+		}else{
+			toastr.error("指令发送失败！");
+		}
+		
 		
 	}
 	//全选
