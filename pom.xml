@@ -126,8 +126,20 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.34</version>
 		</dependency>
-	
-	
+		
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		    <version>2.8.2</version>
+		</dependency>
+		
+		<!-- 服务器发送请求包 -->
+		 <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.10.0</version>
+        </dependency>
+        
 		<!-- 本地依赖包 -->
 		<dependency>
 		    <groupId>com.zkxl.teaching</groupId>  
