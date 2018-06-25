@@ -78,6 +78,14 @@ public class TestPaperFunctionManage extends BrowserFunction{
 				}
 				result = questionService.selectQuestion(params[1]);
 				break;
+			case "delete_question":
+				if (params.length != 2) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("参数个数有误！");
+					break;
+				}
+				result = questionService.deleteQuestionByIds(params[1]);
+				break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");
