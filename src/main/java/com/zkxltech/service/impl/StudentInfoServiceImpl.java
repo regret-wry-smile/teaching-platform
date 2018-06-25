@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ejet.cache.BrowserManager;
+import com.ejet.core.util.ICallBack;
+import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
@@ -13,7 +15,6 @@ import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.sql.StudentInfoSql;
-import com.zkxltech.ui.util.StringUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -23,7 +24,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
 	
 	@Override
-	public Result importStudentInfo(Object object) {
+	public Result importStudentInfo(Object object,ICallBack icallback) {
 		result = new Result();
 		try {
 			String fileName = String.valueOf(object);
@@ -32,8 +33,11 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result = studentInfoSql.importStudent(list);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("导入成功!");
+//				BrowserManager.refreshClass();
+//				BrowserManager.selectClass(classId);
+//				BrowserManager.refreshStudent(classId);
 			}else {
-				Thread.sleep(1000);
+//				icallback.onResult(-1, "导入学生失败", "");
 				result.setMessage("导入学生失败！");
 			}
 			return result;
@@ -42,6 +46,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result.setMessage("导入学生失败！");
 			result.setDetail(IOUtils.getError(e));
 			return result;
+		}finally {
+			icallback.onResult(StringUtils.StringToInt(result.getRet()), result.getMessage(),  result.getRemak());
 		}
 	}
 
@@ -49,7 +55,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	public Result selectStudentInfo(Object param) {
 		result = new Result();
 		try {
-			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseJSON(JSONObject.fromObject(param), StudentInfo.class);
+			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseToBean(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.selectStudentInfo(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("查询学生信息成功!");
@@ -69,7 +75,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	public Result insertStudentInfo(Object param) {
 		try {
 			
-			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseJSON(JSONObject.fromObject(param), StudentInfo.class);
+			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseToBean(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.insertStudentInfo(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("新增学生信息成功!");
@@ -111,7 +117,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	@Override
 	public Result updateStudentById(Object param) {
 		try {
-			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseJSON(JSONObject.fromObject(param), StudentInfo.class);
+			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseToBean(JSONObject.fromObject(param), StudentInfo.class);
 			result = studentInfoSql.updateStudentById(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("修改学生信息成功!");

@@ -5,6 +5,9 @@ import org.eclipse.swt.browser.BrowserFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ejet.cache.BrowserManager;
+import com.ejet.core.util.ICallBack;
+import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.ClassInfoService;
@@ -40,7 +43,24 @@ public class StudentFunctionManage extends BrowserFunction{
 				result = studentInfoservice.insertStudentInfo(param);
 				break;
 			case "import_student":
-				result = studentInfoservice.importStudentInfo(param);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						studentInfoservice.importStudentInfo(param,new ICallBack() {
+							@Override
+							public void onResult(int code, String message, Object ext) {
+								if (StringUtils.intToBoolen(code)) {
+									BrowserManager.showMessage(true,"导入成功!");
+									BrowserManager.refreshClass();
+									BrowserManager.refreshStudent((String)ext);
+								} else {
+									BrowserManager.showMessage(false,"导入失败!");
+//									BrowserManager.refreshClass();
+								}
+							}
+						});
+					}
+				}).start();
 				break;
 			case "import_server":
 				result = studentInfoservice.selectStudentInfo(param);

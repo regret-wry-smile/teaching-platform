@@ -1,5 +1,6 @@
 package com.zkxltech.service;
 
+import com.ejet.core.util.ICallBack;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 
@@ -9,7 +10,7 @@ public interface StudentInfoService {
 	 * @param object excel文件路径
 	 * @return
 	 */
-	Result importStudentInfo(Object object);
+	Result importStudentInfo(Object object,ICallBack icallback);
 	/**
 	 * 新增学生
 	 * @param object StudentInfo对象
