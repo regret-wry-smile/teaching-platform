@@ -21,28 +21,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 				toastr.error($scope.result.message);
 			}
 	}*/
-
-	/*查询班级列表*/
-	var _selectClass = function() {
-		$scope.result = JSON.parse(execute_student("select_class"));
-		if($scope.result.ret=='success'){
-			$scope.classList=$scope.result.item;
-			console.log("班级"+JSON.stringify($scope.classList))
-			if($scope.classList.length>0){
-				$scope.classId=$scope.classList[0].classId;
-				$scope.classobject=$scope.classList[0];
-				$scope.studentList=[];
-				_selectStudent();
-			}else{
-				$scope.studentList=[];
-			}
-		}else{
-			toastr.error($scope.result.message);
-		}
-	};
-	/*$scope.refreshClass = function(){
-		_selectClass();
-	}*/
+	
 	/*查询学生列表*/
 	var _selectStudent = function() {
 		var param = {
@@ -55,18 +34,44 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		if($scope.result.ret=='success'){
 			$scope.studentList=[];
 			$scope.studentList=$scope.result.item;
+			
 		}else{
 			toastr.error($scope.result.message);
 		}
 		
 	};
+	/*查询班级列表*/
+	var _selectClass = function() {
+		$scope.result = JSON.parse(execute_student("select_class"));
+		if($scope.result.ret=='success'){
+			$scope.classList=$scope.result.item;
+			console.log("班级"+JSON.stringify($scope.classList))
+			if($scope.classList.length>0){
+				$scope.classId=$scope.classList[0].classId;
+				$scope.classobject=$scope.classList[0];
+				$scope.isActive = 0; 
+				$scope.studentList=[];
+				
+			}else{
+				$scope.studentList=[];
+			}
+		}else{
+			toastr.error($scope.result.message);
+		}
+	};
+	/*$scope.refreshClass = function(){
+		_selectClass();
+	}*/
+	
 	
 	var _init=function(){
 		_selectClass();
+		_selectStudent();
 	}();
 
 	/*切换班级*/
 	$scope.changeClass=function(item,$index){	
+		
 		$scope.isActive = $index; 
 		$scope.classId=item.classId;
 		$scope.classobject=item;
@@ -88,25 +93,21 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			});
 		
 			modalInstance.result.then(function(info) {
-				_selectStudent();
+				if(info){
+					_selectClass();
+					for(var i=0;i<$scope.classList.length;i++){
+						if(info==$scope.classList[i].classId){
+						$scope.classId=info;
+						$scope.classobject=$scope.classList[i];
+						$scope.isActive =$scope.classList.length-1;
+						$scope.changeClass($scope.classobject,$scope.isActive);
+					}
+					}
+					
+				}
 			}, function() {
 		});
 		}		
-	/*$scope.serverImport=function(){
-		if($scope.classobject.atype=='1'){
-			$scope.result=JSON.parse(execute_student("import_server"));
-				if($scope.result.ret=='success'){
-					toastr.success($scope.result.message);
-					_selectStudent();
-				}else{
-					toastr.error($scope.result.message);
-				}
-		}else{
-			
-		}
-		
-	}*/
-	
 	//打开添加班级弹框
 	$scope.addClass = function() {
 		var modalInstance = $modal.open({
@@ -120,8 +121,18 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 				}
 			}*/
 		});
-		modalInstance.result.then(function(info) {
+		modalInstance.result.then(function(info) {			
 			_selectClass();
+			for(var i=0;i<$scope.classList.length;i++){
+				if(info==$scope.classList[i].classId){
+					$scope.classId=info;
+					$scope.isActive =$scope.classList.length-1;
+					_selectStudent();
+					
+				}
+			}
+			
+			
 		}, function() {
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
@@ -144,6 +155,8 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			$scope.isActive = $index; 
 			$scope.classId=item.classId;
 			_selectStudent();
+			
+			
 		}, function() {
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
@@ -165,28 +178,16 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		});
 		modalInstance.result.then(function(info) {
 			//如果要删除的班级就是当前选中的班级，就默认选择第一个
-			/*if(val == $rootScope.className){
-				if($scope.isActive == 0){ //如果删除的是第一个班级，就刷新第二个班的学生
-					if($scope.classes.length>2){
-						$rootScope.className = $scope.classes[1].class_name;
-					}else{
-						$rootScope.className="";
-					}
-				}else{
-					$rootScope.className = $scope.classes[0].class_name;
-				}
-				$scope.isActive = 0
-			}*/
 			var param={
-				id:item.id
+				id:item.id,
+				classId:item.classId
 			}
-			console.log(JSON.stringify(param))
-			param=JSON.stringify(param)			
-			$scope.result=JSON.parse(execute_student("delete_class",param));
+			console.log(JSON.stringify(param))	
+			$scope.result=JSON.parse(execute_student("delete_class",JSON.stringify(param)));
 			if($scope.result.ret=='success'){
 				toastr.success($scope.result.message);
-				$scope.isActive = 0;
-				_selectClass();
+				_selectClass();	
+				_selectStudent();	
 			}else{
 				toastr.error($scope.result.message);
 			}
@@ -445,11 +446,12 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 					toastr.warning("只能导入.XLSX、.XLS类型文件");
 					return ;
 				}else{
-					console.log(JSON.stringify($scope.filepath))
+					
 					$scope.result=JSON.parse(execute_student("import_student",$scope.filepath));
+					console.log("哈哈哈哈"+JSON.stringify($scope.result))
 					if($scope.result.ret=='success'){
 						toastr.success($scope.result.message);
-						$modalInstance.close('success');
+						$modalInstance.close($scope.result.remak);
 					}else{
 						toastr.error($scope.result.message);
 					}
@@ -463,7 +465,7 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 			$scope.result=JSON.parse(execute_student("import_server",infos.classId));
 			if($scope.result.ret=='success'){
 				toastr.success($scope.result.message);
-				_selectStudent();
+				$modalInstance.close($scope.result.remak);
 			}else{
 				toastr.error($scope.result.message);
 			}
@@ -625,10 +627,10 @@ app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toa
 	$scope.ok = function() {
 		var param = $scope.classInfo;
 		$scope.result= JSON.parse(execute_student("insert_class",JSON.stringify(param)));
-		console.log(JSON.stringify($scope.result))
+		console.log("滴滴滴滴"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){
 			toastr.success($scope.result.message);
-			$modalInstance.close('success');
+			$modalInstance.close($scope.classInfo.classId);
 		}else{
 			toastr.error($scope.result.message);
 		}		

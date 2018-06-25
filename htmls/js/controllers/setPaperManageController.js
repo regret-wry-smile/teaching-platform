@@ -24,8 +24,6 @@ app.controller('setPaperManageCtrl', function($rootScope,$scope,$modal,toastr) {
 	};
 	_selectPaper();
 	
-	$scope.paperInfoList=[{id:1,name:"哈哈哈哈"}]
-	
 	//编辑试卷
 	$scope.editPaper=function(item){
 		$rootScope.editPaperInfo=item;
@@ -250,12 +248,12 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr) {
 			}
 		}else{
 			$scope.result=JSON.parse(execute_testPaper("import_server",$scope.filepath));
-					if($scope.result.ret=='success'){
-						toastr.success($scope.result.message);
-						$modalInstance.close('success');
-					}else{
-						toastr.error($scope.result.message);
-					}
+			if($scope.result.ret=='success'){
+				toastr.success($scope.result.message);
+				$modalInstance.close('success');
+			}else{
+				toastr.error($scope.result.message);
+			}
 		}
 		
 		
