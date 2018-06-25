@@ -1,10 +1,12 @@
 //定义模块时引入依赖  
 var app = angular.module('app', ['ui.bootstrap', 'toastr']);
 app.controller('setmoduleCtrl', function($scope, toastr) {
-	$scope.infoAllNameList = []; //信道设置数组
+	$scope.infoAllNameList = ["第一组","第二组","第三组","第四组","第五组","第六组","第七组","第八组","第九组","第十组"]; //信道设置数组
 	$scope.attendstatus = '1';
 	$scope.sendpower = '3';
 	$scope.sendpower1=angular.copy($scope.sendpower);
+	$scope.chain = $scope.infoAllNameList[0];
+					$scope.chain1=angular.copy($scope.chain);
 	/*获取所有组名*/
 	var _getAllName = function() {
 		/**
@@ -12,7 +14,7 @@ app.controller('setmoduleCtrl', function($scope, toastr) {
 		 * 参数1,执行指令
 		 * 参数2,执行参数,没有参数就不传
 		 */
-		$scope.result = JSON.parse(execute_set("get_all_name"));
+		//$scope.result = JSON.parse(execute_set("get_all_name"));
 		/*
 		 * result
 		 * 		ret 执行结果
@@ -20,7 +22,7 @@ app.controller('setmoduleCtrl', function($scope, toastr) {
 		 * 		detail错误详细信息（调试用）
 		 * 		item 返回信息
 		 * */
-			if($scope.result.ret == 'success') {
+			/*if($scope.result.ret == 'success') {
 				$scope.infoAllNameList = $scope.result.item;
 				console.log(JSON.stringify($scope.infoAllNameList))
 				if($scope.infoAllNameList.length > 0) {
@@ -29,7 +31,7 @@ app.controller('setmoduleCtrl', function($scope, toastr) {
 				}
 			} else {
 				toastr.error($scope.result.message);
-			}
+			}*/
 
 	};
 	$scope.changeChain = function(chain) {
@@ -92,11 +94,20 @@ app.directive('select', function() {
 		restrict: 'A',
 		require: 'ngModel',
 		scope:{
-			defalutvalue:'=?'
+			defalutvalue:'=?',
+			list:'=?'
 		},
 		link: function(scope, element, attrs, ngModelCtr) {
-		scope.$watch('defalutvalue',function(){
+		scope.$watch('defalutvalue+list',function(){
 			if(scope.defalutvalue){
+				if(scope.list){
+					var str='';
+					for(var i=0;i<scope.list.length;i++){
+						str+='<option value="'+scope.list[i]+'">'+scope.list[i]+'</option>';
+					}
+					$(element).html(str);
+				}
+				
 				$(element).multiselect({
 				multiple: false,
 				selectedHtmlValue: '请选择',

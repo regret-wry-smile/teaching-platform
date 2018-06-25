@@ -14,6 +14,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			console.log("班级"+JSON.stringify($scope.classList))
 			if($scope.classList.length>0){
 				$scope.classId=$scope.classList[0].classId;
+				$scope.classobject=$scope.classList[0];
 				$scope.studentList=[];
 				_selectStudent();
 			}else{
@@ -31,6 +32,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		console.log(JSON.stringify(param))
 		param =JSON.stringify(param);
 		$scope.result = JSON.parse(execute_student("select_student",param));
+		console.log("學生"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){
 			$scope.studentList=[];
 			$scope.studentList=$scope.result.item;
@@ -67,6 +69,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	$scope.changeClass=function(item,$index){	
 		$scope.isActive = $index; 
 		$scope.classId=item.classId;
+		$scope.classobject=item;
 		console.log(JSON.stringify(item))
 		_selectStudent();
 	}	
@@ -90,7 +93,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		});
 	};
 	//打开编辑班级弹框
-	$scope.editClass = function(item) {
+	$scope.editClass = function(item,$index) {
 		var modalInstance = $modal.open({
 			templateUrl: 'addClassModal.html',
 			controller: 'editClassModalCtrl',
@@ -104,6 +107,9 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		});
 		modalInstance.result.then(function(info) {
 			_selectClass();
+			$scope.isActive = $index; 
+			$scope.classId=item.classId;
+			_selectStudent();
 		}, function() {
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
@@ -163,7 +169,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			backdrop:false,
 			resolve: {
 				infos: function() {
-					return $scope.classId;
+					return $scope.classobject;
 				}
 			}
 		});
@@ -403,36 +409,48 @@ app.controller('findBindModalCtrl1',function($scope,$modalInstance){
 })
 //添加学生控制器
 app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos){
+	console.log(JSON.stringify(infos))
 	$scope.title="添加学生";
 	if(infos){
-		$scope.classId=infos;
+		$scope.classId=infos.classId;
+		$scope.className=infos.className;
 	}
 	$scope.student={		
 //		studentId:'',
 		studentName:'',
 //		iclickerId:'',
-		classId:$scope.classId
+		classId:$scope.classId,
+		className:$scope.className
 	}
-	if(typeof $scope.student.studentId=='string'){
+	/*if(typeof $scope.student.studentId=='string'){
+		alert(777)
 			$scope.student.studentId=parseInt($scope.student.studentId)
 		}
 		if(typeof $scope.student.iclickerId=='string'){
 			$scope.student.iclickerId=parseInt($scope.student.iclickerId)
-		}
+		}*/
 	$scope.ok = function() {
 		if(typeof $scope.student.studentId=='number'){
-			$scope.student.studentId=JSON.stringify($scope.student.studentId)
+			$scope.student.studentIdint=JSON.stringify($scope.student.studentId)
 		}
 		if(typeof $scope.student.iclickerId=='number'){
-			$scope.student.iclickerId=JSON.stringify($scope.student.iclickerId)
+			$scope.student.iclickerIdint=JSON.stringify($scope.student.iclickerId)
 		}
-		var param = $scope.student;
+		var param = {
+			studentName:$scope.student.studentName,
+			classId:$scope.student.classId,
+			className:$scope.student.className,
+			studentId:$scope.student.studentIdint,
+			iclickerId:$scope.student.iclickerIdint,
+			status:'0'//班級类型
+		}
 		console.log(JSON.stringify(param))
 		$scope.result=JSON.parse(execute_student("insert_student",JSON.stringify(param)));
 		if($scope.result.ret=='success'){
 			toastr.success($scope.result.message);
 			$modalInstance.close('success');
 		}else{
+			console.log(JSON.stringify($scope.result.detail))
 			toastr.error($scope.result.message);
 		}
 	}
@@ -455,12 +473,20 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 	}
 	$scope.ok = function() {
 		if(typeof $scope.student.studentId=='number'){
-			$scope.student.studentId=JSON.stringify($scope.student.studentId)
+			$scope.student.studentIdint=JSON.stringify($scope.student.studentId)
 		}
 		if(typeof $scope.student.iclickerId=='number'){
-			$scope.student.iclickerId=JSON.stringify($scope.student.iclickerId)
+			$scope.student.iclickerIdint=JSON.stringify($scope.student.iclickerId)
 		}
-		var param = $scope.student;
+		var param = {
+			studentName:$scope.student.studentName,
+			classId:$scope.student.classId,
+			className:$scope.student.className,
+			studentId:$scope.student.studentIdint,
+			iclickerId:$scope.student.iclickerIdint,
+			status:$scope.student.status//班級类型
+		}
+		/*var param = $scope.student;*/
 		console.log(JSON.stringify(param))
 		$scope.result=JSON.parse(execute_student("update_student",JSON.stringify(param)));
 		if($scope.result.ret=='success'){

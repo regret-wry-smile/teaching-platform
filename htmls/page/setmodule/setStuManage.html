@@ -220,7 +220,7 @@
 									<span class="sub" ng-class="{'1': 'blue', '0': 'green'}[item.atype]"></span> 
 									<span class="name" ng-class="{active:isActive === $index}">{{item.className}}</span>
 									<a href="javascript:;" class="del pull-right pr5" ng-click="$event.stopPropagation();deleteClass(item)">删除</a>
-									<a href="javascript:;" class="edit pull-right pr5" ng-click="$event.stopPropagation();editClass(item)">编辑</a>
+									<a href="javascript:;" class="edit pull-right pr5" ng-click="$event.stopPropagation();editClass(item,$index)">编辑</a>
 								</td>
 							</tr>
 						</tbody>
