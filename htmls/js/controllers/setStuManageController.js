@@ -244,7 +244,8 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		var param = {
 				classId:$scope.classobject.classId
 		}
-		var result = execute_student("bind_start",JSON.stringify(param));
+		var result = JSON.parse(execute_student("bind_start",JSON.stringify(param)));
+		console.log(JSON.stringify(result));
 		if(result.ret == "success"){
 			var content="一键配对";
 			var modalInstance = $modal.open({
@@ -506,6 +507,12 @@ app.controller('findBindModalCtrl',function($scope,$modalInstance){
 	}
 })
 app.controller('findBindModalCtrl1',function($scope,$modalInstance){
+	$scope.refreshBindCard = function(){
+		alert
+		var result = JSON.parse(execute_student("get_bind_info"));
+		$scope.bindInfo = result;
+		console.log(JSON.stringify(result));
+	}
 	$scope.ok = function() {
 		/*关闭定时器*/
 		$modalInstance.close();

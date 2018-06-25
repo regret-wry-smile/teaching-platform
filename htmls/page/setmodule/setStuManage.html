@@ -134,7 +134,7 @@
 						</p>
 						<div class="clearfix pt5">
 							<div class="pull-left">
-								<h4>{{bindInfo.name}}</h4>
+								<h4>{{bindInfo.studentName}}</h4>
 								<span>答题器</span>
 							</div>
 							<div class="pull-right">
@@ -142,8 +142,9 @@
 							</div>
 						</div>
 						<h4 class="clearfix text-center">
-							<span>{{bindInfo.pair}}位完成配对</span>/<span>{{bindInfo.notPair}}位未完成配对</span>						
+							<span>{{bindInfo.accomplish}}位完成配对</span>/<span>{{bindInfo.notAccomplish}}位未完成配对</span>						
 						</h4>
+						<div id="refreshBindCard" ng-click="refreshBindCard()" style="display:none;"></div>
 					</div>
 			</form>
 			</script>
@@ -260,6 +261,8 @@
 				<div class="bounce3"></div>
 			</div>
 		</div>
+		
+		
 		<div id="refreshClass" ng-click="refreshClass()" style="display:none;"></div>
 		<div id="refreshStudent" ng-click="refreshStudent()" style="display:none;"></div>
 	</body>

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.BrowserManager;
+import com.ejet.cache.RedisMapBind;
 import com.ejet.core.util.ICallBack;
 import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.constant.Constant;
@@ -91,6 +92,8 @@ public class StudentFunctionManage extends BrowserFunction{
 			case "update_class":
 				result = classInfoService.updateClassInfo(param);
 				break;
+			case "get_bind_info":
+				return RedisMapBind.getBindMap();
 				/**清除白名单位(解绑)*/
 			case "clear_bind":
 			    result = equipmentService.clear_wl();

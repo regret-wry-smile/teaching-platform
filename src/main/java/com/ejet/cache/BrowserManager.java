@@ -39,6 +39,7 @@ public class BrowserManager {
 				@Override
 				public void run() {
 					boolean  doRet = b.execute("document.getElementById('refreshBindCard').click();");
+					log.info("刷新绑定页面："+doRet);
 				}
 			});
 		}

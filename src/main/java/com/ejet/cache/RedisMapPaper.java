@@ -1,7 +1,9 @@
 package com.ejet.cache;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -38,8 +40,12 @@ public class RedisMapPaper {
 	 * 获取所有题目信息
 	 * @return
 	 */
-	public static Map<String, Object> getQuestions(){
-		return questionList;
+	public static List<QuestionInfo> getQuestions(){
+		List<QuestionInfo> questionInfos = new ArrayList<QuestionInfo>();
+		for (String key : questionList.keySet()) {
+			questionInfos.add((QuestionInfo)questionList.get(key));
+		}
+		return questionInfos;
     }
 	
 	/**
@@ -68,17 +74,17 @@ public class RedisMapPaper {
 	public static void clearRedis(){
 		questionList.clear();
     }
-//	public static void main(String[] args) {
-//		QuestionInfo questionInfo = new QuestionInfo();
-//		questionInfo.setQuestion("第一题");
-//		addQuestion(questionInfo);
-//		QuestionInfo questionInfo2 = new QuestionInfo();
-//		questionInfo2.setQuestion("第二题");
-//		addQuestion(questionInfo2);
-//		
-//		QuestionInfo questionInfo3 = new QuestionInfo();
-//		questionInfo3.setId(1);
-//		deleteQuestion(questionInfo3);
-//		System.out.println(JSONArray.fromObject(getQuestions()));
-//	}
+	public static void main(String[] args) {
+		QuestionInfo questionInfo = new QuestionInfo();
+		questionInfo.setQuestion("第一题");
+		addQuestion(questionInfo);
+		QuestionInfo questionInfo2 = new QuestionInfo();
+		questionInfo2.setQuestion("第二题");
+		addQuestion(questionInfo2);
+		
+		QuestionInfo questionInfo3 = new QuestionInfo();
+		questionInfo3.setId(1);
+		deleteQuestion(questionInfo3);
+		System.out.println(JSONArray.fromObject(getQuestions()));
+	}
 }

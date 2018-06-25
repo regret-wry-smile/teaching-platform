@@ -48,5 +48,11 @@ public class RedisMapBind {
                 bindMap.put("notAccomplish",studentInfoMap.size()-accomplish);
             }
         }
+        BrowserManager.refreshBindCard();
     }
+    
+	public static String getBindMap(){
+		return JSONObject.fromObject(bindMap).toString();
+    }
+    
 }
