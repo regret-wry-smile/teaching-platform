@@ -12,7 +12,7 @@ public interface EquipmentService {
     /** 清除白名单 */
     public Result clear_wl() ;
     /** 开始绑定  */
-    public Result bind_start(Integer model, String data) ;
+    public Result bind_start(Object param) ;
     /** 停止绑定 */
     public Result bind_stop() ;
     /** 开始答题 */

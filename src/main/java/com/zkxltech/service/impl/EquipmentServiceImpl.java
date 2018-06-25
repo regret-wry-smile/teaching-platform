@@ -2,6 +2,7 @@ package com.zkxltech.service.impl;
 
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
+import com.zkxltech.domain.EquipmentParam;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.EquipmentService;
 import com.zkxlteck.scdll.MachineThread;
@@ -50,19 +51,30 @@ public class EquipmentServiceImpl implements EquipmentService{
         return r;
     }
     @Override
-    public Result bind_start(Integer model,String data) {
+    public Result bind_start(Object param) {
         Result r = new Result();
-        int bind_start = ScDll.intance.wireless_bind_start(model, data) ;
-        if (bind_start != -1) {
-            //FIXME
-//            Thread t = new MachineThread(true, MachineThread.GET_CARD_INFO);
-//            threadPool.submit(t);
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("操作成功");
-        }else{
-            r.setRet(Constant.ERROR);
+        r.setRet(Constant.ERROR);
+        try {
+            EquipmentParam ep =  (EquipmentParam) com.zkxltech.ui.util.StringUtils.parseJSON(param, EquipmentParam.class);
+            if (ep.getModel()== null) {
+                r.setMessage("缺少参数");
+                return r;
+            }
+            int bind_start = ScDll.intance.wireless_bind_start(ep.getModel(), ep.getUidStr() == null ? "" : ep.getUidStr()) ;
+            if (bind_start > 0) {
+                //FIXME
+                t = new MachineThread(MachineThread.GET_CARD_INFO);
+                t.start();
+                r.setItem(bind_start);
+                r.setRet(Constant.SUCCESS);
+                r.setMessage("操作成功");
+            }else{
+                r.setMessage("操作失败");
+            }
+        } catch (Exception e) {
             r.setMessage("操作失败");
-        }
+            r.setDetail(e.getMessage());
+        } 
         return r;
     }
     @Override
