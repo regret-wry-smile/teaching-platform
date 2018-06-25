@@ -217,7 +217,7 @@
 							<tr ng-repeat="item in classList track by $index"  ng-click="changeClass(item,$index)">
 								<td>
 									<span class="sub" ng-class="{'1': 'green', '0': 'grey'}[item.atype]"></span> 
-									<span class="name" ng-class="{active:isActive === $index}">{{item.className}}</span>
+									<span class="name" ng-class="{active:isActive == $index}">{{item.className}}</span>
 									<a href="javascript:;" class="del pull-right pr5" ng-click="$event.stopPropagation();deleteClass(item)">删除</a>
 									<!--<a href="javascript:;" class="edit pull-right pr5" ng-click="$event.stopPropagation();editClass(item,$index)">编辑</a>-->
 								</td>
