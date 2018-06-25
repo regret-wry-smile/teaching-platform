@@ -78,7 +78,7 @@
 								<td>{{$index+1}}</td>
 								<td>{{paperInfo.testName}}</td>
 								<td>{{paperInfo.describe}}</td>
-								<td><a href= "../../page/setmodule/edittestPage.html" class="edit mr5" ng-click="editPaper(item)">编辑</a><a href="javascript:;" class="del" ng-click="delPaper()">删除</a></td>
+								<td><a ng-href="{{objectUrl}}" class="edit mr5" ng-click="editPaper(paperInfo)">编辑</a><a href="javascript:;" class="del" ng-click="delPaper(paperInfo)">删除</a></td>
 							</tr>
 							
 							</tbody>

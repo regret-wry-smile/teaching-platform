@@ -31,6 +31,14 @@
         <script src="js/es5-shim.min.js"></script>        
     	<![endif]-->
 	</head>
+	<style>
+		.newSelect{
+			width: 100px !important;
+		}
+		.newOptions{
+			width: 100px !important;
+		}
+	</style>
 	<body class="bg" ng-controller="addPaperManageCtrl">
 		<!--导入试卷-->
 		<script type="text/ng-template" id="importFile.html">
@@ -65,33 +73,57 @@
 			</form>
 			</script>
 		<!--添加题目start-->
-			<script type="text/ng-template" id="addStudentModal.html">
+			<script type="text/ng-template" id="addSubjectModal.html">
 				<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
 					<div class="modal-header">
 						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
 						<h4 class="modal-title">{{title}}</h4>
 					</div>
 					<div class="modal-body">						
-						<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">学号</label>
+						<!--<div class="form-group">
+					  	<label for="firstname" class="col-sm-3 control-label">序号</label>
 					    <div class="col-sm-8">
 				    	<input type="number" autocomplete="off" name="stunum" id="" value=""  class="form-control" ng-model="student.stuNum" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurStunum()"/>					
 						</div>
 						<span ng-show="myForm.stunum.$invalid" class="warning">*</span>
-						</div>
+						</div>-->
 						<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">姓名</label>
+					  	<label for="firstname" class="col-sm-3 control-label">题目</label>
 					    <div class="col-sm-8">
-				    	<input type="text" autocomplete="off" name="stuname" id="" value=""  class="form-control" ng-model="student.stuName" required maxlength="10" placeholder="请输入长度不能超过10位字符" ng-blur="blurStuname()"/>
+				    	<input type="text" autocomplete="off" name="stuname" id="" value=""  class="form-control" ng-model="testInfo.question" required maxlength="10" placeholder="请输入长度不能超过10位字符" ng-blur="blurStuname()"/>
 						</div>
 						<span ng-show="myForm.stuname.$invalid" class="warning">*</span>
 						</div>
 						<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">答题器编号</label>
+					  	<label for="firstname" class="col-sm-3 control-label">题目内容</label>
 					    <div class="col-sm-8">
-				    	<input type="number" autocomplete="off" name="devicenum" id="" value=""  class="form-control" ng-model="student.deviceNum" required ng-pattern="/^\d{10}$/" placeholder="请输入长度为10位的数字" ng-blur="blurDevicenum()"/>
+				    	<textarea class="form-control" cols="3" placeholder="请输入..." ng-model="testInfo.questionType"></textarea>
 						</div>
 						<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>
+						</div>
+						<div class="form-group">
+					  	<label for="firstname" class="col-sm-3 control-label">答案类型</label>
+					    <div class="col-sm-8">
+				    	<select class="single" select  ng-model="testInfo.questionType" defalutvalue='testInfo.questionType1' ng-change="changequesType(testInfo.questionType)">
+				    		<option value="3">判断</option>
+							<option value="0">字母</option>
+							<option value="4">数字</option>
+						</select>
+				    	<select class="single" ng-model="testInfo.selType" select defalutvalue='testInfo.selType1'>
+				    		<option value="1">单选</option>
+				    		<option value="2">多选</option>
+				    	</select>
+				    	<select class="single" ng-model="testInfo.selType">
+				    		<option value="">A-D</option>
+				    	</select>
+						</div>
+						</div>
+						<div class="form-group">
+					  	<label for="firstname" class="col-sm-3 control-label">答案</label>
+					    <div class="col-sm-8">
+				    	<input type="text" autocomplete="off" name="stuname" id="" value=""  class="form-control" ng-model="student.stuName" required />
+						</div>
+						<span ng-show="myForm.stuname.$invalid" class="warning">*</span>
 						</div>
 					</div>
 					<div class="modal-footer text-center">
@@ -111,21 +143,21 @@
 				</div>
 			</div>
 			<div class="content bgf5 clearfix">		
-				<form class="form-horizontal clearfix">
+				<form class="form-horizontal clearfix" name="myForm">
 			  			<div class="form-group">
 					  	<label for="firstname" class="col-sm-2 control-label">试卷名称</label>
-					    <div class="col-sm-10">
-				    	<input type="number" autocomplete="off" name="stunum" id="" value=""  class="form-control" ng-model="student.stuNum" required />					
-						</div>
+					    <div class="col-sm-9">
+				    	<input type="number" autocomplete="off" name="testName" id="" value=""  class="form-control" ng-model="paperInfo.testName" required />										
+					    </div>
+					    <span ng-show="myForm.testName.$invalid" class="warning">*</span>
 						</div>
 						<div class="form-group">
 					  	<label for="firstname" class="col-sm-2 control-label">试卷描述</label>
-					    <div class="col-sm-10">
-					    	<textarea  class="form-control" rows="3" ></textarea>
+					    <div class="col-sm-9">
+					    	<textarea  class="form-control" rows="3" ng-model="paperInfo.describe"></textarea>
 						</div>
 						</div>
 		  		</form>
-
 			  		<div class="col-main"  id="testlist" style="overflow-x: auto; overflow-y: auto; height:1.5rem; width:100%;padding-right: 0.05rem;">
 					<table class="table table-stripe subject">
 						<thead>

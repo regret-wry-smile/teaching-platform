@@ -195,7 +195,12 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			studentInfo.setClassId(classId);
 			studentInfoSql.deleteStudent(studentInfo); //清除本地该班学生信息
 			result = studentInfoSql.saveStudentByGroup(listMaps); //保存服务器上该班的学生信息
-			result.setMessage("服务器中获取学生成功！");
+			if(Constant.ERROR.equals(result.getRet())){
+				result.setMessage("服务器中获取学生失败！");
+			}else {
+				result.setMessage("服务器中获取学生成功！");
+			}
+			
 			return result;
 		} catch (Exception e) {
 			log.error(IOUtils.getError(e));
