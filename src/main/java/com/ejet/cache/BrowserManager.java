@@ -21,6 +21,10 @@ public class BrowserManager {
 	public static void setBrower(Browser brower) {
 		browerManager = new WeakReference<Browser>(brower);
 	}
+	
+	/*******************/
+	/****** 设置模块   ******/
+	/*******************/
 	/**
 	 * 数据绑定调用页面刷新
 	 * @param echoRequest
@@ -28,19 +32,26 @@ public class BrowserManager {
 	public static void refreshBindCard() {
 		Browser b  = browerManager.get();
 		if (b!=null) {
-			new Thread(new Runnable() {
+			shell.getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					shell.getDisplay().syncExec(new Runnable() {
-						@Override
-						public void run() {
-							b.execute("document.getElementById('refresh').click();");
-						}
-					});
+					b.execute("document.getElementById('refreshBindCard').click();");
 				}
-			}).start();
-			
-			
+			});
+		}
+	}
+	/**
+	 * 选中当前班级
+	 */
+	public static void selectClass(String classId) {
+		Browser b  = browerManager.get();
+		if (b!=null) {
+			shell.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					b.execute("document.getElementById('refreshBindCard').click();");
+				}
+			});
 		}
 	}
 	/**
