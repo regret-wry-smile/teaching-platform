@@ -52,7 +52,7 @@ public class BrowserManager {
 			shell.getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					boolean  doRet = b.execute("var classid = '"+classId+"';document.getElementById('selectClass').click();");
+					boolean  doRet = b.execute("var classId = '"+classId+"';document.getElementById('selectClass').click();");
 				}
 			});
 		}
@@ -82,7 +82,7 @@ public class BrowserManager {
 			shell.getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					boolean  doRet = b.execute("var classid = '"+classId+"';var document.getElementById('refreshStudent').click();");
+					boolean  doRet = b.execute("var classId = '"+classId+"';document.getElementById('refreshStudent').click();");
 					log.info("刷新学生："+doRet);
 				}
 			});

@@ -44,11 +44,11 @@ public class StudentFunctionManage extends BrowserFunction{
 			case "insert_student":
 				result = studentInfoservice.insertStudentInfo(param);
 				break;
-			case "import_student":
+			case "import_student2":
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						studentInfoservice.importStudentInfo(param,new ICallBack() {
+						studentInfoservice.importStudentInfo2(param,new ICallBack() {
 							@Override
 							public void onResult(int code, String message, Object ext) {
 								if (StringUtils.intToBoolen(code)) {
@@ -63,6 +63,9 @@ public class StudentFunctionManage extends BrowserFunction{
 						});
 					}
 				}).start();
+				break;
+			case "import_student":
+				result =  studentInfoservice.importStudentInfo(param);
 				break;
 			case "import_server":
 				result = studentInfoservice.selectStudentInfo(param);

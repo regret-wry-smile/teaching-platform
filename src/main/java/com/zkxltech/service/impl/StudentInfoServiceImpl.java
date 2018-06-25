@@ -24,7 +24,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
 	
 	@Override
-	public Result importStudentInfo(Object object,ICallBack icallback) {
+	public Result importStudentInfo2(Object object,ICallBack icallback) {
 		result = new Result();
 		try {
 			String fileName = String.valueOf(object);
@@ -48,6 +48,28 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			return result;
 		}finally {
 			icallback.onResult(StringUtils.StringToInt(result.getRet()), result.getMessage(),  result.getRemak());
+		}
+	}
+	
+	@Override
+	public Result importStudentInfo(Object object) {
+		result = new Result();
+		try {
+			String fileName = String.valueOf(object);
+			studentInfoSql.deleteStudent(new StudentInfo());
+			List<List<Object>> list = ImportExcelUtils.getBankListByExcel(new FileInputStream(new File(fileName)), fileName);
+			result = studentInfoSql.importStudent(list);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				result.setMessage("导入成功!");
+			}else {
+				result.setMessage("导入学生失败！");
+			}
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("导入学生失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
 		}
 	}
 

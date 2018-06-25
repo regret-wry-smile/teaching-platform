@@ -10,7 +10,9 @@ public interface StudentInfoService {
 	 * @param object excel文件路径
 	 * @return
 	 */
-	Result importStudentInfo(Object object,ICallBack icallback);
+	Result importStudentInfo2(Object object,ICallBack icallback);
+	
+	Result importStudentInfo(Object object);
 	/**
 	 * 新增学生
 	 * @param object StudentInfo对象
