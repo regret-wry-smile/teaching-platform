@@ -1,23 +1,29 @@
 package com.zkxltech.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ejet.cache.BrowserManager;
 import com.ejet.cache.RedisMapAttendance;
 import com.ejet.cache.RedisMapBind;
 import com.ejet.cache.RedisMapClassTest;
+import com.ejet.cache.RedisMapQuick;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.EquipmentParam;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.EquipmentService;
+import com.zkxltech.sql.StudentInfoSql;
 import com.zkxlteck.scdll.AnswerThread;
 import com.zkxlteck.scdll.CardInfoThread;
 import com.zkxlteck.scdll.ScDll;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -28,7 +34,24 @@ public class EquipmentServiceImpl implements EquipmentService{
     //private ExecutorService threadPool = Executors.newSingleThreadExecutor(); //单线程池
     public static final int SUCCESS = 0 ;//
     public static final int ERROR = -1 ; //
-    
+    /*有答案*/
+    public static final String IS_ANSWER_YES = "YES";
+    /*无答案*/
+    public static final String IS_ANSWER_NO = "NO";
+    /*抢答用-字符答案*/
+    public static final String TYPE_CHAR = "CHAR";
+    /*抢答用-数字答案*/
+    public static final String TYPE_NUMBER = "NUMBER";
+    /*抢答用-判断答案*/
+    public static final String TYPE_JUDGE = "JUDGE";
+    /*抢答用-字符答案*/
+    public static final String QUICK_CHAR = "[{'type':'s','id':'0002','range':'A-F'}]";
+    /*抢答用-数字答案*/
+    public static final String QUICK_NUMBER = "[{'type':'d','id':'0002','range':'0-9'}]";
+    /*抢答用-判断答案*/
+    public static final String QUICK_JUDGE = "[{'type':'j','id':'0002','range':''}]";
+    /*抢答用-无答案*/
+    public static final String QUICK_COMMON = "[{'type':'g','id':'0002','range':''}]";
     private Thread t ;
     private static final EquipmentServiceImpl SINGLE = new EquipmentServiceImpl();  
     
@@ -50,16 +73,55 @@ public class EquipmentServiceImpl implements EquipmentService{
         r.setMessage("查询失败");
         return r;
     }
+    /**清除白名单*/
     @Override
-    public Result clear_wl() {
+    public Result clearWl(Object param) {
+        //FIXME 增加事务
         Result r = new Result();
-        int clear_wl = ScDll.intance.clear_wl();
-        if (clear_wl == SUCCESS) {
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("清除成功");
+        r.setRet(Constant.ERROR);
+        String get_device_info = ScDll.intance.get_device_info();
+        if (StringUtils.isBlank(get_device_info)) {
+            r.setMessage("设备故障,请重启设备");
             return r;
         }
-        r.setRet(Constant.ERROR);
+        JSONObject jsono = JSONObject.fromObject(param);
+        if (!jsono.containsKey("classId")) {
+            r.setMessage("缺少班级id参数");
+            return r;
+        }
+        List<String> uids = new ArrayList<>();
+        Object list = JSONObject.fromObject(get_device_info).get("list");
+        JSONArray jsonArray = JSONArray.fromObject(list);
+        for (Object object : jsonArray) {
+            JSONObject jo = JSONObject.fromObject(object);
+            String uid = jo.getString("uid");
+            if (!StringUtils.isBlank(uid)) {
+                uids.add(uid);
+            }
+        }
+        try {
+            if (ListUtils.isEmpty(uids)) {
+                r.setRet(Constant.SUCCESS);
+                r.setMessage("清除成功");
+                return r;
+            }
+            StudentInfoSql studentInfoSql = new StudentInfoSql();
+            Result result = studentInfoSql.updateByIclickerIds(uids);
+            if (result.getRet().equals(Constant.ERROR)) {
+                r.setRet(Constant.ERROR);
+                r.setMessage("清除白名单失败");
+                return r;
+            }
+            int clear_wl = ScDll.intance.clear_wl();
+            if (clear_wl == SUCCESS) {
+                r.setRet(Constant.SUCCESS);
+                r.setMessage("清除成功");
+                BrowserManager.refreshStudent(jsono.getString("classId"));
+                return r;
+            }
+        } catch (Exception e) {
+            r.setDetail(IOUtils.getError(e));
+        }
         r.setMessage("清除失败");
         return r;
     }
@@ -94,18 +156,11 @@ public class EquipmentServiceImpl implements EquipmentService{
             }
             /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
             Map<Object, List<StudentInfo>> studentInfoMap = ListUtils.getClassificationMap(studentInfos, "iclickerId");
-            //检查数据
-            for (Object key : studentInfoMap.keySet()) {
-                List<StudentInfo> list = studentInfoMap.get(key);
-                if (list.size() > 1) {
-                    r.setMessage("答题器编号:"+key+",绑定了多个学生");
-                    return r;
-                }
-            }
             /**存入静态map*/
             //每次调用绑定方法先清空,再存
             RedisMapBind.bindMap.clear();
             RedisMapBind.studentInfoMap.clear();
+            RedisMapBind.cardIdSet.clear();
             RedisMapBind.bindMap.put("studentName", null);
             RedisMapBind.bindMap.put("code", bind_start);
             RedisMapBind.bindMap.put("accomplish", 0);
@@ -414,6 +469,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         if (answer_start == SUCCESS) {
             //每次调用签到先清空数据
             RedisMapAttendance.attendanceMap.clear();
+            RedisMapAttendance.cardIdSet.clear();
             StudentInfoServiceImpl si = new StudentInfoServiceImpl();
             Result result = si.selectStudentInfo(param);
             List<StudentInfo> studentInfos = (List)result.getItem();
@@ -506,6 +562,36 @@ public class EquipmentServiceImpl implements EquipmentService{
         }
         r.setRet(Constant.ERROR);
         r.setMessage("获取失败");
+        return r;
+    }
+    @Override
+    public Result quickAnswer(Object param) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        if (param == null) {
+            r.setMessage("参数班级id不能为空");
+            return r;
+        }
+        int answer_start = ScDll.intance.answer_start(0, QUICK_COMMON);
+        if (answer_start == SUCCESS) {
+            //开始答题前先清空
+            RedisMapQuick.quickMap.clear();
+            RedisMapQuick.studentInfoMap.clear();
+            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
+            Result result = impl.selectStudentInfo(param);
+            List<Object> item = (List<Object>) result.getItem();
+            for (Object object : item) {
+                StudentInfo studentInfo =  (StudentInfo) com.zkxltech.ui.util.StringUtils.parseJSON(object, StudentInfo.class);
+                RedisMapQuick.studentInfoMap.put("studentName", studentInfo.getStudentName());
+                RedisMapQuick.studentInfoMap.put("iclickerId", studentInfo.getIclickerId());
+            }
+            t = new AnswerThread();
+            t.start();
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("发送成功");
+            return r;
+        }
+        r.setMessage("发送失败");
         return r;
     }
 }

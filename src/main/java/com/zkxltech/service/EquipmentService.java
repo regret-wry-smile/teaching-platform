@@ -10,7 +10,7 @@ public interface EquipmentService {
     /** 获取设备信息 */
     public Result get_device_info();
     /** 清除白名单 */
-    public Result clear_wl() ;
+    public Result clearWl(Object param) ;
     /** 开始绑定  */
     public Result bind_start(Object param) ;
     /** 停止绑定 */
@@ -61,4 +61,6 @@ public interface EquipmentService {
     public Result set_wireless_student_id(String uid_str , String student_id_str) ; 
     /** 无线获取设置学号卡片信息 */
     public Result get_wireless_student_id_info() ;
+    /**快速抢答*/
+    public Result quickAnswer(Object param);
 }

@@ -29,7 +29,7 @@ public class RedisMapAttendance {
     }
 	public static Map<String, Map<String,String>> attendanceMap = Collections.synchronizedMap(new HashMap<>());
 	/**绑定时用来去除重复的提交*/
-    private Set<String> cardIdSet = new HashSet<>();
+    public static Set<String> cardIdSet = new HashSet<>();
 	public void addAttendance(String jsonData){
         JSONArray jsonArray = JSONArray.fromObject(jsonData);
         for (int j = 0; j < jsonArray.size(); j++) {

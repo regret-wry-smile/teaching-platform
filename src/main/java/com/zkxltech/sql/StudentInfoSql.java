@@ -191,4 +191,17 @@ public class StudentInfoSql {
 		}
 		return DBHelper.onUpdateByGroup(sqls);
 	}
+
+    public Result updateByIclickerIds(List<String> uidList) {
+        //update student_info set status = '0' where iclicker_id in('3429469477','6666660002','************')
+        StringBuilder sb = new StringBuilder("update student_info set status = '0' where iclicker_id in(");
+        for (int i = 0; i< uidList.size();i++) {
+            sb.append(uidList.get(i));
+            if (i != uidList.size()-1) {
+                sb.append(",");
+            }
+        }
+        sb.append(")");
+        return dbHelper.onUpdate(sb.toString(), null);
+    }
 }

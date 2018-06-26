@@ -38,7 +38,7 @@ public class RedisMapBind {
     /***/
     private static final StudentInfoServiceImpl SIS= new StudentInfoServiceImpl();
     /**绑定时用来去除重复的提交*/
-    private Set<String> cardIdSet = new HashSet<>();
+    public static Set<String> cardIdSet = new HashSet<>();
     public void addBindMap(String jsonData){
         JSONArray jsonArray = JSONArray.fromObject(jsonData);
         for (Object object : jsonArray) {
