@@ -107,7 +107,13 @@ public class ClassHourServiceImpl implements ClassHourService{
 		classInfo.setClassId((String)classId);
 		Result result = new ClassInfoServiceImpl().selectClassInfo(classInfo);
 		if (Constant.SUCCESS.equals(result.getRet())) {
-			Global.setClassInfo((ClassInfo)result.getItem());
+			List<ClassInfo>  classInfos = (List<ClassInfo>) result.getItem();
+			if (classInfos != null && classInfos.size()>0) {
+				Global.setClassInfo(classInfos.get(0));
+			}else {
+				result.setMessage("未找到班级信息！");
+				return result;
+			}
 		}else {
 			result.setMessage("查询班级信息失败！");
 			return result;
