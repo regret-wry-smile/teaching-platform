@@ -19,11 +19,10 @@
 		<script src="../../js/angular-toastr/angular-toastr.tpls.min.js"></script>
 		
 		<script src="../../js/jquery-1.11.1.min.js"></script>
-		<link rel="stylesheet" href="../../js/select/select.css">
+		<!--<link rel="stylesheet" href="../../js/select/select.css">
 		<link rel="stylesheet" href="../../js/select/jquery.mCustomScrollbar.min.css" />
 		<script src="../../js/select/jquery.mCustomScrollbar.concat.min.js"></script>
-		<script src="../../js/select/jquery.select.js"></script>
-		
+		<script src="../../js/select/jquery.select.js"></script>-->
 		<link rel="stylesheet" href="../../js/select/style.css" />
 		<link href="../../js/select/font-awesome.min.css" />
 		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
@@ -60,9 +59,13 @@
 				<div class="modboxs bgfff">
 					<p class="text clearfix">
 						<label class="labelwd pull-left">班级</label>
-						<select  class="select pull-left" id="class" ng-model="setClass.classes" >
+						<!--<select  class="select pull-left" id="class" ng-model="setClass.classes" >
 							<option ng-repeat="item in classList track by $index" value="{{item.id}}">{{item.name}}</option>
+						</select>-->
+						<select class="single" select2 ng-model="setClass.classes" defalutvalue='setClass.classes1' list="classList" ng-change="changeClass(setClass.classes)" >
+				   			<option ng-repeat="classitem in classList track by $index" value="{{classitem}}">{{classitem.value}}</option>
 						</select>
+						
 					</p>
 					<p class="text clearfix">
 						<label class="labelwd pull-left">科目</label>
