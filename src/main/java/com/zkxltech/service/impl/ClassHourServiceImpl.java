@@ -1,5 +1,7 @@
 package com.zkxltech.service.impl;
 
+import java.util.Date;
+
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.ClassHour;
@@ -47,6 +49,47 @@ public class ClassHourServiceImpl implements ClassHourService{
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
 			result.setMessage("新增课程失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
+	}
+
+	@Override
+	public Result deleteClassInfo(Object object) {
+		result = new Result();
+		try {
+			ClassHour classHour =  (ClassHour) StringUtils.parseJSON(object, ClassHour.class);
+			result = classHourSql.deleteAnswerInfo(classHour);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				result.setMessage("删除课程成功!");
+			}else {
+				result.setMessage("删除课程失败！");
+			}
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("删除课程失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
+	}
+
+	@Override
+	public Result updateClassInfoTime(Object object) {
+		result = new Result();
+		try {
+			ClassHour classHour =  (ClassHour) StringUtils.parseJSON(object, ClassHour.class);
+			classHour.setEndTime(com.ejet.core.util.StringUtils.formatDateTime(new Date()));
+			result = classHourSql.updateTestPaper(classHour);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				result.setMessage("删除课程成功!");
+			}else {
+				result.setMessage("删除课程失败！");
+			}
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("删除课程失败！");
 			result.setDetail(IOUtils.getError(e));
 			return result;
 		}

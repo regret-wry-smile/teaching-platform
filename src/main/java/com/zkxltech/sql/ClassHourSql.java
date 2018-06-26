@@ -83,24 +83,55 @@ public class ClassHourSql {
 		return dbHelper.onUpdate(sqlBuilder.toString(), classHour);
 	}
 	
-//	/*删除答题信息*/
-//	public Result deleteAnswerInfo(AnswerInfo answerInfo) throws IllegalArgumentException, IllegalAccessException{
-//		StringBuilder sqlBuilder = new StringBuilder();
-//		sqlBuilder.append("delete from answer_info");
-//		Field[] files = dbHelper.getFields(answerInfo);
-//		int index = 0;
-//		for (int i = 0; i < files.length; i++) {
-//			Object obj = dbHelper.getFiledValues(files[i], answerInfo);
-//			if (!StringUtils.isEmpty(obj)) {
-//				if (index == 0) {
-//					sqlBuilder.append(" where ");
-//				}else {
-//					sqlBuilder.append(" and ");
-//				}
-//				sqlBuilder.append(dbHelper.HumpToUnderline(files[i].getName())+" = ?");
-//				index++;
-//			}
-//		}
-//		return dbHelper.onUpdate(sqlBuilder.toString(), answerInfo);
-//	}
+	/**
+	 * 删除课程
+	 * @param classHour
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public Result deleteAnswerInfo(ClassHour classHour) throws IllegalArgumentException, IllegalAccessException{
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("delete from answer_info");
+		Field[] files = dbHelper.getFields(classHour);
+		int index = 0;
+		for (int i = 0; i < files.length; i++) {
+			Object obj = dbHelper.getFiledValues(files[i], classHour);
+			if (!StringUtils.isEmpty(obj)) {
+				if (index == 0) {
+					sqlBuilder.append(" where ");
+				}else {
+					sqlBuilder.append(" and ");
+				}
+				sqlBuilder.append(dbHelper.HumpToUnderline(files[i].getName())+" = ?");
+				index++;
+			}
+		}
+		return dbHelper.onUpdate(sqlBuilder.toString(), classHour);
+	}
+	
+	/**
+	 * 根据主键更新课程
+	 * 
+	 * */
+	public Result updateTestPaper(ClassHour classHour) throws IllegalArgumentException, IllegalAccessException{
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("update answer_info");
+		Field[] files = dbHelper.getFields(classHour);
+		int index = 0;
+		for (int i = 1; i < files.length; i++) {
+			Object obj = dbHelper.getFiledValues(files[i], classHour);
+			if (!StringUtils.isEmpty(obj)) {
+				if (index == 0) {
+					sqlBuilder.append(" set ");
+				}else {
+					sqlBuilder.append(" , ");
+				}
+				sqlBuilder.append(dbHelper.HumpToUnderline(files[i].getName())+" =  '"+obj+"'");
+				index++;
+			}
+		}
+		sqlBuilder.append(" where id = '"+classHour.getId()+"'");
+		return dbHelper.onUpdate(sqlBuilder.toString(), classHour);
+	}
 }
