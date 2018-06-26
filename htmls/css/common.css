@@ -223,6 +223,7 @@ ul.modbox li.active a{
 	width: 0.80rem;
 	font-size: 0.14rem;
 	text-align: left;
+	cursor: pointer;
 }
 .opbtn a.warning{
 	color: #ca4d4d;
@@ -463,6 +464,7 @@ table.userlist tbody tr:hover{
 table tbody tr td a.del,
 table tbody tr td a.edit {
 	visibility: hidden;
+	cursor: pointer;
 }
 table  tbody tr:hover td a.del,table  tbody tr:hover td a.edit{
 	visibility: visible;
@@ -612,6 +614,16 @@ table.answer{
 }
 .form-group label.control-label{
 	text-align: right !important;
+}
+.form-group label.selradio{
+	display: inline-block;
+	height: 0.40rem;
+	line-height:0.40rem ;
+	vertical-align: middle;
+	cursor: pointer;
+}
+.form-group label.selradio input[type='radio']{
+	cursor: pointer;
 }
 /*table.classlist tbody tr:hover,
 table.userlist tbody tr:hover{
