@@ -34,7 +34,7 @@ public class RedisMapQuick {
             EquipmentServiceImpl instance = EquipmentServiceImpl.getInstance();
             Result r = instance.answerStop();
             if (instance.t!=null && instance.t instanceof QuickThread) {
-                QuickThread qt= (QuickThread)instance.getInstance().t;
+                QuickThread qt= (QuickThread)instance.t;
                 qt.setFLAG(false);
             }
             if (Constant.ERROR.equals(r.getRet())) {
