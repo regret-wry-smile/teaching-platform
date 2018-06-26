@@ -28,7 +28,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     //private ExecutorService threadPool = Executors.newSingleThreadExecutor(); //单线程池
     public static final int SUCCESS = 0 ;//
     public static final int ERROR = -1 ; //
-    public static final String ANSWER_STR = "[{'type':'g','id':'1','range':''}]";
+    
     private Thread t ;
     private static final EquipmentServiceImpl SINGLE = new EquipmentServiceImpl();  
     
@@ -410,7 +410,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         }
         //int sign_in_start = ScDll.intance.sign_in_start();
         //开始签到接口有问题,暂用按任意键
-        int answer_start = ScDll.intance.answer_start(0, ANSWER_STR);
+        int answer_start = ScDll.intance.answer_start(0, Constant.ANSWER_STR);
         if (answer_start == SUCCESS) {
             //每次调用签到先清空数据
             RedisMapAttendance.attendanceMap.clear();
@@ -424,7 +424,7 @@ public class EquipmentServiceImpl implements EquipmentService{
             /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
             for (StudentInfo studentInfo : studentInfos) {
                 Map<String, String> studentInfoMap = new HashMap<>();
-                studentInfoMap.put(studentInfo.getStudentName(), RedisMapAttendance.BIND_NO);
+                studentInfoMap.put(studentInfo.getStudentName(), Constant.ATTENDANCE_NO);
                 RedisMapAttendance.attendanceMap.put(studentInfo.getIclickerId(), studentInfoMap);
             }
             t = new AnswerThread();
