@@ -4,6 +4,7 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 
 import com.ejet.cache.RedisMapPaper;
+import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.QuestionService;
@@ -35,6 +36,8 @@ public class TestPaperFunctionManage extends BrowserFunction{
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
 			switch (method) {
+			case "create_test_id":
+				return StringUtils.getUUID();
 			case "select_paper":
 				result = testPaperService.selectTestPaper(params[1]);
 				break;
