@@ -20,6 +20,7 @@ import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.EquipmentService;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxlteck.scdll.AnswerThread;
+import com.zkxlteck.scdll.AttendanceThread;
 import com.zkxlteck.scdll.CardInfoThread;
 import com.zkxlteck.scdll.ScDll;
 
@@ -52,7 +53,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public static final String QUICK_JUDGE = "[{'type':'j','id':'0002','range':''}]";
     /*抢答用-无答案*/
     public static final String QUICK_COMMON = "[{'type':'g','id':'0002','range':''}]";
-    private Thread t ;
+    public Thread t ;
     private static final EquipmentServiceImpl SINGLE = new EquipmentServiceImpl();  
     
     private EquipmentServiceImpl() {
@@ -185,6 +186,10 @@ public class EquipmentServiceImpl implements EquipmentService{
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
             return r;
+        }
+        if (t!=null && t instanceof CardInfoThread) {
+            CardInfoThread c =  (CardInfoThread)t;
+            c.setFLAG(false);
         }
         r.setRet(Constant.ERROR);
         r.setMessage("停止失败");
@@ -483,7 +488,7 @@ public class EquipmentServiceImpl implements EquipmentService{
                 studentInfoMap.put(studentInfo.getStudentName(), Constant.ATTENDANCE_NO);
                 RedisMapAttendance.attendanceMap.put(studentInfo.getIclickerId(), studentInfoMap);
             }
-            t = new AnswerThread();
+            t = new AttendanceThread();
             t.start();
             r.setRet(Constant.SUCCESS);
             r.setMessage("操作成功");
@@ -501,6 +506,10 @@ public class EquipmentServiceImpl implements EquipmentService{
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
             return r;
+        }
+        if (t != null && t instanceof AttendanceThread ) {
+            AttendanceThread a = (AttendanceThread)t;
+            a.setFLAG(false);
         }
         r.setRet(Constant.ERROR);
         r.setMessage("停止失败");

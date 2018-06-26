@@ -1,8 +1,10 @@
 package com.ejet.cache;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,17 +22,10 @@ import net.sf.json.JSONObject;
  */
 public class RedisMapAttendance {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMapAttendance.class);
-	/**单例*/
-    private static final RedisMapAttendance INSTANCE = new RedisMapAttendance();
-    private RedisMapAttendance() {
-    }
-    public static RedisMapAttendance getInstance(){
-        return INSTANCE;
-    }
 	public static Map<String, Map<String,String>> attendanceMap = Collections.synchronizedMap(new HashMap<>());
 	/**绑定时用来去除重复的提交*/
     public static Set<String> cardIdSet = new HashSet<>();
-	public void addAttendance(String jsonData){
+	public static void addAttendance(String jsonData){
         JSONArray jsonArray = JSONArray.fromObject(jsonData);
         for (int j = 0; j < jsonArray.size(); j++) {
             JSONObject jo = (JSONObject) jsonArray.get(j);
@@ -45,4 +40,12 @@ public class RedisMapAttendance {
             }
         }
     }
+	public static String getAttendance(){
+	    List<Map<String,String>> list = new ArrayList<>();
+	    Set<String> keySet = attendanceMap.keySet();
+	    for (String key : keySet) {
+            list.add(attendanceMap.get(key));
+        }
+	    return JSONArray.fromObject(list).toString();
+	}
 }

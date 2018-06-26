@@ -26,20 +26,13 @@ public class RedisMapBind {
     public static Map<String, Object> bindMap = Collections.synchronizedMap(new HashMap<String, Object>());
     /**答题器id对应的学生*/
     public static Map<Object, List<StudentInfo>> studentInfoMap = Collections.synchronizedMap(new HashMap<>());
-    /**单例*/
-    private static final RedisMapBind INSTANCE = new RedisMapBind();
-    private RedisMapBind() {
-    }
-    public static RedisMapBind getInstance(){
-        return INSTANCE;
-    }
     /**绑定状态*/
     private static final String STATE_BIND = "1";
     /***/
     private static final StudentInfoServiceImpl SIS= new StudentInfoServiceImpl();
     /**绑定时用来去除重复的提交*/
     public static Set<String> cardIdSet = new HashSet<>();
-    public void addBindMap(String jsonData){
+    public static void addBindMap(String jsonData){
         JSONArray jsonArray = JSONArray.fromObject(jsonData);
         for (Object object : jsonArray) {
             JSONObject jo = JSONObject.fromObject(object);
