@@ -25,6 +25,7 @@ public class Constant {
 	public static final String ATTENDANCE_YES = "YES";
 	/*未考勤*/
     public static final String ATTENDANCE_NO = "NO";
-	/*抢答和考勤用*/
+	/*考勤抢答用*/
 	public static final String ANSWER_STR = "[{'type':'g','id':'1','range':''}]";
+	
 }
