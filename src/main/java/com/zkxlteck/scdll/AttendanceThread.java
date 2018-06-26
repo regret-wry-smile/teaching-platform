@@ -25,7 +25,7 @@ public class AttendanceThread extends Thread {
             }
             String jsonData = ScDll.intance.get_answer_list();
             if (!StringUtils.isBlank(jsonData)) {
-                RedisMapAttendance.getInstance().addAttendance(jsonData);
+                RedisMapAttendance.addAttendance(jsonData);
             }
         }
     }

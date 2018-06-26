@@ -3,11 +3,11 @@ package com.zkxlteck.scdll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ejet.cache.RedisMapBind;
+import com.ejet.cache.RedisMapQuick;
 import com.ejet.core.util.comm.StringUtils;
 
-public class CardInfoThread extends Thread {
-    private static final Logger logger = LoggerFactory.getLogger(CardInfoThread.class);
+public class QuickThread extends Thread {
+    private static final Logger logger = LoggerFactory.getLogger(QuickThread.class);
     private boolean FLAG = true;
     public boolean isFLAG() {
         return FLAG;
@@ -23,9 +23,9 @@ public class CardInfoThread extends Thread {
             } catch (InterruptedException e) {
                 logger.error(" Thread sleep failure ");
             }
-            String jsonData = ScDll.intance.get_wireless_bind_info() ;
+            String jsonData = ScDll.intance.get_answer_list();
             if (!StringUtils.isBlank(jsonData)) {
-                RedisMapBind.addBindMap(jsonData);
+                RedisMapQuick.addQuickAnswer(jsonData);
             }
         }
     }
