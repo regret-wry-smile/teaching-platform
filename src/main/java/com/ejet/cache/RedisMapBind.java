@@ -2,14 +2,16 @@ package com.ejet.cache;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ejet.core.util.comm.ListUtils;
 import com.zkxltech.domain.StudentInfo;
+import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -20,33 +22,53 @@ import net.sf.json.JSONObject;
  */
 public class RedisMapBind {
     private static final Logger logger = LoggerFactory.getLogger(RedisMapBind.class);
-    
-    /**
-     * 一键配对缓存
-     */
-    private  static Map<String, Object> bindMap = Collections.synchronizedMap(new HashMap<String, Object>());
-//  private static String[] keyClassTestAnswerMap = {"iclickerId","questionId"};
+    /** 一键配对缓存 */
+    public static Map<String, Object> bindMap = Collections.synchronizedMap(new HashMap<String, Object>());
     /**答题器id对应的学生*/
-    public static Map<Object, List<StudentInfo>> studentInfoMap = null ;
-    
-    public static void addBindMap(String jsonData){
-        
+    public static Map<Object, List<StudentInfo>> studentInfoMap = new HashMap<>();
+    /**初始map数据*/
+    static{
+        bindMap.put("studentName", null);
+        bindMap.put("accomplish", null);
+        bindMap.put("notAccomplish",null);
+        bindMap.put("code", null);
+    }
+    /**单例*/
+    private static final RedisMapBind INSTANCE = new RedisMapBind();
+    private RedisMapBind() {
+    }
+    public static RedisMapBind getInstance(){
+        return INSTANCE;
+    }
+    /**绑定状态*/
+    private static final String STATE_BIND = "1";
+    /***/
+    private static final StudentInfoServiceImpl SIS= new StudentInfoServiceImpl();
+    /**绑定时用来去除重复的提交*/
+    private Set<String> cardIdSet = new HashSet<>();
+    public void addBindMap(String jsonData){
         JSONArray jsonArray = JSONArray.fromObject(jsonData);
         for (Object object : jsonArray) {
             JSONObject jo = JSONObject.fromObject(object);
             String cardId = jo.getString("card_id");
-            List<StudentInfo> list = studentInfoMap.get(cardId);
-            if (!ListUtils.isEmpty(list)) {
-                //此处list肯定只有一个元素,可以直接get(0);配对前已对数据进行了检查
+            if (cardIdSet.contains(cardId)) {
+                continue;
+            }
+            cardIdSet.add(cardId);
+            //此处list肯定只有一个元素,可以直接get(0);配对前已对数据进行了检查
+            StudentInfo studentInfo = studentInfoMap.get(cardId).get(0);
+            if (studentInfo != null) {
                 Integer accomplish = (Integer)bindMap.get("accomplish");
                 if (accomplish == null) {
                     accomplish = 0;
                 }
                 ++accomplish;
-                bindMap.put("studentName", list.get(0).getStudentName()); //
+                bindMap.put("studentName", studentInfo.getStudentName()); //
                 bindMap.put("accomplish", accomplish);
                 bindMap.put("notAccomplish",studentInfoMap.size()-accomplish);
             }
+            studentInfo.setStatus(STATE_BIND);
+            SIS.updateStudentById(studentInfo);
         }
         BrowserManager.refreshBindCard();
     }

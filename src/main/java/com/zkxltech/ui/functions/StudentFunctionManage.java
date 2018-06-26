@@ -102,6 +102,9 @@ public class StudentFunctionManage extends BrowserFunction{
 			case "bind_start":
                 result = equipmentService.bind_start(param);
                 break;
+			case "bind_stop":
+                result = equipmentService.bind_stop();
+                break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");
