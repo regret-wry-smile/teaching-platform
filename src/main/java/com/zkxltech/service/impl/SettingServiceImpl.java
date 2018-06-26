@@ -1,6 +1,5 @@
 package com.zkxltech.service.impl;
 
-import com.ejet.cache.RedisMapScore;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
@@ -11,7 +10,6 @@ import com.zkxltech.service.SettingService;
 import com.zkxltech.ui.enums.SettingEnum;
 import com.zkxltech.ui.util.StringUtils;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class SettingServiceImpl implements SettingService{
