@@ -144,34 +144,48 @@ public class RedisMapScore {
 	 * @param score
 	 */
 	public static void dealBarInfo(){
-		for (String uuid : scoreDetailInfoMap.keySet()) {
-			Map<String, Object> map1 =  (Map<String, Object>) scoreDetailInfoMap.get(uuid);
+		if (!(scoreDetailInfoMap.size() > 0)) {
 			for (int i = 0; i < getScoreInfo().getPrograms().size(); i++) {
 				String questionId = String.valueOf(i+1);
-				if (map1.containsKey(questionId)) {
-					Map<String, Object> map2 = (Map<String, Object>) map1.get(questionId);
-					keyBarMap[0] = questionId; //题号
-					int total = 0;//总分
-					int peopleSum = 0; //人数
-					for (String iclickerId : map2.keySet()) {
-						Answer answer = (Answer) JSONObject.toBean((JSONObject) map2.get(iclickerId), Answer.class);
-						total = total + Integer.parseInt(answer.getAnswer());
-						peopleSum ++;
-					}
-					JSONObject jsonObject = new JSONObject();
-					jsonObject.put("total", total);
-					jsonObject.put("peopleSum", peopleSum);
-					RedisMapUtil.setRedisMap(barMap, keyBarMap, 0, jsonObject);
-				}else {
-					keyBarMap[0] = questionId; //题号
-					int total = 0;//总分
-					int peopleSum = 0; //人数
-					JSONObject jsonObject = new JSONObject();
-					jsonObject.put("total", total);
-					jsonObject.put("peopleSum", peopleSum);
-					RedisMapUtil.setRedisMap(barMap, keyBarMap, 0, jsonObject);
-				}
+				keyBarMap[0] = questionId; //题号
+				int total = 0;//总分
+				int peopleSum = 0; //人数
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("total", total);
+				jsonObject.put("peopleSum", peopleSum);
+				RedisMapUtil.setRedisMap(barMap, keyBarMap, 0, jsonObject);
 			}
+		}else {
+			for (String uuid : scoreDetailInfoMap.keySet()) {
+				Map<String, Object> map1 =  (Map<String, Object>) scoreDetailInfoMap.get(uuid);
+				for (int i = 0; i < getScoreInfo().getPrograms().size(); i++) {
+					String questionId = String.valueOf(i+1);
+					if (map1.containsKey(questionId)) {
+						Map<String, Object> map2 = (Map<String, Object>) map1.get(questionId);
+						keyBarMap[0] = questionId; //题号
+						int total = 0;//总分
+						int peopleSum = 0; //人数
+						for (String iclickerId : map2.keySet()) {
+							Answer answer = (Answer) JSONObject.toBean((JSONObject) map2.get(iclickerId), Answer.class);
+							total = total + Integer.parseInt(answer.getAnswer());
+							peopleSum ++;
+						}
+						JSONObject jsonObject = new JSONObject();
+						jsonObject.put("total", total);
+						jsonObject.put("peopleSum", peopleSum);
+						RedisMapUtil.setRedisMap(barMap, keyBarMap, 0, jsonObject);
+					}else {
+						keyBarMap[0] = questionId; //题号
+						int total = 0;//总分
+						int peopleSum = 0; //人数
+						JSONObject jsonObject = new JSONObject();
+						jsonObject.put("total", total);
+						jsonObject.put("peopleSum", peopleSum);
+						RedisMapUtil.setRedisMap(barMap, keyBarMap, 0, jsonObject);
+					}
+				}
+		}
+		
 			
 			/*for (String questionId : map1.keySet()) {
 				Map<String, Object> map2 =  (Map<String, Object>)	map1.get(questionId);
@@ -213,55 +227,55 @@ public class RedisMapScore {
 		addScoreInfo(score);
 		
 		
-		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
-		StudentInfo studentInfo = new StudentInfo();
-		studentInfo.setIclickerId("0000001");
-		studentInfos.add(studentInfo);
-		StudentInfo studentInfo2 = new StudentInfo();
-		studentInfo2.setIclickerId("0000002");
-		studentInfos.add(studentInfo2);
-		Global.setStudentInfos(studentInfos);
-		
-		JSONArray jsonData = new JSONArray();
-		
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("fun", "update_answer_list");
-		jsonObject.put("card_id", "0000001");
-		JSONArray jsonArray = new JSONArray();
-		JSONObject jsonObject2 = new JSONObject();
-		jsonObject2.put("type", "d");
-		jsonObject2.put("id", "1");
-		jsonObject2.put("answer", "2");
-		jsonArray.add(jsonObject2);
-		JSONObject jsonObject3 = new JSONObject();
-		jsonObject3.put("type", "d");
-		jsonObject3.put("id", "2");
-		jsonObject3.put("answer", "5");
-		jsonArray.add(jsonObject3);
-		jsonObject.put("answers", jsonArray);
-		
-		
-		JSONObject jsonObject_1 = new JSONObject();
-		jsonObject_1.put("fun", "update_answer_list");
-		jsonObject_1.put("card_id", "0000002");
-		JSONArray jsonArray_1 = new JSONArray();
-		JSONObject jsonObject2_1 = new JSONObject();
-		jsonObject2_1.put("type", "d");
-		jsonObject2_1.put("id", "3");
-		jsonObject2_1.put("answer", "9");
-		jsonArray_1.add(jsonObject2_1);
-		JSONObject jsonObject3_1 = new JSONObject();
-		jsonObject3_1.put("type", "d");
-		jsonObject3_1.put("id", "2");
-		jsonObject3_1.put("answer", "9");
-		jsonArray_1.add(jsonObject3_1);
-		jsonObject_1.put("answers", jsonArray_1);
-		
-		jsonData.add(jsonObject);
-		jsonData.add(jsonObject_1);
-		System.out.println(jsonData);
-		
-		addscoreDetailInfo(jsonData.toString());
+//		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
+//		StudentInfo studentInfo = new StudentInfo();
+//		studentInfo.setIclickerId("0000001");
+//		studentInfos.add(studentInfo);
+//		StudentInfo studentInfo2 = new StudentInfo();
+//		studentInfo2.setIclickerId("0000002");
+//		studentInfos.add(studentInfo2);
+//		Global.setStudentInfos(studentInfos);
+//		
+//		JSONArray jsonData = new JSONArray();
+//		
+//		JSONObject jsonObject = new JSONObject();
+//		jsonObject.put("fun", "update_answer_list");
+//		jsonObject.put("card_id", "0000001");
+//		JSONArray jsonArray = new JSONArray();
+//		JSONObject jsonObject2 = new JSONObject();
+//		jsonObject2.put("type", "d");
+//		jsonObject2.put("id", "1");
+//		jsonObject2.put("answer", "2");
+//		jsonArray.add(jsonObject2);
+//		JSONObject jsonObject3 = new JSONObject();
+//		jsonObject3.put("type", "d");
+//		jsonObject3.put("id", "2");
+//		jsonObject3.put("answer", "5");
+//		jsonArray.add(jsonObject3);
+//		jsonObject.put("answers", jsonArray);
+//		
+//		
+//		JSONObject jsonObject_1 = new JSONObject();
+//		jsonObject_1.put("fun", "update_answer_list");
+//		jsonObject_1.put("card_id", "0000002");
+//		JSONArray jsonArray_1 = new JSONArray();
+//		JSONObject jsonObject2_1 = new JSONObject();
+//		jsonObject2_1.put("type", "d");
+//		jsonObject2_1.put("id", "3");
+//		jsonObject2_1.put("answer", "9");
+//		jsonArray_1.add(jsonObject2_1);
+//		JSONObject jsonObject3_1 = new JSONObject();
+//		jsonObject3_1.put("type", "d");
+//		jsonObject3_1.put("id", "2");
+//		jsonObject3_1.put("answer", "9");
+//		jsonArray_1.add(jsonObject3_1);
+//		jsonObject_1.put("answers", jsonArray_1);
+//		
+//		jsonData.add(jsonObject);
+//		jsonData.add(jsonObject_1);
+//		System.out.println(jsonData);
+//		
+//		addscoreDetailInfo(jsonData.toString());
 		
 		System.out.println(getScoreInfoBar());
 	}
