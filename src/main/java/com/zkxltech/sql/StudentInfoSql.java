@@ -145,7 +145,20 @@ public class StudentInfoSql {
 		sqlBuilder.append(" where id = '"+studentInfo.getId()+"'");
 		return dbHelper.onUpdate(sqlBuilder.toString(), null);
 	}
-	
+	/**
+	 * 批量解绑学生
+	 * @param studentInfo
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public Result clearStudentByIds(List<Integer> ids) throws IllegalArgumentException, IllegalAccessException{
+		List<String> sqls = new ArrayList<String>();
+		for (int i = 0; i < ids.size(); i++) {
+			sqls.add("update student_info set iclicker_id = '************'  where id = "+ids.get(i));
+		}
+		return DBHelper.onUpdateByGroup(sqls);
+	}
 	/**
 	 * 根据班级名称获取服务器上的学生
 	 * @param className 班级id

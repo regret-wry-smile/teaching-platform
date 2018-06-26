@@ -245,12 +245,12 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 				classId:$scope.classobject.classId
 		}
 		var result = JSON.parse(execute_student("bind_start",JSON.stringify(param)));
-		console.log(JSON.stringify(result));
+//		console.log(JSON.stringify(result));
 		if(result.ret == "success"){
 			var content="一键配对";
 			var modalInstance = $modal.open({
 				templateUrl: 'findBindModal.html',
-				controller: 'findBindModalCtrl1',
+				controller: 'findBindModalCtrl',
 				size: 'md',
 				backdrop:false,
 				/*resolve: {
@@ -368,18 +368,18 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 				}
 			});
 			modalInstance.result.then(function(info) {
-				var param={
-					ids:$scope.checkedId
-				}
+				var param=$scope.checkedId;
 				console.log(JSON.stringify(param))
-				$scope.result = JSON.parse(execute_student("clear",JSON.stringify(param)));
+				$scope.result = JSON.parse(execute_student("clear_student",JSON.stringify(param)));
 				if($scope.result.ret=='success'){
 					toastr.success($scope.result.message);
+					_selectStudent();
 					$scope.onechecked = [];
 					$scope.checkedId = [];
 					$scope.selected=false;
 				}else{
 					toastr.error($scope.result.message);
+					alert($scope.result.detail);
 				}
 			}, function() {
 			});
@@ -497,23 +497,19 @@ app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
 	}
 })
 //匹配绑定
-app.controller('findBindModalCtrl',function($scope,$modalInstance){
-	//student_manage("start_bind",info);
-	//定时器
-	$scope.ok = function() {
-		/*关闭定时器*/
-		/*$interval.cancel(myTimer);*/
-		$modalInstance.close();
-	}
-})
-app.controller('findBindModalCtrl1',function($scope,$modalInstance){
+app.controller('findBindModalCtrl',function($scope,$modalInstance,toastr){
 	$scope.refreshBindCard = function(){
-		alert
 		var result = JSON.parse(execute_student("get_bind_info"));
 		$scope.bindInfo = result;
-		console.log(JSON.stringify(result));
+//		console.log(JSON.stringify(result));
 	}
-	$scope.ok = function() {
+	$scope.ok = function(){
+		var result = JSON.parse(execute_student("bind_stop"));
+		if(result.ret == 'success'){
+			toastr.success("指令发送成功！");
+		}else{
+			toastr.error("指令发送失败！");
+		}
 		/*关闭定时器*/
 		$modalInstance.close();
 	}
@@ -605,15 +601,6 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 	}
 })
 
-//匹配绑定
-app.controller('findBindModalCtrl',function($scope,info,$modalInstance,$interval){
-	//student_manage("start_bind",info);
-	$scope.ok = function() {
-		/*关闭定时器*/
-		$interval.cancel(myTimer);
-		$modalInstance.close();
-	}
-})
 //添加班级
 app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toastr,$timeout){
 	$scope.classInfo = {

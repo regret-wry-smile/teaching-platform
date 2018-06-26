@@ -31,7 +31,7 @@ public class OkHttpUtils {
         try {
             Response response = client.newCall(request).execute();
             InputStream input = response.body().byteStream() ;
-            String result = IOUtils.toString(new InputStreamReader(input, "utf-8") ) ;
+            String result = IOUtils.toString(new InputStreamReader(input, "gbk") ) ;
             return result ;
         } catch (IOException e) {
             e.printStackTrace();

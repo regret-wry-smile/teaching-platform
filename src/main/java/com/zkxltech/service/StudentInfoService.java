@@ -48,4 +48,10 @@ public interface StudentInfoService {
 	 * @return
 	 */
 	Result updateStudentById(Object object);
+	/**
+	 * 解绑学生
+	 * @param object 主键id数组
+	 * @return
+	 */
+	Result clearStudentByIds(Object object);
 }

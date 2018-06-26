@@ -15,7 +15,9 @@ import com.zkxltech.service.impl.QuestionServiceImpl;
 import com.zkxltech.service.impl.ServerServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 import com.zkxltech.service.impl.TestPaperServiceImpl;
+import com.zkxltech.ui.util.StringConstant;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -38,6 +40,9 @@ public class TestPaperFunctionManage extends BrowserFunction{
 			switch (method) {
 			case "create_test_id":
 				return StringUtils.getUUID();
+			case "get_subject":
+				String[] subjects = StringConstant.SUBJECTS;
+				return JSONArray.fromObject(subjects).toString();
 			case "select_paper":
 				result = testPaperService.selectTestPaper(params[1]);
 				break;
@@ -66,13 +71,21 @@ public class TestPaperFunctionManage extends BrowserFunction{
 				}
 				result = testPaperService.insertTestPaper(params[1]);
 				break;
-			case "update_paper":
-				if (params.length != 3) {
+			case "delete_paper":
+				if (params.length != 2) {
 					result.setRet(Constant.ERROR);
 					result.setMessage("参数个数有误！");
 					break;
 				}
-				result = testPaperService.updateTestPaper(params[1],params[2]);
+				result = testPaperService.deleteTestPaper(params[1]);
+				break;
+			case "update_paper":
+				if (params.length != 2) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("参数个数有误！");
+					break;
+				}
+				result = testPaperService.updateTestPaper(params[1]);
 				break;
 			case "select_question":
 				/*从数据库中查询*/

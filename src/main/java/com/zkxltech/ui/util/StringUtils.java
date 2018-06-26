@@ -11,7 +11,7 @@ import net.sf.json.util.JSONUtils;
 
 public class StringUtils {
 	/**
-	 * 字符串判空
+	 * 对象判空
 	 */
 	public static boolean isEmpty(Object obj){
 		return obj == null || "".equals(obj);
@@ -34,8 +34,12 @@ public class StringUtils {
 	/**
 	 * 数组判空
 	 */
-	public static boolean isEmpty(List<Object> list){
-		return list == null || list.size() == 0;
+	public static boolean isEmptyList(Object object){
+		if (object instanceof List) {
+			List list = (List) object;
+			return list == null  || list.size() == 0;
+		}
+		return false;
 	}
 	
 	/**

@@ -38,8 +38,7 @@ public interface TestPaperService {
 	/**
 	 * 编辑试卷
 	 * @param testInfo
-	 * @param questionInfos 题目信息
 	 * @return
 	 */
-	Result updateTestPaper(Object testInfo,Object questionInfos);
+	Result updateTestPaper(Object testInfo);
 }
