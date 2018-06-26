@@ -25,7 +25,7 @@ public class CardInfoThread extends Thread {
             }
             String jsonData = ScDll.intance.get_wireless_bind_info() ;
             if (!StringUtils.isBlank(jsonData)) {
-                RedisMapBind.addBindMap(jsonData);
+                RedisMapBind.getInstance().addBindMap(jsonData);
             }
         }
     }

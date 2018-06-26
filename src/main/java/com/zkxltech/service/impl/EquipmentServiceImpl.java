@@ -89,14 +89,17 @@ public class EquipmentServiceImpl implements EquipmentService{
             /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
             Map<Object, List<StudentInfo>> studentInfoMap = ListUtils.getClassificationMap(studentInfos, "iclickerId");
             //检查数据
-            Set<Object> keySet = studentInfoMap.keySet();
-            for (Object key : keySet) {
+            for (Object key : studentInfoMap.keySet()) {
                 List<StudentInfo> list = studentInfoMap.get(key);
                 if (list.size() > 1) {
                     r.setMessage("答题器编号:"+key+",绑定了多个学生");
                     return r;
                 }
             }
+            /**存入静态map*/
+            RedisMapBind.bindMap.put("code", bind_start);
+            RedisMapBind.bindMap.put("accomplish", 0);
+            RedisMapBind.bindMap.put("notAccomplish",studentInfos.size());
             RedisMapBind.studentInfoMap = studentInfoMap;
             t = new CardInfoThread();
             t.start();
