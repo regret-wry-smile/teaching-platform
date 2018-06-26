@@ -29,6 +29,7 @@ public class ServerServiceImpl implements ServerService{
 			if ("0".equals(testInfo)) {
 				result.setRet(Constant.ERROR);
 				result.setMessage("从服务器中获取试卷失败！");
+				return result;
 			}else {
 				JSONArray jsonArray = JSONArray.parseArray(testInfo);
 				String[] items = new String[jsonArray.size()];
@@ -51,5 +52,10 @@ public class ServerServiceImpl implements ServerService{
 		
 		
 	}
+	
+//	public static void main(String[] args) {
+//		Result result = new ServerServiceImpl().getTestInfoFromServer("705","语文");
+//		System.out.println(JSONObject.toJSONString(result));
+//	}
 
 }
