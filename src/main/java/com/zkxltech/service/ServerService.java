@@ -17,10 +17,8 @@ public interface ServerService {
 	Result getTestInfoFromServer(String classId,String subjectName);
 	/**
 	 * 获取标准答案
-	 * @param classId 班级id
-	 * @param codeId	考试项目ID号
-	 * @param subjectName 科目名称
+	 * @param ResponseTestPaper 对象
 	 * @return
 	 */
-	Result getQuestionInfoFromServer(String classId, String codeId, String subjectName);
+	Result getQuestionInfoFromServer(Object object);
 }

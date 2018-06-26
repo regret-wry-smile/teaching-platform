@@ -55,6 +55,15 @@ public class TestPaperFunctionManage extends BrowserFunction{
 				}
 				result = serverService.getTestInfoFromServer((String)params[1], (String)params[2]);
 				break;
+			case "import_paper_server":
+				/*服务器导入试卷*/
+				if (params.length != 2) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("参数个数有误！");
+					break;
+				}
+				result = serverService.getQuestionInfoFromServer((String)params[1]);
+				break;
 			case "import_paper":
 				if (params.length != 2) {
 					result.setRet(Constant.ERROR);

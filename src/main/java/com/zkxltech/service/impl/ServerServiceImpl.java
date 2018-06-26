@@ -10,10 +10,13 @@ import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.domain.QuestionInfo;
+import com.zkxltech.domain.ResponseTestPaper;
 import com.zkxltech.domain.Result;
+import com.zkxltech.domain.TestPaper;
 import com.zkxltech.service.ServerService;
 import com.zkxltech.sql.QuestionInfoSql;
 import com.zkxltech.sql.TestPaperSql;
+import com.zkxltech.ui.util.StringUtils;
 
 public class ServerServiceImpl implements ServerService{
 	
@@ -56,9 +59,16 @@ public class ServerServiceImpl implements ServerService{
 		}
 	}
 	@Override
-	public Result getQuestionInfoFromServer(String classId,String codeId,String subjectName) {
+	public Result getQuestionInfoFromServer(Object object) {
 		Result result = new Result();
 		try {
+			ResponseTestPaper responseTestPaper =  (ResponseTestPaper) StringUtils.parseJSON(object, ResponseTestPaper.class);
+
+			String classId = responseTestPaper.getClassId();
+			String codeId = String.valueOf(responseTestPaper.getId());
+			String subjectName = responseTestPaper.getSubjectName();
+			String testId  = responseTestPaper.getXmid();
+			String testName = responseTestPaper.getXm();
 			List<JSONObject> testList = new ArrayList<JSONObject>();//保存所有的试卷信息
 			//根据codeId获取标准答案
 			StringBuilder params = new StringBuilder();
@@ -70,11 +80,20 @@ public class ServerServiceImpl implements ServerService{
 				result.setMessage("从服务器中获取标准答案失败！");
 				return result;
 			}else {
-				QuestionInfo questionInfo = new QuestionInfo();
-				questionInfo.setTestId(codeId);
-				questionInfoSql.deleteQuestionInfo(questionInfo); //删除原来的试卷
+				testPaperSql.deleteTestPaper(testId,subjectName);//根据试卷id和科目删除原来的试卷
+
+				TestPaper testPaper = new TestPaper();
+				testPaper.setTestId(testId);
+				testPaper.setAtype("1");
+				testPaper.setSubject(subjectName);
+				testPaper.setTestName(responseTestPaper.getXm());
+				testPaperSql.insertTestPaper(testPaper);
 				
-				result = testPaperSql.saveTitlebyBatch(codeId, answersInfo);
+				QuestionInfo questionInfo = new QuestionInfo();
+				questionInfo.setTestId(testId);
+				questionInfoSql.deleteQuestionInfo(questionInfo); //删除原来的题目
+				
+				result = testPaperSql.saveTitlebyBatch(responseTestPaper.getXmid(), answersInfo);
 				if (Constant.ERROR.equals(result.getRet())) {
 					result.setMessage("保存服务器中的题目信息失败！");
 					return result;
@@ -95,7 +114,14 @@ public class ServerServiceImpl implements ServerService{
 	public static void main(String[] args) {
 		Result result = new ServerServiceImpl().getTestInfoFromServer("705","语文");
 		System.out.println(JSONObject.toJSONString(result));
-		Result result2 = new ServerServiceImpl().getQuestionInfoFromServer("705","4Y0001","语文");
+		//{"item":[{"xm":"中天测试","xmid":"4Y0001","id":6843},{"xm":"景县助手器测试","xmid":"T11","id":6842}],"message":"从服务器中获取试卷！","ret":"success"}
+		ResponseTestPaper responseTestPaper = new ResponseTestPaper();
+		responseTestPaper.setClassId("705");
+		responseTestPaper.setId(6843);
+		responseTestPaper.setSubjectName("语文");
+		responseTestPaper.setXm("中天测试");
+		responseTestPaper.setXmid("4Y0001");
+		Result result2 = new ServerServiceImpl().getQuestionInfoFromServer(responseTestPaper);
 		System.out.println(JSONObject.toJSONString(result2));
 		
 	}
