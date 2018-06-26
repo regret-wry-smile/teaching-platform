@@ -6,13 +6,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.layout.GridData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.core.util.RedisMapUtil;
 import com.ejet.core.util.StringUtils;
+import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.QuestionInfo;
+import com.zkxltech.domain.Result;
+import com.zkxltech.domain.TestPaper;
+import com.zkxltech.service.impl.QuestionServiceImpl;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -32,20 +39,40 @@ public class RedisMapPaper {
 	 * @param obj
 	 */
 	public static void addQuestion(QuestionInfo questionInfo){
-		keyQuestionList[0] = String.valueOf(questionList.size()+1);
+		keyQuestionList[0] = String.valueOf(questionInfo.getId());
 		RedisMapUtil.setRedisMap(questionList, keyQuestionList, 0, questionInfo);
     }
+	
+	/**
+	 * 将数据库中的题目添加至缓存
+	 */
+	public static void addQuestions(TestPaper testPaper){
+		//从数据库中获取该试卷的题目信息
+		QuestionInfo questionInfo = new QuestionInfo();
+		Result result = new QuestionServiceImpl().selectQuestion(questionInfo);
+		if (Constant.SUCCESS.equals(result.getRet())) {
+			List<QuestionInfo> questionInfos = (List<QuestionInfo>) result.getItem();
+			//将查询到的题目信息添加至缓存
+			for (int i = 0; i < questionInfos.size(); i++) {
+				keyQuestionList[0] = String.valueOf(questionInfos.get(i).getId());
+				RedisMapUtil.setRedisMap(questionList, keyQuestionList, 0, questionInfos.get(i));
+			}
+		}else {
+			BrowserManager.showMessage(false, "查询题目失败！");
+		}
+	}
 	
 	/**
 	 * 获取所有题目信息
 	 * @return
 	 */
-	public static List<QuestionInfo> getQuestions(){
-		List<QuestionInfo> questionInfos = new ArrayList<QuestionInfo>();
+	public static List<QuestionInfo> getQuestions(QuestionInfo questionInfo){
+		
+		List<QuestionInfo> retQuestionInfos = new ArrayList<QuestionInfo>();
 		for (String key : questionList.keySet()) {
-			questionInfos.add((QuestionInfo)questionList.get(key));
+			retQuestionInfos.add((QuestionInfo)questionList.get(key));
 		}
-		return questionInfos;
+		return retQuestionInfos;
     }
 	
 	/**
@@ -74,17 +101,5 @@ public class RedisMapPaper {
 	public static void clearRedis(){
 		questionList.clear();
     }
-	public static void main(String[] args) {
-		QuestionInfo questionInfo = new QuestionInfo();
-		questionInfo.setQuestion("第一题");
-		addQuestion(questionInfo);
-		QuestionInfo questionInfo2 = new QuestionInfo();
-		questionInfo2.setQuestion("第二题");
-		addQuestion(questionInfo2);
-		
-		QuestionInfo questionInfo3 = new QuestionInfo();
-		questionInfo3.setId(1);
-		deleteQuestion(questionInfo3);
-		System.out.println(JSONArray.fromObject(getQuestions()));
-	}
+
 }

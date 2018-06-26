@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ejet.cache.RedisMapPaper;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
@@ -129,6 +130,9 @@ public class TestPaperServiceImpl implements TestPaperService{
 		result = new Result();
 		try {
 			TestPaper testPaper =  (TestPaper) StringUtils.parseJSON(object, TestPaper.class);
+			
+//			RedisMapPaper.addQuestions(questionInfo);
+			
 			List<QuestionInfo> questionInfos1  = (List<QuestionInfo>) JSONArray.toCollection(JSONArray.fromObject(questionInfos), QuestionInfo.class);
 			Result result = questionInfoSql.updateStudentsById(questionInfos1);
 			if (Constant.ERROR.equals(result.getRet())) {

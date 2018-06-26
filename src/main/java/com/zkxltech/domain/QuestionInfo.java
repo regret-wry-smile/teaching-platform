@@ -50,6 +50,10 @@ public class QuestionInfo {
 	 * 最低分
 	 */
 	private String downScore;
+	/**
+	 * 状态0未启用，1启用
+	 */
+	private String status;
 	public Integer getId() {
 		return id;
 	}
@@ -116,4 +120,11 @@ public class QuestionInfo {
 	public void setDownScore(String downScore) {
 		this.downScore = downScore;
 	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 }

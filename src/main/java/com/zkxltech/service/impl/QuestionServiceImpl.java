@@ -37,7 +37,6 @@ public class QuestionServiceImpl implements QuestionService{
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("导入成功!");
 			}else {
-				Thread.sleep(1000);
 				result.setMessage("导入学生失败！");
 			}
 			return result;
@@ -55,8 +54,12 @@ public class QuestionServiceImpl implements QuestionService{
 		result = new Result();
 		try {
 			QuestionInfo questionInfo =  (QuestionInfo) StringUtils.parseJSON(object, QuestionInfo.class);
-			RedisMapPaper.addQuestion(questionInfo);
-			result.setMessage("添加题目成功!");
+			result = questionInfoSql.insertQuestionInfo(questionInfo);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				result.setMessage("添加题目成功!");
+			}else {
+				result.setMessage("添加题目失败！");
+			}
 			result.setRet(Constant.SUCCESS);
 			return result;
 		} catch (Exception e) {
@@ -112,27 +115,32 @@ public class QuestionServiceImpl implements QuestionService{
 		}
 	}
 	
-	@Override
-	public Result deleteQuestionRedis(Object object) {
-		try {
-			QuestionInfo questionInfo =  (QuestionInfo) StringUtils.parseJSON(object, QuestionInfo.class);
-			RedisMapPaper.deleteQuestion(questionInfo);
-			result.setRet(Constant.SUCCESS);
-			result.setMessage("删除题目成功!");
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("删除题目失败！");
-			result.setDetail(IOUtils.getError(e));
-			return result;
-		}
-	}
+//	@Override
+//	public Result deleteQuestionRedis(Object object) {
+//		try {
+//			QuestionInfo questionInfo =  (QuestionInfo) StringUtils.parseJSON(object, QuestionInfo.class);
+//			RedisMapPaper.deleteQuestion(questionInfo);
+//			result.setRet(Constant.SUCCESS);
+//			result.setMessage("删除题目成功!");
+//			return result;
+//		} catch (Exception e) {
+//			result.setRet(Constant.ERROR);
+//			result.setMessage("删除题目失败！");
+//			result.setDetail(IOUtils.getError(e));
+//			return result;
+//		}
+//	}
 
 	@Override
 	public Result updateQuestion(Object object) {
 		try {
 			QuestionInfo questionInfo =  (QuestionInfo)  StringUtils.parseJSON(JSONObject.fromObject(object), QuestionInfo.class);
-			RedisMapPaper.updateQuestion(questionInfo);
+			result = questionInfoSql.updateStudentById(questionInfo);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				result.setMessage("修改题目成功!");
+			}else {
+				result.setMessage("修改题目失败！");
+			}
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("修改题目成功!");
 			return result;
@@ -144,21 +152,22 @@ public class QuestionServiceImpl implements QuestionService{
 		}
 	}
 
-	@Override
-	public Result selectQuestion() {
-		result = new Result();
-		try {
-			result.setItem(RedisMapPaper.getQuestions());
-			result.setMessage("查询题目成功!");
-			result.setRet(Constant.SUCCESS);
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("查询题目失败！");
-			result.setDetail(IOUtils.getError(e));
-			log.error(IOUtils.getError(e));
-			return result;
-		}
-	}
+//	@Override
+//	public Result selectQuestionedis(Object object) {
+//		result = new Result();
+//		try {
+//			QuestionInfo questionInfo =  (QuestionInfo)  StringUtils.parseJSON(JSONObject.fromObject(object), QuestionInfo.class);
+//			result.setItem(RedisMapPaper.getQuestions(questionInfo));
+//			result.setMessage("查询题目成功!");
+//			result.setRet(Constant.SUCCESS);
+//			return result;
+//		} catch (Exception e) {
+//			result.setRet(Constant.ERROR);
+//			result.setMessage("查询题目失败！");
+//			result.setDetail(IOUtils.getError(e));
+//			log.error(IOUtils.getError(e));
+//			return result;
+//		}
+//	}
 
 }

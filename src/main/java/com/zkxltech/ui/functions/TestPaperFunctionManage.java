@@ -80,26 +80,32 @@ public class TestPaperFunctionManage extends BrowserFunction{
 				}
 				result = questionService.selectQuestion(params[1]);
 				break;
-			case "clear_question_redis":
-				/*清空题目缓存*/
-				RedisMapPaper.clearRedis();
-				break;
-			case "select_question_redis":
-				/*从缓存中查询*/
-				result = questionService.selectQuestion();
-				break;
-			case "add_question_redis":
-				/*添加题目到缓存*/
+			case "insert_question":
 				result = questionService.insertQuestion(params[1]);
 				break;
-			case "update_question_redis":
-				/*修改缓存中题目*/
+			case "update_question":
 				result = questionService.updateQuestion(params[1]);
 				break;
-			case "delete_question_redis":
-				/*修改缓存中题目*/
-				result = questionService.deleteQuestionRedis(params[1]);
-				break;
+//			case "clear_question_redis":
+//				/*清空题目缓存*/
+//				RedisMapPaper.clearRedis();
+//				break;
+//			case "select_question_redis":
+//				/*从缓存中查询*/
+//				result = questionService.selectQuestionedis(params[1]);
+//				break;
+//			case "add_question_redis":
+//				/*添加题目到缓存*/
+//				result = questionService.insertQuestion(params[1]);
+//				break;
+//			case "update_question_redis":
+//				/*修改缓存中题目*/
+//				result = questionService.updateQuestion(params[1]);
+//				break;
+//			case "delete_question_redis":
+//				/*修改缓存中题目*/
+//				result = questionService.deleteQuestionRedis(params[1]);
+//				break;
 			case "delete_question":
 				if (params.length != 2) {
 					result.setRet(Constant.ERROR);

@@ -7,11 +7,11 @@ public interface QuestionService {
 	Result importQuestion(Object object);
 	/*新增题目*/
 	Result insertQuestion(Object object);
-	/**
-	 * 从缓存中查询所有题目信息
-	 * @return
-	 */
-	Result selectQuestion();
+//	/**
+//	 * 从缓存中查询所有题目信息
+//	 * @return
+//	 */
+//	Result selectQuestionedis(Object object);
 	/**
 	 * 从数据库中查询题目信息
 	 * @param object question对象
@@ -24,12 +24,12 @@ public interface QuestionService {
 	 * @return
 	 */
 	Result deleteQuestionByIds(Object object);
+//	/**
+//	 * 删除缓存中题目
+//	 */
+//	Result deleteQuestionRedis(Object object);
 	/**
-	 * 删除缓存中题目
-	 */
-	Result deleteQuestionRedis(Object object);
-	/**
-	 * 修改缓存题目
+	 * 修改题目
 	 * @param object
 	 * @return
 	 */
