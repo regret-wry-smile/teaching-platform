@@ -5,6 +5,10 @@ import com.zkxltech.domain.StudentInfo;
 
 public interface ClassHourService {
 	/**
+	 * 开始上课
+	 */
+	Result startClass (Object classId,Object classHour);
+	/**
 	 * 查询课程列表
 	 * @param classId 班级id
 	 * @param subjectName 科目名称

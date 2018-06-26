@@ -1,11 +1,15 @@
 package com.zkxltech.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.ClassHour;
+import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
+import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.domain.TestPaper;
 import com.zkxltech.service.ClassHourService;
 import com.zkxltech.sql.ClassHourSql;
@@ -95,6 +99,33 @@ public class ClassHourServiceImpl implements ClassHourService{
 			result.setDetail(IOUtils.getError(e));
 			return result;
 		}
+	}
+
+	@Override
+	public Result startClass(Object classId, Object classHour) {
+		ClassInfo classInfo = new ClassInfo();
+		classInfo.setClassId((String)classId);
+		Result result = new ClassInfoServiceImpl().selectClassInfo(classInfo);
+		if (Constant.SUCCESS.equals(result.getRet())) {
+			Global.setClassInfo((ClassInfo)result.getItem());
+		}else {
+			result.setMessage("查询班级信息失败！");
+			return result;
+		}
+		
+		StudentInfo studentInfo = new StudentInfo();
+		studentInfo.setClassId((String)classId);
+		result = new StudentInfoServiceImpl().selectStudentInfo(studentInfo);
+		if (Constant.SUCCESS.equals(result.getRet())) {
+			Global.setStudentInfos((List<StudentInfo>)result.getItem());
+		}else {
+			result.setMessage("查询学生信息失败！");
+			return result;
+		}
+		
+		Global.setClassHour((ClassHour) StringUtils.parseJSON(classHour, ClassHour.class));
+		
+		return null;
 	}
 
 }
