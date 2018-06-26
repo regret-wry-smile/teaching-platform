@@ -1,5 +1,6 @@
 package com.zkxltech.service.impl;
 
+import com.ejet.cache.RedisMapScore;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
@@ -9,6 +10,9 @@ import com.zkxltech.domain.User;
 import com.zkxltech.service.SettingService;
 import com.zkxltech.ui.enums.SettingEnum;
 import com.zkxltech.ui.util.StringUtils;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class SettingServiceImpl implements SettingService{
 	private Result result;
@@ -47,13 +51,28 @@ public class SettingServiceImpl implements SettingService{
 		try {
 			result = new Result();
 			//TODO 1创建线程向硬件发送请求2页面显示正在执行提示（无法进行其他操作）3返回执行结果
+			//getNameByTxchAndRxch
 			//发送信道
 			//接收信道
 			//发送功率
+			Result get_device_info = EquipmentServiceImpl.getInstance().get_device_info();
+			Object item = get_device_info.getItem();
+			if (item == null) {
+                result.setRet(Constant.ERROR);
+                result.setMessage("设备故障,请重启");
+                return result;
+            }
+			JSONObject jo = JSONObject.fromObject(item);
+			String tx_ch = jo.getString("tx_ch");
+			String rx_ch = jo.getString("rx_ch");
+			String tx_power = jo.getString("tx_power");
 			Setting setting = new Setting();
+			String name = SettingEnum.getNameByTxchAndRxch(Integer.parseInt(tx_ch), Integer.parseInt(rx_ch));
+			setting.setName(name);
+			setting.setPower(Integer.parseInt(tx_power));
 			//FIXME 
-			setting.setName("第二组");
-			setting.setPower(4);
+//			setting.setName("第二组");
+//			setting.setPower(4);
 			result.setItem(setting);
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("读取成功！");
