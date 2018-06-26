@@ -18,14 +18,34 @@ public class ScoreServiceImpl implements ScoreService{
 	public Result startScore(Object object) {
 		result = new Result();
 		try {
+			RedisMapScore.clearMap();//清除评分缓存
+				
 			Score score =  (Score) StringUtils.parseJSON(object, Score.class);
 			RedisMapScore.addScoreInfo(score); //保存评分主题信息
 			
 			//将评分主题相关信息保存到缓存
+			result.setMessage("开始评分！");
+			result.setRet(Constant.SUCCESS);
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("新增课程失败！");
+			result.setMessage("开始评分失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
+	}
+
+	@Override
+	public Result getScore() {
+		result = new Result();
+		try {
+			result.setItem(RedisMapScore.getScoreInfoBar());
+			result.setRet(Constant.SUCCESS);
+			result.setMessage("获取评分数据成功！");
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("获取评分数据失败！");
 			result.setDetail(IOUtils.getError(e));
 			return result;
 		}
