@@ -15,5 +15,9 @@ public interface ScoreService {
 	 * @return
 	 */
 	Result startScore(Object object);
-	
+	/**
+	 * 获取柱状图数据
+	 * @return
+	 */
+	Result getScore();
 }
