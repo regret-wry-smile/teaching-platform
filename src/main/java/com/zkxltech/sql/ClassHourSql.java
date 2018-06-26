@@ -54,18 +54,18 @@ public class ClassHourSql {
 		return DBHelper.onQuery(sql, key, null);
 	}
 	
-//	public static void main(String[] args) {
-//		try {
-//			Result result = new ClassHourSql().selectClassHour("1", "语文");
-//			System.out.println(JSONObject.toJSONString(result));
-//		} catch (IllegalArgumentException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+	public static void main(String[] args) {
+		try {
+			Result result = new ClassHourSql().selectClassHour("1", "语文");
+			System.out.println(JSONObject.toJSONString(result));
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * 新增课程

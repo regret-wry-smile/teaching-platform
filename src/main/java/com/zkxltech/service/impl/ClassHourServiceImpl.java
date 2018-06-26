@@ -39,6 +39,8 @@ public class ClassHourServiceImpl implements ClassHourService{
 		result = new Result();
 		try {
 			ClassHour classHour =  (ClassHour) StringUtils.parseJSON(object, ClassHour.class);
+			classHour.setClassHourId(com.ejet.core.util.StringUtils.getUUID());
+			classHour.setStartTime(com.ejet.core.util.StringUtils.formatDateTime(new Date()));
 			result = classHourSql.insertClassHour(classHour);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("新增课程成功!");
