@@ -36,17 +36,16 @@ public class QuestionInfoSql {
 					range = (String) rowList.get(i).get(4);
 				}
 				//插入题目信息
-				sql = "insert into question_info (test_id,question_id,question,question_type,true_answer,range) values('"+testId+"','"+
-						rowList.get(i).get(0)+"','"+rowList.get(i).get(1)+"','"+rowList.get(i).get(2)+"','"+rowList.get(i).get(3)+"','"+range+"')";	
-
+				sql = "insert into question_info (test_id,question_id,question,question_type,true_answer,range,status) values('"+testId+"','"+
+						rowList.get(i).get(0)+"','"+rowList.get(i).get(1)+"','"+rowList.get(i).get(2)+"','"+rowList.get(i).get(3)+"','"+range+"','1')";	
 				sqls.add(sql);
 			}
 		}
 		return DBHelper.onUpdateByGroup(sqls);
 	}
 	
-	/*查询试卷*/
-	public Result selectStudentInfo(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
+	/*查询题目*/
+	public Result selectQuestionInfo(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder();
 		sqlBuilder.append("select * from question_info");
 		Field[] files = dbHelper.getFields(questionInfo);
@@ -161,7 +160,32 @@ public class QuestionInfoSql {
 	}
 	
 	/**
-	 * 根据主键更新学生
+	 * 根据试卷id更新题目
+	 * 
+	 * */
+	public Result updateStudent(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("update question_info");
+		Field[] files = dbHelper.getFields(questionInfo);
+		int index = 0;
+		for (int i = 1; i < files.length; i++) {
+			Object obj = dbHelper.getFiledValues(files[i], questionInfo);
+			if (!StringUtils.isEmpty(obj)) {
+				if (index == 0) {
+					sqlBuilder.append(" set ");
+				}else {
+					sqlBuilder.append(" , ");
+				}
+				sqlBuilder.append(dbHelper.HumpToUnderline(files[i].getName())+" =  '"+obj+"'");
+				index++;
+			}
+		}
+		sqlBuilder.append(" where test_id = '"+questionInfo.getTestId()+"'");
+		return dbHelper.onUpdate(sqlBuilder.toString(), null);
+	}
+	
+	/**
+	 * 根据主键更新题目
 	 * 
 	 * */
 	public Result updateStudentById(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{

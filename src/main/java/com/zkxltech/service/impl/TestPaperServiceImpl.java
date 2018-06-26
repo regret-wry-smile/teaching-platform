@@ -27,18 +27,21 @@ public class TestPaperServiceImpl implements TestPaperService{
 	private TestPaperSql testPaperSql = new TestPaperSql();
 	private QuestionInfoSql questionInfoSql = new QuestionInfoSql();
 	@Override
-	public Result insertTestPaper(Object testInfo, Object questionInfos) {
+	public Result insertTestPaper(Object testInfo) {
 		result = new Result();
 		try {
 			TestPaper testPaper =  (TestPaper) StringUtils.parseJSON(testInfo, TestPaper.class);
-			List<QuestionInfo> questionInfos1  = (List<QuestionInfo>) JSONArray.toCollection(JSONArray.fromObject(questionInfos), QuestionInfo.class);
 			//插入试卷
 			result = testPaperSql.insertTestPaper(testPaper);
 			if (Constant.ERROR.equals(result.getRet())) {
 				result.setMessage("插入试卷信息失败！");
 				return result;
 			}
-			result = questionInfoSql.insertQuestionInfo(questionInfos1);
+			//将该试卷的状态改为启用状态
+			QuestionInfo questionInfo = new QuestionInfo();
+			questionInfo.setTestId(testPaper.getTestId());
+			questionInfo.setStatus("1");
+			result = questionInfoSql.updateStudent(questionInfo);
 			if (Constant.ERROR.equals(result.getRet())) {
 				//回滚
 				testPaperSql.deleteTestPaper();

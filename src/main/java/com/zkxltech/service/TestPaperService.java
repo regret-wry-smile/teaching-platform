@@ -7,10 +7,9 @@ public interface TestPaperService {
 	/**
 	 * 新增试卷
 	 * @param testInfo 试卷信息
-	 * @param questionInfos 题目信息
 	 * @return
 	 */
-	Result insertTestPaper(Object testInfo,Object questionInfos);
+	Result insertTestPaper(Object testInfo);
 	/**
 	 * 导入试卷
 	 * @param fileName 文件路径

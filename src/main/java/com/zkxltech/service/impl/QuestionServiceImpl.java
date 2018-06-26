@@ -76,7 +76,7 @@ public class QuestionServiceImpl implements QuestionService{
 		result = new Result();
 		try {
 			QuestionInfo questionInfo =  (QuestionInfo) StringUtils.parseJSON(object, QuestionInfo.class);
-			result = questionInfoSql.selectStudentInfo(questionInfo);
+			result = questionInfoSql.selectQuestionInfo(questionInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("查询题目成功!");
 			}else {

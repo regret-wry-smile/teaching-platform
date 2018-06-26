@@ -64,7 +64,7 @@ public class TestPaperFunctionManage extends BrowserFunction{
 					result.setMessage("参数个数有误！");
 					break;
 				}
-				result = testPaperService.insertTestPaper(params[1],params[2]);
+				result = testPaperService.insertTestPaper(params[1]);
 				break;
 			case "update_paper":
 				if (params.length != 3) {
