@@ -15,7 +15,9 @@ import com.zkxltech.service.impl.QuestionServiceImpl;
 import com.zkxltech.service.impl.ServerServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 import com.zkxltech.service.impl.TestPaperServiceImpl;
+import com.zkxltech.ui.util.StringConstant;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -38,6 +40,9 @@ public class TestPaperFunctionManage extends BrowserFunction{
 			switch (method) {
 			case "create_test_id":
 				return StringUtils.getUUID();
+			case "get_subject":
+				String[] subjects = StringConstant.SUBJECTS;
+				return JSONArray.fromObject(subjects).toString();
 			case "select_paper":
 				result = testPaperService.selectTestPaper(params[1]);
 				break;

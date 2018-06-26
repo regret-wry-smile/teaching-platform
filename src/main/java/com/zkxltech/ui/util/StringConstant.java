@@ -25,4 +25,9 @@ public class StringConstant {
 	 * 记录页面类型
 	 */
 	public static String PAGE_RECORD_TYPE = "3";
+	
+	/**
+	 * 接收率发送功率
+	 */
+	public static String[] SUBJECTS =  {"语文","数学","外语","物理","化学","生物","政治","历史","地理","文综","理综"};
 }
