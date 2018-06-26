@@ -100,7 +100,8 @@ public class DBHelper<T> {
 	 * @return
 	 * @throws SQLException 
 	 */
-	public static synchronized List<Map<String, Object>> onQuery(String sql,String[] key,List<Object> param){
+	public static synchronized Result onQuery(String sql,String[] key,List<Object> param){
+		Result result = new Result();
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -129,8 +130,11 @@ public class DBHelper<T> {
 		    rs.close();
 		    stmt.close();
 		    conn.close(); 
+		    result.setItem(list);
+		    result.setRet(Constant.SUCCESS);
 		  } catch ( Exception e ) {
 			  logger.error(IOUtils.getError(e));
+			  result.setRet(Constant.ERROR);
 		  }finally {
 			  try {
 				  if (stmt != null && !stmt.isClosed()) {
@@ -143,7 +147,7 @@ public class DBHelper<T> {
 					logger.error(IOUtils.getError(e2));
 				}
 		}
-		  return list;
+		 return result;
 	}
 
 	/**

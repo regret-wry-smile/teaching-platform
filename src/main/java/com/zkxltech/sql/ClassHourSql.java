@@ -3,7 +3,10 @@ package com.zkxltech.sql;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+import com.ejet.core.util.constant.Constant;
 import com.sun.org.apache.bcel.internal.generic.Select;
 import com.zkxltech.domain.AnswerInfo;
 import com.zkxltech.domain.ClassHour;
@@ -47,8 +50,22 @@ public class ClassHourSql {
 	/*查询课时列表*/
 	public Result selectClassHour(String classId, String subjectName) throws IllegalArgumentException, IllegalAccessException{
 		String sql = "select DISTINCT(class_hour_id),class_hour_name from class_hour where class_id = '"+classId+"' and subject_name = '"+subjectName+"'";
-		return dbHelper.onUpdate(sql);
+		String[] key = {"class_hour_id","class_hour_name"};
+		return DBHelper.onQuery(sql, key, null);
 	}
+	
+//	public static void main(String[] args) {
+//		try {
+//			Result result = new ClassHourSql().selectClassHour("1", "语文");
+//			System.out.println(JSONObject.toJSONString(result));
+//		} catch (IllegalArgumentException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 	/**
 	 * 新增课程
