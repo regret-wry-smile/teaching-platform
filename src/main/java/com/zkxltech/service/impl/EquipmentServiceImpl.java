@@ -181,15 +181,15 @@ public class EquipmentServiceImpl implements EquipmentService{
     @Override
     public Result bind_stop() {
         Result r = new Result();
+        if (t != null && t instanceof CardInfoThread) {
+            CardInfoThread c =  (CardInfoThread)t;
+            c.setFLAG(false);
+        }
         int bind_stop = ScDll.intance.wireless_bind_stop();
         if (bind_stop == SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
             return r;
-        }
-        if (t!=null && t instanceof CardInfoThread) {
-            CardInfoThread c =  (CardInfoThread)t;
-            c.setFLAG(false);
         }
         r.setRet(Constant.ERROR);
         r.setMessage("停止失败");
@@ -501,15 +501,15 @@ public class EquipmentServiceImpl implements EquipmentService{
     @Override
     public Result signInStop() {
         Result r = new Result();
+        if (t != null && t instanceof AttendanceThread ) {
+            AttendanceThread a = (AttendanceThread)t;
+            a.setFLAG(false);
+        }
         int answer_stop = ScDll.intance.answer_stop();
         if (answer_stop == SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
             return r;
-        }
-        if (t != null && t instanceof AttendanceThread ) {
-            AttendanceThread a = (AttendanceThread)t;
-            a.setFLAG(false);
         }
         r.setRet(Constant.ERROR);
         r.setMessage("停止失败");
