@@ -24,7 +24,7 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 					$scope.classList.push(item);
 					//console.log("班级"+JSON.stringify($scope.classList))
 					$scope.setClass.classes=$scope.classList[0].key;
-					$scope.setClass.classesobject=$scope.classList[0];
+					$scope.classesobject=$scope.classList[0];
 					$scope.setClass.classes1=angular.copy($scope.setClass.classes);								
 	
 				})			
@@ -38,7 +38,7 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 		$scope.setClass.classes=classes;
 		angular.forEach($scope.classList,function(i){
 			if($scope.setClass.classes==i.classId){
-				$scope.setClass.classesobject=i;
+				$scope.classesobject=i;
 			}
 		})
 		
@@ -129,12 +129,30 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
         //var favoriteCookie = $cookieStore.get('myFavorite');
         // Removing a cookie
        // $cookieStore.remove('myFavorite');
-		$scope.param = "classId=" + $scope.setClass.classesobject.key + "&className=" + $scope.setClass.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
+		$scope.param = "classId=" + $scope.classesobject.key + "&className=" + $scope.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
 		console.log(JSON.stringify($scope.param))
 		$scope.objectUrl = '../../page/answermoudle/answerCenter.html' + '?' + $scope.param;
 		
 		$window.location.href = $scope.objectUrl;	
 		//window.location.href = "../../page/answermoudle/answerCenter.html?backurl=" + window.location.href;
+		
+	}
+	//签到	
+	$scope.signIn=function(){
+		var param={
+			classId:$scope.classesobject.key
+		}
+		$scope.result=JSON.parse(execute_attendance("sign_in_start",JSON.stringify(param)));
+		if($scope.result.ret=='success'){
+			toastr.success($scope.result.message);
+			//console.log(JSON.stringify($scope.result))
+			$scope.param = "classId=" + $scope.setClass.classesobject.key + "&className=" + $scope.setClass.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
+		//console.log(JSON.stringify($scope.param))
+		$scope.objectUrl = '../../page/answermoudle/userAttend.html' + '?' + $scope.param;
+			$window.location.href =$scope.objectUrl;
+		}else{
+			toastr.error($scope.result.message);	
+		}
 	}
 })
 app.controller('addClassHourCtrl', function($rootScope,$scope,$modal,$modalInstance,toastr,infos) {	
@@ -169,11 +187,32 @@ app.config(['$locationProvider', function($locationProvider) {
 	});
 }]);
 //设置签到控制器
-app.controller('setSignCtrl', function($rootScope,$scope,$modal,toastr,$location) {
+app.controller('setSignCtrl', function($rootScope,$scope,$modal,toastr,$location,$window) {
+	alert(777)
 	if($location.search()){
 		$scope.classInfo=$location.search();
 		console.log(JSON.stringify($location.search()))
 	}
+	//签到
+	$scope.signIn=function(){
+		var param={
+			classId:$scope.classInfo.classId
+		}
+		//$scope.result=JSON.parse(execute_attendance("sign_in_start",JSON.stringify(param)));
+		//if($scope.result.ret=='success'){
+			//toastr.success($scope.result.message);
+			//console.log(JSON.stringify($scope.result))
+			//$scope.param = "classId=" + $scope.setClass.classesobject.key + "&className=" + $scope.setClass.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
+		//console.log(JSON.stringify($scope.param))
+		//$scope.objectUrl = '../../page/answermoudle/answerCenter.html' + '?' + $scope.param;
+			$window.location.href = "../../page/answermoudle/userAttend.html";
+		/*}else{
+			toastr.error($scope.result.message);	
+		}*/
+	}
+})
+app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
+	
 })
 
 app.directive('select', function() {
