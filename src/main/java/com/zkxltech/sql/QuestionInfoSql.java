@@ -38,6 +38,7 @@ public class QuestionInfoSql {
 				}
 				//1单选；2多选；3判断；4数字；5主观题
 				String type = (String) rowList.get(i).get(2);
+				String  trueAnswer = "";
 				switch (type) {
 				case "单选":
 					type = "1";
@@ -47,6 +48,16 @@ public class QuestionInfoSql {
 					break;
 				case "判断":
 					type = "3";
+					trueAnswer = (String) rowList.get(i).get(3);
+					if ("对".equals(trueAnswer)) {
+						trueAnswer = "T";
+					}else if("错".equals(trueAnswer)){
+						trueAnswer = "F";
+					}else {
+						result.setRet(Constant.ERROR);
+						result.setMessage((i+2)+"行正确答案格式有误!");
+						return result;
+					}
 					break;
 				case "数字":
 					type = "4";
@@ -58,7 +69,7 @@ public class QuestionInfoSql {
 				}
 				//插入题目信息
 				sql = "insert into question_info (test_id,question_id,question,question_type,true_answer,range,status) values('"+testId+"','"+
-						rowList.get(i).get(0)+"','"+rowList.get(i).get(1)+"','"+type+"','"+rowList.get(i).get(3)+"','"+range+"','1')";	
+						rowList.get(i).get(0)+"','"+rowList.get(i).get(1)+"','"+type+"','"+trueAnswer+"','"+range+"','1')";	
 				sqls.add(sql);
 			}
 		}
