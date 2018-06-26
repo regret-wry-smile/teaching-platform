@@ -25,7 +25,7 @@ public class RedisMapClassTest {
 	/**
 	 * 随堂检测作答缓存
 	 */
-	private  static Map<String, Object> classTestAnswerMap = Collections.synchronizedMap(new HashMap<String, Object>());
+	public static Map<String, Object> classTestAnswerMap = Collections.synchronizedMap(new HashMap<String, Object>());
 	/**
 	 * eg: 
 	 * 张三：

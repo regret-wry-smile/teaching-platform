@@ -6,6 +6,9 @@ package com.zkxltech.domain;
 public class EquipmentParam {
     private Integer model;
     private String uidStr;
+    /**答题接收的参数*/
+    private Integer isQuickResponse;
+    private String answerStr;
     public Integer getModel() {
         return model;
     }
@@ -17,5 +20,17 @@ public class EquipmentParam {
     }
     public void setUidStr(String uidStr) {
         this.uidStr = uidStr;
+    }
+    public Integer getIsQuickResponse() {
+        return isQuickResponse;
+    }
+    public void setIsQuickResponse(Integer isQuickResponse) {
+        this.isQuickResponse = isQuickResponse;
+    }
+    public String getAnswerStr() {
+        return answerStr;
+    }
+    public void setAnswerStr(String answerStr) {
+        this.answerStr = answerStr;
     }
 }
