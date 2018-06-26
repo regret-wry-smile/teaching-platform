@@ -5,7 +5,10 @@ import org.eclipse.swt.browser.BrowserFunction;
 
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
+import com.zkxltech.domain.Score;
+import com.zkxltech.service.ScoreService;
 import com.zkxltech.service.StudentInfoService;
+import com.zkxltech.service.impl.ScoreServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
@@ -15,6 +18,7 @@ import net.sf.json.JSONObject;
  *
  */
 public class ScoreFunctionManage extends BrowserFunction{
+	private ScoreService scoreService = new ScoreServiceImpl();
 	
 	public ScoreFunctionManage(Browser browser, String name) {
 		super(browser, name);
@@ -24,11 +28,14 @@ public class ScoreFunctionManage extends BrowserFunction{
 		Result result = new Result();
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
-			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数
 			switch (method) {
-			case "import_paper":
-				StudentInfoService service = new StudentInfoServiceImpl();
-				result = service.selectStudentInfo(param);
+			case "start_score":
+				if (params.length != 2) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("参数个数有误！");
+					break;
+				}
+				result = scoreService.startScore(params[1]);
 				break;
 			default:
 				result.setRet(Constant.ERROR);
