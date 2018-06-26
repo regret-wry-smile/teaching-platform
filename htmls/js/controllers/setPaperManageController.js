@@ -174,20 +174,24 @@ app.controller('addPaperManageCtrl',function($rootScope,$scope,$modal,toastr,$lo
 	}
 	//保存试卷
 	$scope.savePaper=function(){
-		var param={
-			testId:$scope.testId,
-			subject:$scope.subject,
-			testName:$scope.paperInfo.testName,//试卷名称
-			describe:$scope.paperInfo.describe,//试卷描述			
-		}
-		$scope.result= JSON.parse(execute_testPaper("insert_paper",JSON.stringify(param)));
-		if($scope.result.ret=='success'){
-			toastr.success($scope.result.message);
-			/*$scope.lastUrl="../../page/setmodule/testPaperManage.html";
-			 $window.location.href=$scope.lastUrl;*/
+		if($scope.subjectList.length>0){			
+			var param={
+				testId:$scope.testId,
+				subject:$scope.subject,
+				testName:$scope.paperInfo.testName,//试卷名称
+				describe:$scope.paperInfo.describe,//试卷描述			
+			}
+			$scope.result= JSON.parse(execute_testPaper("insert_paper",JSON.stringify(param)));
+			if($scope.result.ret=='success'){
+				toastr.success($scope.result.message);
+				/*$scope.lastUrl="../../page/setmodule/testPaperManage.html";
+				 $window.location.href=$scope.lastUrl;*/
+			}else{
+				toastr.error($scope.result.message);
+				console.log(JSON.stringify($scope.result.detail))
+			}
 		}else{
-			toastr.error($scope.result.message);
-			console.log(JSON.stringify($scope.result.detail))
+			toastr.warning('该试卷没有题目，请先添加题目');
 		}
 	}
 	
@@ -338,22 +342,26 @@ app.controller('editPaperManageCtrl',function($rootScope,$scope,$modal,$location
 	}
 	//修改试卷
 	$scope.savePaper=function(){
-		var param={
-			id:$scope.paperInfo.id,
-			testId:$scope.paperInfo.testId,
-			subject:$scope.paperInfo.subject,
-			testName:$scope.paperInfo.testName,//试卷名称
-			describe:$scope.paperInfo.describe,//试卷描述			
-		}
-		console.log(JSON.stringify(param))
-		$scope.result= JSON.parse(execute_testPaper("update_paper",JSON.stringify(param)));
-		if($scope.result.ret=='success'){
-			toastr.success($scope.result.message);
-			/*$scope.lastUrl="../../page/setmodule/testPaperManage.html";
-			 $window.location.href=$scope.lastUrl;*/
+		if($scope.subjectList.length>0){
+			var param={
+				id:$scope.paperInfo.id,
+				testId:$scope.paperInfo.testId,
+				subject:$scope.paperInfo.subject,
+				testName:$scope.paperInfo.testName,//试卷名称
+				describe:$scope.paperInfo.describe,//试卷描述			
+			}
+			//console.log(JSON.stringify(param))
+			$scope.result= JSON.parse(execute_testPaper("update_paper",JSON.stringify(param)));
+			if($scope.result.ret=='success'){
+				toastr.success($scope.result.message);
+				/*$scope.lastUrl="../../page/setmodule/testPaperManage.html";
+				 $window.location.href=$scope.lastUrl;*/
+			}else{
+				toastr.error($scope.result.message);
+				console.log(JSON.stringify($scope.result.detail))
+			}
 		}else{
-			toastr.error($scope.result.message);
-			console.log(JSON.stringify($scope.result.detail))
+			toastr.warning('该试卷没有题目，请先添加题目');
 		}
 	}
 })
@@ -366,7 +374,6 @@ app.controller('addSubjectModalCtrl',function($rootScope,$modalInstance,$scope,$
 		/*range:'A-D',*/
 		trueAnswer:'T'
 	}	
-	//$scope.idnum=1;
 	if(infos){
 		$scope.testId=angular.copy(infos);
 	}
@@ -375,11 +382,17 @@ app.controller('addSubjectModalCtrl',function($rootScope,$modalInstance,$scope,$
 	//切换答案类型
 	$scope.changequesType=function(quesType){
 		$scope.testInfo.questionType=quesType;
-		if($scope.testInfo.questionType=='0'){			
+		if($scope.testInfo.questionType=='0'){
+			$scope.testInfo.trueAnswer='';
 			$scope.testInfo.selType="1";
 			$scope.testInfo.range="A-D";
 			$scope.testInfo.selType1=angular.copy($scope.testInfo.selType);
 			$scope.testInfo.range1=angular.copy($scope.testInfo.range);
+		}else if($scope.testInfo.questionType=='3'){
+			$scope.testInfo.trueAnswer='T';
+		}
+		else if($scope.testInfo.questionType=='1'){
+			$scope.testInfo.trueAnswer='';
 		}
 	}
 	
@@ -443,36 +456,50 @@ app.controller('addSubjectModalCtrl',function($rootScope,$modalInstance,$scope,$
 		}
 	}
 	$scope.ok = function() {
-		var param={
-			//id:$scope.idnum,
-			testId:$scope.testId,
-			questionId:$scope.testInfo.questionId,
-			question:$scope.testInfo.question,
-			questionType:$scope.testInfo.questionType,
-			trueAnswer:$scope.testInfo.trueAnswer,
-			range:$scope.testInfo.range
+			if($scope.testInfo.questionType=='0'){
+				switch($scope.testInfo.selType){
+					case '1':
+					$scope.testInfo.questionType='1';
+					break;
+					case '2':
+					$scope.testInfo.questionType='2';
+					break;
+				}
+			}
+			var param={
+				//id:$scope.idnum,
+				testId:$scope.testId,
+				questionId:$scope.testInfo.questionId,
+				question:$scope.testInfo.question,
+				questionType:$scope.testInfo.questionType,
+				trueAnswer:$scope.testInfo.trueAnswer,
+				range:$scope.testInfo.range
+			}
+			console.log("参数"+JSON.stringify(param))
+			$scope.result= JSON.parse(execute_testPaper("insert_question",JSON.stringify(param)));		
+			if($scope.result.ret=='success'){
+				toastr.success($scope.result.message);
+				$modalInstance.close('success');	
+			}else{
+				toastr.error($scope.result.message);
+			}
 		}
-		console.log("参数"+JSON.stringify(param))
-		$scope.result= JSON.parse(execute_testPaper("insert_question",JSON.stringify(param)));		
-		if($scope.result.ret=='success'){
-			toastr.success($scope.result.message);
-			$modalInstance.close('success');	
-		}else{
-			toastr.error($scope.result.message);
-		}
-		
-	}
 	$scope.cancel = function() {
 		$modalInstance.dismiss('cancel');
 	}
 })
 //编辑题目控制器
 app.controller('editSubjectModalCtrl',function($rootScope,$modalInstance,$scope,$modal,toastr,infos){
-	$scope.title="编辑试卷";
+	$scope.title="编辑题目";
 	if(infos){
 		$scope.testInfo=angular.copy(infos);
 		if(typeof $scope.testInfo.questionId=='string'){
 			$scope.testInfo.questionId=parseInt($scope.testInfo.questionId);
+		}		
+		if($scope.testInfo.questionType=='1'||$scope.testInfo.questionType=='2'){
+			$scope.testInfo.selType=$scope.testInfo.questionType;
+			$scope.testInfo.selType1=angular.copy($scope.testInfo.selType);
+			$scope.testInfo.questionType='0';
 		}
 		$scope.testInfo.questionType1=angular.copy($scope.testInfo.questionType);
 		$scope.testInfo.range1=angular.copy($scope.testInfo.range);
@@ -480,29 +507,31 @@ app.controller('editSubjectModalCtrl',function($rootScope,$modalInstance,$scope,
 	//切换答案类型
 	$scope.changequesType=function(quesType){
 		$scope.testInfo.questionType=quesType;
-		if($scope.testInfo.questionType=='0'){			
+		if($scope.testInfo.questionType=='0'){
+			$scope.testInfo.trueAnswer='';
 			$scope.testInfo.selType="1";
 			$scope.testInfo.range="A-D";
 			$scope.testInfo.selType1=angular.copy($scope.testInfo.selType);
 			$scope.testInfo.range1=angular.copy($scope.testInfo.range);
+		}else if($scope.testInfo.questionType=='3'){
+			$scope.testInfo.trueAnswer='T';
+		}
+		else if($scope.testInfo.questionType=='1'){
+			$scope.testInfo.trueAnswer='';
 		}
 	}
-	
 	$scope.isLetterRange = function(value, letterRange) {
 
 		var isLetterRange = true;
-		alert(value)
-		/*if(time && value) {
-			isLetterRange = moment(today + ' ' + value).isAfter(today + ' ' + time);
-			return isAfter;
-		} else {
-			return true;
-		}*/
+		alert(letterRange)
 
 	}
+	
 	$scope.changeselType=function(selType){
 		$scope.testInfo.selType=selType;
-		if($scope.testInfo.questionType=='0'){			
+		
+		
+		/*if($scope.testInfo.questionType=='0'){			
 			switch($scope.testInfo.selType)
 				{
 				case '1':
@@ -521,7 +550,7 @@ app.controller('editSubjectModalCtrl',function($rootScope,$modalInstance,$scope,
 				  break;
 				
 				}
-		}
+		}*/
 	}
 	//检验对错
 	$scope.changeJudge=function(trueAnswer){
@@ -548,8 +577,19 @@ app.controller('editSubjectModalCtrl',function($rootScope,$modalInstance,$scope,
 		}
 	}
 	$scope.ok = function() {
+		
 		if(typeof $scope.testInfo.questionId=='number'){
 			$scope.testInfo.questionIds=parseInt($scope.testInfo.questionId);
+		}
+		if($scope.testInfo.questionType=='0'){
+			switch($scope.testInfo.selType){
+				case '1':
+				$scope.testInfo.questionType='1';
+				break;
+				case '2':
+				$scope.testInfo.questionType='2';
+				break;
+			}
 		}
 		var param={
 			id:$scope.testInfo.id,
@@ -624,13 +664,15 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr) {
 				toastr.warning("请选择文件");
 			}
 		}else{
-			$scope.result=JSON.parse(execute_testPaper("import_server",$scope.filepath));
+			$scope.result=JSON.parse(execute_testPaper("select_paper_server"));
+			console.log(JSON.stringify($scope.result))
 			if($scope.result.ret=='success'){
 				toastr.success($scope.result.message);
 				// window.location.href="../../page/setmodule/testPaperManage.html"; 
 				$modalInstance.close('success');
 			}else{
 				toastr.error($scope.result.message);
+				console.log(JSON.stringify($scope.result.detail))
 			}
 		}
 		
@@ -741,6 +783,28 @@ app.filter('questionType', function() {
 					statename = '数字';
 					break;
 				}
+		}
+		return statename;
+	}
+});
+app.filter('AnswerType', function() {
+	return function(AnswerType) {
+		var statename = '';
+		switch(AnswerType) {
+			case 'T':
+				{
+					statename = '对';
+					break;
+				}
+			case 'F':
+				{
+					statename = '错';
+					break;
+				}
+			default:{
+				statename = AnswerType;
+				break;
+			}
 		}
 		return statename;
 	}

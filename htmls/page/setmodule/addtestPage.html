@@ -150,21 +150,20 @@
 				</div>
 			</div>
 			<div class="content bgf5 clearfix">		
-				<form class="form-horizontal clearfix" name="myForm">
-			  			<div class="form-group">
-					  	<label for="firstname" class="col-sm-2 control-label">试卷名称</label>
-					    <div class="col-sm-9">
-				    	<input type="number" autocomplete="off" name="testName" id="" value=""  class="form-control" ng-model="paperInfo.testName" required />										
-					    </div>
-					    <span ng-show="myForm.testName.$invalid" class="warning">*</span>
-						</div>
-						<div class="form-group">
-					  	<label for="firstname" class="col-sm-2 control-label">试卷描述</label>
-					    <div class="col-sm-9">
-					    	<textarea  class="form-control" rows="3" ng-model="paperInfo.describe"></textarea>
-						</div>
-						</div>
-		  		</form>
+				<form class="form-horizontal clearfix" name="myForm" novalidate>
+		  			<div class="form-group">
+				  	<label for="firstname" class="col-sm-2 control-label">试卷名称</label>
+				    <div class="col-sm-9">
+			    	<input type="text" autocomplete="off" name="testName" id="" value=""  class="form-control" ng-model="paperInfo.testName" required />										
+				    </div>
+				    <span ng-show="myForm.testName.$invalid" class="warning">*</span>
+					</div>
+					<div class="form-group">
+				  	<label for="firstname" class="col-sm-2 control-label">试卷描述</label>
+				    <div class="col-sm-9">
+				    	<textarea  class="form-control" rows="3" ng-model="paperInfo.describe"></textarea>
+					</div>
+					</div>
 			  		<div class="col-main"  id="testlist" style="overflow-x: auto; overflow-y: auto; height:1.5rem; width:100%;padding-right: 0.05rem;">
 					<table class="table table-stripe subject">
 						<thead>
@@ -191,10 +190,10 @@
 			  	<div class="opbtn clearfix pt10">
 				  	<a href="javascript:;"  ng-click="addSubject()">新增</a>
 			  	</div>
-			  	<div class="operatebtn pt10 clearfix">
-			  		
-			  		<button class="btn btn-primary btn-lg" ng-click="savePaper()">保存</button>
+			  	<div class="operatebtn pt10 clearfix">			  		
+			  		<button class="btn btn-primary btn-lg" ng-click="savePaper()" ng-disabled="!myForm.$valid">保存</button>
 			  	</div>
+			  	</form>
 			  </div>
 	</body>
 </html>
