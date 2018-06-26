@@ -71,15 +71,17 @@
 		
 
 	</style>
-	<body class="bg clearfix" ng-controller="setClassCtrl" >
+	<body class="bg clearfix" ng-controller="setClassCtrl">
 			<div class="header clearfix">
 				<div class="pull-left">
-					<img src="../../image/set.png" class="ml25" />
-					<span>课程设置</span>
+					<button class="btn btnfff" class="mr25">{{classesobject.value}}</button>
 				</div>
-				<!--<div class="pull-right">
-					<img src="../../image/return.png" />
-				</div>-->
+				<div class="pull-right">
+					<a href="../../page/answermoudle/userAttend.html" ng-click="signIn()">
+					<button class="btn whitebtn mr25" >
+					</button></a>
+				</div>
+				
 			</div>
 		  	<div class="block">
 		  	<ul class="col-4">
@@ -119,12 +121,3 @@
 	</body>
 
 </html>
-<link rel="stylesheet" href="../../js/select2/j-select.css" />
-<script src="../../js/select2/jquery-nicescroll.js"></script>
-<script src="../../js/select2/jquery-jSelect.min.js"></script>
-
-<script type="text/javascript">
-//	$("#mySelect").jSelect();
-//	$("#city").jSelect();
-$(".select").jSelect();
-</script>
