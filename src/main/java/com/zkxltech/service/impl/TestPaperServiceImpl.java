@@ -43,8 +43,6 @@ public class TestPaperServiceImpl implements TestPaperService{
 			questionInfo.setStatus("1");
 			result = questionInfoSql.updateStudent(questionInfo);
 			if (Constant.ERROR.equals(result.getRet())) {
-				//回滚
-				testPaperSql.deleteTestPaper();
 				result.setMessage("插入题目信息失败！");
 				return result;
 			}
