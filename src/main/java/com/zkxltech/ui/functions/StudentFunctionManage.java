@@ -77,6 +77,10 @@ public class StudentFunctionManage extends BrowserFunction{
 			case "update_student":
 				result = studentInfoservice.updateStudentById(param);
 				break;
+			case "clear_student":
+				/*解绑*/
+				result = studentInfoservice.clearStudentByIds(param);
+				break;
 			case "select_student":
 				result = studentInfoservice.selectStudentInfo(param);
 				break;

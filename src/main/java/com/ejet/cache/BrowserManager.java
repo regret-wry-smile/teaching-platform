@@ -44,20 +44,20 @@ public class BrowserManager {
 			});
 		}
 	}
-	/**
-	 * 选中当前班级
-	 */
-	public static void selectClass(String classId) {
-		Browser b  = browerManager.get();
-		if (b!=null) {
-			shell.getDisplay().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					boolean  doRet = b.execute("var classId = '"+classId+"';document.getElementById('selectClass').click();");
-				}
-			});
-		}
-	}
+//	/**
+//	 * 选中当前班级
+//	 */
+//	public static void selectClass(String classId) {
+//		Browser b  = browerManager.get();
+//		if (b!=null) {
+//			shell.getDisplay().syncExec(new Runnable() {
+//				@Override
+//				public void run() {
+//					boolean  doRet = b.execute("var classId = '"+classId+"';document.getElementById('selectClass').click();");
+//				}
+//			});
+//		}
+//	}
 	
 	/**
 	 * 刷新班级

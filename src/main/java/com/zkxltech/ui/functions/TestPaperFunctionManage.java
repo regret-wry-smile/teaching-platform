@@ -71,6 +71,14 @@ public class TestPaperFunctionManage extends BrowserFunction{
 				}
 				result = testPaperService.insertTestPaper(params[1]);
 				break;
+			case "delete_paper":
+				if (params.length != 2) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("参数个数有误！");
+					break;
+				}
+				result = testPaperService.deleteTestPaper(params[1]);
+				break;
 			case "update_paper":
 				if (params.length != 3) {
 					result.setRet(Constant.ERROR);

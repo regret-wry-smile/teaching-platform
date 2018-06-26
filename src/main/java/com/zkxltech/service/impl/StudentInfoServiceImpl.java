@@ -122,6 +122,37 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 		try {
 			
 			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseToBean(JSONObject.fromObject(param), StudentInfo.class);
+//			/*判断该班中学生学号是否存在*/
+//			StudentInfo paramStudentInfo1 = new StudentInfo();
+//			paramStudentInfo1.setClassId(studentInfo.getClassId());
+//			paramStudentInfo1.setStudentId(studentInfo.getStudentId());
+//			result = studentInfoSql.selectStudentInfo(paramStudentInfo1);
+//			if(Constant.ERROR.equals(result.getRet())){
+//				result.setMessage("查询学生失败!");
+//				return result;
+//			}else {
+//				 if(!com.zkxltech.ui.util.StringUtils.isEmptyList(result.getItem())){
+//					 result.setMessage("该班该学号已经存在!");
+//					 result.setRet(Constant.ERROR);
+//					 return result;
+//				 }
+//			}
+//			
+//			/*判断该班中答题器编号是否存在*/
+//			StudentInfo paramStudentInfo2= new StudentInfo();
+//			paramStudentInfo2.setClassId(studentInfo.getClassId());
+//			paramStudentInfo2.setIclickerId(studentInfo.getIclickerId());
+//			result = studentInfoSql.selectStudentInfo(paramStudentInfo2);
+//			if(Constant.ERROR.equals(result.getRet())){
+//				result.setMessage("查询学生失败!");
+//				return result;
+//			}else {
+//				 if(!com.zkxltech.ui.util.StringUtils.isEmptyList(result.getItem())){
+//					 result.setMessage("该班该答题器编号已经存在!");
+//					 result.setRet(Constant.ERROR);
+//					 return result;
+//				 }
+//			}
 			result = studentInfoSql.insertStudentInfo(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("新增学生信息成功!");
@@ -207,6 +238,30 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result.setRet(Constant.ERROR);
 			result.setDetail(IOUtils.getError(e));
 			result.setMessage("服务器中获取学生失败！");
+			return result;
+		}
+	}
+
+	@Override
+	public Result clearStudentByIds(Object object) {
+		try {
+			JSONArray jsonArray = JSONArray.fromObject(object);
+			List<Integer> ids = new ArrayList<Integer>();
+			for (int i = 0; i < jsonArray.size(); i++) {
+				ids.add(jsonArray.getInt(i));
+			}
+			result = studentInfoSql.clearStudentByIds(ids);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				result.setMessage("解绑成功!");
+				BrowserManager.refreshBindCard();
+			}else {
+				result.setMessage("解绑失败！");
+			}
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("解绑失败！");
+			result.setDetail(IOUtils.getError(e));
 			return result;
 		}
 	}
