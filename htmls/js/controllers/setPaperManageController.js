@@ -40,7 +40,7 @@ app.controller('setPaperManageCtrl', function($rootScope,$scope,$modal,toastr,$w
 		var result = JSON.parse(execute_testPaper("select_paper",JSON.stringify(param)));
 		console.log(JSON.stringify(result));
 		if(result.ret == 'success'){
-			$scope.paperInfoList = result.item;
+			$rootScope.paperInfoList = result.item;
 		}else{
 			toastr.error(result.message);
 		}
@@ -624,7 +624,7 @@ app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
 	}
 })
 //导入试卷控制器
-app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,$modal) {
+app.controller('uploadfileModalCtrl', function($rootScope,$scope,$modalInstance,toastr,$modal) {
 	$scope.fileType='0';//0:本地导入;1:服务获取
 	$scope.fileType1=angular.copy($scope.fileType);
 	$scope.sujectlists=[];//科目数组
@@ -708,7 +708,7 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,$mod
 			$scope.result=JSON.parse(execute_testPaper("select_paper_server",$scope.selclass,$scope.selsubject));
 			if($scope.result.ret=='success'){
 				console.log(JSON.stringify($scope.result))
-				toastr.success($scope.result.message);
+				//toastr.success($scope.result.message);
 				// window.location.href="../../page/setmodule/testPaperManage.html"; 
 				$modalInstance.close('success');
 				var selitem={
@@ -735,9 +735,10 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,$mod
 					//查询所有试卷
 					var param = {};
 					var result = JSON.parse(execute_testPaper("select_paper",JSON.stringify(param)));
-					//console.log(JSON.stringify(result));
+					console.log(JSON.stringify(result));
 					if(result.ret == 'success'){
-						$scope.paperInfoList = result.item;
+						$rootScope.paperInfoList=[];
+						$rootScope.paperInfoList = result.item;
 					}else{
 						toastr.error(result.message);
 					}
