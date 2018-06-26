@@ -94,6 +94,19 @@ public class TestPaperSql {
 	}
 	
 	/**
+	 * 
+	 * @param testId 试卷id
+	 * @param subjectNam 科目名称
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public Result deleteTestPaper(String testId,String subjectName) throws IllegalArgumentException, IllegalAccessException{
+		String sql = "delete from " + tableName + " where test_id = '"+testId+"' and subject = '"+subjectName+"'";
+		return dbHelper.onUpdate(sql);
+	}
+	
+	/**
 	 * 删除最新添加的试卷
 	 * @return
 	 * @throws IllegalArgumentException
@@ -133,40 +146,39 @@ public class TestPaperSql {
 			// answers
 			// ="[{\"tno\":1,\"tanswer\":\"A\",\"tscore\":5.0,\"type\":0,\"atype\":0,\"partScore\":0.0,\"highScore\":0.0,\"downScore\":0.0},{\"tno\":2,\"tanswer\":\"A\",\"tscore\":5.0,\"type\":0,\"atype\":0,\"partScore\":0.0,\"highScore\":0.0,\"downScore\":0.0},{\"tno\":3,\"tanswer\":\"A\",\"tscore\":5.0,\"type\":0,\"atype\":0,\"partScore\":0.0,\"highScore\":0.0,\"downScore\":0.0},{\"tno\":4,\"tanswer\":\"A\",\"tscore\":5.0,\"type\":0,\"atype\":0,\"partScore\":0.0,\"highScore\":0.0,\"downScore\":0.0},{\"tno\":5,\"tanswer\":\"A\",\"tscore\":5.0,\"type\":0,\"atype\":0,\"partScore\":0.0,\"highScore\":0.0,\"downScore\":0.0},{\"tno\":6,\"tanswer\":\"\",\"tscore\":5.0,\"type\":0,\"atype\":1,\"partScore\":0.0,\"highScore\":5.0,\"downScore\":0.0},{\"tno\":7,\"tanswer\":\"\",\"tscore\":5.0,\"type\":0,\"atype\":1,\"partScore\":0.0,\"highScore\":5.0,\"downScore\":0.0},{\"tno\":8,\"tanswer\":\"\",\"tscore\":5.0,\"type\":0,\"atype\":1,\"partScore\":0.0,\"highScore\":5.0,\"downScore\":0.0},{\"tno\":9,\"tanswer\":\"\",\"tscore\":5.0,\"type\":0,\"atype\":1,\"partScore\":0.0,\"highScore\":5.0,\"downScore\":0.0},{\"tno\":10,\"tanswer\":\"\",\"tscore\":5.0,\"type\":0,\"atype\":1,\"partScore\":0.0,\"highScore\":5.0,\"downScore\":0.0}]";
 			JSONArray jsonArray = JSONArray.parseArray(answers);
-			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.append(
-					"insert into title_manage (title_id,title_uid,type_name,title_answer,test_id,range,score,part_score,high_score,down_score,atype) values");
 			// insert into title_manage values
 			// (1,1,"1","1","1",1,"1"),(1,1,"1","1","1",1,"1")
 			for (int i = 0; i < jsonArray.size(); i++) {
+				StringBuilder stringBuilder = new StringBuilder();
+				stringBuilder.append(
+						"insert into question_info (question_id,question_type,true_answer,test_id,range,score,part_score,high_score,down_score,atype) values");
 				com.alibaba.fastjson.JSONObject jsonObject = jsonArray.getJSONObject(i);
+//				System.out.println(jsonObject);
 				int titleId = jsonObject.getInteger("tno"); // 题号
 				String titleAnswer = jsonObject.getString("tanswer"); // 答案
 				String score = jsonObject.getString("tscore"); // 分值
 				int type = jsonObject.getInteger("type"); // 0单选1多选
-				String typeString = null;
+				String typeString = "";
 				if (type == 0) {
 					typeString = "单选";
 				} else {
 					typeString = "多选";
 				}
 				int atype = jsonObject.getInteger("atype"); // 0客观1主观
-				String partScore = null, highScore = null, downScore = null;
+				String partScore = "", highScore = "", downScore = "";
 				String range = "A-F";
 				if (atype == 1) {
 					partScore = jsonObject.getString("partScore");
 					highScore = jsonObject.getString("highScore");
 					downScore = jsonObject.getString("downScore");
 					titleAnswer = highScore;
-					range = null;
+					range = "";
 
 				}
-				stringBuilder.append("(" + titleId + "," + titleId + ",'" + typeString + "','" + titleAnswer + "','" + testId
+				stringBuilder.append("('" + titleId + "','" + typeString + "','" + titleAnswer + "','" + testId
 						+ "','" + range + "','" + score + "','" + partScore + "','" + highScore + "','" + downScore + "',"
 						+ atype + ")");
-				if (i != jsonArray.size() - 1) {
-					stringBuilder.append(",");
-				}
+//				System.out.println(stringBuilder.toString());
 				sqls.add(stringBuilder.toString());
 			}
 			return DBHelper.onUpdateByGroup(sqls);
