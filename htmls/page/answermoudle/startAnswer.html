@@ -12,13 +12,13 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 		<link rel="stylesheet" href="../../css/bootstrap.css" />
 		<link rel="stylesheet" href="../../css/common.css" />
-		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
+		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>	
+		<script src="../../js/jquery-1.11.1.min.js"></script>
 		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
 		<script src="../../js/angular-toastr/angular-toastr.min.js"></script>
-		<script src="../../js/angular-toastr/angular-toastr.tpls.min.js"></script>
-		
-		<script src="../../js/jquery-1.11.1.min.js"></script>
+		<script src="../../js/angular-toastr/angular-toastr.tpls.min.js"></script>	
+		<script type="text/javascript" src="../../js/angular-cookies/angular-cookies.js" ></script>
 		<!--<link rel="stylesheet" href="../../js/select/select.css">
 		<link rel="stylesheet" href="../../js/select/jquery.mCustomScrollbar.min.css" />
 		<script src="../../js/select/jquery.mCustomScrollbar.concat.min.js"></script>
@@ -30,9 +30,8 @@
 		<script src="../../js/vconsole.min.js"></script>
 		<script src="../../js/jquery.nicescroll.min.js"></script>
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
-		<script type="text/javascript" src="../../js/app.js" ></script>
+	<!--	<script type="text/javascript" src="../../js/app.js" ></script>-->
 		<script src="../../js/controllers/setClassController.js"></script>
-		
 	</head>
 	<style type="text/css">
 		body{
@@ -44,8 +43,36 @@
 			left: 0;
 			right: 0;
 		}
+		.newSelect{
+			width:4.0rem !important;
+		}
+		.newOptions{
+			width:4.0rem !important;
+		}
 	</style>
 	<body class="bg clearfix" ng-controller="setClassCtrl" >
+		<!--添加课程start-->
+			<script type="text/ng-template" id="addClassHourModal.html">
+				<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
+					<div class="modal-header">
+						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+						<h4 class="modal-title">{{title}}</h4>
+					</div>
+					<div class="modal-body">						
+						<div class="form-group">
+					  	<label for="firstname" class="col-sm-3 control-label">课程</label>
+					    <div class="col-sm-8">
+				    	<input type="text" autocomplete="off" name="classhour" id="" value=""  class="form-control" ng-model="classInfo.classHourName" required  maxlength="10" placeholder="请输入长度不能超过10位的字符" ng-blur="blurClassHour()"/>					
+						</div>
+						<span ng-show="myForm.classhour.$invalid" class="warning">*</span>
+						</div>
+					</div>
+					<div class="modal-footer text-center">
+						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
+						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>		
+					</div>
+				</form>
+			</script>
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/set.png" class="ml25" />
@@ -59,26 +86,25 @@
 				<div class="modboxs bgfff">
 					<p class="text clearfix">
 						<label class="labelwd pull-left">班级</label>
-						<!--<select  class="select pull-left" id="class" ng-model="setClass.classes" >
-							<option ng-repeat="item in classList track by $index" value="{{item.id}}">{{item.name}}</option>
-						</select>-->
 						<select class="single" select2 ng-model="setClass.classes" defalutvalue='setClass.classes1' list="classList" ng-change="changeClass(setClass.classes)" >
 				   			<option ng-repeat="classitem in classList track by $index" value="{{classitem}}">{{classitem.value}}</option>
-						</select>
-						
+						</select>						
 					</p>
 					<p class="text clearfix">
 						<label class="labelwd pull-left">科目</label>
-						<select class="select pull-left" id="subject" ng-model="setClass.suject" defalutvalue='setClass.suject1'>
-							<option value="">哈哈哈</option>
+						<select class="single" select1 ng-model="setClass.subject" defalutvalue='setClass.subject1' list="subjectlists" ng-change="changeSubject(setClass.subject)" >
+				   			<option ng-repeat="subjectitem in subjectlists track by $index" value="{{subjectitem}}">{{subjectitem}}</option>
 						</select>
 					</p>
 					<p class="text clearfix">
 						<label class="labelwd pull-left">课程名</label>
-						<select class="select pull-left" id="sujectName" ng-model="setClass.sujectName" defalutvalue='setClass.sujectName1'>
-							<option value="">哈哈哈</option>
-						</select>
+						<select class="single" select2 ng-model="setClass.sujectName" defalutvalue='setClass.sujectName1' list="classhourList" ng-change="changeClassHour(setClass.sujectName)" >
+				   			<option ng-repeat="houritem in classhourList track by $index" value="{{houritem}}">{{houritem.value}}</option>
+						</select>			
 					</p>
+					<a href="javascript:;" ng-click="addClassHour()">
+					<img src="../../image/answer.png" class="editbtn" />
+					</a>
 				</div>
 			  	
 				  
@@ -96,12 +122,3 @@
 	</body>
 
 </html>
-<link rel="stylesheet" href="../../js/select2/j-select.css" />
-<script src="../../js/select2/jquery-nicescroll.js"></script>
-<script src="../../js/select2/jquery-jSelect.min.js"></script>
-
-<script type="text/javascript">
-//	$("#mySelect").jSelect();
-//	$("#city").jSelect();
-$(".select").jSelect();
-</script>
