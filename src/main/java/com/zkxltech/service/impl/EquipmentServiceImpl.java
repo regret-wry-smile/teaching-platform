@@ -485,7 +485,8 @@ public class EquipmentServiceImpl implements EquipmentService{
             /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
             for (StudentInfo studentInfo : studentInfos) {
                 Map<String, String> studentInfoMap = new HashMap<>();
-                studentInfoMap.put(studentInfo.getStudentName(), Constant.ATTENDANCE_NO);
+                studentInfoMap.put("studentName", studentInfo.getStudentName());
+                studentInfoMap.put("status", Constant.ATTENDANCE_NO);
                 RedisMapAttendance.attendanceMap.put(studentInfo.getIclickerId(), studentInfoMap);
             }
             t = new AttendanceThread();
