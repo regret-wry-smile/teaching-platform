@@ -155,7 +155,7 @@ public class StudentInfoSql {
 	public Result clearStudentByIds(List<Integer> ids) throws IllegalArgumentException, IllegalAccessException{
 		List<String> sqls = new ArrayList<String>();
 		for (int i = 0; i < ids.size(); i++) {
-			sqls.add("update student_info set iclicker_id = '************'  where id = "+ids.get(i));
+			sqls.add("update student_info set iclicker_id = '************',status = '0'  where id = "+ids.get(i));
 		}
 		return DBHelper.onUpdateByGroup(sqls);
 	}
