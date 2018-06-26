@@ -66,7 +66,9 @@ public class EquipmentServiceImplTest {
     @Test
     public void setClearWl(){
         EquipmentServiceImpl es = EquipmentServiceImpl.getInstance();
-        Result rs = es.clear_wl();
+        JSONObject jo = new JSONObject();
+        jo.put("classId", "BJ1001");
+        Result rs = es.clearWl(jo);
         System.out.println(rs.toString());
     }
     /**开始签到   

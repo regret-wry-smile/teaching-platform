@@ -21,4 +21,11 @@ public class Constant {
 	public static String BING_YES = "1";
 	/*未绑定状态*/
 	public static String BING_NO = "0";
+	/*已考勤*/
+	public static final String ATTENDANCE_YES = "YES";
+	/*未考勤*/
+    public static final String ATTENDANCE_NO = "NO";
+	/*考勤抢答用*/
+	public static final String ANSWER_STR = "[{'type':'g','id':'1','range':''}]";
+	
 }

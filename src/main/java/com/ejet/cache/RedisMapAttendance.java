@@ -9,6 +9,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ejet.core.util.constant.Constant;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 /**
@@ -25,11 +27,9 @@ public class RedisMapAttendance {
     public static RedisMapAttendance getInstance(){
         return INSTANCE;
     }
-    public static final String BIND_YES = "YES";
-    public static final String BIND_NO = "NO";
 	public static Map<String, Map<String,String>> attendanceMap = Collections.synchronizedMap(new HashMap<>());
 	/**绑定时用来去除重复的提交*/
-    private Set<String> cardIdSet = new HashSet<>();
+    public static Set<String> cardIdSet = new HashSet<>();
 	public void addAttendance(String jsonData){
         JSONArray jsonArray = JSONArray.fromObject(jsonData);
         for (int j = 0; j < jsonArray.size(); j++) {
@@ -41,7 +41,7 @@ public class RedisMapAttendance {
             cardIdSet.add(card_id);
             Map<String, String> map = attendanceMap.get(card_id);
             for (String key : map.keySet()) {
-                map.put(key, BIND_YES);
+                map.put(key, Constant.ATTENDANCE_YES);
             }
         }
     }
