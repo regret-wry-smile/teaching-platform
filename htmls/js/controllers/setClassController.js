@@ -91,7 +91,7 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 	$scope.addClassHour=function(){
 		var item={
 			classId:$scope.setClass.classes,
-			className:$scope.setClass.classesobject.value,
+			className:$scope.classesobject.value,
 			subjectName:$scope.setClass.subject
 		}
 		var modalInstance = $modal.open({
@@ -129,11 +129,21 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
         //var favoriteCookie = $cookieStore.get('myFavorite');
         // Removing a cookie
        // $cookieStore.remove('myFavorite');
-		$scope.param = "classId=" + $scope.classesobject.key + "&className=" + $scope.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
-		console.log(JSON.stringify($scope.param))
-		$scope.objectUrl = '../../page/answermoudle/answerCenter.html' + '?' + $scope.param;
+       var param={
+       	classHourId:$scope.sujectNameobject.key,
+       	classHourName:$scope.sujectNameobject.value
+       }
+       console.log(JSON.stringify($scope.setClass.classes))
+      $scope.result=JSON.parse(execute_record("start_class",$scope.setClass.classes,JSON.stringify(param))); 
+	    if($scope.result.ret=='success'){
+	      	$scope.objectUrl = '../../page/answermoudle/answerCenter.html';
+	      	$window.location.href = $scope.objectUrl;	
+	    }
+		//$scope.param = "classId=" + $scope.classesobject.key + "&className=" + $scope.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
+		//console.log(JSON.stringify($scope.param))
+		//$scope.objectUrl = '../../page/answermoudle/answerCenter.html' + '?' + $scope.param;
 		
-		$window.location.href = $scope.objectUrl;	
+		
 		//window.location.href = "../../page/answermoudle/answerCenter.html?backurl=" + window.location.href;
 		
 	}
@@ -145,11 +155,9 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 		$scope.result=JSON.parse(execute_attendance("sign_in_start",JSON.stringify(param)));
 		if($scope.result.ret=='success'){
 			toastr.success($scope.result.message);
-			//console.log(JSON.stringify($scope.result))
-			$scope.param = "classId=" + $scope.setClass.classesobject.key + "&className=" + $scope.setClass.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
-		//console.log(JSON.stringify($scope.param))
-		$scope.objectUrl = '../../page/answermoudle/userAttend.html' + '?' + $scope.param;
-			$window.location.href =$scope.objectUrl;
+			/*$scope.param = "classId=" + $scope.setClass.classesobject.key + "&className=" + $scope.setClass.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
+			$scope.objectUrl = '../../page/answermoudle/userAttend.html' + '?' + $scope.param;
+			$window.location.href =$scope.objectUrl;*/
 		}else{
 			toastr.error($scope.result.message);	
 		}
