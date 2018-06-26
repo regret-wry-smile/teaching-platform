@@ -68,20 +68,23 @@ public class RedisMapUtil {
 	 */
 	public static Map<String, Object> setRedisMap(Map<String, Object> map ,String[] keys,int index,Object value){
 		Map<String, Object> retMap = null;
-		Object obj =  map.get(keys[index]);
-		if (obj == null ) { //map有key没有对应的值
-			setRedisMapOrNull(map,keys,index,value);
-//			throw new Exception("this key of '"+ keys[index] +"' no vlaue！");
-		}else {
-			if (obj instanceof Map) {
-				retMap = (Map<String, Object>) obj;
-			}
-			if (index != keys.length - 2) {
-				setRedisMap(retMap, keys, ++index, value);
+		if (index != keys.length) {
+			Object obj =  map.get(keys[index]);
+			if (obj == null ) { //map有key没有对应的值
+				setRedisMapOrNull(map,keys,index,value);
+//				throw new Exception("this key of '"+ keys[index] +"' no vlaue！");
 			}else {
-				retMap.put(keys[++index], value);
+				if (obj instanceof Map) {
+					retMap = (Map<String, Object>) obj;
+				}
+				if (index != keys.length - 2) {
+					setRedisMap(retMap, keys, ++index, value);
+				}else {
+					retMap.put(keys[++index], value);
+				}
 			}
 		}
+		
 		return retMap;
 	}
 	
