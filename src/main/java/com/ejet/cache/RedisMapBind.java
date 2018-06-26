@@ -25,14 +25,7 @@ public class RedisMapBind {
     /** 一键配对缓存 */
     public static Map<String, Object> bindMap = Collections.synchronizedMap(new HashMap<String, Object>());
     /**答题器id对应的学生*/
-    public static Map<Object, List<StudentInfo>> studentInfoMap = new HashMap<>();
-    /**初始map数据*/
-    static{
-        bindMap.put("studentName", null);
-        bindMap.put("accomplish", null);
-        bindMap.put("notAccomplish",null);
-        bindMap.put("code", null);
-    }
+    public static Map<Object, List<StudentInfo>> studentInfoMap = Collections.synchronizedMap(new HashMap<>());
     /**单例*/
     private static final RedisMapBind INSTANCE = new RedisMapBind();
     private RedisMapBind() {
@@ -76,5 +69,4 @@ public class RedisMapBind {
 	public static String getBindMap(){
 		return JSONObject.fromObject(bindMap).toString();
     }
-    
 }

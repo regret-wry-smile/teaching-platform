@@ -1,19 +1,24 @@
 package com.zkxltech.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import com.ejet.cache.RedisMapAttendance;
 import com.ejet.cache.RedisMapBind;
+import com.ejet.cache.RedisMapClassTest;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
+import com.zkxltech.domain.EquipmentParam;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.EquipmentService;
 import com.zkxlteck.scdll.AnswerThread;
 import com.zkxlteck.scdll.CardInfoThread;
 import com.zkxlteck.scdll.ScDll;
+
+import net.sf.json.JSONObject;
 
 /**
  * @author: ZhouWei
@@ -23,6 +28,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     //private ExecutorService threadPool = Executors.newSingleThreadExecutor(); //单线程池
     public static final int SUCCESS = 0 ;//
     public static final int ERROR = -1 ; //
+    public static final String ANSWER_STR = "[{'type':'g','id':'1','range':''}]";
     private Thread t ;
     private static final EquipmentServiceImpl SINGLE = new EquipmentServiceImpl();  
     
@@ -97,6 +103,10 @@ public class EquipmentServiceImpl implements EquipmentService{
                 }
             }
             /**存入静态map*/
+            //每次调用绑定方法先清空,再存
+            RedisMapBind.bindMap.clear();
+            RedisMapBind.studentInfoMap.clear();
+            RedisMapBind.bindMap.put("studentName", null);
             RedisMapBind.bindMap.put("code", bind_start);
             RedisMapBind.bindMap.put("accomplish", 0);
             RedisMapBind.bindMap.put("notAccomplish",studentInfos.size());
@@ -126,17 +136,25 @@ public class EquipmentServiceImpl implements EquipmentService{
         return r;
     }
     @Override
-    public Result answer_start(int is_quick_response, String answer_str) {
+    public Result answerStart(Object param) {
         Result r = new Result();
-        int answer_start = ScDll.intance.answer_start(is_quick_response, answer_str);
+        r.setRet(Constant.ERROR);
+        EquipmentParam ep =  (EquipmentParam) com.zkxltech.ui.util.StringUtils.parseJSON(param, EquipmentParam.class);
+        Integer isQuickResponse = ep.getIsQuickResponse();
+        String answerStr = ep.getAnswerStr();
+        if(isQuickResponse == null || StringUtils.isBlank(answerStr)){
+            r.setMessage("缺少参数");
+        }
+        int answer_start = ScDll.intance.answer_start(isQuickResponse,answerStr);
         if (answer_start == SUCCESS) {
+            //开始答题前先清空
+            RedisMapClassTest.classTestAnswerMap.clear();
             t = new AnswerThread();
             t.start();
             r.setRet(Constant.SUCCESS);
             r.setMessage("发送成功");
             return r;
         }
-        r.setRet(Constant.ERROR);
         r.setMessage("发送失败");
         return r;
     }
@@ -190,7 +208,7 @@ public class EquipmentServiceImpl implements EquipmentService{
 //        return r;
 //    }
     @Override
-    public Result answer_stop() {
+    public Result answerStop() {
         Result r = new Result();
         int answer_stop = ScDll.intance.answer_stop();
         if (answer_stop == SUCCESS) {
@@ -375,24 +393,55 @@ public class EquipmentServiceImpl implements EquipmentService{
     }
 
     @Override
-    public Result sign_in_start() {
+    public Result signInStart(Object param) {
         Result r = new Result();
-        int sign_in_start = ScDll.intance.sign_in_start();
-        if (sign_in_start == SUCCESS) {
+        r.setRet(Constant.ERROR);
+        if (param == null) {
+            r.setMessage("缺少参数");
+            return r;
+        }
+        JSONObject jo = JSONObject.fromObject(param);
+        if (jo.containsKey("classId")) {
+            String classId = jo.getString("classId");
+            if (StringUtils.isBlank(classId)) {
+                r.setMessage("班级ID为空");
+                return r;
+            }
+        }
+        //int sign_in_start = ScDll.intance.sign_in_start();
+        //开始签到接口有问题,暂用按任意键
+        int answer_start = ScDll.intance.answer_start(0, ANSWER_STR);
+        if (answer_start == SUCCESS) {
+            //每次调用签到先清空数据
+            RedisMapAttendance.attendanceMap.clear();
+            StudentInfoServiceImpl si = new StudentInfoServiceImpl();
+            Result result = si.selectStudentInfo(param);
+            List<StudentInfo> studentInfos = (List)result.getItem();
+            if (result== null || ListUtils.isEmpty(studentInfos)) {
+                r.setMessage("您还未上传学生信息");
+                return r;
+            }
+            /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+            for (StudentInfo studentInfo : studentInfos) {
+                Map<String, String> studentInfoMap = new HashMap<>();
+                studentInfoMap.put(studentInfo.getStudentName(), RedisMapAttendance.BIND_NO);
+                RedisMapAttendance.attendanceMap.put(studentInfo.getIclickerId(), studentInfoMap);
+            }
+            t = new AnswerThread();
+            t.start();
             r.setRet(Constant.SUCCESS);
             r.setMessage("操作成功");
             return r;
         }
-        r.setRet(Constant.ERROR);
         r.setMessage("操作失败");
         return r;
     }
 
     @Override
-    public Result sign_in_stop() {
+    public Result signInStop() {
         Result r = new Result();
-        int sign_in_stop = ScDll.intance.sign_in_stop();
-        if (sign_in_stop == SUCCESS) {
+        int answer_stop = ScDll.intance.answer_stop();
+        if (answer_stop == SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
             return r;

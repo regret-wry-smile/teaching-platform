@@ -16,7 +16,7 @@ public interface EquipmentService {
     /** 停止绑定 */
     public Result bind_stop() ;
     /** 开始答题 */
-    public Result answer_start( int is_quick_response, String answer_str );
+    public Result answerStart(Object param);
     /**  开始答题 */
     public Result answer_start_with_raise_hand( int is_quick_response, int raise_hand, String answer_str ); 
     /** 设置举手功能 */
@@ -24,7 +24,7 @@ public interface EquipmentService {
     /** 设置签到功能 */
     public Result set_sign_in(int attendance) ;
     /** 停止作答 */
-    public Result answer_stop() ;
+    public Result answerStop() ;
     
     public Result set_student_id(String student_id_str) ;
     
@@ -50,9 +50,9 @@ public interface EquipmentService {
     /** 获取学生提交的举手信息. */
     public Result get_raise_hand_list() ;
     /** 开始签到 */
-    public Result sign_in_start() ;
+    public Result signInStart(Object param) ;
     /**  停止签到 */
-    public Result sign_in_stop() ;
+    public Result signInStop() ;
     /** 获取学生提交的签到信息 */
     public Result get_sign_in_list() ;
     /** 设置2.4G考勤功能(绑定前设置有效) */
