@@ -78,6 +78,39 @@ public class RedisMapScore {
 	}
 	
 	/**
+	 * 初始化柱状图数据缓存
+	 */
+	public static void initBarMap(){
+		for (String uuid : scoreDetailInfoMap.keySet()) {
+			Map<String, Object> map1 =  (Map<String, Object>) scoreDetailInfoMap.get(uuid);
+			for (int i = 0; i < getScoreInfo().getPrograms().size(); i++) {
+				if (map1.containsKey(String.valueOf(i+1))) {
+					Map<String, Object> map2 = (Map<String, Object>) map1.get(String.valueOf(i));
+					keyBarMap[0] = String.valueOf(i+1); //题号
+					int total = 0;//总分
+					int peopleSum = 0; //人数
+					for (String iclickerId : map2.keySet()) {
+						Answer answer = (Answer) JSONObject.toBean((JSONObject) map2.get(iclickerId), Answer.class);
+						total = total + Integer.parseInt(answer.getAnswer());
+						peopleSum ++;
+					}
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("total", total);
+					jsonObject.put("peopleSum", peopleSum);
+					RedisMapUtil.setRedisMap(barMap, keyBarMap, 0, jsonObject);
+				}else {
+					keyBarMap[0] = String.valueOf(i+1); //题号
+					int total = 0;//总分
+					int peopleSum = 0; //人数
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("total", total);
+					jsonObject.put("peopleSum", peopleSum);
+					RedisMapUtil.setRedisMap(barMap, keyBarMap, 0, jsonObject);
+				}
+			}
+        }
+	}
+	/**
 	 * 添加评分详情
 	 * @param score
 	 */
@@ -114,9 +147,10 @@ public class RedisMapScore {
 		for (String uuid : scoreDetailInfoMap.keySet()) {
 			Map<String, Object> map1 =  (Map<String, Object>) scoreDetailInfoMap.get(uuid);
 			for (int i = 0; i < getScoreInfo().getPrograms().size(); i++) {
-				if (map1.containsKey(String.valueOf(i+1))) {
-					Map<String, Object> map2 = (Map<String, Object>) map1.get(String.valueOf(i));
-					keyBarMap[0] = String.valueOf(i+1); //题号
+				String questionId = String.valueOf(i+1);
+				if (map1.containsKey(questionId)) {
+					Map<String, Object> map2 = (Map<String, Object>) map1.get(questionId);
+					keyBarMap[0] = questionId; //题号
 					int total = 0;//总分
 					int peopleSum = 0; //人数
 					for (String iclickerId : map2.keySet()) {
@@ -124,6 +158,14 @@ public class RedisMapScore {
 						total = total + Integer.parseInt(answer.getAnswer());
 						peopleSum ++;
 					}
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("total", total);
+					jsonObject.put("peopleSum", peopleSum);
+					RedisMapUtil.setRedisMap(barMap, keyBarMap, 0, jsonObject);
+				}else {
+					keyBarMap[0] = questionId; //题号
+					int total = 0;//总分
+					int peopleSum = 0; //人数
 					JSONObject jsonObject = new JSONObject();
 					jsonObject.put("total", total);
 					jsonObject.put("peopleSum", peopleSum);
@@ -154,10 +196,23 @@ public class RedisMapScore {
 	 * @param score
 	 */
 	public static String getScoreInfoBar(){
+		dealBarInfo();
+		dealBarInfo();
 		return JSONObject.fromObject(barMap).toString();
     }
 	
 	public static void main(String[] args) {
+		Score score = new Score();
+		List<String> programs = new ArrayList<String>();
+		programs.add("张三");
+		programs.add("李四");
+		programs.add("王五");
+		score.setPrograms(programs);
+		score.setTitle("测试主题");
+		score.setDescribe("测试描述");
+		addScoreInfo(score);
+		
+		
 		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
 		StudentInfo studentInfo = new StudentInfo();
 		studentInfo.setIclickerId("0000001");
@@ -207,7 +262,6 @@ public class RedisMapScore {
 		System.out.println(jsonData);
 		
 		addscoreDetailInfo(jsonData.toString());
-		dealBarInfo();
 		
 		System.out.println(getScoreInfoBar());
 	}
