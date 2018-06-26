@@ -403,7 +403,10 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 
 		modalInstance.result.then(function(info) {
 			//发送指令
-			$scope.result = JSON.parse(execute_student("clear_bind"));
+			var param={
+					classId:$scope.classId
+			}
+			$scope.result = JSON.parse(execute_student("clear_bind",JSON.stringify(param)));
 			if($scope.result.ret=='success'){
 				toastr.success($scope.result.message);
 			}else{
