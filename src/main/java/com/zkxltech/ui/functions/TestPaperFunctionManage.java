@@ -80,12 +80,12 @@ public class TestPaperFunctionManage extends BrowserFunction{
 				result = testPaperService.deleteTestPaper(params[1]);
 				break;
 			case "update_paper":
-				if (params.length != 3) {
+				if (params.length != 2) {
 					result.setRet(Constant.ERROR);
 					result.setMessage("参数个数有误！");
 					break;
 				}
-				result = testPaperService.updateTestPaper(params[1],params[2]);
+				result = testPaperService.updateTestPaper(params[1]);
 				break;
 			case "select_question":
 				/*从数据库中查询*/

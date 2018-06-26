@@ -127,15 +127,16 @@ public class TestPaperServiceImpl implements TestPaperService{
 	}
 
 	@Override
-	public Result updateTestPaper(Object object, Object questionInfos) {
+	public Result updateTestPaper(Object object) {
 		result = new Result();
 		try {
 			TestPaper testPaper =  (TestPaper) StringUtils.parseJSON(object, TestPaper.class);
 			
-//			RedisMapPaper.addQuestions(questionInfo);
+			QuestionInfo questionInfo = new QuestionInfo();
 			
-			List<QuestionInfo> questionInfos1  = (List<QuestionInfo>) JSONArray.toCollection(JSONArray.fromObject(questionInfos), QuestionInfo.class);
-			Result result = questionInfoSql.updateStudentsById(questionInfos1);
+			questionInfo.setTestId(testPaper.getTestId());
+			questionInfo.setStatus("1");
+			Result result = questionInfoSql.updateStudent(questionInfo);
 			if (Constant.ERROR.equals(result.getRet())) {
 				result.setMessage("修改题目信息成功!");
 				return result;
