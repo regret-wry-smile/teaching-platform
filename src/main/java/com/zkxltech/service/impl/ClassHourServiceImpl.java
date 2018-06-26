@@ -131,7 +131,7 @@ public class ClassHourServiceImpl implements ClassHourService{
 		
 		Global.setClassHour((ClassHour) StringUtils.parseJSON(classHour, ClassHour.class));
 		
-		return null;
+		return result;
 	}
 
 }
