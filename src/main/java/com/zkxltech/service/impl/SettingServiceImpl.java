@@ -9,6 +9,7 @@ import com.zkxltech.domain.User;
 import com.zkxltech.service.SettingService;
 import com.zkxltech.ui.enums.SettingEnum;
 import com.zkxltech.ui.util.StringUtils;
+import com.zkxlteck.scdll.ScDll;
 
 import net.sf.json.JSONObject;
 
@@ -86,21 +87,42 @@ public class SettingServiceImpl implements SettingService{
 	public Result set(Object object) {
 		try {
 			result = new Result();
+			result.setRet(Constant.ERROR);
 			Setting setting = StringUtils.parseJSON(object, Setting.class);
 			String name = setting.getName();
+			if (com.ejet.core.util.comm.StringUtils.isBlank(name)) {
+                result.setMessage("缺少参数,系统信道名称为空");
+                return result;
+            }
+			Integer tx_power = setting.getPower();
+			if (tx_power == null) {
+                result.setMessage("缺少参数, 发送功率为空");
+                return result;
+            }
 			//发送信道
-			Integer tx_ch = SettingEnum.getRxchByName(name);
+			Integer tx_ch = SettingEnum.getTxchByName(name);
 			//接收信道
 			Integer rx_ch = SettingEnum.getRxchByName(name);
 			//发送功率
-			Integer power = setting.getPower();
-			//TODO 创建线程向硬件发送请求
+			if (tx_ch == null || rx_ch == null) {
+                result.setMessage("根据信道名称 :"+name+" ,未查询到对应的发送和接收信道值");
+                return result;
+            }
 			
+			int set_channel = ScDll.intance.set_channel(tx_ch, rx_ch);
+			if (set_channel == EquipmentServiceImpl.ERROR) {
+			    result.setMessage("设置信道失败");
+                return result;
+            }
+			int set_tx_power = ScDll.intance.set_tx_power(tx_power);
+			if (set_tx_power == EquipmentServiceImpl.ERROR) {
+			    result.setMessage("设置功率失败");
+			    return result;
+            }
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("设置成功！");
 			return result;
 		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
 			result.setMessage("设置失败!");
 			result.setDetail(IOUtils.getError(e));
 			return result;
@@ -111,14 +133,32 @@ public class SettingServiceImpl implements SettingService{
 	public Result setDefault() {
 		try {
 			result = new Result();
+			result.setRet(Constant.ERROR);
 			//默认发送信道
 			Integer tx_ch =Integer.parseInt(ConfigConstant.projectConf.getTx_ch());
 			//默认接收信道
 			Integer rx_ch =Integer.parseInt(ConfigConstant.projectConf.getRx_ch());
 			//默认发送功率
-			Integer power = Integer.parseInt(ConfigConstant.projectConf.getPower());
+			Integer tx_power = Integer.parseInt(ConfigConstant.projectConf.getPower());
 			//TODO 创建线程向硬件发送请求
-			
+			if (tx_ch == null || rx_ch == null) {
+                result.setMessage("读取配置文件\"系统信道\"默认设置失败");
+                return result;
+            }
+			if (tx_power == null) {
+			    result.setMessage("读取配置文件\"答题器发送功率\"默认设置失败");
+                return result;
+            }
+			int set_channel = ScDll.intance.set_channel(tx_ch, rx_ch);
+			if (set_channel == EquipmentServiceImpl.ERROR) {
+                result.setMessage("系统信道设置失败,请重试或重启设备");
+                return result;
+            }
+			int set_tx_power = ScDll.intance.set_tx_power(tx_power);
+			if (set_tx_power == EquipmentServiceImpl.ERROR) {
+                result.setMessage("设置答题器发送功率失败,请重试或重启设备");
+                return result;
+            }
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("设置成功！");
 			return result;
