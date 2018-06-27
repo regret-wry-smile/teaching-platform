@@ -134,5 +134,21 @@ public class BrowserManager {
 				
 		}
 	}
-
+	
+	/**
+	 * 刷新评分数据
+	 * @param echoRequest
+	 */
+	public static void refresScore() {
+		Browser b  = browerManager.get();
+		if (b!=null) {
+			shell.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					boolean  doRet = b.execute("document.getElementById('refresScore').click();");
+					log.info("刷新评分数据："+doRet);
+				}
+			});
+		}
+	}
 }

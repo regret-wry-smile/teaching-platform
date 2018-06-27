@@ -38,7 +38,6 @@ public class ScoreFunctionManage extends BrowserFunction{
 				result = scoreService.startScore(params[1]);
 				break;
 			case "get_score":
-				
 				result = scoreService.getScore();
 				break;
 			default:
