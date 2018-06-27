@@ -41,6 +41,9 @@ public class VoteFunctionManage extends BrowserFunction{
 			case "get_vote":
 				result = voteService.getVote();
 				break;
+			case "get_voteTitleInfo":
+				result = voteService.getVoteTitleInfo();
+				break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");

@@ -34,6 +34,9 @@ public class AnswerFunctionManage extends BrowserFunction{
 			case "single_answer":
                 result = EquipmentServiceImpl.getInstance().singleAnswer(param);
                 break;
+			case "start_multiple_answer":
+                result = EquipmentServiceImpl.getInstance().singleAnswer(param);
+                break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");

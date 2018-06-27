@@ -20,4 +20,9 @@ public interface VoteService {
 	 * @return
 	 */
 	Result getVote();
+	/**
+	 * 获取投票主题
+	 * @return
+	 */
+	Result getVoteTitleInfo();
 }
