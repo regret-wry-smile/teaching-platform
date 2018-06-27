@@ -97,17 +97,17 @@ public class StudentFunctionManage extends BrowserFunction{
 				result = classInfoService.updateClassInfo(param);
 				break;
 			case "get_bind_info":
-				return RedisMapBind.getBindMap();
+				return RedisMapBind.getBindMapValue();
 				/**清除白名单位(解绑)*/
 			case "clear_bind":
 			    result = equipmentService.clearWl(param);
 			    break;
 			    /**开始绑定(一键配对)*/
 			case "bind_start":
-                result = equipmentService.bind_start(param);
+                result = equipmentService.bindStart(param);
                 break;
 			case "bind_stop":
-                result = equipmentService.bind_stop();
+                result = equipmentService.bindStop();
                 break;
 			default:
 				result.setRet(Constant.ERROR);

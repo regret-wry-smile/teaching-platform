@@ -12,9 +12,9 @@ public interface EquipmentService {
     /** 清除白名单 */
     public Result clearWl(Object param) ;
     /** 开始绑定  */
-    public Result bind_start(Object param) ;
+    public Result bindStart(Object param) ;
     /** 停止绑定 */
-    public Result bind_stop() ;
+    public Result bindStop() ;
     /** 开始答题 */
     public Result answerStart(Object param);
     /**  开始答题 */
