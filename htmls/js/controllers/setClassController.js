@@ -273,11 +273,11 @@ app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
 	 $scope.returnPage=function(){
 	 	$scope.result=JSON.parse(execute_attendance("sign_in_stop"));  
 	 	if($scope.result.ret=='success'){
-	 		$scope.back="javascript:history.go(-1);";
+	 		history.go(-1);
 	 		console.log(JSON.stringify($scope.result));
 	 		
 	 	}else{
-	 		$scope.back="javascript:history.go(-1);";
+	 		history.go(-1);
 	 		toastr.error($scope.result.message);
 	 	}
 	 	

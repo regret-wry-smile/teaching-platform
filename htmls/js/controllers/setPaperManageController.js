@@ -184,8 +184,7 @@ app.controller('addPaperManageCtrl',function($rootScope,$scope,$modal,toastr,$lo
 			$scope.result= JSON.parse(execute_testPaper("insert_paper",JSON.stringify(param)));
 			if($scope.result.ret=='success'){
 				toastr.success($scope.result.message);
-				/*$scope.lastUrl="../../page/setmodule/testPaperManage.html";
-				 $window.location.href=$scope.lastUrl;*/
+				history.go(-1);
 			}else{
 				toastr.error($scope.result.message);
 				console.log(JSON.stringify($scope.result.detail))
@@ -292,7 +291,7 @@ app.controller('editPaperManageCtrl',function($rootScope,$scope,$modal,$location
 	}
 	//编辑题目
 	$scope.editSuject=function(item){
-		console.log(JSON.stringify(item))
+		//console.log(JSON.stringify(item))
 		var modalInstance = $modal.open({
 			templateUrl: 'addSubjectModal.html',
 			controller: 'editSubjectModalCtrl',
@@ -312,33 +311,37 @@ app.controller('editPaperManageCtrl',function($rootScope,$scope,$modal,$location
 	}
 	//删除题目 
 	$scope.delSuject=function(item){
-		var content="删除题目";
-		var modalInstance = $modal.open({
-			templateUrl: 'sureModal.html',
-			controller: 'sureModalCtrl',
-			size: 'sm',
-			backdrop:false,
-			resolve: {
-				content: function() {
-					return content;
+		if($scope.checkedId.length>0){
+			var content="删除题目";
+			var modalInstance = $modal.open({
+				templateUrl: 'sureModal.html',
+				controller: 'sureModalCtrl',
+				size: 'sm',
+				backdrop:false,
+				resolve: {
+					content: function() {
+						return content;
+					}
 				}
-			}
-		});
-		modalInstance.result.then(function(info) {
-			var param=$scope.checkedId;	
-			$scope.result=JSON.parse(execute_testPaper("delete_question",JSON.stringify(param)));
-			if($scope.result.ret=='success'){
-				toastr.success($scope.result.message);
-				_selectQuestion();
-				$scope.onechecked = [];
-				$scope.checkedId = [];
-				$scope.selected = false;
-			}else{
-				toastr.error($scope.result.message);
-			}
-		}, function() {
-			//$log.info('Modal dismissed at: ' + new Date());
-		});
+			});
+			modalInstance.result.then(function(info) {
+				var param=$scope.checkedId;	
+				$scope.result=JSON.parse(execute_testPaper("delete_question",JSON.stringify(param)));
+				if($scope.result.ret=='success'){
+					toastr.success($scope.result.message);
+					_selectQuestion();
+					$scope.onechecked = [];
+					$scope.checkedId = [];
+					$scope.selected = false;
+				}else{
+					toastr.error($scope.result.message);
+				}
+			}, function() {
+				//$log.info('Modal dismissed at: ' + new Date());
+			});			
+		}else{
+			toastr.warning("请先勾选至少一个题目");
+		}
 	}
 	//修改试卷
 	$scope.savePaper=function(){
@@ -354,8 +357,7 @@ app.controller('editPaperManageCtrl',function($rootScope,$scope,$modal,$location
 			$scope.result= JSON.parse(execute_testPaper("update_paper",JSON.stringify(param)));
 			if($scope.result.ret=='success'){
 				toastr.success($scope.result.message);
-				/*$scope.lastUrl="../../page/setmodule/testPaperManage.html";
-				 $window.location.href=$scope.lastUrl;*/
+				history.go(-1);
 			}else{
 				toastr.error($scope.result.message);
 				console.log(JSON.stringify($scope.result.detail))
@@ -369,8 +371,8 @@ app.controller('editPaperManageCtrl',function($rootScope,$scope,$modal,$location
 app.controller('addSubjectModalCtrl',function($rootScope,$modalInstance,$scope,$modal,toastr,infos){
 	$scope.title="新增题目";
 	$scope.testInfo={
-		questionType:'3',
-		selType:'1',
+		questionType:'2',//(0单选，1多选，2判断，3数字)
+		selType:'0',
 		/*range:'A-D',*/
 		trueAnswer:'T'
 	}	
@@ -382,16 +384,16 @@ app.controller('addSubjectModalCtrl',function($rootScope,$modalInstance,$scope,$
 	//切换答案类型
 	$scope.changequesType=function(quesType){
 		$scope.testInfo.questionType=quesType;
-		if($scope.testInfo.questionType=='0'){
+		if($scope.testInfo.questionType=='-1'){
 			$scope.testInfo.trueAnswer='';
-			$scope.testInfo.selType="1";
+			$scope.testInfo.selType="0";
 			$scope.testInfo.range="A-D";
 			$scope.testInfo.selType1=angular.copy($scope.testInfo.selType);
 			$scope.testInfo.range1=angular.copy($scope.testInfo.range);
-		}else if($scope.testInfo.questionType=='3'){
+		}else if($scope.testInfo.questionType=='2'){
 			$scope.testInfo.trueAnswer='T';
 		}
-		else if($scope.testInfo.questionType=='1'){
+		else if($scope.testInfo.questionType=='3'){
 			$scope.testInfo.trueAnswer='';
 		}
 	}
@@ -410,17 +412,17 @@ app.controller('addSubjectModalCtrl',function($rootScope,$modalInstance,$scope,$
 	}
 	$scope.changeselType=function(selType){
 		$scope.testInfo.selType=selType;
-		if($scope.testInfo.questionType=='0'){			
+		if($scope.testInfo.questionType=='-1'){			
 			switch($scope.testInfo.selType)
 				{
-				case '1':
+				case '0':
 				 if($scope.testInfo.range=='A-D'){
 				 	$scope.pattern="/^(A|B|C|D)$/";
 				 }else{
 				 	$scope.pattern="/^[A-F]$/";
 				 }
 				  break;
-				case '2':
+				case '1':
 				  if($scope.testInfo.range=='A-D'){
 				 	$scope.pattern="/^[A-D]?+$/";
 				 }else{
@@ -434,17 +436,17 @@ app.controller('addSubjectModalCtrl',function($rootScope,$modalInstance,$scope,$
 	//检验对错
 	$scope.changeJudge=function(trueAnswer){
 		$scope.testInfo.trueAnswer=trueAnswer;
-		if($scope.testInfo.questionType=='0'){
+		if($scope.testInfo.questionType=='-1'){
 			switch($scope.testInfo.selType)
 				{
-				case '1':
+				case '0':
 				 if($scope.testInfo.range=='A-D'){
 				 	$scope.pattern="/^[a-zA-Z](A|B|C|D)$/";
 				 }else{
 				 	$scope.pattern="/^[a-zA-Z][A-F]$/";
 				 }
 				  break;
-				case '2':
+				case '1':
 				  if($scope.testInfo.range=='A-D'){
 				 	$scope.pattern="/^[a-zA-Z][ABCD]+$/";
 				 }else{
@@ -456,13 +458,13 @@ app.controller('addSubjectModalCtrl',function($rootScope,$modalInstance,$scope,$
 		}
 	}
 	$scope.ok = function() {
-			if($scope.testInfo.questionType=='0'){
+			if($scope.testInfo.questionType=='-1'){
 				switch($scope.testInfo.selType){
+					case '0':
+					$scope.testInfo.questionType='0';
+					break;
 					case '1':
 					$scope.testInfo.questionType='1';
-					break;
-					case '2':
-					$scope.testInfo.questionType='2';
 					break;
 				}
 			}
@@ -496,10 +498,10 @@ app.controller('editSubjectModalCtrl',function($rootScope,$modalInstance,$scope,
 		if(typeof $scope.testInfo.questionId=='string'){
 			$scope.testInfo.questionId=parseInt($scope.testInfo.questionId);
 		}		
-		if($scope.testInfo.questionType=='1'||$scope.testInfo.questionType=='2'){
+		if($scope.testInfo.questionType=='0'||$scope.testInfo.questionType=='1'){
 			$scope.testInfo.selType=$scope.testInfo.questionType;
 			$scope.testInfo.selType1=angular.copy($scope.testInfo.selType);
-			$scope.testInfo.questionType='0';
+			$scope.testInfo.questionType='-1';
 		}
 		$scope.testInfo.questionType1=angular.copy($scope.testInfo.questionType);
 		$scope.testInfo.range1=angular.copy($scope.testInfo.range);
@@ -507,16 +509,16 @@ app.controller('editSubjectModalCtrl',function($rootScope,$modalInstance,$scope,
 	//切换答案类型
 	$scope.changequesType=function(quesType){
 		$scope.testInfo.questionType=quesType;
-		if($scope.testInfo.questionType=='0'){
+		if($scope.testInfo.questionType=='-1'){
 			$scope.testInfo.trueAnswer='';
-			$scope.testInfo.selType="1";
+			$scope.testInfo.selType="0";
 			$scope.testInfo.range="A-D";
 			$scope.testInfo.selType1=angular.copy($scope.testInfo.selType);
 			$scope.testInfo.range1=angular.copy($scope.testInfo.range);
-		}else if($scope.testInfo.questionType=='3'){
+		}else if($scope.testInfo.questionType=='2'){
 			$scope.testInfo.trueAnswer='T';
 		}
-		else if($scope.testInfo.questionType=='1'){
+		else if($scope.testInfo.questionType=='3'){
 			$scope.testInfo.trueAnswer='';
 		}
 	}
@@ -553,19 +555,20 @@ app.controller('editSubjectModalCtrl',function($rootScope,$modalInstance,$scope,
 		}*/
 	}
 	//检验对错
+	//检验对错
 	$scope.changeJudge=function(trueAnswer){
 		$scope.testInfo.trueAnswer=trueAnswer;
-		if($scope.testInfo.questionType=='0'){
+		if($scope.testInfo.questionType=='-1'){
 			switch($scope.testInfo.selType)
 				{
-				case '1':
+				case '0':
 				 if($scope.testInfo.range=='A-D'){
 				 	$scope.pattern="/^[a-zA-Z](A|B|C|D)$/";
 				 }else{
 				 	$scope.pattern="/^[a-zA-Z][A-F]$/";
 				 }
 				  break;
-				case '2':
+				case '1':
 				  if($scope.testInfo.range=='A-D'){
 				 	$scope.pattern="/^[a-zA-Z][ABCD]+$/";
 				 }else{
@@ -581,13 +584,13 @@ app.controller('editSubjectModalCtrl',function($rootScope,$modalInstance,$scope,
 		if(typeof $scope.testInfo.questionId=='number'){
 			$scope.testInfo.questionIds=parseInt($scope.testInfo.questionId);
 		}
-		if($scope.testInfo.questionType=='0'){
+		if($scope.testInfo.questionType=='-1'){
 			switch($scope.testInfo.selType){
+				case '0':
+				$scope.testInfo.questionType='0';
+				break;
 				case '1':
 				$scope.testInfo.questionType='1';
-				break;
-				case '2':
-				$scope.testInfo.questionType='2';
 				break;
 			}
 		}
@@ -933,22 +936,22 @@ app.filter('questionType', function() {
 	return function(questionType) {
 		var statename = '';
 		switch(questionType) {
-			case '3':
+			case '2':
 				{
 					statename = '判断';
 					break;
 				}
-			case '1':
+			case '0':
 				{
 					statename = '单选';
 					break;
 				}
-			case '2':
+			case '1':
 				{
 					statename = '多选';
 					break;
 				}
-			case '4':
+			case '3':
 				{
 					statename = '数字';
 					break;
