@@ -22,4 +22,9 @@ public interface VoteService {
 	Result getVote();
     Result stopVote();
     Result startVote(int questionNum);
+	/**
+	 * 获取投票主题
+	 * @return
+	 */
+	Result getVoteTitleInfo();
 }

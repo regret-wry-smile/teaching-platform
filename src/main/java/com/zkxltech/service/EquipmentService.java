@@ -51,4 +51,7 @@ public interface EquipmentService {
     public Result get_wireless_student_id_info() ;
     /**设备和数据库绑定的状态同步*/
     public Result equipmentDatabaseSynchronization();
+    
+    /** 开始答题 */
+    public Result answerStart2(Object param);
 }

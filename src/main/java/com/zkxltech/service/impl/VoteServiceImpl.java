@@ -32,9 +32,9 @@ public class VoteServiceImpl implements VoteService{
                result.setMessage(reStart.getMessage());
                return result;
             }
-			RedisMapVote.clearMap();//清除评分缓存
+			RedisMapVote.clearMap();//清除投票缓存
 				
-			RedisMapVote.addVoteInfo(vote); //保存评分主题信息
+			RedisMapVote.addVoteInfo(vote); //投票评分主题信息
 			
 			//将评分主题相关信息保存到缓存
 			result.setMessage("开始投票！");
@@ -118,4 +118,21 @@ public class VoteServiceImpl implements VoteService{
         r.setMessage("发送成功");
         return r;
     }
+	
+	@Override
+	public Result getVoteTitleInfo() {
+		result = new Result();
+		try {
+			result.setItem(RedisMapVote.getVoteInfo()); //保存评分主题信息
+			result.setRet(Constant.SUCCESS);
+			result.setMessage("获取投票主题成功！");
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("获取投票主题失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
+	}
+	
 }
