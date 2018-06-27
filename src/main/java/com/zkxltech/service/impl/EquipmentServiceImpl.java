@@ -132,24 +132,13 @@ public class EquipmentServiceImpl implements EquipmentService{
         Result r = new Result();
         r.setRet(Constant.ERROR);
         try {
-            //EquipmentParam ep =  (EquipmentParam) com.zkxltech.ui.util.StringUtils.parseJSON(param, EquipmentParam.class);
-//            if (ep.getModel()== null) {
-//                r.setMessage("缺少参数");
-//                return r;
-//            }
             int bind_start = ScDll.intance.wireless_bind_start(1,"") ;
             if (bind_start < 1) {
                 r.setMessage("操作失败");
                 return r;
             }
-            //FIXME
-            /**查询学生信息*/
+            /**根据班级id查询学生信息*/
             StudentInfoServiceImpl sis= new StudentInfoServiceImpl();
-//            StudentInfo si =  (StudentInfo) com.zkxltech.ui.util.StringUtils.parseJSON(param, StudentInfo.class);
-//            if (StringUtils.isBlank(si.getClassId())) {
-//                r.setMessage("参数为空:班级id");
-//                return r;
-//            }
             Result result = sis.selectStudentInfo(param);
             List<StudentInfo> studentInfos = (List)result.getItem();
             if (result== null || ListUtils.isEmpty(studentInfos)) {
@@ -157,15 +146,35 @@ public class EquipmentServiceImpl implements EquipmentService{
                 return r;
             }
             /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
-            Map<Object, List<StudentInfo>> studentInfoMap = ListUtils.getClassificationMap(studentInfos, "iclickerId");
+            Map<String, StudentInfo> studentInfoMap = new HashMap<>();
+            /**按绑定状态进行分类*/
+            int bind = 0,notBind = 0 ;
+            for (StudentInfo studentInfo : studentInfos) {
+                String iclickerId = studentInfo.getIclickerId();
+                String status = studentInfo.getStatus();
+                if (StringUtils.isBlank(iclickerId)) {
+                    r.setMessage("学生:"+studentInfo.getStudentName()+",的答题器编号不能为空");
+                    return r;
+                }
+                if (StringUtils.isBlank(status)) {
+                    r.setMessage("学生:"+studentInfo.getStudentName()+",的绑定状态不能为空");
+                    return r;
+                }
+                studentInfoMap.put(iclickerId, studentInfo);
+                if (studentInfo.getStatus().equals(Constant.BING_YES)) {
+                    ++bind;
+                }else{
+                    ++notBind;
+                }
+            }
             /**存入静态map*/
             //每次调用绑定方法先清空,再存
-            RedisMapBind.clearCardIdSet();
+            RedisMapBind.clearCardIdMap();
             RedisMapBind.clearBindMap();
             RedisMapBind.getBindMap().put("studentName", null);
             RedisMapBind.getBindMap().put("code", bind_start);
-            RedisMapBind.getBindMap().put("accomplish", 0);
-            RedisMapBind.getBindMap().put("notAccomplish",studentInfos.size());
+            RedisMapBind.getBindMap().put("accomplish", bind);
+            RedisMapBind.getBindMap().put("notAccomplish",notBind);
             RedisMapBind.setStudentInfoMap(studentInfoMap);
             t = new CardInfoThread();
             t.start();
