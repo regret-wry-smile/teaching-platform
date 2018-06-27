@@ -605,15 +605,9 @@ public class EquipmentServiceImpl implements EquipmentService{
         r.setMessage("发送失败");
         return r;
     }
-    public Result voteStart(Object param) {
+    public Result scoreStart(int questionNum) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
-        JSONObject jo = JSONObject.fromObject(param);
-        if (!jo.containsKey("questionNum")) {
-            r.setMessage("缺少问题数量的参数");
-            return r;
-        }
-        int questionNum = jo.getInt("questionNum");
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("[");
         for (int i = 0; i < questionNum; i++) {

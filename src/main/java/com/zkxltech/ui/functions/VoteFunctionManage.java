@@ -32,7 +32,7 @@ public class VoteFunctionManage extends BrowserFunction{
 				result = service.selectStudentInfo(param);
 				break;
 			case "vote_start":
-			    EquipmentServiceImpl.getInstance().voteStart(param);
+			    //EquipmentServiceImpl.getInstance().voteStart(param);
                 break;
 			default:
 				result.setRet(Constant.ERROR);
