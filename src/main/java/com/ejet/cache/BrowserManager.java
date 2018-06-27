@@ -151,4 +151,22 @@ public class BrowserManager {
 			});
 		}
 	}
+	
+	/**
+	 * 刷新投票数据
+	 * @param echoRequest
+	 */
+	public static void refresVote() {
+		Browser b  = browerManager.get();
+		if (b!=null) {
+			shell.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					boolean  doRet = b.execute("document.getElementById('refresVote').click();");
+					log.info("刷新投票数据："+doRet);
+				}
+			});
+		}
+	}
+	
 }
