@@ -6,6 +6,7 @@ import org.eclipse.swt.browser.BrowserFunction;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.StudentInfoService;
+import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
@@ -30,6 +31,9 @@ public class VoteFunctionManage extends BrowserFunction{
 				StudentInfoService service = new StudentInfoServiceImpl();
 				result = service.selectStudentInfo(param);
 				break;
+			case "vote_start":
+			    EquipmentServiceImpl.getInstance().voteStart(param);
+                break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");

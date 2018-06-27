@@ -23,6 +23,7 @@ import com.zkxlteck.scdll.AnswerThread;
 import com.zkxlteck.scdll.AttendanceThread;
 import com.zkxlteck.scdll.CardInfoThread;
 import com.zkxlteck.scdll.ScDll;
+import com.zkxlteck.scdll.ScoreThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -602,6 +603,48 @@ public class EquipmentServiceImpl implements EquipmentService{
             return r;
         }
         r.setMessage("发送失败");
+        return r;
+    }
+    public Result voteStart(Object param) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        JSONObject jo = JSONObject.fromObject(param);
+        if (!jo.containsKey("questionNum")) {
+            r.setMessage("缺少问题数量的参数");
+            return r;
+        }
+        int questionNum = jo.getInt("questionNum");
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append("[");
+        for (int i = 0; i < questionNum; i++) {
+          strBuilder.append("{");
+          String id = String.valueOf(i+1);
+          String type = "d";
+          String range = "";
+          try {
+            range = "0-9";
+          } catch (Exception e2) {
+            range = "";
+          }
+          strBuilder.append("'id':'"+id+"',");
+          strBuilder.append("'type':'"+type+"',");
+          strBuilder.append("'range':'"+range+"'");
+          strBuilder.append("}");
+          
+          if (questionNum-1 != i) {
+            strBuilder.append(",");
+          }
+        }
+        strBuilder.append("]");
+        int answer_start = ScDll.intance.answer_start(0, strBuilder.toString());
+        if (answer_start == ERROR) {
+            r.setMessage("指令发送失败");
+            return r;
+        }
+        t = new ScoreThread();
+        t.start();
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("发送成功");
         return r;
     }
 }
