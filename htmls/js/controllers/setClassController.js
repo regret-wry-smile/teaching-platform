@@ -160,6 +160,22 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 			$window.location.href =$scope.objectUrl;*/
 		}else{
 			toastr.error($scope.result.message);	
+			return false;
+		}
+	}
+	//抢答
+	$scope.quickAnswer=function(){
+		var param={
+			classId:$scope.classesobject.key
+		}
+		$scope.result=JSON.parse(execute_preemptive("quick_answer",JSON.stringify(param)));
+		console.log(JSON.stringify($scope.result))
+		if($scope.result.ret=='success'){
+			toastr.success($scope.result.message);
+			$scope.objectUrl = '../../page/answermoudle/stopAnswer.html';
+			$window.location.href =$scope.objectUrl;
+		}else{			
+			toastr.error($scope.result.message);	
 		}
 	}
 })
@@ -195,8 +211,7 @@ app.config(['$locationProvider', function($locationProvider) {
 	});
 }]);
 //设置签到控制器
-app.controller('setSignCtrl', function($rootScope,$scope,$modal,toastr,$location,$window) {
-	alert(777)
+/*app.controller('setSignCtrl', function($rootScope,$scope,$modal,toastr,$location,$window) {
 	if($location.search()){
 		$scope.classInfo=$location.search();
 		console.log(JSON.stringify($location.search()))
@@ -206,23 +221,67 @@ app.controller('setSignCtrl', function($rootScope,$scope,$modal,toastr,$location
 		var param={
 			classId:$scope.classInfo.classId
 		}
-		//$scope.result=JSON.parse(execute_attendance("sign_in_start",JSON.stringify(param)));
-		//if($scope.result.ret=='success'){
-			//toastr.success($scope.result.message);
-			//console.log(JSON.stringify($scope.result))
-			//$scope.param = "classId=" + $scope.setClass.classesobject.key + "&className=" + $scope.setClass.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
-		//console.log(JSON.stringify($scope.param))
-		//$scope.objectUrl = '../../page/answermoudle/answerCenter.html' + '?' + $scope.param;
+		$scope.result=JSON.parse(execute_attendance("sign_in_start",JSON.stringify(param)));
+		if($scope.result.ret=='success'){
+			toastr.success($scope.result.message);
+			console.log(JSON.stringify($scope.result))
+			$scope.param = "classId=" + $scope.setClass.classesobject.key + "&className=" + $scope.setClass.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
+		console.log(JSON.stringify($scope.param))
+		$scope.objectUrl = '../../page/answermoudle/userAttend.html' + '?' + $scope.param;
 			$window.location.href = "../../page/answermoudle/userAttend.html";
-		/*}else{
+		}else{
 			toastr.error($scope.result.message);	
-		}*/
+		}
 	}
-})
+})*/
 app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
+	$scope.studentAttendList=[];//签到学生数组
+	$scope.studentAttendList=JSON.parse(execute_attendance("get_sign_in"));
+	console.log("哈哈哈"+JSON.stringify($scope.studentAttendList))
+	/*for(var i=0;i<120;i++){
+		var item={
+			studentName:"张三",
+			status:"NO"
+		}
+		$scope.studentAttendList.push(item);
+	}*/
+})
+app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$interval) {
+	$scope.studentName='';//抢答数据
+	var myTimer;
+	$scope.time=3;
+	var _stopAnswer=function(){
+		if($scope.time<=0||($scope.studentName&&$scope.studentName!="抢答中")){
+		$interval.cancel(myTimer); 
+		}
+	}
+	//定时器
+	myTimer = $interval(function(){	
+		$scope.result=JSON.parse(execute_preemptive("get_quick_answer_studentName"));
+		$scope.time=$scope.time-1;
+		console.log(JSON.stringify($scope.result))
+		if(JSON.stringify($scope.result)!="{}"){
+			$scope.studentName=$scope.result.studentName;
+			_stopAnswer();
+		}else{
+			console.log($scope.time)		
+			if($scope.time<1){
+				$scope.studentName="抢答中...";
+			}	
+		}
+	},1000);
+	
+	
+	$scope.stopAnswer = function(){
+		 //关闭定时器
+		$interval.cancel(myTimer); 
+	};
+	
+	$scope.$on('$destroy',function(){
+        $interval.cancel(myTimer);
+    })
 	
 })
-
 app.directive('select', function() {
 	return {
 		restrict: 'A',

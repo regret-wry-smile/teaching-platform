@@ -34,8 +34,7 @@
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/menu.png" class="ml25 pt20" />
-					<span class="mr10">答案</span>
-					<span>D</span>
+					<span class="mr10">人员列表</span>
 				</div>
 				<div class="pull-right">
 					<a href="javascript:history.go(-1);">
@@ -44,12 +43,11 @@
 					</a>
 				</div>
 			</div>
-			<div class="content clearfix">
-				<div class="modboxs clearfix ml20 mr20" style="margin:0;padding: 0;">
-					<div class="box">张三</div>
-					<div class="box">张三</div>
-					<div class="box">张三</div>
-					<div class="box">张三</div>
+			<div class="content clearfix" style="margin: 0;padding: 0;position: relative;">
+				<div class="modboxs clearfix " style="margin: 0.0rem 0.05rem;padding: 0;position: absolute;left: 0.18rem;">
+					<div class="box" ng-repeat="item in studentAttendList track by $index" ng-class="{'YES':'green','NO':'' }[item.status]">
+						{{item.studentName}}
+					</div>
 			  	</div>
 			</div>
 			<div ng-spinner-loader class="loading">
