@@ -23,9 +23,11 @@
 		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
 		<script src="../../js/jquery.nicescroll.min.js"></script>
 		<script src="../../js/common.js"></script>
+		<script src="../../js/vconsole.min.js"></script>
+		<script src="../../js/ui-validate.js"></script>
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<script type="text/javascript" src="../../js/app.js" ></script>
-		<script src="../../js/controllers/setquickMarkController.js"></script>
+		<script src="../../js/controllers/setvoteController.js"></script>
 		<!--<script src="../../js/controllers/uploadfileModalCtrl.js"></script>-->
 		  <!--[if IE 8]>
         <script src="js/es5-shim.min.js"></script>        
@@ -47,7 +49,7 @@
 			margin-right: 0.10rem;
 		}
 	</style>
-	<body class="bg" ng-controller="quickMarkCountCtrl">
+	<body class="bg" ng-controller="quickVoteCountCtrl">
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/stars.png" class="ml25 pt20" />
@@ -59,35 +61,35 @@
 			</div>
 			<div class="content  clearfix">	
 				<div class="pannel clearfix" style="height: 100%;">
-				<div class="col-sub pull-left" style="width: 48%;">
+				<div class="col-sub pull-left" style="width: 40%;">
 					<div class="text clearfix">
 						<label class="pull-left">投票主题:</label>
 						<div class="pull-left" style="width: 80%; vertical-align: middle;margin-top: 0.07rem;">
-							<p class="con">哈哈哈啊哈哈哈哈啊哈哈哈哈啊哈哈哈哈啊哈</p>
+							<p class="con">{{voteInfo.title}}</p>
 						</div>
 					</div>
 					<div class="text clearfix">
 						<label class="pull-left">投票内容:</label>
 						<div class="pull-left" style="width: 80%; vertical-align: middle;margin-top: 0.07rem;">
-							<p class="con">哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈啊哈哈哈哈啊哈哈哈哈啊哈</p>
+							<p class="con">{{voteInfo.describe}}</p>
 						</div>
 					</div>
 				</div>
-				<div class="col-main pull-left" style="width: 52%;height: 3.0rem;margin-top: -0.5rem;">
+				<div class="col-main pull-left" style="width: 60%;height: 3.2rem;margin-top: -0.5rem;">
 				<div id="coutbar" class="clearfix" style="height: 100%;"></div>
 				</div>
 				</div>
 			</div>
 			<div class="operatebtn text-center pt20">
-				<span>反对:100</span>
-				<span>赞成:52人</span>
-				<span>弃权:80</span>
+				<button class="btn savebtn" ng-click="stopVoteCount()">停止投票</button>
 			</div>
+			<div id= "refresVote" ng-click="refresVote()" style="display:none"></div>
+			
 	</body>
 </html>
 
-<script src="../../js/echarts.simple.min.js"></script>
-<script type="text/javascript">
+<script src="../../js/echarts.min.js"></script>
+<!--<script type="text/javascript">
 	var dom = document.getElementById("coutbar");
 	var myChart = echarts.init(dom);
 	var colors = ['#5793f3', '#d14a61', '#675bba'];
@@ -183,5 +185,5 @@
 };
 if(option && typeof option === "object") {
 	myChart.setOption(option, true);
-}
+}-->
 </script>

@@ -34,17 +34,6 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 			toastr.error($scope.result.message);
 		}
 	};
-	//切换班级
-	$scope.changeClass=function(classes){
-		$scope.setClass.classes=classes;
-		angular.forEach($scope.classList,function(i){
-			if($scope.setClass.classes==i.key){
-				$scope.classesobject=i;
-				console.log(JSON.stringify($scope.classesobject))
-			}
-		})
-		
-	}
 	//查询科目
 	var _getsubject=function(){
 		$scope.subjectlists= JSON.parse(execute_testPaper("get_subject"));
@@ -53,27 +42,10 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 			$scope.setClass.subject1=angular.copy($scope.setClass.subject);
 		}
 	}
-	//切换科目
-	$scope.changeSubject=function(subject){
-		$scope.setClass.subject	=subject;
-	}
-	
-	//查询当前上课班级
-	var _isStartClass=function(){
-		$scope.result=JSON.parse(execute_record("get_classInfo"));
-		console.log("巴巴爸爸"+JSON.stringify($scope.result))
-		if($scope.result.ret=='success'&&$scope.result.item){
-			$scope.curclassName=$scope.result.item.className;
-		}else{
-			$scope.curclassName="";
-		}
-	}
-	
-	
 	//查询课程
 	var _selectClassHour=function(){
 		$scope.result=JSON.parse(execute_record("select_class_hour",$scope.setClass.classes,$scope.setClass.subject));
-		console.log(JSON.stringify($scope.result))
+		//console.log(JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){			
 			if($scope.result.item.length>0){
 				angular.forEach($scope.result.item,function(i){
@@ -90,6 +62,33 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 			}
 		}else{
 			toastr.error($scope.result.message);
+		}
+	}
+	//切换班级
+	$scope.changeClass=function(classes){
+		$scope.setClass.classes=classes;
+		angular.forEach($scope.classList,function(i){
+			if($scope.setClass.classes==i.key){
+				$scope.classesobject=i;
+				$scope.classhourList=[];
+				_selectClassHour();
+			}
+		})
+		
+	}
+	//切换科目
+	$scope.changeSubject=function(subject){
+		$scope.setClass.subject	=subject;
+	}
+	
+	//查询当前上课班级
+	var _isStartClass=function(){
+		$scope.result=JSON.parse(execute_record("get_classInfo"));
+		console.log("巴巴爸爸"+JSON.stringify($scope.result))
+		if($scope.result.ret=='success'&&$scope.result.item){
+			$scope.curclassName=$scope.result.item.className;
+		}else{
+			$scope.curclassName="";
 		}
 	}
 	//切换课程
@@ -121,6 +120,7 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 			}
 		});
 		modalInstance.result.then(function(info) {
+			$scope.classhourList=[];
 			_selectClassHour();
 		}, function() {
 			//$log.info('Modal dismissed at: ' + new Date());

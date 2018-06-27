@@ -289,12 +289,12 @@ button.btnfff:after{
 }
 button.circlefff{
 	border: 3px solid #dedede;
-	width: 1.0rem;
-	height: 1.0rem;
+	width: 1.5rem;
+	height: 1.5rem;
 	border-radius: 100%;
 	background: #fff;
 	color: #90a4cc;
-	font-size: 0.25rem;
+	font-size: 0.30rem;
 }
 button.circlefff:hover{
 	opacity: 0.8;

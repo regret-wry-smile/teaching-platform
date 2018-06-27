@@ -64,26 +64,24 @@
 					<div class="text clearfix">
 						<label class="pull-left">评分主题:</label>
 						<div class="pull-left" style="width: 80%; vertical-align: middle;margin-top: 0.07rem;">
-							<p class="con">{{markInfo.program}}</p>
+							<p class="con">{{markInfo.title}}</p>
 						</div>
 					</div>
 					<div class="text clearfix">
 						<label class="pull-left">评分内容:</label>
 						<div class="pull-left" style="width: 80%; vertical-align: middle;margin-top: 0.07rem;">
-							<p class="con">哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈哈啊哈哈哈哈啊哈哈哈哈啊哈哈哈哈啊哈</p>
+							<p class="con">{{markInfo.describe}}</p>
 						</div>
 					</div>
 				</div>
-				<div class="col-main pull-left" style="width: 60%;height: 4.0rem;margin-top: -0.5rem;">
+				<div class="col-main pull-left" style="width: 60%;height: 3.2rem;margin-top: -0.5rem;">
 				<div id="coutbar" class="clearfix" style="height: 100%;"></div>
 				</div>
 				</div>
 			</div>
-			<!--<div class="operatebtn text-center pt20">
-				<span>总分数:{{markInfo.total}}</span>
-				<span>总人数:{{markInfo.peopleSum}}人</span>
-				<span>平均分:{{average}}</span>
-			</div>-->
+			<div class="operatebtn text-center pt20">
+				<button class="btn savebtn" ng-click="stopMarkCount()">停止评分</button>
+			</div>
 		
 		<div id= "refresScore" ng-click="refresScore()" style="display:none"></div>
 	</body>

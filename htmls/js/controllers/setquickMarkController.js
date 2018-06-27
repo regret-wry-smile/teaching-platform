@@ -30,6 +30,7 @@ app.controller('quickMarkCtrl', function($rootScope,$scope,$modal,toastr) {
 			window.location.href="../../page/answermoudle/markCount.html";
 		}else{
 			toastr.error($scope.result.message);
+			window.location.href="../../page/answermoudle/markCount.html";
 		}
 	}
 	//返回设置页面
@@ -40,6 +41,16 @@ app.controller('quickMarkCtrl', function($rootScope,$scope,$modal,toastr) {
 })
 //评分统计控制器
 app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
+	$scope.markInfo={};
+	var _getScoreTitleInfo=function(){
+		$scope.result=JSON.parse(execute_score("get_scoreTitleInfo"));
+		if($scope.result.ret=='success'&&$scope.result.item){		
+			$scope.markInfo=$scope.result.item;
+			console.log($scope.result);
+		}else{
+			toastr.error($scope.result.message);			
+		}		
+	}
 	var dom = document.getElementById("coutbar");
 	var myChart = echarts.init(dom);
 	$scope.markInfoslist=[];
@@ -56,7 +67,8 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		}
 	}
 	var _init=function(){
-		_getscore();
+		_getScoreTitleInfo();
+		_getscore();		
 	}();
 	//$scope.markInfoslist=[{"num":"1","peopleSum":5,"program":"1","total":100},{"num":"2","peopleSum":1,"program":"2","total":89},{"num":"3","peopleSum":3,"program":"3","total":79},{"num":"4","peopleSum":4,"program":"f","total":79},{"num":"5","peopleSum":"2","program":"g","total":79}]
 	$scope.$watch('markInfoslist',function(newvalue,oldvalue){
@@ -69,7 +81,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		$scope.colors.push(i);
 		
 		$scope.titleList.push($scope.markInfoslist[i].program);	
-		console.log("头部"+JSON.stringify($scope.titleList))
+		//console.log("头部"+JSON.stringify($scope.titleList))
 		var average=($scope.markInfoslist[i].total/$scope.markInfoslist[i].peopleSum).toFixed(1);
 		
 			var item={
@@ -91,7 +103,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	    		
 	            data:[$scope.markInfoslist[i].total,$scope.markInfoslist[i].peopleSum,average],
 			}
-			
+			$scope.data=[];
 			$scope.data.push(item);
 			
 		}
@@ -180,6 +192,16 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	//刷新评分
 	$scope.refresScore=function(){
 		_getscore();
+	}
+	//停止评分
+	$scope.stopMarkCount=function(){
+		$scope.result=JSON.parse(execute_score("stop_score"));
+		//console.log(JSON.stringify($scope.result))
+		if($scope.result.ret=='success'){	
+			toastr.success($scope.result.message);
+		}else{
+			toastr.error($scope.result.message);
+		}
 	}
 	//返回设置页面
 	$scope.returnPage=function(){
