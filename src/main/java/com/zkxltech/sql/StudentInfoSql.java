@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
@@ -193,16 +194,26 @@ public class StudentInfoSql {
 		}
 		return DBHelper.onUpdateByGroup(sqls);
 	}
+	public Result updateStatusByIclickerIds(List<String> uidList,String status) {
+	    return updateStatusByIclickerIds(uidList, status, "in");
+	}
 
-    public Result updateStatusByIclickerIds(List<String> uidList,String status) {
+    public Result updateStatusByIclickerIds(List<String> uidList,String status,String inOrNotIN) {
         if (StringUtils.isEmpty(status)) {
             Result r = new Result();
             r.setRet(Constant.ERROR);
             r.setMessage("缺少参数 :绑定状态不能为空");
             return r;
         }
+        if (ListUtils.isEmpty(uidList)) {
+            Result r = new Result();
+            r.setRet(Constant.ERROR);
+            r.setMessage("缺少参数 :卡的编号不能为空");
+            return r;
+        }
+        
         //update student_info set status = '0' where iclicker_id in('3429469477','6666660002','************')
-        StringBuilder sb = new StringBuilder("update student_info set status = "+status+" where iclicker_id in(");
+        StringBuilder sb = new StringBuilder("update student_info set status = "+status+" where iclicker_id "+inOrNotIN+"(");
         for (int i = 0; i< uidList.size();i++) {
             sb.append(uidList.get(i));
             if (i != uidList.size()-1) {
@@ -210,6 +221,17 @@ public class StudentInfoSql {
             }
         }
         sb.append(")");
+        return dbHelper.onUpdate(sb.toString(), null);
+    }
+
+    public Result updateStatus(String status) {
+        if (StringUtils.isEmpty(status)) {
+            Result r = new Result();
+            r.setRet(Constant.ERROR);
+            r.setMessage("缺少参数 :绑定状态不能为空");
+            return r;
+        }
+        String sb ="update student_info set status = "+status;
         return dbHelper.onUpdate(sb.toString(), null);
     }
 }
