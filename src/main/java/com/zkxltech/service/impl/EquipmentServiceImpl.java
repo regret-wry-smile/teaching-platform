@@ -108,10 +108,10 @@ public class EquipmentServiceImpl implements EquipmentService{
                 return r;
             }
             StudentInfoSql studentInfoSql = new StudentInfoSql();
-            Result result = studentInfoSql.updateByIclickerIds(uids);
+            Result result = studentInfoSql.updateStatusByIclickerIds(uids,Constant.BING_NO);
             if (result.getRet().equals(Constant.ERROR)) {
                 r.setRet(Constant.ERROR);
-                r.setMessage("清除白名单失败");
+                r.setMessage(result.getMessage());
                 return r;
             }
             int clear_wl = ScDll.intance.clear_wl();
