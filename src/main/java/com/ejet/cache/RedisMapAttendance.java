@@ -36,8 +36,11 @@ public class RedisMapAttendance {
             cardIdSet.add(card_id);
             Map<String, String> map = attendanceMap.get(card_id);
             for (String key : map.keySet()) {
-                map.put(key, Constant.ATTENDANCE_YES);
+                if (key.equals("status")) {
+                    map.put(key, Constant.ATTENDANCE_YES);
+                }
             }
+            BrowserManager.refresAttendance();
         }
     }
 	public static String getAttendance(){

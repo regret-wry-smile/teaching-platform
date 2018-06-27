@@ -6,9 +6,8 @@ import org.eclipse.swt.browser.BrowserFunction;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.SettingService;
-import com.zkxltech.service.StudentInfoService;
+import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.SettingServiceImpl;
-import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
 
@@ -47,6 +46,10 @@ public class SetFunctionManage extends BrowserFunction{
 			case "set_default":
 				result = settingService.setDefault();
 				break;
+			case "equipment_database_synchronization":
+			    /* 同步设备和数据库中卡对应的学生的绑定状态*/
+			    result = EquipmentServiceImpl.getInstance().equipmentDatabaseSynchronization();
+                break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");

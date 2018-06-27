@@ -13,6 +13,7 @@ import com.ejet.cache.RedisMapQuick;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.EquipmentParam;
 import com.zkxltech.domain.Result;
@@ -22,6 +23,7 @@ import com.zkxltech.sql.StudentInfoSql;
 import com.zkxlteck.scdll.AnswerThread;
 import com.zkxlteck.scdll.AttendanceThread;
 import com.zkxlteck.scdll.CardInfoThread;
+import com.zkxlteck.scdll.QuickThread;
 import com.zkxlteck.scdll.ScDll;
 import com.zkxlteck.scdll.ScoreThread;
 
@@ -47,13 +49,13 @@ public class EquipmentServiceImpl implements EquipmentService{
     /*抢答用-判断答案*/
     public static final String TYPE_JUDGE = "JUDGE";
     /*抢答用-字符答案*/
-    public static final String QUICK_CHAR = "[{'type':'s','id':'0002','range':'A-F'}]";
+    public static final String QUICK_CHAR = "[{'type':'s','id':'1','range':'A-F'}]";
     /*抢答用-数字答案*/
-    public static final String QUICK_NUMBER = "[{'type':'d','id':'0002','range':'0-9'}]";
+    public static final String QUICK_NUMBER = "[{'type':'d','id':'1','range':'0-9'}]";
     /*抢答用-判断答案*/
-    public static final String QUICK_JUDGE = "[{'type':'j','id':'0002','range':''}]";
+    public static final String QUICK_JUDGE = "[{'type':'j','id':'1','range':''}]";
     /*抢答用-无答案*/
-    public static final String QUICK_COMMON = "[{'type':'g','id':'0002','range':''}]";
+    public static final String QUICK_COMMON = "[{'type':'g','id':'1','range':''}]";
     public Thread t ;
     private static final EquipmentServiceImpl SINGLE = new EquipmentServiceImpl();  
     
@@ -78,40 +80,22 @@ public class EquipmentServiceImpl implements EquipmentService{
     /**清除白名单*/
     @Override
     public Result clearWl(Object param) {
-        //FIXME 增加事务
         Result r = new Result();
         r.setRet(Constant.ERROR);
-        String get_device_info = ScDll.intance.get_device_info();
-        if (StringUtils.isBlank(get_device_info)) {
-            r.setMessage("设备故障,请重启设备");
-            return r;
-        }
         JSONObject jsono = JSONObject.fromObject(param);
         if (!jsono.containsKey("classId")) {
             r.setMessage("缺少班级id参数");
             return r;
         }
-        List<String> uids = new ArrayList<>();
-        Object list = JSONObject.fromObject(get_device_info).get("list");
-        JSONArray jsonArray = JSONArray.fromObject(list);
-        for (Object object : jsonArray) {
-            JSONObject jo = JSONObject.fromObject(object);
-            String uid = jo.getString("uid");
-            if (!StringUtils.isBlank(uid)) {
-                uids.add(uid);
-            }
+        String get_device_info = ScDll.intance.get_device_info();
+        if (StringUtils.isBlank(get_device_info)) {
+            r.setMessage("设备故障,请重启设备");
+            return r;
         }
         try {
-            if (ListUtils.isEmpty(uids)) {
-                r.setRet(Constant.SUCCESS);
-                r.setMessage("清除成功");
-                return r;
-            }
             StudentInfoSql studentInfoSql = new StudentInfoSql();
-            Result result = studentInfoSql.updateByIclickerIds(uids);
-            if (result.getRet().equals(Constant.ERROR)) {
-                r.setRet(Constant.ERROR);
-                r.setMessage("清除白名单失败");
+            r = studentInfoSql.updateStatus(Constant.BING_NO);
+            if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }
             int clear_wl = ScDll.intance.clear_wl();
@@ -127,6 +111,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         r.setMessage("清除失败");
         return r;
     }
+    
     @Override
     public Result bindStart(Object param) {
         Result r = new Result();
@@ -134,7 +119,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         try {
             int bind_start = ScDll.intance.wireless_bind_start(1,"") ;
             if (bind_start < 1) {
-                r.setMessage("操作失败");
+                r.setMessage("指令发送失败");
                 return r;
             }
             /**根据班级id查询学生信息*/
@@ -282,7 +267,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         int answer_stop = ScDll.intance.answer_stop();
         if (answer_stop == SUCCESS) {
             //FIXME
-            if (t != null) {
+            if (t != null && t instanceof AnswerThread) {
                 AnswerThread m = (AnswerThread)t;
                 m.setFLAG(false);
             }
@@ -480,31 +465,32 @@ public class EquipmentServiceImpl implements EquipmentService{
         //int sign_in_start = ScDll.intance.sign_in_start();
         //开始签到接口有问题,暂用按任意键
         int answer_start = ScDll.intance.answer_start(0, Constant.ANSWER_STR);
-        if (answer_start == SUCCESS) {
-            //每次调用签到先清空数据
-            RedisMapAttendance.clearAttendanceMap();
-            RedisMapAttendance.clearCardIdSet();
-            StudentInfoServiceImpl si = new StudentInfoServiceImpl();
-            Result result = si.selectStudentInfo(param);
-            List<StudentInfo> studentInfos = (List)result.getItem();
-            if (result== null || ListUtils.isEmpty(studentInfos)) {
-                r.setMessage("您还未上传学生信息");
-                return r;
-            }
-            /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
-            for (StudentInfo studentInfo : studentInfos) {
-                Map<String, String> studentInfoMap = new HashMap<>();
-                studentInfoMap.put("studentName", studentInfo.getStudentName());
-                studentInfoMap.put("status", Constant.ATTENDANCE_NO);
-                RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
-            }
-            t = new AttendanceThread();
-            t.start();
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("操作成功");
+        if (answer_start == ERROR) {
+            r.setMessage("指令发送失败");
             return r;
         }
-        r.setMessage("操作失败");
+        //每次调用签到先清空数据
+        RedisMapAttendance.clearAttendanceMap();
+        RedisMapAttendance.clearCardIdSet();
+//        StudentInfoServiceImpl si = new StudentInfoServiceImpl();
+//        Result result = si.selectStudentInfo(param);
+//        List<StudentInfo> studentInfos = (List)result.getItem();
+        List<StudentInfo> studentInfos = Global.getStudentInfos();
+        if (ListUtils.isEmpty(studentInfos)) {
+            r.setMessage("未获取到学生信息");
+            return r;
+        }
+        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+        for (StudentInfo studentInfo : studentInfos) {
+            Map<String, String> studentInfoMap = new HashMap<>();
+            studentInfoMap.put("studentName", studentInfo.getStudentName());
+            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
+            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
+        }
+        t = new AttendanceThread();
+        t.start();
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("操作成功");
         return r;
     }
 
@@ -596,15 +582,14 @@ public class EquipmentServiceImpl implements EquipmentService{
             //开始答题前先清空
             RedisMapQuick.clearQuickMap();
             RedisMapQuick.clearStudentInfoMap();
-            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
-            Result result = impl.selectStudentInfo(param);
-            List<Object> item = (List<Object>) result.getItem();
-            for (Object object : item) {
-                StudentInfo studentInfo =  (StudentInfo) com.zkxltech.ui.util.StringUtils.parseJSON(object, StudentInfo.class);
-                RedisMapQuick.getStudentInfoMap().put("studentName", studentInfo.getStudentName());
-                RedisMapQuick.getStudentInfoMap().put("iclickerId", studentInfo.getIclickerId());
+//            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
+//            Result result = impl.selectStudentInfo(param);
+//            List<Object> item = (List<Object>) result.getItem();
+            List<StudentInfo> studentInfos = Global.getStudentInfos();
+            for (StudentInfo studentInfo : studentInfos) {
+                RedisMapQuick.getStudentInfoMap().put(studentInfo.getIclickerId(), studentInfo);
             }
-            t = new AnswerThread();
+            t = new QuickThread();
             t.start();
             r.setRet(Constant.SUCCESS);
             r.setMessage("发送成功");
@@ -648,5 +633,53 @@ public class EquipmentServiceImpl implements EquipmentService{
         r.setRet(Constant.SUCCESS);
         r.setMessage("发送成功");
         return r;
+    }
+    /**设备和数据库绑定的状态同步*/
+    @Override
+    public Result equipmentDatabaseSynchronization() {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        String get_device_info = ScDll.intance.get_device_info();
+        if (StringUtils.isBlank(get_device_info)) {
+            r.setMessage("设备故障,请重启设备");
+            return r;
+        }
+        StudentInfoSql studentInfoSql = new StudentInfoSql();
+        List<String> uids = getEquipmentAllUid(get_device_info);
+        /**如果设备没有值,直接将库全改为未绑定*/
+        if (ListUtils.isEmpty(uids)) {
+            r = studentInfoSql.updateStatus(Constant.BING_NO);
+       }else{
+           /**有值的将库里对应的学生改为绑定,没值的全部是未绑定*/
+           try {
+               r = studentInfoSql.updateStatusByIclickerIds(uids,Constant.BING_YES);
+               if (r.getRet().equals(Constant.ERROR)) {
+                   return r;
+               }
+               r = studentInfoSql.updateStatusByIclickerIds(uids, Constant.BING_NO," not in");
+               if (r.getRet().equals(Constant.ERROR)) {
+                   return r;
+               }
+               r.setRet(Constant.SUCCESS);
+           } catch (Exception e) {
+               r.setMessage("同步设备与数据库绑定状态失败");
+               r.setDetail(IOUtils.getError(e));
+           }
+       }
+        return r;
+    }
+    
+    private List<String> getEquipmentAllUid(String get_device_info) {
+        List<String> uids = new ArrayList<>();
+        Object list = JSONObject.fromObject(get_device_info).get("list");
+        JSONArray jsonArray = JSONArray.fromObject(list);
+        for (Object object : jsonArray) {
+            JSONObject jo = JSONObject.fromObject(object);
+            String uid = jo.getString("uid");
+            if (!StringUtils.isBlank(uid)) {
+                uids.add(uid);
+            }
+        }
+        return uids;
     }
 }

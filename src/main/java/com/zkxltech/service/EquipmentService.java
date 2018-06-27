@@ -63,4 +63,6 @@ public interface EquipmentService {
     public Result get_wireless_student_id_info() ;
     /**快速抢答*/
     public Result quickAnswer(Object param);
+    /**设备和数据库绑定的状态同步*/
+    public Result equipmentDatabaseSynchronization();
 }
