@@ -31,7 +31,7 @@ public enum SettingEnum {
 	public static Integer getTxchByName(String name) {
 		SettingEnum[] s = SettingEnum.values();
 		for (SettingEnum settingEnum : s) {
-			if (settingEnum.name == name) {
+			if (settingEnum.name.equals(name)) {
 				return settingEnum.tx_ch;
 			}
 		}
@@ -46,7 +46,7 @@ public enum SettingEnum {
 	public static Integer getRxchByName(String name) {
 		SettingEnum[] s = SettingEnum.values();
 		for (SettingEnum settingEnum : s) {
-			if (settingEnum.name == name) {
+			if (settingEnum.name.equals(name)) {
 				return settingEnum.rx_ch;
 			}
 		}
