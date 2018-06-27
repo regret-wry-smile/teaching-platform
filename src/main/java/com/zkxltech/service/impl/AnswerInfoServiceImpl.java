@@ -84,7 +84,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 				return result;
 			}
 			RedisMapMultipleAnswer.clearMap();
-			RedisMapMultipleAnswer.startAnswer((String)object);
+			RedisMapMultipleAnswer.startAnswer(requestVo.getRange());
 			result.setRet(Constant.SUCCESS);
 			return result;
 		} catch (Exception e) {
