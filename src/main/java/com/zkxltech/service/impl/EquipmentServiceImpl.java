@@ -128,7 +128,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         return r;
     }
     @Override
-    public Result bind_start(Object param) {
+    public Result bindStart(Object param) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
         try {
@@ -160,14 +160,13 @@ public class EquipmentServiceImpl implements EquipmentService{
             Map<Object, List<StudentInfo>> studentInfoMap = ListUtils.getClassificationMap(studentInfos, "iclickerId");
             /**存入静态map*/
             //每次调用绑定方法先清空,再存
-            RedisMapBind.bindMap.clear();
-            RedisMapBind.studentInfoMap.clear();
-            RedisMapBind.cardIdSet.clear();
-            RedisMapBind.bindMap.put("studentName", null);
-            RedisMapBind.bindMap.put("code", bind_start);
-            RedisMapBind.bindMap.put("accomplish", 0);
-            RedisMapBind.bindMap.put("notAccomplish",studentInfos.size());
-            RedisMapBind.studentInfoMap = studentInfoMap;
+            RedisMapBind.clearCardIdSet();
+            RedisMapBind.clearBindMap();
+            RedisMapBind.getBindMap().put("studentName", null);
+            RedisMapBind.getBindMap().put("code", bind_start);
+            RedisMapBind.getBindMap().put("accomplish", 0);
+            RedisMapBind.getBindMap().put("notAccomplish",studentInfos.size());
+            RedisMapBind.setStudentInfoMap(studentInfoMap);
             t = new CardInfoThread();
             t.start();
             r.setItem(bind_start);
@@ -180,7 +179,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         return r;
     }
     @Override
-    public Result bind_stop() {
+    public Result bindStop() {
         Result r = new Result();
         if (t != null && t instanceof CardInfoThread) {
             CardInfoThread c =  (CardInfoThread)t;
@@ -474,8 +473,8 @@ public class EquipmentServiceImpl implements EquipmentService{
         int answer_start = ScDll.intance.answer_start(0, Constant.ANSWER_STR);
         if (answer_start == SUCCESS) {
             //每次调用签到先清空数据
-            RedisMapAttendance.attendanceMap.clear();
-            RedisMapAttendance.cardIdSet.clear();
+            RedisMapAttendance.clearAttendanceMap();
+            RedisMapAttendance.clearCardIdSet();
             StudentInfoServiceImpl si = new StudentInfoServiceImpl();
             Result result = si.selectStudentInfo(param);
             List<StudentInfo> studentInfos = (List)result.getItem();
@@ -488,7 +487,7 @@ public class EquipmentServiceImpl implements EquipmentService{
                 Map<String, String> studentInfoMap = new HashMap<>();
                 studentInfoMap.put("studentName", studentInfo.getStudentName());
                 studentInfoMap.put("status", Constant.ATTENDANCE_NO);
-                RedisMapAttendance.attendanceMap.put(studentInfo.getIclickerId(), studentInfoMap);
+                RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
             }
             t = new AttendanceThread();
             t.start();
@@ -586,15 +585,15 @@ public class EquipmentServiceImpl implements EquipmentService{
         int answer_start = ScDll.intance.answer_start(0, QUICK_COMMON);
         if (answer_start == SUCCESS) {
             //开始答题前先清空
-            RedisMapQuick.quickMap.clear();
-            RedisMapQuick.studentInfoMap.clear();
+            RedisMapQuick.clearQuickMap();
+            RedisMapQuick.clearStudentInfoMap();
             StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
             Result result = impl.selectStudentInfo(param);
             List<Object> item = (List<Object>) result.getItem();
             for (Object object : item) {
                 StudentInfo studentInfo =  (StudentInfo) com.zkxltech.ui.util.StringUtils.parseJSON(object, StudentInfo.class);
-                RedisMapQuick.studentInfoMap.put("studentName", studentInfo.getStudentName());
-                RedisMapQuick.studentInfoMap.put("iclickerId", studentInfo.getIclickerId());
+                RedisMapQuick.getStudentInfoMap().put("studentName", studentInfo.getStudentName());
+                RedisMapQuick.getStudentInfoMap().put("iclickerId", studentInfo.getIclickerId());
             }
             t = new AnswerThread();
             t.start();

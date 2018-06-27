@@ -22,9 +22,9 @@ import net.sf.json.JSONObject;
  */
 public class RedisMapAttendance {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMapAttendance.class);
-	public static Map<String, Map<String,String>> attendanceMap = Collections.synchronizedMap(new HashMap<>());
+	private static Map<String, Map<String,String>> attendanceMap = Collections.synchronizedMap(new HashMap<>());
 	/**绑定时用来去除重复的提交*/
-    public static Set<String> cardIdSet = new HashSet<>();
+    private static Set<String> cardIdSet = new HashSet<>();
 	public static void addAttendance(String jsonData){
         JSONArray jsonArray = JSONArray.fromObject(jsonData);
         for (int j = 0; j < jsonArray.size(); j++) {
@@ -48,4 +48,22 @@ public class RedisMapAttendance {
         }
 	    return JSONArray.fromObject(list).toString();
 	}
+    public static Map<String, Map<String, String>> getAttendanceMap() {
+        return attendanceMap;
+    }
+    public static void setAttendanceMap(Map<String, Map<String, String>> attendanceMap) {
+        RedisMapAttendance.attendanceMap = attendanceMap;
+    }
+    public static Set<String> getCardIdSet() {
+        return cardIdSet;
+    }
+    public static void setCardIdSet(Set<String> cardIdSet) {
+        RedisMapAttendance.cardIdSet = cardIdSet;
+    }
+    public static void clearCardIdSet() {
+        cardIdSet.clear();
+    }
+    public static void clearAttendanceMap() {
+        attendanceMap.clear();
+    }
 }

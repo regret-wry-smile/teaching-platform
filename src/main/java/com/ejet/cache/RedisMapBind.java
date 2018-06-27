@@ -23,15 +23,15 @@ import net.sf.json.JSONObject;
 public class RedisMapBind {
     private static final Logger logger = LoggerFactory.getLogger(RedisMapBind.class);
     /** 一键配对缓存 */
-    public static Map<String, Object> bindMap = Collections.synchronizedMap(new HashMap<String, Object>());
+    private static Map<String, Object> bindMap = Collections.synchronizedMap(new HashMap<String, Object>());
     /**答题器id对应的学生*/
-    public static Map<Object, List<StudentInfo>> studentInfoMap = Collections.synchronizedMap(new HashMap<>());
+    private static Map<Object, List<StudentInfo>> studentInfoMap = Collections.synchronizedMap(new HashMap<>());
     /**绑定状态*/
     private static final String STATE_BIND = "1";
     /***/
     private static final StudentInfoServiceImpl SIS= new StudentInfoServiceImpl();
     /**绑定时用来去除重复的提交*/
-    public static Set<String> cardIdSet = new HashSet<>();
+    private static Set<String> cardIdSet = new HashSet<>();
     public static void addBindMap(String jsonData){
         JSONArray jsonArray = JSONArray.fromObject(jsonData);
         for (Object object : jsonArray) {
@@ -59,7 +59,40 @@ public class RedisMapBind {
         BrowserManager.refreshBindCard();
     }
     
-	public static String getBindMap(){
+	public static String getBindMapValue(){
 		return JSONObject.fromObject(bindMap).toString();
+    }
+	
+    public static Map<String, Object> getBindMap() {
+        return bindMap;
+    }
+
+    public static Map<Object, List<StudentInfo>> getStudentInfoMap() {
+        return studentInfoMap;
+    }
+    public static void clearStudentInfoMap(){
+        studentInfoMap.clear();
+    }
+
+    public static void setStudentInfoMap(Map<Object, List<StudentInfo>> studentInfoMap) {
+        RedisMapBind.studentInfoMap = studentInfoMap;
+    }
+
+    public static Set<String> getCardIdSet() {
+        return cardIdSet;
+    }
+
+    public static void setCardIdSet(Set<String> cardIdSet) {
+        RedisMapBind.cardIdSet = cardIdSet;
+    }
+    public static void clearCardIdSet() {
+        cardIdSet.clear();
+    }
+
+    public static void setBindMap(Map<String, Object> bindMap) {
+        RedisMapBind.bindMap = bindMap;
+    }
+    public static void clearBindMap() {
+        bindMap.clear();
     }
 }

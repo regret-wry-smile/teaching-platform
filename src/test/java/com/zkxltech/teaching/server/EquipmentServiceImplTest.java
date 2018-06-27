@@ -21,7 +21,7 @@ public class EquipmentServiceImplTest {
         JSONObject jo = new JSONObject();
         jo.put("model", 1);
         jo.put("uidStr", "");
-        Result rs = es.bind_start(jo);
+        Result rs = es.bindStart(jo);
         System.out.println(rs.toString());
     }
     
@@ -29,7 +29,7 @@ public class EquipmentServiceImplTest {
     @Test
     public void bindStop(){
         EquipmentServiceImpl es = EquipmentServiceImpl.getInstance();
-        Result rs = es.bind_stop();
+        Result rs = es.bindStop();
         System.out.println(rs.toString());
     }
     

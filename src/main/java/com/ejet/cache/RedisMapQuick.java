@@ -21,9 +21,10 @@ import net.sf.json.JSONObject;
  */
 public class RedisMapQuick {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMapQuick.class);
-	public static Map<String,String> quickMap = Collections.synchronizedMap(new HashMap<>());
+	private static Map<String,String> quickMap = Collections.synchronizedMap(new HashMap<>());
 	/**学生信息*/
-	public static Map<String,String> studentInfoMap = new HashMap<>(); 
+	private static Map<String,String> studentInfoMap = new HashMap<>(); 
+	
     public static void addQuickAnswer(String jsonData){
         JSONArray jsonArray = JSONArray.fromObject(jsonData);
         for (Object object : jsonArray) {
@@ -44,5 +45,23 @@ public class RedisMapQuick {
     }
     public static String getQuickAnswer(){
         return quickMap.toString();
+    }
+    public static Map<String, String> getQuickMap() {
+        return quickMap;
+    }
+    public static void setQuickMap(Map<String, String> quickMap) {
+        RedisMapQuick.quickMap = quickMap;
+    }
+    public static Map<String, String> getStudentInfoMap() {
+        return studentInfoMap;
+    }
+    public static void setStudentInfoMap(Map<String, String> studentInfoMap) {
+        RedisMapQuick.studentInfoMap = studentInfoMap;
+    }
+    public static void clearQuickMap() {
+        quickMap.clear();
+    }
+    public static void clearStudentInfoMap() {
+        studentInfoMap.clear();
     }
 }
