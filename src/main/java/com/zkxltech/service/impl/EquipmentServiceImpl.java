@@ -1,35 +1,19 @@
 package com.zkxltech.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.ejet.cache.BrowserManager;
-import com.ejet.cache.RedisMapAnswer;
-import com.ejet.cache.RedisMapAttendance;
-import com.ejet.cache.RedisMapBind;
 import com.ejet.cache.RedisMapClassTest;
-import com.ejet.cache.RedisMapQuick;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
-import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
-import com.zkxltech.domain.Answer;
-import com.zkxltech.domain.EquipmentParam;
 import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
-import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.EquipmentService;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxlteck.scdll.AnswerThread;
-import com.zkxlteck.scdll.AttendanceThread;
-import com.zkxlteck.scdll.CardInfoThread;
-import com.zkxlteck.scdll.QuickThread;
 import com.zkxlteck.scdll.ScDll;
-import com.zkxlteck.scdll.ScoreThread;
-import com.zkxlteck.scdll.VoteThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
