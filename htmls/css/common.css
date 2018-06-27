@@ -287,6 +287,18 @@ button.btnfff:after{
 	position: absolute;
 	right: 10%;
 }
+button.circlefff{
+	border: 3px solid #dedede;
+	width: 1.0rem;
+	height: 1.0rem;
+	border-radius: 100%;
+	background: #fff;
+	color: #90a4cc;
+	font-size: 0.25rem;
+}
+button.circlefff:hover{
+	opacity: 0.8;
+}
 label.area{
 	padding:0.05rem 0.15rem;
 	display: inline-block;

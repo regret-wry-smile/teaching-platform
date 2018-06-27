@@ -8,6 +8,7 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 		subject:'',
 		sujectName:''
 	}
+	$scope.curclassName='';//当前班级
 	$scope.classList=[];//班级数组
 	$scope.subjectlists=[];//科目数组
 	$scope.classhourList=[]//课程数组
@@ -37,8 +38,9 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 	$scope.changeClass=function(classes){
 		$scope.setClass.classes=classes;
 		angular.forEach($scope.classList,function(i){
-			if($scope.setClass.classes==i.classId){
+			if($scope.setClass.classes==i.key){
 				$scope.classesobject=i;
+				console.log(JSON.stringify($scope.classesobject))
 			}
 		})
 		
@@ -55,6 +57,19 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 	$scope.changeSubject=function(subject){
 		$scope.setClass.subject	=subject;
 	}
+	
+	//查询当前上课班级
+	var _isStartClass=function(){
+		$scope.result=JSON.parse(execute_record("get_classInfo"));
+		console.log("巴巴爸爸"+JSON.stringify($scope.result))
+		if($scope.result.ret=='success'&&$scope.result.item){
+			$scope.curclassName=$scope.result.item.className;
+		}else{
+			$scope.curclassName="";
+		}
+	}
+	
+	
 	//查询课程
 	var _selectClassHour=function(){
 		$scope.result=JSON.parse(execute_record("select_class_hour",$scope.setClass.classes,$scope.setClass.subject));
@@ -116,6 +131,7 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 		_selectClass();
 		_getsubject();
 		_selectClassHour();
+		_isStartClass();
 	}();
 	//跳转到答题中心页面
 	$scope.startClass=function(){
@@ -160,7 +176,6 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 			$window.location.href =$scope.objectUrl;*/
 		}else{
 			toastr.error($scope.result.message);	
-			return false;
 		}
 	}
 	//抢答
@@ -177,6 +192,18 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 		}else{			
 			toastr.error($scope.result.message);	
 		}
+	}
+	//下课
+	$scope.stopClass=function(){
+		$scope.result=JSON.parse(execute_record("end_class"));
+		if($scope.result.ret=='success'){
+			toastr.success($scope.result.message);
+			$scope.objectUrl = '../../page/answermoudle/startAnswer.html';
+			$window.location.href =$scope.objectUrl;
+		}else{			
+			toastr.error($scope.result.message);	
+		}
+		
 	}
 })
 app.controller('addClassHourCtrl', function($rootScope,$scope,$modal,$modalInstance,toastr,infos) {	
@@ -236,15 +263,28 @@ app.config(['$locationProvider', function($locationProvider) {
 })*/
 app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.studentAttendList=[];//签到学生数组
-	$scope.studentAttendList=JSON.parse(execute_attendance("get_sign_in"));
-	console.log("哈哈哈"+JSON.stringify($scope.studentAttendList))
-	/*for(var i=0;i<120;i++){
-		var item={
-			studentName:"张三",
-			status:"NO"
-		}
-		$scope.studentAttendList.push(item);
-	}*/
+	var _getsignStudent=function(){
+		$scope.studentAttendList=JSON.parse(execute_attendance("get_sign_in"));
+		console.log("哈哈哈"+JSON.stringify($scope.studentAttendList))
+	}
+	var _init=function(){
+		_getsignStudent();
+	}();
+	 $scope.returnPage=function(){
+	 	$scope.result=JSON.parse(execute_attendance("sign_in_stop"));  
+	 	if($scope.result.ret=='success'){
+	 		$scope.back="javascript:history.go(-1);";
+	 		console.log(JSON.stringify($scope.result));
+	 		
+	 	}else{
+	 		$scope.back="javascript:history.go(-1);";
+	 		toastr.error($scope.result.message);
+	 	}
+	 	
+	 }
+	$scope.refresAttendance=function(){
+		_getsignStudent();
+	}
 })
 app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$interval) {
 	$scope.studentName='';//抢答数据
@@ -273,6 +313,7 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
 	
 	
 	$scope.stopAnswer = function(){
+		
 		 //关闭定时器
 		$interval.cancel(myTimer); 
 	};
