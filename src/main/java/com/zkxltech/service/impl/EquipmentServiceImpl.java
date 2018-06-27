@@ -18,6 +18,7 @@ import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.EquipmentParam;
+import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.EquipmentService;
@@ -772,4 +773,62 @@ public class EquipmentServiceImpl implements EquipmentService{
         r.setRet(Constant.SUCCESS);
         return r;
     }
+    
+	@Override
+	public Result answerStart2(Object param) {
+		Result r = new Result();
+        r.setRet(Constant.ERROR);
+        
+        List<RequestVo> requestVos = (List<RequestVo>) JSONArray.toCollection(JSONArray.fromObject(param), RequestVo.class);
+        StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append("[");
+
+		for (int i = 0; i < requestVos.size(); i++) {
+			RequestVo requestVo = requestVos.get(i);
+			String id = requestVo.getId();
+			String type = requestVo.getType();
+			strBuilder.append("{");
+			if ("单选".equals(type)) {
+				type = "s";
+			} else if ("多选".equals(type)) {
+				type = "m";
+			} else if ("判断".equals(type)) {
+				type = "j";
+			} else if ("数字".equals(type)) {
+				type = "d";
+			}
+			String range = requestVo.getRange();
+			strBuilder.append("'id':'" + id + "',");
+			strBuilder.append("'type':'" + type + "',");
+			strBuilder.append("'range':'" + range + "'");
+			strBuilder.append("}");
+
+			strBuilder.append(",");
+
+		}
+		strBuilder = new StringBuilder(strBuilder.substring(0, strBuilder.lastIndexOf(",")));
+//		System.out.println(strBuilder);
+        int answer_start = ScDll.intance.answer_start(1,strBuilder.toString());
+        if (answer_start == Constant.SEND_SUCCESS) {
+            //开始答题前先清空
+            RedisMapClassTest.classTestAnswerMap.clear();
+            t = new AnswerThread();
+            t.start();
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("发送成功");
+            return r;
+        }
+        r.setMessage("发送失败");
+        return r;
+	}
+	
+//	public static void main(String[] args) {
+//		List<RequestVo> list = new ArrayList<RequestVo>();
+//		RequestVo requestVo1 = new RequestVo();
+//		requestVo1.setId("1");
+//		requestVo1.setRange("A-F");
+//		requestVo1.setType("m");
+//		list.add(requestVo1);
+//		new EquipmentServiceImpl().answerStart2(list);
+//	}
 }

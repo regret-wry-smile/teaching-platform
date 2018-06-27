@@ -1,14 +1,17 @@
 package com.zkxltech.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.AnswerInfo;
+import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.AnswerInfoService;
 import com.zkxltech.sql.AnswerInfoSql;
+import com.zkxltech.ui.util.StringUtils;
 
 public class AnswerInfoServiceImpl implements AnswerInfoService{
 	private Result result;
@@ -71,17 +74,22 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	public Result startMultipleAnswer(Object object) {
 		result = new Result();
 		try {
+			RequestVo requestVo = StringUtils.parseJSON(object, RequestVo.class);
+			List<RequestVo> list = new ArrayList<RequestVo>();
+			list.add(requestVo);
+			result = EquipmentServiceImpl.getInstance().answerStart2(list);
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setRet(Constant.ERROR);
+				result.setMessage("开始答题指令发送失败！");
+				return result;
+			}
 			RedisMapMultipleAnswer.clearMap();
 			RedisMapMultipleAnswer.startAnswer((String)object);
-			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("查询答题信息成功!");
-			}else {
-				result.setMessage("查询答题信息失败！");
-			}
+			result.setRet(Constant.SUCCESS);
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("查询答题信息失败！");
+			result.setMessage("开始答题指令发送失败！");
 			result.setDetail(IOUtils.getError(e));
 			return result;
 		}
