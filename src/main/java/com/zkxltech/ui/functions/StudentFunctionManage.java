@@ -100,14 +100,14 @@ public class StudentFunctionManage extends BrowserFunction{
 				return RedisMapBind.getBindMapValue();
 				/**清除白名单位(解绑)*/
 			case "clear_bind":
-			    result = equipmentService.clearWl(param);
+			    result = classInfoService.clearWl(param);
 			    break;
 			    /**开始绑定(一键配对)*/
 			case "bind_start":
-                result = equipmentService.bindStart(param);
+			    result = classInfoService.bindStart(param);
                 break;
 			case "bind_stop":
-                result = equipmentService.bindStop();
+			    result = classInfoService.bindStop();
                 break;
 			default:
 				result.setRet(Constant.ERROR);

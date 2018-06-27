@@ -9,22 +9,14 @@ import com.zkxltech.domain.Result;
 public interface EquipmentService {
     /** 获取设备信息 */
     public Result get_device_info();
-    /** 清除白名单 */
-    public Result clearWl(Object param) ;
-    /** 开始绑定  */
-    public Result bindStart(Object param) ;
-    /** 停止绑定 */
-    public Result bindStop() ;
     /** 开始答题 */
-    public Result answerStart(Object param);
+//    public Result answerStart(Object param);
     /**  开始答题 */
-    public Result answer_start_with_raise_hand( int is_quick_response, int raise_hand, String answer_str ); 
+//    public Result answer_start_with_raise_hand( int is_quick_response, int raise_hand, String answer_str ); 
     /** 设置举手功能 */
     public Result set_raise_hand(int raise_hand) ;
     /** 设置签到功能 */
     public Result set_sign_in(int attendance) ;
-    /** 停止作答 */
-    public Result answerStop() ;
     
     public Result set_student_id(String student_id_str) ;
     
@@ -49,10 +41,6 @@ public interface EquipmentService {
     public Result raise_hand_stop() ;
     /** 获取学生提交的举手信息. */
     public Result get_raise_hand_list() ;
-    /** 开始签到 */
-    public Result signInStart(Object param) ;
-    /**  停止签到 */
-    public Result signInStop() ;
     /** 获取学生提交的签到信息 */
     public Result get_sign_in_list() ;
     /** 设置2.4G考勤功能(绑定前设置有效) */
@@ -61,8 +49,6 @@ public interface EquipmentService {
     public Result set_wireless_student_id(String uid_str , String student_id_str) ; 
     /** 无线获取设置学号卡片信息 */
     public Result get_wireless_student_id_info() ;
-    /**快速抢答*/
-    public Result quickAnswer(Object param);
     /**设备和数据库绑定的状态同步*/
     public Result equipmentDatabaseSynchronization();
 }

@@ -54,4 +54,9 @@ public interface StudentInfoService {
 	 * @return
 	 */
 	Result clearStudentByIds(Object object);
+    Result singleAnswer(Object param);
+    Result signInStart(Object param);
+    Result signInStop();
+    Result quickAnswer(Object param);
+    Result answerStop();
 }

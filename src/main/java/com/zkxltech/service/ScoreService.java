@@ -26,4 +26,6 @@ public interface ScoreService {
 	 * @return
 	 */
 	Result getScoreTitleInfo();
+    Result stopScore();
+    Result scoreStart(int size);
 }

@@ -36,7 +36,7 @@ public class VoteFunctionManage extends BrowserFunction{
 				result = voteService.startVote(params[1]);
 				break;
 			case "stop_vote":
-                result = EquipmentServiceImpl.getInstance().stopVote();
+			    result = voteService.stopVote();
                 break;
 			case "get_vote":
 				result = voteService.getVote();

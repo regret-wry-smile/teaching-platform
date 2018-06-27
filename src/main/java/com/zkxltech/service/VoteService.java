@@ -20,4 +20,6 @@ public interface VoteService {
 	 * @return
 	 */
 	Result getVote();
+    Result stopVote();
+    Result startVote(int questionNum);
 }

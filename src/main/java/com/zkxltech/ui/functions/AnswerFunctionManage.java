@@ -26,13 +26,16 @@ public class AnswerFunctionManage extends BrowserFunction{
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
 			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数
+			StudentInfoService service = new StudentInfoServiceImpl();
 			switch (method) {
 			case "import_paper":
-				StudentInfoService service = new StudentInfoServiceImpl();
 				result = service.selectStudentInfo(param);
 				break;
 			case "single_answer":
-                result = EquipmentServiceImpl.getInstance().singleAnswer(param);
+			    result = service.singleAnswer(param);
+                break;
+			case "get_single_answer":
+                //result = EquipmentServiceImpl.getInstance().singleAnswer(param);
                 break;
 			default:
 				result.setRet(Constant.ERROR);

@@ -27,19 +27,18 @@ public class AttendanceFunctionManage extends BrowserFunction{
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
 			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数
-			EquipmentServiceImpl es = EquipmentServiceImpl.getInstance();
+			StudentInfoService service = new StudentInfoServiceImpl();
 			switch (method) {
 			case "import_paper":
-			    StudentInfoService service = new StudentInfoServiceImpl();
 				result = service.selectStudentInfo(param);
 				break;
 			case "sign_in_start":
 			    /**签到接口有问题,改成答题的就行了,按任意*/
-			    result = es.signInStart(param);
+			    result = service.signInStart(param);
                 break;
 			case "sign_in_stop":
                 /**签到接口有问题,改成答题的就行了,停止*/
-                result = es.signInStop();
+			    result = service.signInStop();
                 break;
 			case "get_sign_in":
                 /**获取考勤信息*/

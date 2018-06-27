@@ -3,6 +3,7 @@ package com.zkxltech.service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,16 +11,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.BrowserManager;
+import com.ejet.cache.RedisMapAnswer;
+import com.ejet.cache.RedisMapAttendance;
+import com.ejet.cache.RedisMapQuick;
 import com.ejet.core.util.ICallBack;
 import com.ejet.core.util.StringUtils;
+import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
+import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.sql.StudentInfoSql;
+import com.zkxlteck.scdll.AnswerThread;
+import com.zkxlteck.scdll.AttendanceThread;
+import com.zkxlteck.scdll.QuickThread;
+import com.zkxlteck.scdll.ScDll;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -28,8 +39,17 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	private static final Logger log = LoggerFactory.getLogger(StudentInfoServiceImpl.class);
 	private Result result;
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
+	private static Thread thread;
 	
-	@Override
+	public static Thread getThread() {
+        return thread;
+    }
+
+    public static void setThread(Thread thread) {
+        StudentInfoServiceImpl.thread = thread;
+    }
+
+    @Override
 	public Result importStudentInfo2(Object object,ICallBack icallback) {
 		result = new Result();
 		try {
@@ -265,4 +285,155 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			return result;
 		}
 	}
+
+    @Override
+    public Result singleAnswer(Object param) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        Answer answer = com.zkxltech.ui.util.StringUtils.parseJSON(param, Answer.class);
+        if (answer == null || StringUtils.isEmpty(answer.getType())) {
+            r.setMessage("缺少参数,题目类型不能为空");
+            return r;
+        }
+        String type = answer.getType();
+        int status = -1;
+        switch (type) {
+            case Constant.ANSWER_CHAR_TYPE:
+                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
+                break;
+            case Constant.ANSWER_NUMBER_TYPE:
+                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
+                break;
+            case Constant.ANSWER_JUDGE_TYPE:
+                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
+                break;
+            default:
+                r.setMessage("参数错误");
+                return r;
+        }
+        if (status == Constant.SEND_ERROR) {
+            r.setMessage("指令发送失败");
+            return r;
+        }
+        //传入类型 ,清空数据
+        RedisMapAnswer.setAnswer(answer);
+        RedisMapAnswer.clearSingleAnswerMap();
+        RedisMapAnswer.clearStudentInfoMap();
+        thread = new AnswerThread();
+        thread.start();
+        r.setRet(Constant.SUCCESS);
+        return r;
+    }
+
+    @Override
+    public Result signInStart(Object param) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        if (param == null) {
+            r.setMessage("缺少参数");
+            return r;
+        }
+        JSONObject jo = JSONObject.fromObject(param);
+        if (jo.containsKey("classId")) {
+            String classId = jo.getString("classId");
+            if (StringUtils.isEmpty(classId)) {
+                r.setMessage("班级ID为空");
+                return r;
+            }
+        }
+        //int sign_in_start = ScDll.intance.sign_in_start();
+        //开始签到接口有问题,暂用按任意键
+        int answer_start = ScDll.intance.answer_start(0, Constant.ANSWER_STR);
+        if (answer_start == Constant.SEND_ERROR) {
+            r.setMessage("指令发送失败");
+            return r;
+        }
+        //每次调用签到先清空数据
+        RedisMapAttendance.clearAttendanceMap();
+        RedisMapAttendance.clearCardIdSet();
+//        StudentInfoServiceImpl si = new StudentInfoServiceImpl();
+//        Result result = si.selectStudentInfo(param);
+//        List<StudentInfo> studentInfos = (List)result.getItem();
+        List<StudentInfo> studentInfos = Global.getStudentInfos();
+        if (ListUtils.isEmpty(studentInfos)) {
+            r.setMessage("未获取到学生信息");
+            return r;
+        }
+        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+        for (StudentInfo studentInfo : studentInfos) {
+            Map<String, String> studentInfoMap = new HashMap<>();
+            studentInfoMap.put("studentName", studentInfo.getStudentName());
+            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
+            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
+        }
+        thread = new AttendanceThread();
+        thread.start();
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("操作成功");
+        return r;
+    }
+    @Override
+    public Result signInStop() {
+        Result r = new Result();
+        if (thread != null && thread instanceof AttendanceThread ) {
+            AttendanceThread a = (AttendanceThread)thread;
+            a.setFLAG(false);
+        }
+        int answer_stop = ScDll.intance.answer_stop();
+        if (answer_stop == Constant.SEND_SUCCESS) {
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("停止成功");
+            return r;
+        }
+        r.setRet(Constant.ERROR);
+        r.setMessage("停止失败");
+        return r;
+    }
+    @Override
+    public Result quickAnswer(Object param) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        if (param == null) {
+            r.setMessage("参数班级id不能为空");
+            return r;
+        }
+        int answer_start = ScDll.intance.answer_start(0, Constant.QUICK_COMMON);
+        if (answer_start == Constant.SEND_SUCCESS) {
+            //开始答题前先清空
+            RedisMapQuick.clearQuickMap();
+            RedisMapQuick.clearStudentInfoMap();
+//            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
+//            Result result = impl.selectStudentInfo(param);
+//            List<Object> item = (List<Object>) result.getItem();
+            List<StudentInfo> studentInfos = Global.getStudentInfos();
+            for (StudentInfo studentInfo : studentInfos) {
+                RedisMapQuick.getStudentInfoMap().put(studentInfo.getIclickerId(), studentInfo);
+            }
+            thread = new QuickThread();
+            thread.start();
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("发送成功");
+            return r;
+        }
+        r.setMessage("发送失败");
+        return r;
+    }
+    @Override
+    public Result answerStop() {
+        Result r = new Result();
+        int answer_stop = ScDll.intance.answer_stop();
+        if (answer_stop == Constant.SEND_SUCCESS) {
+            //FIXME
+            if (thread != null && thread instanceof AnswerThread) {
+                AnswerThread m = (AnswerThread)thread;
+                m.setFLAG(false);
+            }
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("停止成功");
+            return r;
+        }
+        r.setRet(Constant.ERROR);
+        r.setMessage("停止失败");
+        return r;
+    }
 }

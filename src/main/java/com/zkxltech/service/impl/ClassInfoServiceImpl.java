@@ -1,5 +1,12 @@
 package com.zkxltech.service.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.ejet.cache.BrowserManager;
+import com.ejet.cache.RedisMapBind;
+import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.ClassInfo;
@@ -10,6 +17,8 @@ import com.zkxltech.service.ClassInfoService;
 import com.zkxltech.sql.ClassInfoSql;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.ui.util.StringUtils;
+import com.zkxlteck.scdll.CardInfoThread;
+import com.zkxlteck.scdll.ScDll;
 
 import net.sf.json.JSONObject;
 
@@ -17,8 +26,17 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 	private Result result;
 	private ClassInfoSql classInfoSql = new ClassInfoSql();
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
+	private static Thread thread;
 	
-	@Override
+	public static Thread getThread() {
+        return thread;
+    }
+
+    public static void setT(Thread thread) {
+        ClassInfoServiceImpl.thread = thread;
+    }
+
+    @Override
 	public Result insertClassInfo(Object object) {
 		result = new Result();
 		try {
@@ -107,4 +125,116 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 		}
 	}
 
+	/**清除白名单*/
+    @Override
+    public Result clearWl(Object param) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        JSONObject jsono = JSONObject.fromObject(param);
+        if (!jsono.containsKey("classId")) {
+            r.setMessage("缺少班级id参数");
+            return r;
+        }
+        String get_device_info = ScDll.intance.get_device_info();
+        if (StringUtils.isEmpty(get_device_info)) {
+            r.setMessage("设备故障,请重启设备");
+            return r;
+        }
+        try {
+            StudentInfoSql studentInfoSql = new StudentInfoSql();
+            r = studentInfoSql.updateStatus(Constant.BING_NO);
+            if (r.getRet().equals(Constant.ERROR)) {
+                return r;
+            }
+            int clear_wl = ScDll.intance.clear_wl();
+            if (clear_wl == Constant.SEND_SUCCESS) {
+                r.setRet(Constant.SUCCESS);
+                r.setMessage("清除成功");
+                BrowserManager.refreshStudent(jsono.getString("classId"));
+                return r;
+            }
+        } catch (Exception e) {
+            r.setDetail(IOUtils.getError(e));
+        }
+        r.setMessage("清除失败");
+        return r;
+    }
+    @Override
+    public Result bindStart(Object param) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        try {
+            int bind_start = ScDll.intance.wireless_bind_start(1,"") ;
+            if (bind_start < 1) {
+                r.setMessage("指令发送失败");
+                return r;
+            }
+            /**根据班级id查询学生信息*/
+            StudentInfoServiceImpl sis= new StudentInfoServiceImpl();
+            Result result = sis.selectStudentInfo(param);
+            List<StudentInfo> studentInfos = (List)result.getItem();
+            if (result== null || ListUtils.isEmpty(studentInfos)) {
+                r.setMessage("您还未上传学生信息");
+                return r;
+            }
+            /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+            Map<String, StudentInfo> studentInfoMap = new HashMap<>();
+            /**按绑定状态进行分类*/
+            int bind = 0,notBind = 0 ;
+            for (StudentInfo studentInfo : studentInfos) {
+                String iclickerId = studentInfo.getIclickerId();
+                String status = studentInfo.getStatus();
+                if (StringUtils.isEmpty(iclickerId)) {
+                    r.setMessage("学生:"+studentInfo.getStudentName()+",的答题器编号不能为空");
+                    return r;
+                }
+                if (StringUtils.isEmpty(status)) {
+                    r.setMessage("学生:"+studentInfo.getStudentName()+",的绑定状态不能为空");
+                    return r;
+                }
+                studentInfoMap.put(iclickerId, studentInfo);
+                if (studentInfo.getStatus().equals(Constant.BING_YES)) {
+                    ++bind;
+                }else{
+                    ++notBind;
+                }
+            }
+            /**存入静态map*/
+            //每次调用绑定方法先清空,再存
+            RedisMapBind.clearCardIdMap();
+            RedisMapBind.clearBindMap();
+            RedisMapBind.getBindMap().put("studentName", null);
+            RedisMapBind.getBindMap().put("code", bind_start);
+            RedisMapBind.getBindMap().put("accomplish", bind);
+            RedisMapBind.getBindMap().put("notAccomplish",notBind);
+            RedisMapBind.setStudentInfoMap(studentInfoMap);
+            thread = new CardInfoThread();
+            thread.start();
+            r.setItem(bind_start);
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("操作成功");
+        } catch (Exception e) {
+            r.setMessage("操作失败");
+            r.setDetail(e.getMessage());
+        } 
+        return r;
+    }
+    
+    @Override
+    public Result bindStop() {
+        Result r = new Result();
+        if (thread != null && thread instanceof CardInfoThread) {
+            CardInfoThread c =  (CardInfoThread)thread;
+            c.setFLAG(false);
+        }
+        int bind_stop = ScDll.intance.wireless_bind_stop();
+        if (bind_stop == Constant.SEND_SUCCESS) {
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("停止成功");
+            return r;
+        }
+        r.setRet(Constant.ERROR);
+        r.setMessage("停止失败");
+        return r;
+    }
 }

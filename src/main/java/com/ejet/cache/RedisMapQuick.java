@@ -11,6 +11,7 @@ import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.impl.EquipmentServiceImpl;
+import com.zkxltech.service.impl.StudentInfoServiceImpl;
 import com.zkxlteck.scdll.QuickThread;
 
 import net.sf.json.JSONArray;
@@ -33,13 +34,13 @@ public class RedisMapQuick {
             String card_id = jo.getString("card_id");
             StudentInfo studentInfo = studentInfoMap.get(card_id);
             quickMap.put("studentName", studentInfo.getStudentName());
-            EquipmentServiceImpl instance = EquipmentServiceImpl.getInstance();
+            StudentInfoServiceImpl instance = new StudentInfoServiceImpl();
             Result r = instance.answerStop();
             if (r.getRet().equals(Constant.ERROR)) {
                 logger.error("抢答环节:关闭停止答题失败");
             }
-            if (instance.t!=null && instance.t instanceof QuickThread) {
-                QuickThread qt= (QuickThread)instance.t;
+            if (instance.getThread()!=null && instance.getThread() instanceof QuickThread) {
+                QuickThread qt= (QuickThread)instance.getThread();
                 qt.setFLAG(false);
             }
             if (Constant.ERROR.equals(r.getRet())) {

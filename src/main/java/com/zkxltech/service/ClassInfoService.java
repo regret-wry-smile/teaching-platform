@@ -12,4 +12,7 @@ public interface ClassInfoService {
 	Result deleteClassInfo(Object object);
 	/*修改班级*/
 	Result updateClassInfo(Object object);
+    Result clearWl(Object param);
+    Result bindStart(Object param);
+    Result bindStop();
 }
