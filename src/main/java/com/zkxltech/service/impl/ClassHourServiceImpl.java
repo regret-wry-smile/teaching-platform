@@ -181,6 +181,8 @@ public class ClassHourServiceImpl implements ClassHourService{
 
 	@Override
 	public Result endClass() {
+		result = new Result();
+		result.setRet(Constant.SUCCESS);
 		try {
 			Global.setClassHour(null);
 			Global.setClassId(null);
@@ -198,6 +200,8 @@ public class ClassHourServiceImpl implements ClassHourService{
 
 	@Override
 	public Result getClassInfo() {
+		result = new Result();
+		result.setRet(Constant.SUCCESS);
 		try {
 			result.setItem(Global.getClassInfo());
 			result.setRet(Constant.SUCCESS);
