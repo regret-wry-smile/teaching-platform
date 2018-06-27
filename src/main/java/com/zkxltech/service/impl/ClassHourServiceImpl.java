@@ -3,6 +3,10 @@ package com.zkxltech.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ejet.cache.RedisMapScore;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
@@ -15,8 +19,11 @@ import com.zkxltech.service.ClassHourService;
 import com.zkxltech.sql.ClassHourSql;
 import com.zkxltech.ui.util.StringUtils;
 
+import net.sf.json.JSONArray;
+
 public class ClassHourServiceImpl implements ClassHourService{
-	private Result result;
+	private static final Logger logger = LoggerFactory.getLogger(ClassHourServiceImpl.class);
+	private static Result result;
 	private ClassHourSql classHourSql = new ClassHourSql();
 
 	@Override
@@ -102,35 +109,90 @@ public class ClassHourServiceImpl implements ClassHourService{
 	}
 
 	@Override
-	public Result startClass(Object classId, Object classHour) {
-		ClassInfo classInfo = new ClassInfo();
-		classInfo.setClassId((String)classId);
-		Result result = new ClassInfoServiceImpl().selectClassInfo(classInfo);
-		if (Constant.SUCCESS.equals(result.getRet())) {
-			List<ClassInfo>  classInfos = (List<ClassInfo>) result.getItem();
-			if (classInfos != null && classInfos.size()>0) {
-				Global.setClassInfo(classInfos.get(0));
+	public Result startClass(Object classId, Object classHourObj) {
+		try {
+			
+			ClassHour classHour = (ClassHour) StringUtils.parseJSON(classHourObj, ClassHour.class);
+			
+			Global.setClassId((String)classId);
+			
+			classHour.setClassId((String)classId);
+			
+			result = refreshGload();
+			
+			Global.setClassHour(classHour);
+			
+//			classHourSql.insertClassHour(classHour);
+			
+			result.setRet(Constant.SUCCESS);
+			result.setMessage("开始上课！");
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("上课失败！");
+		}
+		return result;
+	}
+	
+	/**
+	 * 更新当前学生信息和班级信息
+	 * @param classId
+	 * @return
+	 */
+	public static Result refreshGload(){
+		result = new Result();
+		result.setRet(Constant.SUCCESS);
+		if (!StringUtils.isEmpty(Global.classId)) {
+			ClassInfo classInfo = new ClassInfo();
+			classInfo.setClassId(Global.classId);
+			result = new ClassInfoServiceImpl().selectClassInfo(classInfo);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				List<ClassInfo>  classInfos = (List<ClassInfo>) result.getItem();
+				if (classInfos != null && classInfos.size()>0) {
+					Global.setClassInfo(classInfos.get(0));
+				}else {
+					result.setMessage("未找到班级信息！");
+					result.setRet(Constant.ERROR);
+					return result;
+				}
 			}else {
-				result.setMessage("未找到班级信息！");
+				result.setMessage("查询班级信息失败！");
+				result.setRet(Constant.ERROR);
 				return result;
 			}
-		}else {
-			result.setMessage("查询班级信息失败！");
-			return result;
+			
+			StudentInfo studentInfo = new StudentInfo();
+			studentInfo.setClassId(Global.classId);
+			result = new StudentInfoServiceImpl().selectStudentInfo(studentInfo);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				Global.setStudentInfos((List<StudentInfo>)result.getItem());
+			}else {
+				result.setMessage("查询学生信息失败！");
+				result.setRet(Constant.ERROR);
+				return result;
+			}
 		}
-		
-		StudentInfo studentInfo = new StudentInfo();
-		studentInfo.setClassId((String)classId);
-		result = new StudentInfoServiceImpl().selectStudentInfo(studentInfo);
-		if (Constant.SUCCESS.equals(result.getRet())) {
-			Global.setStudentInfos((List<StudentInfo>)result.getItem());
-		}else {
-			result.setMessage("查询学生信息失败！");
-			return result;
+		logger.info("当前班级学生信息>>>"+JSONArray.fromObject(Global.studentInfos));
+		return result;
+	}
+
+	public static boolean isStartClass() {
+		return !StringUtils.isEmpty(Global.classId);
+	}
+
+	@Override
+	public Result endClass() {
+		try {
+			Global.setClassHour(null);
+			Global.setClassId(null);
+			Global.setClassInfo(null);
+			Global.setStudentInfos(null);
+			
+			result.setRet(Constant.SUCCESS);
+			result.setMessage("下课！");
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("下课失败！");
 		}
-		
-		Global.setClassHour((ClassHour) StringUtils.parseJSON(classHour, ClassHour.class));
-		
 		return result;
 	}
 

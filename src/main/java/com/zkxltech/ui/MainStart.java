@@ -30,9 +30,11 @@ import com.App;
 import com.sun.awt.AWTUtilities;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
+import com.zkxltech.service.impl.ClassHourServiceImpl;
 import com.zkxltech.ui.util.Colors;
 import com.zkxltech.ui.util.PageConstant;
 import com.zkxltech.ui.util.StringConstant;
+import com.zkxltech.ui.util.StringUtils;
 import com.zkxltech.ui.util.SwtTools;
 import org.eclipse.swt.events.MouseTrackAdapter;
 /*
@@ -330,6 +332,9 @@ public class MainStart {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				if(e.button == 1){
+					if (!StringUtils.isEmpty(com.ejet.core.util.constant.Global.classId)) {
+						ClassHourServiceImpl.refreshGload();
+					}
 					frame.setVisible(false);
 					shell.setVisible(false);
 					new MainPage(shell,mianStart,StringConstant.PAGE_ANSWER_TYPE).open();

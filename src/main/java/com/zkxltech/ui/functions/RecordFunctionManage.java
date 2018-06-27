@@ -29,6 +29,7 @@ public class RecordFunctionManage extends BrowserFunction{
 			String method = (String) params[0]; //页面要调用的方法
 			switch (method) {
 			case "start_class":
+				//上课
 				if (params.length != 3) {
 					result.setRet(Constant.ERROR);
 					result.setMessage("参数个数有误！");
@@ -36,6 +37,13 @@ public class RecordFunctionManage extends BrowserFunction{
 				}
 				result = classHourService.startClass(params[1], params[2]);
 				break;
+			case "end_class":
+				//下课
+				result = classHourService.endClass();
+				break;
+			case "is_start_class":
+				/*是否开始上课*/
+				return ClassHourServiceImpl.isStartClass();
 			case "select_class_hour":
 				/*查询课程列表列表*/
 				if (params.length != 3) {

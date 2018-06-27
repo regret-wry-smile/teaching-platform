@@ -34,4 +34,10 @@ public interface ClassHourService {
 	 * @return
 	 */
 	Result updateClassInfoTime(Object object);
+	
+	
+	/**
+	 * 下课
+	 */
+	Result endClass();
 }

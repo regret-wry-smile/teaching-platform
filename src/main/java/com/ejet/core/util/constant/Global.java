@@ -8,6 +8,10 @@ import com.zkxltech.domain.StudentInfo;
 
 public class Global {
 	/**
+	 * 当前班级id
+	 */
+	public  static String classId;
+	/**
 	 * 当前班级信息
 	 */
 	public static ClassInfo classInfo;
@@ -41,6 +45,14 @@ public class Global {
 
 	public static void setClassHour(ClassHour classHour) {
 		Global.classHour = classHour;
+	}
+
+	public static String getClassId() {
+		return classId;
+	}
+
+	public static void setClassId(String classId) {
+		Global.classId = classId;
 	}
 
 
