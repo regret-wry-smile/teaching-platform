@@ -6,6 +6,7 @@ import org.eclipse.swt.browser.BrowserFunction;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.VoteService;
+import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.VoteServiceImpl;
 
 import net.sf.json.JSONObject;
@@ -26,7 +27,7 @@ public class VoteFunctionManage extends BrowserFunction{
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
 			switch (method) {
-			case "start_score":
+			case "start_vote":
 				if (params.length != 2) {
 					result.setRet(Constant.ERROR);
 					result.setMessage("参数个数有误！");
@@ -34,6 +35,9 @@ public class VoteFunctionManage extends BrowserFunction{
 				}
 				result = scoreService.startVote(params[1]);
 				break;
+			case "stop_vote":
+                result = EquipmentServiceImpl.getInstance().stopVote();
+                break;
 			case "get_score":
 				result = scoreService.getVote();
 				break;

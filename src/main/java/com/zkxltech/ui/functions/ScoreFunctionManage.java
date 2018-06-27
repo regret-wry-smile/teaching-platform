@@ -5,11 +5,9 @@ import org.eclipse.swt.browser.BrowserFunction;
 
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
-import com.zkxltech.domain.Score;
 import com.zkxltech.service.ScoreService;
-import com.zkxltech.service.StudentInfoService;
+import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.ScoreServiceImpl;
-import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
 
@@ -37,6 +35,9 @@ public class ScoreFunctionManage extends BrowserFunction{
 				}
 				result = scoreService.startScore(params[1]);
 				break;
+			case "stop_score":
+			    result = EquipmentServiceImpl.getInstance().stopScore();
+                break;
 			case "get_score":
 				result = scoreService.getScore();
 				break;

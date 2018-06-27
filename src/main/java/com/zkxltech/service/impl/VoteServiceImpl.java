@@ -18,7 +18,7 @@ public class VoteServiceImpl implements VoteService{
 		result = new Result();
 		try {
 		    Vote vote =  (Vote) StringUtils.parseJSON(object, Vote.class);
-		    Result reStart = EquipmentServiceImpl.getInstance().scoreStart(vote.getPrograms().size());
+		    Result reStart = EquipmentServiceImpl.getInstance().startVote(vote.getPrograms().size());
 		    if (reStart.getRet().equals(Constant.ERROR)) {
                result.setMessage(reStart.getMessage());
                return result;

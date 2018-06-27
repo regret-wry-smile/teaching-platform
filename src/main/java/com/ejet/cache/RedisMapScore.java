@@ -132,7 +132,7 @@ public class RedisMapScore {
         			keyScoreDetailInfoMap[1] = num;
         			keyScoreDetailInfoMap[2] = carId;
         			Answer answer = (Answer) JSONObject.toBean((JSONObject) RedisMapUtil.getRedisMap(scoreDetailInfoMap, keyScoreDetailInfoMap, 0), Answer.class);
-        			if (answer != null) {
+        			if (answer!= null && !StringUtils.isEmpty(answer.getAnswer())) {
         				continue;
 					}
         			RedisMapUtil.setRedisMap(scoreDetailInfoMap, keyScoreDetailInfoMap, 0, answeJSONObject);
@@ -176,8 +176,10 @@ public class RedisMapScore {
 						int peopleSum = 0; //人数
 						for (String iclickerId : map2.keySet()) {
 							Answer answer = (Answer) JSONObject.toBean((JSONObject) map2.get(iclickerId), Answer.class);
-							total = total + Integer.parseInt(answer.getAnswer());
-							peopleSum ++;
+							if(!"".equals(answer.getAnswer())){
+							    total = total + Integer.parseInt(answer.getAnswer());
+	                            peopleSum ++;
+							}
 						}
 						ScoreVO scoreVO = new ScoreVO();
 						scoreVO.setNum(questionId);

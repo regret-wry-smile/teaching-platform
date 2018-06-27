@@ -26,6 +26,7 @@ import com.zkxlteck.scdll.CardInfoThread;
 import com.zkxlteck.scdll.QuickThread;
 import com.zkxlteck.scdll.ScDll;
 import com.zkxlteck.scdll.ScoreThread;
+import com.zkxlteck.scdll.VoteThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -681,5 +682,73 @@ public class EquipmentServiceImpl implements EquipmentService{
             }
         }
         return uids;
+    }
+    public Result startVote(int questionNum) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append("[");
+        for (int i = 0; i < questionNum; i++) {
+          strBuilder.append("{");
+          String id = String.valueOf(i+1);
+          String type = "s";
+          String range = "";
+          try {
+            range = "A-C";
+          } catch (Exception e2) {
+            range = "";
+          }
+          strBuilder.append("'id':'"+id+"',");
+          strBuilder.append("'type':'"+type+"',");
+          strBuilder.append("'range':'"+range+"'");
+          strBuilder.append("}");
+          
+          if (questionNum-1 != i) {
+            strBuilder.append(",");
+          }
+        }
+        strBuilder.append("]");
+        int answer_start = ScDll.intance.answer_start(0, strBuilder.toString());
+        if (answer_start == ERROR) {
+            r.setMessage("指令发送失败");
+            return r;
+        }
+        t = new VoteThread();
+        t.start();
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("发送成功");
+        return r;
+    }
+    public Result stopScore() {
+        Result r = new Result();
+        if (t != null && t instanceof ScoreThread) {
+            ScoreThread c =  (ScoreThread)t;
+            c.setFLAG(false);
+        }
+        int answer_stop = ScDll.intance.answer_stop();
+        if (answer_stop == SUCCESS) {
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("停止成功");
+            return r;
+        }
+        r.setRet(Constant.ERROR);
+        r.setMessage("停止失败");
+        return r;
+    }
+    public Result stopVote() {
+        Result r = new Result();
+        if (t != null && t instanceof VoteThread) {
+            VoteThread c =  (VoteThread)t;
+            c.setFLAG(false);
+        }
+        int answer_stop = ScDll.intance.answer_stop();
+        if (answer_stop == SUCCESS) {
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("停止成功");
+            return r;
+        }
+        r.setRet(Constant.ERROR);
+        r.setMessage("停止失败");
+        return r;
     }
 }
