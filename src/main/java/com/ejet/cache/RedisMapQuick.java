@@ -42,4 +42,7 @@ public class RedisMapQuick {
             }
         }
     }
+    public static String getQuickAnswer(){
+        return quickMap.toString();
+    }
 }

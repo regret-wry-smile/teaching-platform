@@ -3,6 +3,7 @@ package com.zkxltech.ui.functions;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 
+import com.ejet.cache.RedisMapQuick;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.StudentInfoService;
@@ -34,6 +35,8 @@ public class PreemptiveFunctionManage extends BrowserFunction{
 			case "quick_answer":
 			    result = EquipmentServiceImpl.getInstance().quickAnswer(param);
                 break;
+			case "get_quick_answer_studentName":
+			    return RedisMapQuick.getQuickAnswer();
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");
