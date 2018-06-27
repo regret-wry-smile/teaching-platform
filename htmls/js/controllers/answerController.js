@@ -22,11 +22,11 @@ app.config(['$locationProvider', function($locationProvider) {
 	requireBase: false
 	});
 }]);
-app.controller('stopAnswerCtrl', function($scope, toastr,$window,$location) {
+/*app.controller('stopAnswerCtrl', function($scope, toastr,$window,$location) {
 	alert(JSON.stringify($location))
 	 console.log($location.search().classes);
       console.log($location.search().suject);
       console.log($location.search().sujectName);
 	
 })
- 
+ */

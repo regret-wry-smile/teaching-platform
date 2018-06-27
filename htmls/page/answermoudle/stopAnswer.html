@@ -33,7 +33,7 @@
 		<script src="../../js/vconsole.min.js"></script>
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<script type="text/javascript" src="../../js/app.js" ></script>
-		<script src="../../js/controllers/answerController.js"></script>
+		<script src="../../js/controllers/setClassController.js"></script>
 		<script src="../../js/jquery.nicescroll.min.js"></script>
 		
 	</head>
@@ -41,44 +41,31 @@
 		body{
 			position: relative;
 		}
-		.operatebtn{
+		.circle{
 			position: absolute;
-			bottom: 0.50rem;
+		    left: 50%;
+		    top: 35%;
+		    transform: translate(-50%,-35%);
+		}
+		.operatebtn{		
+			position: absolute;			
+			bottom:10%;
 			left: 0;
 			right: 0;
 		}
+		
+		
 	</style>
-	<body class="bg clearfix" ng-controller="stopAnswerCtrl">
-				<div class="content  clearfix">
-				<div class="modboxs text-center">
-					<label class="circle">
-						<span>4</span>
-					</label>
-				</div>  
+	<body class="bg" ng-controller="stopAnswerCtrl">
+			<div class="content  clearfix">
+			<label class="circle">
+				<span ng-if="time>=1">{{time}}</span>
+				<span ng-if="studentName" style="font-size: 0.30rem;">{{studentName}}</span>
+			</label>
 			</div>
-			<div class="operatebtn mt20 clearfix text-center">
+			<div class="operatebtn  clearfix text-center">
 		  		<button class="btn savebtn" ng-click="stopAnswer()">停止答题</button>
-		  	</div>
-			<div ng-spinner-loader class="loading">
-				<div class="spinner">
-					<div class="bounce1"></div>
-					<div class="bounce2"></div>
-					<div class="bounce3"></div>
-				</div>
-			</div>
+		 	</div>
 	</body>
 
 </html>
-<script type="text/javascript">
-	$(function(){
-		$('.head ul li a').click(function(){
-			$('.head ul li a.active').removeClass('active'); 
-			$(this).addClass('active');
-		})
-		$('ul.modbox li').click(function(){
-			$('ul.modbox li.active').removeClass('active'); 
-			$(this).addClass('active');
-		})
-	})
-
-</script>
