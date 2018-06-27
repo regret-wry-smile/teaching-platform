@@ -15,6 +15,7 @@ import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
+import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.StudentInfoService;
@@ -101,7 +102,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	public Result selectStudentInfo(Object param) {
 		result = new Result();
 		try {
-			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseToBean(JSONObject.fromObject(param), StudentInfo.class);
+			StudentInfo studentInfo =  (StudentInfo) com.zkxltech.ui.util.StringUtils.parseJSON(param, StudentInfo.class);
 			result = studentInfoSql.selectStudentInfo(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("查询学生信息成功!");

@@ -225,7 +225,7 @@ public class RedisMapScore {
 	 */
 	public static String getScoreInfoBar(){
 		dealBarInfo();
-		dealBarInfo();
+		logger.info("评分数据"+JSONArray.fromObject(scoreVos).toString());
 		return JSONArray.fromObject(scoreVos).toString();
     }
 	
