@@ -196,4 +196,17 @@ public class ClassHourServiceImpl implements ClassHourService{
 		return result;
 	}
 
+	@Override
+	public Result getClassInfo() {
+		try {
+			result.setItem(Global.getClassInfo());
+			result.setRet(Constant.SUCCESS);
+			result.setMessage("获取当前班级信息成功！");
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("获取当前班级信息失败！");
+		}
+		return result;
+	}
+
 }

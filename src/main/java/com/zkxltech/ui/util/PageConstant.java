@@ -16,7 +16,13 @@ public class PageConstant {
 	/**
 	 * 答题页面类型
 	 */
-	public static String PAGE_ANSWER_URL = COMMON_URL+"/page/answermoudle/startAnswer.html";
+	public static String PAGE_ANSWER_URL_START = COMMON_URL+"/page/answermoudle/answerCenter.html";
+	
+	/**
+	 * 答题页面类型
+	 */
+	public static String PAGE_ANSWER_URL_NO_START = COMMON_URL+"/page/answermoudle/startAnswer.html";
+	
 	/**
 	 * 设置页面类型
 	 */

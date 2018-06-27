@@ -21,6 +21,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.ejet.cache.BrowserManager;
 import com.zkxltech.config.ConfigConstant;
+import com.zkxltech.service.impl.ClassHourServiceImpl;
 import com.zkxltech.ui.functions.AnswerFunctionManage;
 import com.zkxltech.ui.functions.AttendanceFunctionManage;
 import com.zkxltech.ui.functions.PreemptiveFunctionManage;
@@ -247,7 +248,11 @@ public class MainPage extends Dialog {
 		}else {
 			switch (pageType) {
 			case "1":
-				PageConstant.browser.setUrl(PageConstant.PAGE_ANSWER_URL);
+				if (ClassHourServiceImpl.isStartClass()) {
+					PageConstant.browser.setUrl(PageConstant.PAGE_ANSWER_URL_START);
+				}else {
+					PageConstant.browser.setUrl(PageConstant.PAGE_ANSWER_URL_NO_START);
+				}
 				break;
 			case "2":
 				PageConstant.browser.setUrl(PageConstant.PAGE_SET_URL);

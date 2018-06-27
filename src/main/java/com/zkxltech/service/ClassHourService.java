@@ -40,4 +40,10 @@ public interface ClassHourService {
 	 * 下课
 	 */
 	Result endClass();
+	
+	/**
+	 * 获取当前班级信息
+	 * @return
+	 */
+	Result getClassInfo();
 }

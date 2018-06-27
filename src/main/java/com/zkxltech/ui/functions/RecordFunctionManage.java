@@ -44,6 +44,10 @@ public class RecordFunctionManage extends BrowserFunction{
 			case "is_start_class":
 				/*是否开始上课*/
 				return ClassHourServiceImpl.isStartClass();
+			case "get_classInfo":
+				/*获取当前班级信息*/
+				result = classHourService.getClassInfo();
+				break;
 			case "select_class_hour":
 				/*查询课程列表列表*/
 				if (params.length != 3) {
