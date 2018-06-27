@@ -160,9 +160,9 @@ public class TestPaperSql {
 				int type = jsonObject.getInteger("type"); // 0单选1多选
 				String typeString = "";
 				if (type == 0) {
-					typeString = "单选";
+					typeString = "0";
 				} else {
-					typeString = "多选";
+					typeString = "1";
 				}
 				int atype = jsonObject.getInteger("atype"); // 0客观1主观
 				String partScore = "", highScore = "", downScore = "";
@@ -173,6 +173,7 @@ public class TestPaperSql {
 					downScore = jsonObject.getString("downScore");
 					titleAnswer = highScore;
 					range = "";
+					typeString = "4";
 
 				}
 				stringBuilder.append("('" + titleId + "','" + typeString + "','" + titleAnswer + "','" + testId

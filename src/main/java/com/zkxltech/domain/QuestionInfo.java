@@ -23,7 +23,7 @@ public class QuestionInfo {
 	private String question;
 	/**
 	 * 题目类型
-	 * 1单选；2多选；3判断；4数字；5主观题
+	 * 0单选；1多选；2判断；3数字；4主观题
 	 */
 	private String questionType;
 	/**

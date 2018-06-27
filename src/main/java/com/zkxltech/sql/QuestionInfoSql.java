@@ -36,18 +36,18 @@ public class QuestionInfoSql {
 				if(rowList.get(i).size() == 5){
 					range = (String) rowList.get(i).get(4);
 				}
-				//1单选；2多选；3判断；4数字；5主观题
+				//0单选；1多选；2判断；3数字；4主观题
 				String type = (String) rowList.get(i).get(2);
 				String  trueAnswer = "";
 				switch (type) {
 				case "单选":
-					type = "1";
+					type = "0";
 					break;
 				case "多选":
-					type = "2";
+					type = "1";
 					break;
 				case "判断":
-					type = "3";
+					type = "2";
 					trueAnswer = (String) rowList.get(i).get(3);
 					if ("对".equals(trueAnswer)) {
 						trueAnswer = "T";
