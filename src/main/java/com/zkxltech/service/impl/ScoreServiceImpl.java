@@ -56,4 +56,20 @@ public class ScoreServiceImpl implements ScoreService{
 		}
 	}
 	
+	@Override
+	public Result getScoreTitleInfo() {
+		result = new Result();
+		try {
+			result.setItem(RedisMapScore.getScoreInfo()); //保存评分主题信息
+			result.setRet(Constant.SUCCESS);
+			result.setMessage("获取评分主题成功！");
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("获取评分主题失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
+	}
+	
 }

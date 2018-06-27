@@ -40,6 +40,9 @@ public class ScoreFunctionManage extends BrowserFunction{
 			case "get_score":
 				result = scoreService.getScore();
 				break;
+			case "get_scoreTitleInfo":
+				result = scoreService.getScoreTitleInfo();
+				break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");

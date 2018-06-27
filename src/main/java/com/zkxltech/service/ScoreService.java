@@ -20,4 +20,10 @@ public interface ScoreService {
 	 * @return
 	 */
 	Result getScore();
+	
+	/**
+	 * 获取评分主题信息
+	 * @return
+	 */
+	Result getScoreTitleInfo();
 }
