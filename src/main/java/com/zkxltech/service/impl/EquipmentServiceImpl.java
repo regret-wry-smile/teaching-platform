@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ejet.cache.BrowserManager;
+import com.ejet.cache.RedisMapAnswer;
 import com.ejet.cache.RedisMapAttendance;
 import com.ejet.cache.RedisMapBind;
 import com.ejet.cache.RedisMapClassTest;
@@ -15,6 +16,7 @@ import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
+import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.EquipmentParam;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
@@ -37,26 +39,7 @@ import net.sf.json.JSONObject;
  */
 public class EquipmentServiceImpl implements EquipmentService{
     //private ExecutorService threadPool = Executors.newSingleThreadExecutor(); //单线程池
-    public static final int SUCCESS = 0 ;//
-    public static final int ERROR = -1 ; //
-    /*有答案*/
-    public static final String IS_ANSWER_YES = "YES";
-    /*无答案*/
-    public static final String IS_ANSWER_NO = "NO";
-    /*抢答用-字符答案*/
-    public static final String TYPE_CHAR = "CHAR";
-    /*抢答用-数字答案*/
-    public static final String TYPE_NUMBER = "NUMBER";
-    /*抢答用-判断答案*/
-    public static final String TYPE_JUDGE = "JUDGE";
-    /*抢答用-字符答案*/
-    public static final String QUICK_CHAR = "[{'type':'s','id':'1','range':'A-F'}]";
-    /*抢答用-数字答案*/
-    public static final String QUICK_NUMBER = "[{'type':'d','id':'1','range':'0-9'}]";
-    /*抢答用-判断答案*/
-    public static final String QUICK_JUDGE = "[{'type':'j','id':'1','range':''}]";
-    /*抢答用-无答案*/
-    public static final String QUICK_COMMON = "[{'type':'g','id':'1','range':''}]";
+    
     public Thread t ;
     private static final EquipmentServiceImpl SINGLE = new EquipmentServiceImpl();  
     
@@ -100,7 +83,7 @@ public class EquipmentServiceImpl implements EquipmentService{
                 return r;
             }
             int clear_wl = ScDll.intance.clear_wl();
-            if (clear_wl == SUCCESS) {
+            if (clear_wl == Constant.SEND_SUCCESS) {
                 r.setRet(Constant.SUCCESS);
                 r.setMessage("清除成功");
                 BrowserManager.refreshStudent(jsono.getString("classId"));
@@ -181,7 +164,7 @@ public class EquipmentServiceImpl implements EquipmentService{
             c.setFLAG(false);
         }
         int bind_stop = ScDll.intance.wireless_bind_stop();
-        if (bind_stop == SUCCESS) {
+        if (bind_stop == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
             return r;
@@ -201,7 +184,7 @@ public class EquipmentServiceImpl implements EquipmentService{
             r.setMessage("缺少参数");
         }
         int answer_start = ScDll.intance.answer_start(isQuickResponse,answerStr);
-        if (answer_start == SUCCESS) {
+        if (answer_start == Constant.SEND_SUCCESS) {
             //开始答题前先清空
             RedisMapClassTest.classTestAnswerMap.clear();
             t = new AnswerThread();
@@ -217,7 +200,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result answer_start_with_raise_hand(int is_quick_response, int raise_hand, String answer_str) {
         Result r = new Result();
         int answer_start_with_raise_hand = ScDll.intance.answer_start_with_raise_hand(is_quick_response, raise_hand, answer_str);
-        if (answer_start_with_raise_hand == SUCCESS) {
+        if (answer_start_with_raise_hand == Constant.SEND_SUCCESS) {
             t = new AnswerThread();
             t.start();
             r.setRet(Constant.SUCCESS);
@@ -232,7 +215,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result set_raise_hand(int raise_hand) {
         Result r = new Result();
         int set_raise_hand = ScDll.intance.set_raise_hand(raise_hand);
-        if (set_raise_hand == SUCCESS) {
+        if (set_raise_hand == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("设置成功");
             return r;
@@ -245,7 +228,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result set_sign_in(int attendance) {
         Result r = new Result();
         int set_sign_in = ScDll.intance.set_sign_in(attendance);
-        if (set_sign_in == SUCCESS) {
+        if (set_sign_in == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("设置成功");
             return r;
@@ -266,7 +249,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result answerStop() {
         Result r = new Result();
         int answer_stop = ScDll.intance.answer_stop();
-        if (answer_stop == SUCCESS) {
+        if (answer_stop == Constant.SEND_SUCCESS) {
             //FIXME
             if (t != null && t instanceof AnswerThread) {
                 AnswerThread m = (AnswerThread)t;
@@ -284,7 +267,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result set_student_id(String student_id_str) {
         Result r = new Result();
         int set_student_id = ScDll.intance.set_student_id(student_id_str);
-        if (set_student_id == SUCCESS) {
+        if (set_student_id == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("操作成功");
             return r;
@@ -311,7 +294,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result set_channel(int tx_ch, int rx_ch) {
         Result r = new Result();
         int set_channel = ScDll.intance.set_channel(tx_ch,rx_ch);
-        if (set_channel == SUCCESS) {
+        if (set_channel == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("操作成功");
             return r;
@@ -324,7 +307,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result set_tx_power(int tx_power) {
         Result r = new Result();
         int set_tx_power = ScDll.intance.set_tx_power(tx_power);
-        if (set_tx_power == SUCCESS) {
+        if (set_tx_power == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("操作成功");
             return r;
@@ -350,7 +333,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result read_card_uid_start() {
         Result r = new Result();
         int read_card_uid_start = ScDll.intance.read_card_uid_start();
-        if (read_card_uid_start == SUCCESS) {
+        if (read_card_uid_start == Constant.SEND_SUCCESS) {
             r.setItem(read_card_uid_start);
             r.setRet(Constant.SUCCESS);
             r.setMessage("操作成功");
@@ -379,7 +362,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result read_card_uid_stop() {
         Result r = new Result();
         int read_card_uid_stop = ScDll.intance.read_card_uid_stop();
-        if (read_card_uid_stop == SUCCESS) {
+        if (read_card_uid_stop == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
             return r;
@@ -408,7 +391,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         Result r = new Result();
         int raise_hand_start = ScDll.intance.raise_hand_start();
         //FIXME
-        if (raise_hand_start == SUCCESS) {
+        if (raise_hand_start == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("操作成功");
             return r;
@@ -422,7 +405,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result raise_hand_stop() {
         Result r = new Result();
         int raise_hand_stop = ScDll.intance.raise_hand_stop();
-        if (raise_hand_stop == SUCCESS) {
+        if (raise_hand_stop == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
             return r;
@@ -466,7 +449,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         //int sign_in_start = ScDll.intance.sign_in_start();
         //开始签到接口有问题,暂用按任意键
         int answer_start = ScDll.intance.answer_start(0, Constant.ANSWER_STR);
-        if (answer_start == ERROR) {
+        if (answer_start == Constant.SEND_ERROR) {
             r.setMessage("指令发送失败");
             return r;
         }
@@ -503,7 +486,7 @@ public class EquipmentServiceImpl implements EquipmentService{
             a.setFLAG(false);
         }
         int answer_stop = ScDll.intance.answer_stop();
-        if (answer_stop == SUCCESS) {
+        if (answer_stop == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
             return r;
@@ -532,7 +515,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result set_attendance_24g(int is_open, int pro_index) {
       Result r = new Result();
       int set_attendance_24g = ScDll.intance.set_attendance_24g(is_open,pro_index);
-      if (set_attendance_24g == SUCCESS) {
+      if (set_attendance_24g == Constant.SEND_SUCCESS) {
           r.setRet(Constant.SUCCESS);
           r.setMessage("设置成功");
           return r;
@@ -546,7 +529,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result set_wireless_student_id(String uid_str, String student_id_str) {
         Result r = new Result();
         int set_wireless_student_id = ScDll.intance.set_wireless_student_id(uid_str,student_id_str);
-        if (set_wireless_student_id == SUCCESS) {
+        if (set_wireless_student_id == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("设置成功");
             return r;
@@ -578,8 +561,8 @@ public class EquipmentServiceImpl implements EquipmentService{
             r.setMessage("参数班级id不能为空");
             return r;
         }
-        int answer_start = ScDll.intance.answer_start(0, QUICK_COMMON);
-        if (answer_start == SUCCESS) {
+        int answer_start = ScDll.intance.answer_start(0, Constant.QUICK_COMMON);
+        if (answer_start == Constant.SEND_SUCCESS) {
             //开始答题前先清空
             RedisMapQuick.clearQuickMap();
             RedisMapQuick.clearStudentInfoMap();
@@ -625,7 +608,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         }
         strBuilder.append("]");
         int answer_start = ScDll.intance.answer_start(0, strBuilder.toString());
-        if (answer_start == ERROR) {
+        if (answer_start == Constant.SEND_ERROR) {
             r.setMessage("指令发送失败");
             return r;
         }
@@ -709,7 +692,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         }
         strBuilder.append("]");
         int answer_start = ScDll.intance.answer_start(0, strBuilder.toString());
-        if (answer_start == ERROR) {
+        if (answer_start == Constant.SEND_ERROR) {
             r.setMessage("指令发送失败");
             return r;
         }
@@ -726,7 +709,7 @@ public class EquipmentServiceImpl implements EquipmentService{
             c.setFLAG(false);
         }
         int answer_stop = ScDll.intance.answer_stop();
-        if (answer_stop == SUCCESS) {
+        if (answer_stop == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
             return r;
@@ -742,13 +725,51 @@ public class EquipmentServiceImpl implements EquipmentService{
             c.setFLAG(false);
         }
         int answer_stop = ScDll.intance.answer_stop();
-        if (answer_stop == SUCCESS) {
+        if (answer_stop == Constant.SEND_SUCCESS) {
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
             return r;
         }
         r.setRet(Constant.ERROR);
         r.setMessage("停止失败");
+        return r;
+    }
+    public Result singleAnswer(Object param) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        Answer answer = com.zkxltech.ui.util.StringUtils.parseJSON(param, Answer.class);
+        if (answer == null || StringUtils.isBlank(answer.getType())) {
+            r.setMessage("缺少参数,题目类型不能为空");
+            return r;
+        }
+        String type = answer.getType();
+        int status = -1;
+        switch (type) {
+            case Constant.ANSWER_CHAR_TYPE:
+                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
+                break;
+            case Constant.ANSWER_NUMBER_TYPE:
+                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
+                break;
+            case Constant.ANSWER_JUDGE_TYPE:
+                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
+                break;
+            default:
+                r.setMessage("参数错误");
+                return r;
+        }
+        if (status == Constant.SEND_ERROR) {
+            r.setMessage("指令发送失败");
+            return r;
+        }
+        //传入类型 ,清空数据
+        RedisMapAnswer.setAnswer(answer);
+        RedisMapAnswer.clearSingleAnswerMap();
+        RedisMapAnswer.clearMultipleAnswerMap();
+        RedisMapAnswer.clearStudentInfoMap();
+        t = new AnswerThread();
+        t.start();
+        r.setRet(Constant.SUCCESS);
         return r;
     }
 }

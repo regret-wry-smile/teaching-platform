@@ -16,7 +16,7 @@ import net.sf.json.JSONObject;
  *
  */
 public class VoteFunctionManage extends BrowserFunction{
-	private VoteService scoreService = new VoteServiceImpl();
+	private VoteService voteService = new VoteServiceImpl();
 	
 	public VoteFunctionManage(Browser browser, String name) {
 		super(browser, name);
@@ -33,13 +33,13 @@ public class VoteFunctionManage extends BrowserFunction{
 					result.setMessage("参数个数有误！");
 					break;
 				}
-				result = scoreService.startVote(params[1]);
+				result = voteService.startVote(params[1]);
 				break;
 			case "stop_vote":
                 result = EquipmentServiceImpl.getInstance().stopVote();
                 break;
-			case "get_score":
-				result = scoreService.getVote();
+			case "get_vote":
+				result = voteService.getVote();
 				break;
 			default:
 				result.setRet(Constant.ERROR);

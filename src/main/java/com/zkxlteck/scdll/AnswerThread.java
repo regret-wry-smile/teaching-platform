@@ -3,7 +3,7 @@ package com.zkxlteck.scdll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ejet.cache.RedisMapClassTest;
+import com.ejet.cache.RedisMapAnswer;
 import com.ejet.core.util.comm.StringUtils;
 
 public class AnswerThread extends Thread {
@@ -25,7 +25,7 @@ public class AnswerThread extends Thread {
             }
             String jsonData = ScDll.intance.get_answer_list();
             if (!StringUtils.isBlank(jsonData)) {
-                RedisMapClassTest.addAnswer(jsonData);
+                RedisMapAnswer.addAnswer(jsonData);
             }
         }
     }

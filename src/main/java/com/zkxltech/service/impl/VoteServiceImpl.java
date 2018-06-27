@@ -43,7 +43,7 @@ public class VoteServiceImpl implements VoteService{
 	public Result getVote() {
 		result = new Result();
 		try {
-			result.setItem(RedisMapScore.getScoreInfoBar());
+			result.setItem(RedisMapVote.getVoteInfoBar());
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("获取投票数据成功！");
 			return result;

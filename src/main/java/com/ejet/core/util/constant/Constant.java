@@ -25,7 +25,27 @@ public class Constant {
 	public static final String ATTENDANCE_YES = "YES";
 	/*未考勤*/
     public static final String ATTENDANCE_NO = "NO";
-	/*考勤抢答用*/
-	public static final String ANSWER_STR = "[{'type':'g','id':'1','range':''}]";
+    
+	public static final int SEND_SUCCESS = 0 ;//
 	
+    public static final int SEND_ERROR = -1 ; //
+    /* 字符题型*/
+    public static final String ANSWER_CHAR_TYPE = "char";
+    /* 数字题型*/
+    public static final String ANSWER_NUMBER_TYPE = "number";
+    /* 判断答案*/
+    public static final String ANSWER_JUDGE_TYPE = "judge";
+    /* 多选答案*/
+    public static final String ANSWER_MULTIPLE_TYPE = "multiple";
+    /*字符题型*/
+    public static final String SINGLE_ANSWER_CHAR = "[{'type':'s','id':'1','range':'A-D'}]";
+    /* 数字题型*/
+    public static final String SINGLE_ANSWER_NUMBER = "[{'type':'d','id':'1','range':'0-9'}]";
+    /* 判断答案*/
+    public static final String SINGLE_ANSWER_JUDGE = "[{'type':'j','id':'1','range':''}]";
+    /*抢答用-按任意*/
+    public static final String QUICK_COMMON = "[{'type':'g','id':'1','range':''}]";
+    
+    /*考勤抢答用*/
+    public static final String ANSWER_STR = "[{'type':'g','id':'1','range':''}]";
 }

@@ -110,12 +110,12 @@ public class SettingServiceImpl implements SettingService{
             }
 			
 			int set_channel = ScDll.intance.set_channel(tx_ch, rx_ch);
-			if (set_channel == EquipmentServiceImpl.ERROR) {
+			if (set_channel == Constant.SEND_ERROR) {
 			    result.setMessage("设置信道失败");
                 return result;
             }
 			int set_tx_power = ScDll.intance.set_tx_power(tx_power);
-			if (set_tx_power == EquipmentServiceImpl.ERROR) {
+			if (set_tx_power == Constant.SEND_ERROR) {
 			    result.setMessage("设置功率失败");
 			    return result;
             }
@@ -150,12 +150,12 @@ public class SettingServiceImpl implements SettingService{
                 return result;
             }
 			int set_channel = ScDll.intance.set_channel(tx_ch, rx_ch);
-			if (set_channel == EquipmentServiceImpl.ERROR) {
+			if (set_channel == Constant.SEND_ERROR) {
                 result.setMessage("系统信道设置失败,请重试或重启设备");
                 return result;
             }
 			int set_tx_power = ScDll.intance.set_tx_power(tx_power);
-			if (set_tx_power == EquipmentServiceImpl.ERROR) {
+			if (set_tx_power == Constant.SEND_ERROR) {
                 result.setMessage("设置答题器发送功率失败,请重试或重启设备");
                 return result;
             }
