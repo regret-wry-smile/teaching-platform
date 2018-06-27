@@ -3,6 +3,7 @@ package com.zkxltech.ui.functions;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 
+import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.AnswerInfoService;
@@ -34,6 +35,9 @@ public class AnswerFunctionManage extends BrowserFunction{
 			case "start_multiple_answer":
                 result = answerInfoService.startMultipleAnswer(params[1]);
                 break;
+			case "get_multiple_answer_num":
+				//获取多选作答人数
+               return RedisMapMultipleAnswer.getAnswerNum();
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");
