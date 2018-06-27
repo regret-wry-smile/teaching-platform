@@ -74,14 +74,16 @@
 	<body class="bg clearfix" ng-controller="setClassCtrl">
 			<div class="header clearfix">
 				<div class="pull-left">
-					<button class="btn btnfff" class="mr25">{{classesobject.value}}</button>
+					<button class="btn btnfff" class="mr25">{{curclassName}}</button>
 				</div>
 				<div class="pull-right">
 					<a href="../../page/answermoudle/userAttend.html" ng-click="signIn()">
 					<button class="btn whitebtn mr25" >
 					</button></a>
-				</div>
-				
+				</div>				
+			</div>
+			<div class="content" style="margin: 10% 48%;transform: translate(-45%,-48%);">
+				<button class="btn circlefff" class="mr25" ng-click="stopClass()">下课</button>
 			</div>
 		  	<div class="block">
 		  	<ul class="col-4">
