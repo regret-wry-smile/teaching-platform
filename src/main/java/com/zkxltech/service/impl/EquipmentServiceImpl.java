@@ -132,24 +132,13 @@ public class EquipmentServiceImpl implements EquipmentService{
         Result r = new Result();
         r.setRet(Constant.ERROR);
         try {
-            //EquipmentParam ep =  (EquipmentParam) com.zkxltech.ui.util.StringUtils.parseJSON(param, EquipmentParam.class);
-//            if (ep.getModel()== null) {
-//                r.setMessage("缺少参数");
-//                return r;
-//            }
             int bind_start = ScDll.intance.wireless_bind_start(1,"") ;
             if (bind_start < 1) {
                 r.setMessage("操作失败");
                 return r;
             }
-            //FIXME
-            /**查询学生信息*/
+            /**根据班级id查询学生信息*/
             StudentInfoServiceImpl sis= new StudentInfoServiceImpl();
-//            StudentInfo si =  (StudentInfo) com.zkxltech.ui.util.StringUtils.parseJSON(param, StudentInfo.class);
-//            if (StringUtils.isBlank(si.getClassId())) {
-//                r.setMessage("参数为空:班级id");
-//                return r;
-//            }
             Result result = sis.selectStudentInfo(param);
             List<StudentInfo> studentInfos = (List)result.getItem();
             if (result== null || ListUtils.isEmpty(studentInfos)) {
@@ -158,14 +147,18 @@ public class EquipmentServiceImpl implements EquipmentService{
             }
             /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
             Map<Object, List<StudentInfo>> studentInfoMap = ListUtils.getClassificationMap(studentInfos, "iclickerId");
+            /**按绑定状态进行分类*/
+            Map<Object, List<StudentInfo>> studentStatusInfoMap = ListUtils.getClassificationMap(studentInfos, "status");
+            List<StudentInfo> bindList = studentStatusInfoMap.get(Constant.BING_YES);
+            List<StudentInfo> notBindList = studentStatusInfoMap.get(Constant.BING_YES);
             /**存入静态map*/
             //每次调用绑定方法先清空,再存
             RedisMapBind.clearCardIdSet();
             RedisMapBind.clearBindMap();
             RedisMapBind.getBindMap().put("studentName", null);
             RedisMapBind.getBindMap().put("code", bind_start);
-            RedisMapBind.getBindMap().put("accomplish", 0);
-            RedisMapBind.getBindMap().put("notAccomplish",studentInfos.size());
+            RedisMapBind.getBindMap().put("accomplish", bindList == null ? 0 :bindList.size());
+            RedisMapBind.getBindMap().put("notAccomplish",notBindList == null ? 0 :notBindList.size());
             RedisMapBind.setStudentInfoMap(studentInfoMap);
             t = new CardInfoThread();
             t.start();
