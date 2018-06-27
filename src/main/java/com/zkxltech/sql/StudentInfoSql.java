@@ -26,9 +26,10 @@ public class StudentInfoSql {
 		for (int i = 0; i < rowList.size(); i++) {
 			if(i == 0){
 				classId = (String) rowList.get(i).get(0);
+				sqls.add("delete from class_info where class_id = '" + classId+"'"); //删除原来班级信息
 				sqls.add("insert into class_info (class_id,class_name,atype) values('"+classId+"','"+
 						rowList.get(i).get(1)+"','0')"); //添加班级信息
-				sqls.add("delete from student_info where class_id = '" + rowList.get(i).get(0)+"'"); //删除原来的班级学生
+				sqls.add("delete from student_info where class_id = '" + classId+"'"); //删除原来的班级学生
 			}
 			sql = "insert into student_info (class_id,class_name,student_id,student_name,iclicker_id,status) values('"+classId+"','"+
 					rowList.get(i).get(1)+"','"+rowList.get(i).get(2)+"','"+rowList.get(i).get(3)+"','"+rowList.get(i).get(4)+"','0')";
