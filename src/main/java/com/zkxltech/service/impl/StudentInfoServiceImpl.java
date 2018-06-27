@@ -199,7 +199,6 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result = studentInfoSql.updateStudentById(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("修改学生信息成功!");
-				BrowserManager.refreshBindCard();
 			}else {
 				result.setMessage("修改学生信息失败！");
 			}
