@@ -46,7 +46,7 @@ public class Record {
 	 */
 	private String answer;
 	/**
-	 * 作答结果
+	 * 作答结果1正确，2错误
 	 */
 	private String result;
 	public Integer getId() {

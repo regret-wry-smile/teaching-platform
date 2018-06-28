@@ -1,5 +1,10 @@
 package com.zkxltech.domain;
 
+/**
+ * 给硬件发送指令参数对象
+ * @author zkxl
+ *
+ */
 public class RequestVo {
 	/**
 	 * 题目编号

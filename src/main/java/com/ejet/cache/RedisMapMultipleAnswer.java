@@ -67,6 +67,10 @@ public class RedisMapMultipleAnswer {
 	}
 	
 	
+	public static String getRange(){
+		return JSONArray.fromObject(range).toString();
+	}
+	
 	/**
 	 * 添加评分详情
 	 * @param score

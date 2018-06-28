@@ -11,7 +11,17 @@ public class Constant {
 	public static String KEGUANGTI = "客观题";
 	/*判断题(中文)*/
 	public static String PANDUANTI = "判断题";
-	/*主观题(英文)*/
+	/*单选(编号)*/
+	public static String DANXUANTI_NUM = "0";
+	/*多选(编号)*/
+	public static String DUOXUANTI_NUM = "1";
+	/*判断(编号)*/
+	public static String PANDUANTI_NUM = "2";
+	/*数字(编号)*/
+	public static String SHUZITI_NUM = "3";
+	/*主观题(编号)*/
+	public static String ZHUGUANTI_NUM = "4";
+	/*主观题(数字)*/
 	public static String QUSETIONTYPEONE = "qusetiontypeone";
 	/*客观题(英文)*/
 	public static String QUSETIONTYPETWO = "qusetiontypetwo";
