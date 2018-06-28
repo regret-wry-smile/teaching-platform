@@ -26,6 +26,7 @@ import com.zkxltech.sql.RecordSql;
 import com.zkxltech.ui.util.StringUtils;
 import com.zkxlteck.scdll.ScDll;
 import com.zkxlteck.thread.AttendanceThread;
+import com.zkxlteck.thread.MultipleAnswerThread;
 import com.zkxlteck.thread.SingleAnswerThread;
 
 public class AnswerInfoServiceImpl implements AnswerInfoService{
@@ -224,18 +225,10 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         }else{
             log.error("单选线程停止失败");;
         }
-        
-        int answer_stop = ScDll.intance.answer_stop();
-        if (answer_stop == Constant.SEND_ERROR) {
-            int answer_stop2 = ScDll.intance.answer_stop();
-            if (answer_stop2 == Constant.SEND_ERROR) {
-                r.setRet(Constant.ERROR);
-                r.setMessage("指令发送失败");
-                log.error("\"停止单选\"指令发送失败");
-                return r;
-            }
+        r = EquipmentServiceImpl.getInstance().answer_stop();
+        if (r.getRet().equals(Constant.ERROR)) {
+            return r;
         }
-        log.info("\"停止单选\"指令发送成功");
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
@@ -256,4 +249,23 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 		}
 		return result;
 	}
+
+    @Override
+    public Result stopMultipleAnswer() {
+        Result r = new Result();
+        if (EquipmentServiceImpl.getThread() != null && EquipmentServiceImpl.getThread() instanceof MultipleAnswerThread ) {
+            AttendanceThread a = (AttendanceThread)thread;
+            a.setFLAG(false);
+            log.info("多选线程停止成功");
+        }else{
+            log.error("多选线程停止失败");;
+        }
+        r = EquipmentServiceImpl.getInstance().answer_stop();
+        if (r.getRet().equals(Constant.ERROR)) {
+            return r;
+        }
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("停止成功");
+        return r;
+    }
 }

@@ -27,4 +27,6 @@ public interface AnswerInfoService {
     Result stopSingleAnswer();
     
     Result getEverybodyAnswerInfo();
+
+    Result stopMultipleAnswer();
 }

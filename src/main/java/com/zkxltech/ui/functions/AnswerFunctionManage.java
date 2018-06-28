@@ -54,6 +54,10 @@ public class AnswerFunctionManage extends BrowserFunction{
 			case "start_multiple_answer": //开始多选答题
                 result = answerInfoService.startMultipleAnswer(params[1]);
                 break;
+			case "stop_multiple_answer":
+			    //获取每个答案对应的作答人数
+			    result = answerInfoService.stopMultipleAnswer();
+			    break;
 			case "get_multiple_range":
 				//获取多选范围
                return RedisMapMultipleAnswer.getRange();

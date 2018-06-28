@@ -26,13 +26,16 @@ import net.sf.json.JSONObject;
  */
 public class EquipmentServiceImpl implements EquipmentService{
     private static final Logger log = LoggerFactory.getLogger(EquipmentServiceImpl.class);
-    public Thread t ;
+    private static Thread thread ;
     private static final EquipmentServiceImpl SINGLE = new EquipmentServiceImpl();  
     
     private EquipmentServiceImpl() {
     }
     public static EquipmentServiceImpl getInstance() {  
         return SINGLE;  
+    }
+    public static Thread getThread() {
+        return thread;
     }
     @Override
     public Result get_device_info() {
@@ -376,8 +379,8 @@ public class EquipmentServiceImpl implements EquipmentService{
 //		System.out.println(strBuilder);
         int answer_start = ScDll.intance.answer_start(1,strBuilder.toString());
         if (answer_start == Constant.SEND_SUCCESS) {
-            t = new MultipleAnswerThread(answerType);
-            t.start();
+            thread = new MultipleAnswerThread(answerType);
+            thread.start();
             r.setRet(Constant.SUCCESS);
             r.setMessage("发送成功");
             return r;
