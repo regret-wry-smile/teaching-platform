@@ -61,7 +61,7 @@ public class AnswerFunctionManage extends BrowserFunction{
 				//获取多选作答详情
                return RedisMapMultipleAnswer.getEveryAnswerInfoBar();
 			case "start_class_test_objective": //开始客观答题
-                result = answerInfoService.startMultipleAnswer(params[1]);
+                result = answerInfoService.startObjectiveAnswer(params[1]);
                 break;
 			case "stop_class_test_objective":
 				//停止客观题答题
