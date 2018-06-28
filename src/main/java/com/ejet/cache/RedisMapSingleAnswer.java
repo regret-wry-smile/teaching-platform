@@ -61,6 +61,7 @@ public class RedisMapSingleAnswer {
                     continue;
                 }
                 iclickerIdsSet.add(card_id);
+                singleAnswerNumMap.put("current", iclickerIdsSet.size());
                 switch (answer.getType()) {
                     case Constant.ANSWER_CHAR_TYPE:
                         setCharCount(result);
