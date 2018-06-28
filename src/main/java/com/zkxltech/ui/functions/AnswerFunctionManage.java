@@ -11,7 +11,6 @@ import com.zkxltech.domain.Result;
 import com.zkxltech.service.AnswerInfoService;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.service.impl.AnswerInfoServiceImpl;
-import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
@@ -36,9 +35,13 @@ public class AnswerFunctionManage extends BrowserFunction{
 			case "import_paper":
 				result = service.selectStudentInfo(param);
 				break;
-			case "single_answer":
-			    result = service.singleAnswer(param);
+			case "single_answer": //开始单题单选答题
+			    result = answerInfoService.singleAnswer(param);
                 break;
+			case "stop_single_answer":
+			    //获取每个答案对应的作答人数
+			    result = answerInfoService.stopSingleAnswer();
+			    break;
 			case "get_single_answer_num":
 			    //获取单选作答人数
 			    return RedisMapSingleAnswer.getSingleAnswerNum();

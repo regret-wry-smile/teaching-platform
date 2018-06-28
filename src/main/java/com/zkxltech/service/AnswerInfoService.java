@@ -21,6 +21,10 @@ public interface AnswerInfoService {
 	 * 停止客观题答题
 	 */
 	Result stopObjectiveAnswer();
-	
-	Result getEverybodyAnswerInfo();
+
+    Result singleAnswer(Object param);
+
+    Result stopSingleAnswer();
+    
+    Result getEverybodyAnswerInfo();
 }

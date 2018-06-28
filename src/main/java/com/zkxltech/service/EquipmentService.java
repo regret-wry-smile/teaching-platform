@@ -54,4 +54,5 @@ public interface EquipmentService {
     
     /** 开始答题 */
     public Result answerStart2(String answerType,Object param);
+    Result answer_stop();
 }

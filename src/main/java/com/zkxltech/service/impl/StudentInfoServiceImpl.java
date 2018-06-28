@@ -30,7 +30,6 @@ import com.zkxlteck.scdll.ScDll;
 import com.zkxlteck.thread.AttendanceThread;
 import com.zkxlteck.thread.MultipleAnswerThread;
 import com.zkxlteck.thread.QuickThread;
-import com.zkxlteck.thread.singleAnswerThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -287,82 +286,6 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	}
 
     @Override
-    public Result singleAnswer(Object param) {
-        Result r = new Result();
-        r.setRet(Constant.ERROR);
-        Answer answer = com.zkxltech.ui.util.StringUtils.parseJSON(param, Answer.class);
-        if (answer == null || StringUtils.isEmpty(answer.getType())) {
-            r.setMessage("缺少参数,题目类型不能为空");
-            return r;
-        }
-        //传入类型 ,清空数据
-        RedisMapSingleAnswer.setAnswer(answer);
-        RedisMapSingleAnswer.clearSingleAnswerNumMap();
-        RedisMapSingleAnswer.clearStudentInfoMap();
-        RedisMapSingleAnswer.clearSingleAnswerStudentNameMap();
-        RedisMapSingleAnswer.cleariclickerIdsSet();
-        List<StudentInfo> studentInfos = Global.getStudentInfos();
-        if (ListUtils.isEmpty(studentInfos)) {
-            r.setMessage("未获取到当前班次学生信息");
-            return r;
-        }
-        Map<String,StudentInfo> map = new HashMap<>();
-        RedisMapSingleAnswer.setStudentInfoMap(map);
-        for (StudentInfo studentInfo : studentInfos) {
-            map.put(studentInfo.getIclickerId(), studentInfo);
-        }
-        String type = answer.getType();
-        int status = -1;
-        switch (type) {
-            case Constant.ANSWER_CHAR_TYPE:
-                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
-                if (status == Constant.SEND_ERROR) {
-                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
-                }
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_A, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_B, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_C, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_D, 0);
-                break;
-            case Constant.ANSWER_NUMBER_TYPE:
-                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
-                if (status == Constant.SEND_ERROR) {
-                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
-                }
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_1, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_2, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_3, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_4, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_5, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_6, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_7, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_8, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_9, 0);
-                break;
-            case Constant.ANSWER_JUDGE_TYPE:
-                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
-                if (status == Constant.SEND_ERROR) {
-                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
-                }
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_TRUE, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_FALSE, 0);
-                break;
-            default:
-                r.setMessage("参数错误");
-                return r;
-        }
-        if (status == Constant.SEND_ERROR) {
-            r.setMessage("指令发送失败");
-            return r;
-        }
-        
-        thread = new singleAnswerThread();
-        thread.start();
-        r.setRet(Constant.SUCCESS);
-        return r;
-    }
-
-    @Override
     public Result signInStart(Object param) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
@@ -378,24 +301,14 @@ public class StudentInfoServiceImpl implements StudentInfoService{
                 return r;
             }
         }
-        //int sign_in_start = ScDll.intance.sign_in_start();
         //开始签到接口有问题,暂用按任意键
-        int answer_start = ScDll.intance.answer_start(0, Constant.ANSWER_STR);
-        if (answer_start == Constant.SEND_ERROR) {
-            int answer_start2 = ScDll.intance.answer_start(0, Constant.ANSWER_STR);
-            if (answer_start2 == Constant.SEND_ERROR) {
-                log.error("签到指令发送失败");
-                r.setMessage("指令发送失败");
-                return r;
-            }
+        r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
+        if (r.getRet().equals(Constant.ERROR)) {
+            return r;
         }
-        log.info("签到指令发送成功");
         //每次调用签到先清空数据
         RedisMapAttendance.clearAttendanceMap();
         RedisMapAttendance.clearCardIdSet();
-//        StudentInfoServiceImpl si = new StudentInfoServiceImpl();
-//        Result result = si.selectStudentInfo(param);
-//        List<StudentInfo> studentInfos = (List)result.getItem();
         List<StudentInfo> studentInfos = Global.getStudentInfos();
         if (ListUtils.isEmpty(studentInfos)) {
             r.setMessage("未获取到学生信息");
@@ -424,18 +337,10 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }else{
             log.error("签到线程停止失败");;
         }
-        
-        int answer_stop = ScDll.intance.answer_stop();
-        if (answer_stop == Constant.SEND_ERROR) {
-            int answer_stop2 = ScDll.intance.answer_stop();
-            if (answer_stop2 == Constant.SEND_ERROR) {
-                r.setRet(Constant.ERROR);
-                r.setMessage("指令发送失败");
-                log.error("\"停止签到\"指令发送失败");
-                return r;
-            }
+        r = EquipmentServiceImpl.getInstance().answer_stop();
+        if (r.getRet().equals(Constant.ERROR)) {
+            return r;
         }
-        log.info("\"停止签到\"指令发送成功");
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
@@ -448,16 +353,10 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             r.setMessage("参数班级id不能为空");
             return r;
         }
-        int answer_start = ScDll.intance.answer_start(0, Constant.QUICK_COMMON);
-        if (answer_start == Constant.SEND_ERROR) {
-            int answer_start2 = ScDll.intance.answer_start(0, Constant.QUICK_COMMON);
-            if (answer_start2 == Constant.SEND_ERROR) {
-                log.error("抢答指令发送失败");
-                r.setMessage("指令发送失败");
-                return r;
-            }
+        r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
+        if (r.getRet().equals(Constant.ERROR)) {
+            return r;
         }
-        log.info("抢答指令发送成功");
         //开始答题前先清空
         RedisMapQuick.clearQuickMap();
         RedisMapQuick.clearStudentInfoMap();

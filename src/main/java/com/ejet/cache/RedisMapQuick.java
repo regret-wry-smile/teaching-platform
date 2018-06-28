@@ -7,10 +7,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.StudentInfo;
+import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
-import com.zkxlteck.scdll.ScDll;
 import com.zkxlteck.thread.QuickThread;
 
 import net.sf.json.JSONArray;
@@ -33,17 +32,6 @@ public class RedisMapQuick {
             String card_id = jo.getString("card_id");
             StudentInfo studentInfo = studentInfoMap.get(card_id);
             quickMap.put("studentName", studentInfo.getStudentName());
-            int answer_stop = ScDll.intance.answer_stop();
-            if (answer_stop == Constant.SEND_ERROR) {
-                int answer_stop2 = ScDll.intance.answer_stop();
-                if (answer_stop2 == Constant.SEND_ERROR) {
-                    logger.error("停止抢答指令发送失败");
-                }else{
-                    logger.info("停止抢答指令发送成功");
-                }
-            }else{
-                logger.info("停止抢答指令发送成功");
-            }
             if (StudentInfoServiceImpl.getThread()!=null && StudentInfoServiceImpl.getThread() instanceof QuickThread) {
                 QuickThread qt= (QuickThread)StudentInfoServiceImpl.getThread();
                 qt.setFLAG(false);
@@ -51,6 +39,7 @@ public class RedisMapQuick {
             }else{
                 logger.error("抢答线程停止失败");
             }
+            EquipmentServiceImpl.getInstance().answer_stop();
         }
     }
     public static String getQuickAnswer(){
