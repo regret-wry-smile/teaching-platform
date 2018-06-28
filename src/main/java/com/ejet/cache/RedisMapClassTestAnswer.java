@@ -170,7 +170,7 @@ public class RedisMapClassTestAnswer {
 			classTestVos.add(classTestVo);
 		}
 		
-		BrowserManager.refresAnswerNum();
+		BrowserManager.refreClassTest();
 		return JSONArray.fromObject(classTestVos).toString();
 	}
 	/**
