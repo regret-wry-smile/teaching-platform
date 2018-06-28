@@ -245,7 +245,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	public Result getEverybodyAnswerInfo() {
 		result = new Result();
 		try {
-			RedisMapClassTestAnswer.getEverybodyAnswerInfo();
+			result.setItem(RedisMapClassTestAnswer.getEverybodyAnswerInfo());;
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("获取作答数据成功！");
 			return result;
