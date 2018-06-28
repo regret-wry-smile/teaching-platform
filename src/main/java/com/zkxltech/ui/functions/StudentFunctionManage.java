@@ -30,7 +30,6 @@ public class StudentFunctionManage extends BrowserFunction{
 	
 	private ClassInfoService classInfoService = new ClassInfoServiceImpl();
 	private StudentInfoService studentInfoservice = new StudentInfoServiceImpl();
-	private EquipmentService equipmentService = EquipmentServiceImpl.getInstance();
 	public StudentFunctionManage(Browser browser, String name) {
 		super(browser, name);
 	}
