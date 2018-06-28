@@ -1,13 +1,14 @@
-package com.zkxlteck.scdll;
+package com.zkxlteck.thread;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ejet.cache.RedisMapBind;
+import com.ejet.cache.RedisMapScore;
 import com.ejet.core.util.comm.StringUtils;
+import com.zkxlteck.scdll.ScDll;
 
-public class CardInfoThread extends Thread {
-    private static final Logger logger = LoggerFactory.getLogger(CardInfoThread.class);
+public class ScoreThread extends Thread {
+    private static final Logger logger = LoggerFactory.getLogger(ScoreThread.class);
     private boolean FLAG = true;
     public boolean isFLAG() {
         return FLAG;
@@ -23,10 +24,10 @@ public class CardInfoThread extends Thread {
             } catch (InterruptedException e) {
                 logger.error(" Thread sleep failure ");
             }
-            String jsonData = ScDll.intance.get_wireless_bind_info() ;
+            String jsonData = ScDll.intance.get_answer_list();
             if (!StringUtils.isBlank(jsonData)) {
                 logger.info("获取到答题数据:===>>"+jsonData);
-                RedisMapBind.addBindMap(jsonData);
+                RedisMapScore.addscoreDetailInfo(jsonData);
             }
         }
     }

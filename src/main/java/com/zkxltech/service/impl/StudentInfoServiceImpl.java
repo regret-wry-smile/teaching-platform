@@ -22,15 +22,14 @@ import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
 import com.zkxltech.domain.Answer;
-import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.sql.StudentInfoSql;
-import com.zkxlteck.scdll.AnswerThread;
-import com.zkxlteck.scdll.AttendanceThread;
-import com.zkxlteck.scdll.QuickThread;
 import com.zkxlteck.scdll.ScDll;
+import com.zkxlteck.thread.AnswerThread;
+import com.zkxlteck.thread.AttendanceThread;
+import com.zkxlteck.thread.QuickThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

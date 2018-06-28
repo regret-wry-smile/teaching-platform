@@ -8,7 +8,7 @@ import com.zkxltech.domain.Score;
 import com.zkxltech.service.ScoreService;
 import com.zkxltech.ui.util.StringUtils;
 import com.zkxlteck.scdll.ScDll;
-import com.zkxlteck.scdll.ScoreThread;
+import com.zkxlteck.thread.ScoreThread;
 
 public class ScoreServiceImpl implements ScoreService{
 	private Result result = new Result();

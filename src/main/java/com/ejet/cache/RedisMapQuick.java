@@ -12,7 +12,7 @@ import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
-import com.zkxlteck.scdll.QuickThread;
+import com.zkxlteck.thread.QuickThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

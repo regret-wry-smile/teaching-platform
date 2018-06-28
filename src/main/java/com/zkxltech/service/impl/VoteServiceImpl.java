@@ -9,7 +9,7 @@ import com.zkxltech.domain.Vote;
 import com.zkxltech.service.VoteService;
 import com.zkxltech.ui.util.StringUtils;
 import com.zkxlteck.scdll.ScDll;
-import com.zkxlteck.scdll.VoteThread;
+import com.zkxlteck.thread.VoteThread;
 
 public class VoteServiceImpl implements VoteService{
 	private Result result = new Result();

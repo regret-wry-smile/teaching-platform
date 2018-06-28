@@ -1,13 +1,14 @@
-package com.zkxlteck.scdll;
+package com.zkxlteck.thread;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ejet.cache.RedisMapScore;
+import com.ejet.cache.RedisMapVote;
 import com.ejet.core.util.comm.StringUtils;
+import com.zkxlteck.scdll.ScDll;
 
-public class ScoreThread extends Thread {
-    private static final Logger logger = LoggerFactory.getLogger(ScoreThread.class);
+public class VoteThread extends Thread {
+    private static final Logger logger = LoggerFactory.getLogger(VoteThread.class);
     private boolean FLAG = true;
     public boolean isFLAG() {
         return FLAG;
@@ -26,7 +27,7 @@ public class ScoreThread extends Thread {
             String jsonData = ScDll.intance.get_answer_list();
             if (!StringUtils.isBlank(jsonData)) {
                 logger.info("获取到答题数据:===>>"+jsonData);
-                RedisMapScore.addscoreDetailInfo(jsonData);
+                RedisMapVote.addVoteDetailInfo(jsonData);
             }
         }
     }
