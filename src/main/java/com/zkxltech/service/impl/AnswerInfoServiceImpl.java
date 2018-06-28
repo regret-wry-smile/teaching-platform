@@ -254,7 +254,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
     public Result stopMultipleAnswer() {
         Result r = new Result();
         if (EquipmentServiceImpl.getThread() != null && EquipmentServiceImpl.getThread() instanceof MultipleAnswerThread ) {
-            AttendanceThread a = (AttendanceThread)thread;
+            AttendanceThread a = (AttendanceThread)EquipmentServiceImpl.getThread();
             a.setFLAG(false);
             log.info("多选线程停止成功");
         }else{
