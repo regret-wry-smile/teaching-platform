@@ -21,4 +21,9 @@ public interface ServerService {
 	 * @return
 	 */
 	Result getQuestionInfoFromServer(Object object);
+	
+	/**
+	 * 上传服务器
+	 */
+	Result uploadServer(Object testId,Object subject,Object classId);
 }

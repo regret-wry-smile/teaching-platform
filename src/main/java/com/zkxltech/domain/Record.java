@@ -50,6 +50,10 @@ public class Record {
 	 */
 	private String trueAnswer;
 	/**
+	 * 分数
+	 */
+	private String score;
+	/**
 	 * 作答答案
 	 */
 	private String answer;
@@ -134,6 +138,12 @@ public class Record {
 	}
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+	public String getScore() {
+		return score;
+	}
+	public void setScore(String score) {
+		this.score = score;
 	}
 	
 }

@@ -88,6 +88,11 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 				}
 			}
 			
+			if (StringUtils.isEmptyList(questionInfos2)) {
+				result.setMessage("该试卷没有客观题目！");
+				result.setRet(Constant.ERROR);
+				return result;
+			}
 
 			RedisMapClassTestAnswer.startClassTest(questionInfos2); //缓存初始化
 			
@@ -100,7 +105,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 				requestVos.add(requestVo);
 			}
 			
-			result = EquipmentServiceImpl.getInstance().answerStart2(Constant.ANSWER_MULTIPLE_TYPE,requestVos); //发送硬件指令
+			result = EquipmentServiceImpl.getInstance().answerStart2(Constant.ANSWER_CLASS_TEST_OBJECTIVE,requestVos); //发送硬件指令
 			if (Constant.ERROR.equals(result.getRet())) {
 				result.setMessage("硬件指令发送失败！");
 				return result;

@@ -12,7 +12,7 @@ public interface AnswerInfoService {
 	
 	/**
 	 * 开始客观答题
-	 * @param answerInfos
+	 * @param testId 试卷id
 	 * @return
 	 */
 	Result startObjectiveAnswer(Object testId);

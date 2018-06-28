@@ -24,6 +24,7 @@ import com.zkxltech.domain.Record;
 import com.zkxltech.domain.ResponseAnswer;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
+import com.zkxltech.service.impl.AnswerInfoServiceImpl;
 import com.zkxltech.service.impl.QuestionServiceImpl;
 
 import net.sf.json.JSONArray;
@@ -128,6 +129,7 @@ public class RedisMapClassTestAnswer {
 				record.setClassHourId(Global.getClassHour().getClassHourId());
 				record.setTestId(questionInfo.getTestId());
 				record.setAnswer(answer.getAnswer());
+				record.setScore(questionInfo.getScore());
 				record.setQuestion(questionInfo.getQuestion());
 				record.setQuestionId(questionId);
 				record.setQuestionType(questionInfo.getQuestionType());
@@ -167,6 +169,8 @@ public class RedisMapClassTestAnswer {
 			}
 			classTestVos.add(classTestVo);
 		}
+		
+		BrowserManager.refreClassTest();
 		return JSONArray.fromObject(classTestVos).toString();
 	}
 	/**
@@ -194,6 +198,7 @@ public class RedisMapClassTestAnswer {
 					record.setQuestionType(questionInfo.getQuestionType());
 					record.setStudentId(studentInfo.getStudentId());
 					record.setStudentName(studentInfo.getStudentName());
+					record.setScore(questionInfo.getScore());
 					record.setResult("2");
 					record.setTrueAnswer(questionInfo.getTrueAnswer());
 				}
@@ -264,7 +269,7 @@ public class RedisMapClassTestAnswer {
 				record.setQuestion(questionInfo.getQuestion());
 				record.setQuestionId(questionId);
 				record.setQuestionType(questionInfo.getQuestionType());
-				
+				record.setScore(questionInfo.getScore());
 				record.setStudentId(studentInfo.getStudentId());
 				record.setStudentName(studentInfo.getStudentName());
 				record.setTestId(questionInfo.getTestId());
@@ -308,26 +313,69 @@ public class RedisMapClassTestAnswer {
 		
 		/*模拟答题器发送的数据*/
 		JSONArray jsonData = new JSONArray();
-		
+		/*客观题*/
+//		JSONObject jsonObjectStu = new JSONObject(); //学生1
+//		jsonObjectStu.put("fun", "update_answer_list");
+//		jsonObjectStu.put("card_id", "0000001");
+//		JSONArray jsonArray = new JSONArray();
+//		JSONObject jsonObject1 = new JSONObject(); //第一题
+//		jsonObject1.put("type", "m");
+//		jsonObject1.put("id", "1");
+//		jsonObject1.put("answer", "ABC");
+//		jsonArray.add(jsonObject1);
+//		JSONObject jsonObject2 = new JSONObject(); //第二题
+//		jsonObject2.put("type", "s");
+//		jsonObject2.put("id", "2");
+//		jsonObject2.put("answer", "B");
+//		jsonArray.add(jsonObject2);
+//		jsonObjectStu.put("answers", jsonArray);
+//		JSONObject jsonObject3 = new JSONObject(); //第三题
+//		jsonObject3.put("type", "d");
+//		jsonObject3.put("id", "3");
+//		jsonObject3.put("answer", "8");
+//		jsonArray.add(jsonObject3);
+//		jsonObjectStu.put("answers", jsonArray);
+//	
+//		JSONObject jsonObjectStu_1 = new JSONObject();  //学生2
+//		jsonObjectStu_1.put("fun", "update_answer_list");
+//		jsonObjectStu_1.put("card_id", "0000002");
+//		JSONArray jsonArray_1 = new JSONArray();
+//		JSONObject jsonObject1_1 = new JSONObject();
+//		jsonObject1_1.put("type", "s");
+//		jsonObject1_1.put("id", "1");
+//		jsonObject1_1.put("answer", "D");
+//		jsonArray_1.add(jsonObject1_1);
+//		
+//		JSONObject jsonObject1_2 = new JSONObject();
+//		jsonObject1_2.put("type", "s");
+//		jsonObject1_2.put("id", "2");
+//		jsonObject1_2.put("answer", "C");
+//		jsonArray_1.add(jsonObject1_2);
+//		
+//		jsonObjectStu_1.put("answers", jsonArray_1);
+//		
+//		jsonData.add(jsonObjectStu);
+//		jsonData.add(jsonObjectStu_1);
+		/*主观题*/
 		JSONObject jsonObjectStu = new JSONObject(); //学生1
 		jsonObjectStu.put("fun", "update_answer_list");
 		jsonObjectStu.put("card_id", "0000001");
 		JSONArray jsonArray = new JSONArray();
-		JSONObject jsonObject1 = new JSONObject(); //第一题
-		jsonObject1.put("type", "m");
-		jsonObject1.put("id", "1");
-		jsonObject1.put("answer", "ABC");
+		JSONObject jsonObject1 = new JSONObject(); //第六题
+		jsonObject1.put("type", "d");
+		jsonObject1.put("id", "6");
+		jsonObject1.put("answer", "5");
 		jsonArray.add(jsonObject1);
-		JSONObject jsonObject2 = new JSONObject(); //第二题
-		jsonObject2.put("type", "s");
-		jsonObject2.put("id", "2");
-		jsonObject2.put("answer", "B");
+		JSONObject jsonObject2 = new JSONObject(); //第七题
+		jsonObject2.put("type", "d");
+		jsonObject2.put("id", "7");
+		jsonObject2.put("answer", "4");
 		jsonArray.add(jsonObject2);
 		jsonObjectStu.put("answers", jsonArray);
-		JSONObject jsonObject3 = new JSONObject(); //第三题
+		JSONObject jsonObject3 = new JSONObject(); //第八题
 		jsonObject3.put("type", "d");
-		jsonObject3.put("id", "3");
-		jsonObject3.put("answer", "8");
+		jsonObject3.put("id", "8");
+		jsonObject3.put("answer", "2");
 		jsonArray.add(jsonObject3);
 		jsonObjectStu.put("answers", jsonArray);
 	
@@ -336,22 +384,21 @@ public class RedisMapClassTestAnswer {
 		jsonObjectStu_1.put("card_id", "0000002");
 		JSONArray jsonArray_1 = new JSONArray();
 		JSONObject jsonObject1_1 = new JSONObject();
-		jsonObject1_1.put("type", "s");
-		jsonObject1_1.put("id", "1");
-		jsonObject1_1.put("answer", "D");
+		jsonObject1_1.put("type", "d");
+		jsonObject1_1.put("id", "6");
+		jsonObject1_1.put("answer", "3");
 		jsonArray_1.add(jsonObject1_1);
 		
 		JSONObject jsonObject1_2 = new JSONObject();
-		jsonObject1_2.put("type", "s");
-		jsonObject1_2.put("id", "2");
-		jsonObject1_2.put("answer", "C");
+		jsonObject1_2.put("type", "d");
+		jsonObject1_2.put("id", "7");
+		jsonObject1_2.put("answer", "4");
 		jsonArray_1.add(jsonObject1_2);
 		
 		jsonObjectStu_1.put("answers", jsonArray_1);
 		
 		jsonData.add(jsonObjectStu);
 		jsonData.add(jsonObjectStu_1);
-		
 		
 		try {
 			//获取试卷
@@ -361,15 +408,22 @@ public class RedisMapClassTestAnswer {
 			if (result.getRet().equals(Constant.ERROR)) {
 				System.out.println("查询试卷题目失败!");
 			}
-			//筛选主观题
+//			//筛选主观题
+//			List<QuestionInfo> questionInfos = (List<QuestionInfo>)result.getItem();
+//			List<QuestionInfo> questionInfos2 = new ArrayList<QuestionInfo>();
+//			for (int i = 0; i < questionInfos.size(); i++) {
+//				if (!Constant.ZHUGUANTI_NUM.equals(questionInfos.get(i).getQuestionType())) {
+//					questionInfos2.add(questionInfos.get(i));
+//				}
+//			}
+			//筛选客观题
 			List<QuestionInfo> questionInfos = (List<QuestionInfo>)result.getItem();
 			List<QuestionInfo> questionInfos2 = new ArrayList<QuestionInfo>();
 			for (int i = 0; i < questionInfos.size(); i++) {
-				if (!Constant.ZHUGUANTI_NUM.equals(questionInfos.get(i).getQuestionType())) {
+				if (Constant.ZHUGUANTI_NUM.equals(questionInfos.get(i).getQuestionType())) {
 					questionInfos2.add(questionInfos.get(i));
 				}
 			}
-			
 
 			startClassTest(questionInfos2);
 			
@@ -384,6 +438,9 @@ public class RedisMapClassTestAnswer {
 			System.out.println("每个人的作答信息："+getEverybodyAnswerInfo());
 			
 			 System.out.println(JSONArray.fromObject(getRecordList()));
+			 
+			 //保存到数据库
+			 new AnswerInfoServiceImpl().stopObjectiveAnswer();
 		} catch (BusinessException e) {
 			System.out.println(e.getMessage());
 		}

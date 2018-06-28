@@ -22,7 +22,7 @@ public class RecordSql {
 		for (int i = 0; i < records.size(); i++) {
 			record = records.get(i);
 			StringBuilder sqlBuilder = new StringBuilder();
-			sqlBuilder.append("insert into answer_info (");
+			sqlBuilder.append("insert into record (");
 			Field[] files = dbHelper.getFields(record);
 			for (int j = 0; j < files.length; j++) {
 				Object obj = dbHelper.getFiledValues(files[j], record);
@@ -46,26 +46,26 @@ public class RecordSql {
 		return dbHelper.onUpdateByGroup(sqls);
 	}
 	
-//	/*查询答题信息*/
-//	public Result selectAnswerInfoInfo(AnswerInfo answerInfo) throws IllegalArgumentException, IllegalAccessException{
-//		StringBuilder sqlBuilder = new StringBuilder();
-//		sqlBuilder.append("select * from answer_info");
-//		Field[] files = dbHelper.getFields(answerInfo);
-//		int index = 0;
-//		for (int i = 0; i < files.length; i++) {
-//			Object obj = dbHelper.getFiledValues(files[i], answerInfo);
-//			if (!StringUtils.isEmpty(obj)) {
-//				if (index == 0) {
-//					sqlBuilder.append(" where ");
-//				}else {
-//					sqlBuilder.append(" and ");
-//				}
-//				sqlBuilder.append(dbHelper.HumpToUnderline(files[i].getName())+" = ?");
-//				index++;
-//			}
-//		}
-//		return dbHelper.onQuery(sqlBuilder.toString(), answerInfo);
-//	}
+	/*查询答题信息*/
+	public Result selectRecord(Record record) throws IllegalArgumentException, IllegalAccessException{
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("select * from record");
+		Field[] files = dbHelper.getFields(record);
+		int index = 0;
+		for (int i = 0; i < files.length; i++) {
+			Object obj = dbHelper.getFiledValues(files[i], record);
+			if (!StringUtils.isEmpty(obj)) {
+				if (index == 0) {
+					sqlBuilder.append(" where ");
+				}else {
+					sqlBuilder.append(" and ");
+				}
+				sqlBuilder.append(dbHelper.HumpToUnderline(files[i].getName())+" = ?");
+				index++;
+			}
+		}
+		return dbHelper.onQuery(sqlBuilder.toString(), record);
+	}
 //	
 //	
 //	/*删除答题信息*/
