@@ -66,6 +66,11 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 				}
 			}
 			
+			if (StringUtils.isEmptyList(questionInfos2)) {
+				result.setMessage("该试卷没有客观题目！");
+				result.setRet(Constant.ERROR);
+				return result;
+			}
 
 			RedisMapClassTestAnswer.startClassTest(questionInfos2); //缓存初始化
 			
