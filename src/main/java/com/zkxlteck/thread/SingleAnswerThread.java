@@ -7,8 +7,8 @@ import com.ejet.cache.RedisMapSingleAnswer;
 import com.ejet.core.util.comm.StringUtils;
 import com.zkxlteck.scdll.ScDll;
 
-public class singleAnswerThread extends Thread {
-    private static final Logger logger = LoggerFactory.getLogger(singleAnswerThread.class);
+public class SingleAnswerThread extends Thread {
+    private static final Logger logger = LoggerFactory.getLogger(SingleAnswerThread.class);
     private boolean FLAG = true;
     public boolean isFLAG() {
         return FLAG;

@@ -3,6 +3,9 @@ package com.zkxltech.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
@@ -22,8 +25,7 @@ import net.sf.json.JSONObject;
  * @date:2018年6月21日 下午2:55:17
  */
 public class EquipmentServiceImpl implements EquipmentService{
-    //private ExecutorService threadPool = Executors.newSingleThreadExecutor(); //单线程池
-    
+    private static final Logger log = LoggerFactory.getLogger(EquipmentServiceImpl.class);
     public Thread t ;
     private static final EquipmentServiceImpl SINGLE = new EquipmentServiceImpl();  
     
@@ -46,43 +48,6 @@ public class EquipmentServiceImpl implements EquipmentService{
         return r;
     }
     
-//    @Override
-//    public Result answerStart(Object param) {
-//        Result r = new Result();
-//        r.setRet(Constant.ERROR);
-//        EquipmentParam ep =  (EquipmentParam) com.zkxltech.ui.util.StringUtils.parseJSON(param, EquipmentParam.class);
-//        Integer isQuickResponse = ep.getIsQuickResponse();
-//        String answerStr = ep.getAnswerStr();
-//        if(isQuickResponse == null || StringUtils.isBlank(answerStr)){
-//            r.setMessage("缺少参数");
-//        }
-//        int answer_start = ScDll.intance.answer_start(isQuickResponse,answerStr);
-//        if (answer_start == Constant.SEND_SUCCESS) {
-//            //开始答题前先清空
-//            RedisMapClassTest.classTestAnswerMap.clear();
-//            t = new AnswerThread();
-//            t.start();
-//            r.setRet(Constant.SUCCESS);
-//            r.setMessage("发送成功");
-//            return r;
-//        }
-//        r.setMessage("发送失败");
-//        return r;
-//    }
-//    @Override
-//    public Result answer_start_with_raise_hand(int is_quick_response, int raise_hand, String answer_str) {
-//        Result r = new Result();
-//        int answer_start_with_raise_hand = ScDll.intance.answer_start_with_raise_hand(is_quick_response, raise_hand, answer_str);
-//        if (answer_start_with_raise_hand == Constant.SEND_SUCCESS) {
-//            t = new AnswerThread();
-//            t.start();
-//            r.setRet(Constant.SUCCESS);
-//            r.setMessage("发送成功");
-//            return r;
-//        }
-//        r.setRet(Constant.ERROR);
-//        r.setMessage("发送失败");
-//        return r;
 //    }
     @Override
     public Result set_raise_hand(int raise_hand) {
@@ -111,13 +76,6 @@ public class EquipmentServiceImpl implements EquipmentService{
         return r;
     }
 
-//    public Result get_answer_list() {
-//        Result r = new Result();
-//        MachineThread t = new MachineThread(true, MachineThread.GET_ANSWER);
-//        t.start();
-//        map.put("thread", t);
-//        return r;
-//    }
     
     @Override
     public Result set_student_id(String student_id_str) {
@@ -173,18 +131,6 @@ public class EquipmentServiceImpl implements EquipmentService{
         return r;
     }
 
-//    public Result attendance_24g(int is_open, int pro_index) {
-//        Result r = new Result();
-//        int attendance_24g = ScDll.intance.attendance_24g(is_open,pro_index);
-//        if (attendance_24g == SUCCESS) {
-//            r.setRet(Constant.SUCCESS);
-//            r.setMessage("操作成功");
-//            return r;
-//        }
-//        r.setRet(Constant.ERROR);
-//        r.setMessage("操作失败");
-//        return r;
-//    }
     @Override
     public Result read_card_uid_start() {
         Result r = new Result();
@@ -439,6 +385,42 @@ public class EquipmentServiceImpl implements EquipmentService{
         r.setMessage("发送失败");
         return r;
 	}
+	
+	@Override
+    public Result answer_stop() {
+        Result r = new Result();
+        int answer_stop = ScDll.intance.answer_stop();
+        if (answer_stop == Constant.SEND_ERROR) {
+            int answer_stop2 = ScDll.intance.answer_stop();
+            if (answer_stop2 == Constant.SEND_ERROR) {
+                r.setRet(Constant.ERROR);
+                r.setMessage("指令发送失败");
+                log.error("\"停止答题\"指令发送失败");
+                return r;
+            }
+        }
+        log.info("\"停止答题\"指令发送成功");
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("停止成功");
+        return r;
+    }
+    public Result answer_start(int is_quick_response, String answer_str) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        int answer_start = ScDll.intance.answer_start(is_quick_response, answer_str);
+        if (answer_start == Constant.SEND_ERROR) {
+            int answer_start2 = ScDll.intance.answer_start(is_quick_response, answer_str);
+            if (answer_start2 == Constant.SEND_ERROR) {
+                log.error("开始答题指令发送失败");
+                r.setMessage("指令发送失败");
+                return r;
+            }
+        }
+        log.info("开始答题指令发送成功");
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("指令发送成功");
+        return r;
+    }
 	
 //	public static void main(String[] args) {
 //		List<RequestVo> list = new ArrayList<RequestVo>();

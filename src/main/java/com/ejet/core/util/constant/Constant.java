@@ -57,9 +57,6 @@ public class Constant {
     public static final String SINGLE_ANSWER_NUMBER = "[{'type':'d','id':'1','range':'0-9'}]";
     /* 判断答案*/
     public static final String SINGLE_ANSWER_JUDGE = "[{'type':'j','id':'1','range':''}]";
-    /*抢答用-按任意*/
-    public static final String QUICK_COMMON = "[{'type':'g','id':'1','range':''}]";
-    
     /*考勤抢答用*/
     public static final String ANSWER_STR = "[{'type':'g','id':'1','range':''}]";
 }
