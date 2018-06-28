@@ -293,7 +293,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 			}
 			
 			if (StringUtils.isEmptyList(questionInfos2)) {
-				result.setMessage("该试卷没有客观题目！");
+				result.setMessage("该试卷没有主观题目！");
 				result.setRet(Constant.ERROR);
 				return result;
 			}
@@ -305,7 +305,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 				RequestVo requestVo = new RequestVo();
 				requestVo.setId(questionInfos2.get(i).getQuestionId());
 				requestVo.setType(questionInfos2.get(i).getQuestionType());
-				requestVo.setRange(questionInfos2.get(i).getRange());
+				requestVo.setRange("0-"+(int)Double.parseDouble(questionInfos2.get(i).getScore()));
 				requestVos.add(requestVo);
 			}
 			

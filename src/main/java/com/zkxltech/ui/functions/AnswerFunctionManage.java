@@ -78,7 +78,7 @@ public class AnswerFunctionManage extends BrowserFunction{
 				//获取每个人的作答统计
 				result = answerInfoService.getEverybodyAnswerInfo();
 				break;
-			case "start_class_test_subjective": //开始客观答题
+			case "start_class_test_subjective": //开始主答题
                 result = answerInfoService.startSubjectiveAnswer(params[1]);
                 break;
 //			case "stop_class_test_subjective":
