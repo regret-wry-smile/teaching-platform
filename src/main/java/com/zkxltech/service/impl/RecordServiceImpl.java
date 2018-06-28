@@ -151,5 +151,14 @@ public class RecordServiceImpl implements RecordService{
         out.flush();// 将数据写出去
         out.close(); 
 	}
+	/**
+	 * 查询答题记录
+	 * @param object
+	 * @return
+	 */
+    public Result selectRecord(Object object) {
+        
+        return null;
+    }
 
 }

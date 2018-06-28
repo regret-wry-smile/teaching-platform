@@ -73,38 +73,24 @@
 				<div class="tab-pane" ng-show="tabpane=='s'" ng-controller="answerCtrl">
 				<div class="content clearfix">
 				<ul class="modbox">
-					<li ng-click="changeAnswerType()">
-						<label>
-						<a href="javascript:;">
+					<li class="active">
+						<a href="javascript:;" ng-click="selAnswerType('char')">
 							<img src="../../image/letter.png"/>
 							<span class="title">字母</span>
-							<label class="pull-right checked">
-								<input type="checkbox" name="type"/>
-							</label>
 						</a>
 						</label>
 					</li>
-					<li ng-click="changeAnswerType()">
-						<label>
-						<a href="javascript:;">
+					<li>
+						<a href="javascript:;" ng-click="selAnswerType('number')">
 							<img src="../../image/number.png"/>
 							<span class="title">数字</span>
-							<label class="pull-right checked">
-								<input type="checkbox" name="type"/>
-							</label>
 						</a>
-						</label>
 					</li>
-					<li ng-click="changeAnswerType()">
-						<label>
-						<a href="javascript:;">
+					<li>
+						<a href="javascript:;" ng-click="selAnswerType('judge')">
 							<img src="../../image/gou.png"/>
 							<span class="title">判断</span>
-							<label class="pull-right checked">
-								<input type="checkbox" name="type"/>
-							</label>
 						</a>
-						</label>
 					</li>
 				</ul>	  
 				</div>
@@ -132,7 +118,7 @@
 			  		</a>
 			  </div>
 			</div>
-			<div class="tab-pane" ng-show="tabpane=='c'" ng-controller="answerMutilCtrl">
+			<div class="tab-pane" ng-show="tabpane=='c'" ng-controller="classCheckCtrl">
 				<div class="header clearfix">
 					<div class="pull-left">
 						<img src="../../image/check.png" class="ml25 pt20" />
@@ -146,20 +132,19 @@
 					</div>
 				</div>
 				<div class="content clearfix text-center">
-				<div class="col-main"  id="testlist" style="overflow-x: auto; overflow-y: auto; height:1.5rem; width:100%;padding-right: 0.05rem;">
-					<table class="table table-stripe subject">
+				<div class="col-main"  id="testlist" style="overflow-x: auto; overflow-y: auto; height:2.10rem; width:100%;padding-right:0.02rem;">
+					<table class="table table-stripe papertable">
 						<tbody>
-							<!--<tr ng-repeat="item in subjectList track by $index">
+							<tr ng-repeat="paperInfo in paperInfoList track by $index">
 								<td>{{$index+1}}</td>
-								<td>{{item.id}}</td>
-								<td>{{item.question}}</td>
-								<td>{{item.questionType|questionType}}</td>
-								<td ng-if="item.questionType=='3'">{{item.trueAnswer=='T'?'√':'×'}}</td>	
-								<td ng-if="item.questionType!='3'">{{item.trueAnswer}}</td>		
-							</tr>-->
+								<td>{{paperInfo.testName}}</td>
+								<td>{{paperInfo.describe}}</td>
+								<td><input type="checkbox" /></td>
+							</tr>
+							
 							</tbody>
-					</table>
-			  	</div>
+						</table>
+					</div>
 
 				</div>
 				<div class="operatebtn mt20 clearfix text-center">

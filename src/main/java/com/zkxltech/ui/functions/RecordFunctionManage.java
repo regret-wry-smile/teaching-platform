@@ -8,6 +8,7 @@ import com.zkxltech.domain.Result;
 import com.zkxltech.service.ClassHourService;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.service.impl.ClassHourServiceImpl;
+import com.zkxltech.service.impl.RecordServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
@@ -75,6 +76,11 @@ public class RecordFunctionManage extends BrowserFunction{
 				}
 				result = classHourService.deleteClassInfo(params[1]);
 				break;
+			case "select_record":
+			    RecordServiceImpl impl = new RecordServiceImpl();
+			    /*查询答题记录*/
+			    result = impl.selectRecord(params[1]);
+			    break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");
