@@ -541,6 +541,9 @@ table.classlist thead tr th{
 	padding: 0.08rem ;
 	vertical-align: middle;
 }
+table.papertable{
+	background: #fff;
+}
 span.sub{
 	display: inline-block;
 	width: 0.05rem;
