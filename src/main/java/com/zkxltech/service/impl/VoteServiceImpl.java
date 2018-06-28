@@ -77,17 +77,10 @@ public class VoteServiceImpl implements VoteService{
         }else{
             logger.error("投票线程停止失败");
         }
-        int answer_stop = ScDll.intance.answer_stop();
-        if (answer_stop == Constant.SEND_ERROR) {
-            int answer_stop2 = ScDll.intance.answer_stop();
-            if (answer_stop2 == Constant.SEND_ERROR) {
-                r.setRet(Constant.ERROR);
-                r.setMessage("停止失败");
-                logger.error("停止投票指令发送失败");
-                return r;
-            }
+        r = EquipmentServiceImpl.getInstance().answer_stop();
+        if (r.getRet().equals(Constant.ERROR)) {
+            return r;
         }
-        logger.info("停止投票指令发送成功");
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
