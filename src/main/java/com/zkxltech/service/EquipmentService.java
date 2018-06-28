@@ -53,5 +53,5 @@ public interface EquipmentService {
     public Result equipmentDatabaseSynchronization();
     
     /** 开始答题 */
-    public Result answerStart2(Object param);
+    public Result answerStart2(String answerType,Object param);
 }

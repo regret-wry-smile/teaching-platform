@@ -395,7 +395,7 @@ public class EquipmentServiceImpl implements EquipmentService{
     }
     
 	@Override
-	public Result answerStart2(Object param) {
+	public Result answerStart2(String answerType,Object param) {
 		Result r = new Result();
         r.setRet(Constant.ERROR);
         
@@ -430,7 +430,7 @@ public class EquipmentServiceImpl implements EquipmentService{
 //		System.out.println(strBuilder);
         int answer_start = ScDll.intance.answer_start(1,strBuilder.toString());
         if (answer_start == Constant.SEND_SUCCESS) {
-            t = new MultipleAnswerThread();
+            t = new MultipleAnswerThread(answerType);
             t.start();
             r.setRet(Constant.SUCCESS);
             r.setMessage("发送成功");

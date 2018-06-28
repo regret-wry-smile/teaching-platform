@@ -26,7 +26,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 			RequestVo requestVo = StringUtils.parseJSON(object, RequestVo.class);
 			List<RequestVo> list = new ArrayList<RequestVo>();
 			list.add(requestVo);
-			result = EquipmentServiceImpl.getInstance().answerStart2(list);
+			result = EquipmentServiceImpl.getInstance().answerStart2(Constant.ANSWER_MULTIPLE_TYPE,list);
 			if (Constant.ERROR.equals(result.getRet())) {
 				result.setRet(Constant.ERROR);
 				result.setMessage("开始答题指令发送失败！");
@@ -78,7 +78,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 				requestVos.add(requestVo);
 			}
 			
-			result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
+			result = EquipmentServiceImpl.getInstance().answerStart2(Constant.ANSWER_MULTIPLE_TYPE,requestVos); //发送硬件指令
 			if (Constant.ERROR.equals(result.getRet())) {
 				result.setMessage("硬件指令发送失败！");
 				return result;
