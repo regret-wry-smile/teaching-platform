@@ -12,7 +12,7 @@ import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.EquipmentService;
 import com.zkxltech.sql.StudentInfoSql;
-import com.zkxlteck.thread.AnswerThread;
+import com.zkxlteck.thread.MultipleAnswerThread;
 import com.zkxlteck.scdll.ScDll;
 
 import net.sf.json.JSONArray;
@@ -433,7 +433,7 @@ public class EquipmentServiceImpl implements EquipmentService{
         if (answer_start == Constant.SEND_SUCCESS) {
             //开始答题前先清空
             RedisMapClassTest.classTestAnswerMap.clear();
-            t = new AnswerThread();
+            t = new MultipleAnswerThread();
             t.start();
             r.setRet(Constant.SUCCESS);
             r.setMessage("发送成功");

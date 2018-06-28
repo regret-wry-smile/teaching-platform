@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,8 +13,6 @@ import com.ejet.core.util.RedisMapUtil;
 import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.constant.Global;
 import com.zkxltech.domain.Answer;
-import com.zkxltech.domain.Score;
-import com.zkxltech.domain.ScoreVO;
 import com.zkxltech.domain.StudentInfo;
 
 import net.sf.json.JSONArray;

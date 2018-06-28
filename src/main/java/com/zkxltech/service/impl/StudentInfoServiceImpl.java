@@ -27,9 +27,10 @@ import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxlteck.scdll.ScDll;
-import com.zkxlteck.thread.AnswerThread;
+import com.zkxlteck.thread.MultipleAnswerThread;
 import com.zkxlteck.thread.AttendanceThread;
 import com.zkxlteck.thread.QuickThread;
+import com.zkxlteck.thread.singleAnswerThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -299,12 +300,21 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         switch (type) {
             case Constant.ANSWER_CHAR_TYPE:
                 status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
+                if (status == Constant.SEND_ERROR) {
+                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
+                }
                 break;
             case Constant.ANSWER_NUMBER_TYPE:
                 status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
+                if (status == Constant.SEND_ERROR) {
+                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
+                }
                 break;
             case Constant.ANSWER_JUDGE_TYPE:
                 status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
+                if (status == Constant.SEND_ERROR) {
+                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
+                }
                 break;
             default:
                 r.setMessage("参数错误");
@@ -318,7 +328,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         RedisMapAnswer.setAnswer(answer);
         RedisMapAnswer.clearSingleAnswerMap();
         RedisMapAnswer.clearStudentInfoMap();
-        thread = new AnswerThread();
+        thread = new singleAnswerThread();
         thread.start();
         r.setRet(Constant.SUCCESS);
         return r;
@@ -440,8 +450,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     public Result answerStop() {
         Result r = new Result();
         int answer_stop = ScDll.intance.answer_stop();
-        if (thread != null && thread instanceof AnswerThread) {
-            AnswerThread m = (AnswerThread)thread;
+        if (thread != null && thread instanceof MultipleAnswerThread) {
+            MultipleAnswerThread m = (MultipleAnswerThread)thread;
             m.setFLAG(false);
             log.info("\"停止答题\"线程停止成功");
         }else{

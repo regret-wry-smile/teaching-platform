@@ -3,12 +3,12 @@ package com.zkxlteck.thread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ejet.cache.RedisMapMultipleAnswer;
+import com.ejet.cache.RedisMapSingleAnswer;
 import com.ejet.core.util.comm.StringUtils;
 import com.zkxlteck.scdll.ScDll;
 
-public class AnswerThread extends Thread {
-    private static final Logger logger = LoggerFactory.getLogger(AnswerThread.class);
+public class singleAnswerThread extends Thread {
+    private static final Logger logger = LoggerFactory.getLogger(singleAnswerThread.class);
     private boolean FLAG = true;
     public boolean isFLAG() {
         return FLAG;
@@ -27,7 +27,7 @@ public class AnswerThread extends Thread {
             String jsonData = ScDll.intance.get_answer_list();
             if (!StringUtils.isBlank(jsonData)) {
                 logger.info("获取到答题数据:===>>"+jsonData);
-            	RedisMapMultipleAnswer.addEveryAnswerInfo(jsonData);
+                RedisMapSingleAnswer.addEveryAnswerInfo(jsonData);
             }
         }
     }
