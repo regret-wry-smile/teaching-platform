@@ -91,6 +91,7 @@ public class RedisMapSingleAnswer {
                list.add(studentInfo.getStudentName());
             }
         }
+        BrowserManager.refresAnswerNum();
     }
     
     private static void setJudgeCount(String result) {
