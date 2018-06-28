@@ -4,11 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ejet.cache.BrowserManager;
 import com.ejet.cache.RedisMapBind;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
+import com.mysql.jdbc.log.Log;
 import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
@@ -22,6 +26,7 @@ import com.zkxlteck.thread.CardInfoThread;
 import net.sf.json.JSONObject;
 
 public class ClassInfoServiceImpl implements ClassInfoService{
+    private static final Logger log = LoggerFactory.getLogger(StudentInfoServiceImpl.class);
 	private Result result;
 	private ClassInfoSql classInfoSql = new ClassInfoSql();
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
@@ -227,13 +232,19 @@ public class ClassInfoServiceImpl implements ClassInfoService{
             c.setFLAG(false);
         }
         int bind_stop = ScDll.intance.wireless_bind_stop();
-        if (bind_stop == Constant.SEND_SUCCESS) {
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("停止成功");
-            return r;
+        if (bind_stop == Constant.SEND_ERROR) {
+            int bind_stop2 = ScDll.intance.wireless_bind_stop();
+            if (bind_stop2 == Constant.SEND_ERROR) {
+                r.setRet(Constant.SUCCESS);
+                r.setMessage("停止失败");
+                log.info("\"停止绑定\"停止失败");
+                return r;
+            }
+           
         }
+        log.info("\"停止绑定\"停止成功");
         r.setRet(Constant.ERROR);
-        r.setMessage("停止失败");
+        r.setMessage("停止成功");
         return r;
     }
 }
