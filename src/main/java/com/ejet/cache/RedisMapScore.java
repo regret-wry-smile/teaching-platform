@@ -60,6 +60,7 @@ public class RedisMapScore {
 		scoreInfoMap.clear();
 		scoreDetailInfoMap.clear();
 		barMap.clear();
+		scoreVos.clear();
 	}
 	
 	/**
