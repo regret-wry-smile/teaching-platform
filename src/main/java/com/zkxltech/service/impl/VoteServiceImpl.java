@@ -1,6 +1,8 @@
 package com.zkxltech.service.impl;
 
-import com.ejet.cache.RedisMapScore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ejet.cache.RedisMapVote;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
@@ -12,6 +14,7 @@ import com.zkxlteck.scdll.ScDll;
 import com.zkxlteck.thread.VoteThread;
 
 public class VoteServiceImpl implements VoteService{
+    private static final Logger logger = LoggerFactory.getLogger(VoteServiceImpl.class);
 	private Result result = new Result();
 	private static Thread thread ;
 	public static Thread getThread() {
@@ -70,15 +73,23 @@ public class VoteServiceImpl implements VoteService{
         if (thread != null && thread instanceof VoteThread) {
             VoteThread c =  (VoteThread)thread;
             c.setFLAG(false);
+            logger.info("投票线程停止成功");
+        }else{
+            logger.error("投票线程停止失败");
         }
         int answer_stop = ScDll.intance.answer_stop();
-        if (answer_stop == Constant.SEND_SUCCESS) {
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("停止成功");
-            return r;
+        if (answer_stop == Constant.SEND_ERROR) {
+            int answer_stop2 = ScDll.intance.answer_stop();
+            if (answer_stop2 == Constant.SEND_ERROR) {
+                r.setRet(Constant.ERROR);
+                r.setMessage("停止失败");
+                logger.error("停止投票指令发送失败");
+                return r;
+            }
         }
-        r.setRet(Constant.ERROR);
-        r.setMessage("停止失败");
+        logger.info("停止投票指令发送成功");
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("停止成功");
         return r;
     }
 	@Override
@@ -109,9 +120,14 @@ public class VoteServiceImpl implements VoteService{
         strBuilder.append("]");
         int answer_start = ScDll.intance.answer_start(0, strBuilder.toString());
         if (answer_start == Constant.SEND_ERROR) {
-            r.setMessage("指令发送失败");
-            return r;
+            int answer_start2 = ScDll.intance.answer_start(0, strBuilder.toString());
+            if (answer_start2 == Constant.SEND_ERROR) {
+                r.setMessage("指令发送失败");
+                logger.error("投票指令发送失败");
+                return r;
+            }
         }
+        logger.info("投票指令发送成功");
         thread = new VoteThread();
         thread.start();
         r.setRet(Constant.SUCCESS);

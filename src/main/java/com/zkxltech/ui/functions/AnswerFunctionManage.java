@@ -38,7 +38,6 @@ public class AnswerFunctionManage extends BrowserFunction{
 			    result = service.singleAnswer(param);
                 break;
 			case "get_single_answer":
-                //result = EquipmentServiceImpl.getInstance().singleAnswer(param);
                 break;
 			case "start_multiple_answer": //开始多选答题
                 result = answerInfoService.startMultipleAnswer(params[1]);

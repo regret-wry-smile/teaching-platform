@@ -1,21 +1,15 @@
 package com.ejet.cache;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ejet.core.util.RedisMapUtil;
 import com.ejet.core.util.StringUtils;
-import com.ejet.core.util.constant.Global;
+import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Answer;
-import com.zkxltech.domain.Score;
-import com.zkxltech.domain.ScoreVO;
 import com.zkxltech.domain.StudentInfo;
 
 import net.sf.json.JSONArray;
@@ -28,206 +22,152 @@ import net.sf.json.JSONObject;
  */
 public class RedisMapSingleAnswer {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMapSingleAnswer.class);
-	/**
-	 * 当前答题编号
-	 */
-	private static String answerId;
-	
-	/**
-	 * 当前答题
-	 */
-	private static char[] range;
-	
-	/**
-	 * 每个答案作答信息
-	 */
-	public static Map<String, Object> everyAnswerMap = Collections.synchronizedMap(new HashMap<String, Object>());
-	/**
-	 * 每个人的作答信息
-	 */
-	public static Map<String, Object> everyBodyMap = Collections.synchronizedMap(new HashMap<String, Object>());
-	
-	
-	private static String[] keyEveryAnswerMap = {"uuid","questionId","answer"};
-	
-	private static String[] keyEveryBodyMap = {"uuid","questionId","iclicker"};
-	
-	/**
-	 * 开始答题
-	 */
-	
-	public static void startAnswer(String rangStr){
-		answerId = StringUtils.getUUID();
-		range = splitString(rangStr);
-	}
-	
-	/**
-	 * 清空缓存
-	 */
-	public static void clearMap(){
-		everyAnswerMap.clear();
-		everyBodyMap.clear();
-	}
-	
-	
-	/**
-	 * 添加评分详情
-	 * @param score
-	 */
-	public static void addEveryAnswerInfo(String jsonData){
-		keyEveryBodyMap[0] = answerId; //主题编号
-		keyEveryAnswerMap[0] = answerId;
-		JSONArray jsonArray = JSONArray.fromObject(jsonData); 
-        for (int  i= 0; i < jsonArray.size(); i++) {
-        	JSONObject jsonObject = jsonArray.getJSONObject(i); //，每个学生的作答信息
-        	String carId = jsonObject.getString("card_id"); //答题器编号
-        	StudentInfo studentInfo = verifyCardId(carId);
-        	if (studentInfo != null) {
-        		JSONArray answers =  JSONArray.fromObject(jsonObject.get("answers"));
-        		for (int j = 0; j < answers.size(); j++) {
-        			JSONObject answeJSONObject = answers.getJSONObject(j);
-        			String num = answeJSONObject.getString("id");//节目编号(题目编号)
-        			
-        			keyEveryBodyMap[1] = num;
-        			keyEveryAnswerMap[1] = num;
-        			keyEveryBodyMap[2] = carId;
-        			Answer answer = (Answer) JSONObject.toBean((JSONObject) RedisMapUtil.getRedisMap(everyBodyMap, keyEveryBodyMap, 0), Answer.class);
-        			if (answer!= null && !StringUtils.isEmpty(answer.getAnswer())) {
-        				//已经上传了答案就跳过
-        				continue;
-					}
-        			RedisMapUtil.setRedisMap(everyBodyMap, keyEveryBodyMap, 0, answeJSONObject);
-        			
-        			String answerString = answeJSONObject.getString("answer");
-        			char[] everyAnswer = answerString.toCharArray();
-        			for (int k = 0; k < everyAnswer.length; k++) {
-        				keyEveryAnswerMap[2] = String.valueOf(everyAnswer[k]);
-        				List<StudentInfo> studentInfos = (List<StudentInfo>) RedisMapUtil.getRedisMap(everyAnswerMap, keyEveryAnswerMap, 0);
-        				if (com.zkxltech.ui.util.StringUtils.isEmptyList(studentInfos)) {
-        					studentInfos = new ArrayList<StudentInfo>();
-						}
-        				studentInfos.add(studentInfo);
-        				RedisMapUtil.setRedisMap(everyAnswerMap, keyEveryAnswerMap, 0, studentInfos);
-					}
-				}
-			}
+    private static Map<String,Integer> singleAnswerMap = Collections.synchronizedMap(new HashMap<>());
+    /**学生信息*/
+    private static Map<String,StudentInfo> studentInfoMap = new HashMap<>(); 
+    private static Answer answer;
+    public static final String CHAR_A = "A";
+    public static final String CHAR_B = "B";
+    public static final String CHAR_C = "C";
+    public static final String CHAR_D = "D";
+    public static final String NUMBER_1 = "1";
+    public static final String NUMBER_2 = "2";
+    public static final String NUMBER_3 = "3";
+    public static final String NUMBER_4 = "4";
+    public static final String NUMBER_5 = "5";
+    public static final String NUMBER_6 = "6";
+    public static final String NUMBER_7 = "7";
+    public static final String NUMBER_8 = "8";
+    public static final String NUMBER_9 = "9";
+    public static final String JUDGE_TRUE = "true";
+    public static final String JUDGE_FALSE = "false";
+    
+    public static void addAnswer(String jsonData){
+        JSONArray jsonArray= JSONArray.fromObject(jsonData);
+        String type = answer.getType();
+        for (Object object : jsonArray) {
+            JSONObject jsonObject = JSONObject.fromObject(object);
+            JSONArray answers =  JSONArray.fromObject(jsonObject.get("answers"));
+            for (Object answer : answers) {
+                JSONObject answerJO = JSONObject.fromObject(answer);
+                String result = answerJO.getString("answer");
+                switch (type) {
+                    case Constant.ANSWER_CHAR_TYPE:
+                        if (StringUtils.isEmpty(result)) {
+                            continue;
+                        }
+                        setCharCount(result);
+                        break;
+                    case Constant.ANSWER_NUMBER_TYPE:
+                        setNumberCount(result);
+                        break;
+                    case Constant.ANSWER_JUDGE_TYPE:
+                        setJudgeCount(result);
+                        break;
+                }
+            }
         }
-        BrowserManager.refresAnswerNum();
     }
-	
-	/**
-	 * 获取柱状图需要的数据
-	 * @param score
-	 */
-	public static String getEveryAnswerInfoBar(){
-		String[] keString = new String[2];
-		keString[0] = answerId;
-		keString[1] = "1";
-		RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0);
-		logger.info("每个答案的选择信息："+JSONArray.fromObject(RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0)).toString());
-		return JSONArray.fromObject(RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0)).toString();
+    public static String getSingleAnswerValue(){
+        return singleAnswerMap.toString();
     }
-	
-	/**
-	 * 获取答题人数
-	 * @param score
-	 */
-	public static int getAnswerNum(){
-		String[] keString = new String[2];
-		keString[0] = answerId;
-		keString[1] = "1";
-		Map<String, Object> map = (Map<String, Object>) RedisMapUtil.getRedisMap(everyBodyMap, keString, 0);
-		logger.info("作答人数："+ map.size());
-		return map.size();
+    private static void setJudgeCount(String result) {
+        switch (result) {
+            case JUDGE_TRUE:
+                Integer countTrue =  singleAnswerMap.containsKey(JUDGE_TRUE) ? singleAnswerMap.get(JUDGE_TRUE)+1:1;
+                singleAnswerMap.put(JUDGE_TRUE, countTrue);
+                break;
+            case JUDGE_FALSE:
+                Integer countFalse =  singleAnswerMap.containsKey(JUDGE_FALSE) ? singleAnswerMap.get(CHAR_B)+1:1;
+                singleAnswerMap.put(JUDGE_FALSE, countFalse);
+                break;
+        }
     }
-	
-//	public static void main(String[] args) {	
-//		
-//		startAnswer("A-F");
-//		
-//		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
-//		StudentInfo studentInfo = new StudentInfo();
-//		studentInfo.setIclickerId("0000001");
-//		studentInfos.add(studentInfo);
-//		StudentInfo studentInfo2 = new StudentInfo();
-//		studentInfo2.setIclickerId("0000002");
-//		studentInfos.add(studentInfo2);
-//		Global.setStudentInfos(studentInfos);
-//		
-//		JSONArray jsonData = new JSONArray();
-//		
-//		JSONObject jsonObject = new JSONObject();
-//		jsonObject.put("fun", "update_answer_list");
-//		jsonObject.put("card_id", "0000001");
-//		JSONArray jsonArray = new JSONArray();
-//		JSONObject jsonObject2 = new JSONObject();
-//		jsonObject2.put("type", "s");
-//		jsonObject2.put("id", "1");
-//		jsonObject2.put("answer", "ABC");
-//		jsonArray.add(jsonObject2);
-//		jsonObject.put("answers", jsonArray);
-//	
-//		JSONObject jsonObject_1 = new JSONObject();
-//		jsonObject_1.put("fun", "update_answer_list");
-//		jsonObject_1.put("card_id", "0000002");
-//		JSONArray jsonArray_1 = new JSONArray();
-//		JSONObject jsonObject2_1 = new JSONObject();
-//		jsonObject2_1.put("type", "s");
-//		jsonObject2_1.put("id", "1");
-//		jsonObject2_1.put("answer", "ABCF");
-//		jsonArray_1.add(jsonObject2_1);
-//		jsonObject_1.put("answers", jsonArray_1);
-//		
-//		jsonData.add(jsonObject);
-//		jsonData.add(jsonObject_1);
-//		
-//		
-//		
-//		addEveryAnswerInfo(jsonData.toString());
-//		
-//		System.out.println("每个人的作答详情"+JSONObject.fromObject(everyBodyMap));
-//		System.out.println("每个答案的作答详情"+JSONObject.fromObject(everyAnswerMap));
-//		getEveryAnswerInfoBar();
-//		getAnswerNum();
-//	}
-	
-	/**
-	 * 判断该答题器编号是否属于当前班级
-	 */
-	public static StudentInfo verifyCardId(String cardId){
-		for (int i = 0; i < Global.studentInfos.size(); i++) {
-    		if (cardId.equals(Global.studentInfos.get(i).getIclickerId())) { //是否属于当前班级
-				return Global.studentInfos.get(i);
-			}
-		}
-		return null;
-		
-	}
-	
-	/**
-	 * "A-D" 转换为 ["A","B","C","D"]
-	 * @param string
-	 * @return
-	 */
-	public static char[] splitString(String string){
-		if (string.length() != 3) {
-			return null;
-		}
-		if (string.substring(1, 2).hashCode() != 45) {
-			return null;
-		}
-		int startCode = string.substring(0, 1).hashCode();
-		int endCode = string.substring(2, 3).hashCode();
-		if (startCode >= endCode) {
-			return null;
-		}
-
-		char[] chars = new char[endCode-startCode+1];
-		int index = 0;
-		for (int i = startCode; i <= endCode; i++) {
-			chars[index++] = (char)i;
-		}
-		return chars;
-	}
-	
+    private static void setNumberCount(String result) {
+        switch (result) {
+            case NUMBER_1:
+                Integer number1 =  singleAnswerMap.containsKey(NUMBER_1) ? singleAnswerMap.get(NUMBER_1)+1:1;
+                singleAnswerMap.put(NUMBER_1, number1);
+                break;
+            case NUMBER_2:
+                Integer number2 =  singleAnswerMap.containsKey(NUMBER_2) ? singleAnswerMap.get(NUMBER_2)+1:1;
+                singleAnswerMap.put(NUMBER_2, number2);
+                break;
+            case NUMBER_3:
+                Integer number3 =  singleAnswerMap.containsKey(NUMBER_3) ? singleAnswerMap.get(NUMBER_3)+1:1;
+                singleAnswerMap.put(NUMBER_3, number3);
+                break;
+            case NUMBER_4:
+                Integer number4 =  singleAnswerMap.containsKey(NUMBER_4) ? singleAnswerMap.get(NUMBER_4)+1:1;
+                singleAnswerMap.put(NUMBER_4, number4);
+                break;
+            case NUMBER_5:
+                Integer number5 =  singleAnswerMap.containsKey(NUMBER_5) ? singleAnswerMap.get(NUMBER_5)+1:1;
+                singleAnswerMap.put(NUMBER_5, number5);
+                break;
+            case NUMBER_6:
+                Integer number6 =  singleAnswerMap.containsKey(NUMBER_6) ? singleAnswerMap.get(NUMBER_6)+1:1;
+                singleAnswerMap.put(NUMBER_6, number6);
+                break;
+            case NUMBER_7:
+                Integer number7 =  singleAnswerMap.containsKey(NUMBER_7) ? singleAnswerMap.get(NUMBER_7)+1:1;
+                singleAnswerMap.put(NUMBER_7, number7);
+                break;
+            case NUMBER_8:
+                Integer number8 =  singleAnswerMap.containsKey(NUMBER_8) ? singleAnswerMap.get(NUMBER_8)+1:1;
+                singleAnswerMap.put(NUMBER_8, number8);
+                break;
+            case NUMBER_9:
+                Integer number9 =  singleAnswerMap.containsKey(NUMBER_9) ? singleAnswerMap.get(NUMBER_9)+1:1;
+                singleAnswerMap.put(NUMBER_9, number9);
+                break;
+        }
+    }
+    private static void setCharCount(String result) {
+        switch (result) {
+            case CHAR_A:
+                Integer countA =  singleAnswerMap.containsKey(CHAR_A) ? singleAnswerMap.get(CHAR_A)+1:1;
+                singleAnswerMap.put(CHAR_A, countA);
+                break;
+            case CHAR_B:
+                Integer countB =  singleAnswerMap.containsKey(CHAR_B) ? singleAnswerMap.get(CHAR_B)+1:1;
+                singleAnswerMap.put(CHAR_B, countB);
+                break;
+            case CHAR_C:
+                Integer countC =  singleAnswerMap.containsKey(CHAR_C) ? singleAnswerMap.get(CHAR_C)+1:1;
+                singleAnswerMap.put(CHAR_C, countC);
+                break;
+            case CHAR_D:
+                Integer countD =  singleAnswerMap.containsKey(CHAR_D) ? singleAnswerMap.get(CHAR_D)+1:1;
+                singleAnswerMap.put(CHAR_D, countD);
+                break;
+        }
+    }
+    public static Map<String, StudentInfo> getStudentInfoMap() {
+        return studentInfoMap;
+    }
+    public static void setStudentInfoMap(Map<String, StudentInfo> studentInfoMap) {
+        RedisMapSingleAnswer.studentInfoMap = studentInfoMap;
+    }
+    public static void clearStudentInfoMap() {
+        studentInfoMap.clear();
+    }
+    public static Map<String, Integer> getSingleAnswerMap() {
+        return singleAnswerMap;
+    }
+    public static void setSingleAnswerMap(Map<String, Integer> singleAnswerMap) {
+        RedisMapSingleAnswer.singleAnswerMap = singleAnswerMap;
+    }
+    public static void clearSingleAnswerMap() {
+        singleAnswerMap.clear();
+    }
+    public static Answer getAnswer() {
+        return answer;
+    }
+    public static void setAnswer(Answer answer) {
+        RedisMapSingleAnswer.answer = answer;
+    }
+    public static Logger getLogger() {
+        return logger;
+    }
 }

@@ -1,5 +1,8 @@
 package com.zkxltech.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ejet.cache.RedisMapScore;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
@@ -11,6 +14,7 @@ import com.zkxlteck.scdll.ScDll;
 import com.zkxlteck.thread.ScoreThread;
 
 public class ScoreServiceImpl implements ScoreService{
+    private static final Logger logger = LoggerFactory.getLogger(ScoreServiceImpl.class);
 	private Result result = new Result();
 	private static Thread thread ;
 	
@@ -86,15 +90,23 @@ public class ScoreServiceImpl implements ScoreService{
         if (thread != null && thread instanceof ScoreThread) {
             ScoreThread c =  (ScoreThread)thread;
             c.setFLAG(false);
+            logger.info("评分线程停止成功");
+        }else{
+            logger.error("评分线程停止失败");
         }
         int answer_stop = ScDll.intance.answer_stop();
-        if (answer_stop == Constant.SEND_SUCCESS) {
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("停止成功");
-            return r;
+        if (answer_stop == Constant.SEND_ERROR) {
+            int answer_stop2 = ScDll.intance.answer_stop();
+            if (answer_stop2 == Constant.SEND_ERROR) {
+                r.setRet(Constant.ERROR);
+                r.setMessage("停止失败");
+                logger.error("评分指令发送失败");
+                return r;
+            }
         }
-        r.setRet(Constant.ERROR);
-        r.setMessage("停止失败");
+        logger.info("评分指令发送成功");
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("停止成功");
         return r;
     }
     @Override
@@ -125,9 +137,15 @@ public class ScoreServiceImpl implements ScoreService{
         strBuilder.append("]");
         int answer_start = ScDll.intance.answer_start(0, strBuilder.toString());
         if (answer_start == Constant.SEND_ERROR) {
-            r.setMessage("指令发送失败");
-            return r;
+            int answer_start2 = ScDll.intance.answer_start(0, strBuilder.toString());
+            if (answer_start2 == Constant.SEND_ERROR) {
+                r.setMessage("指令发送失败");
+                logger.error("评分指令发送失败");
+                return r;
+                
+            }
         }
+        logger.info("评分指令发送成功");
         thread = new ScoreThread();
         thread.start();
         r.setRet(Constant.SUCCESS);

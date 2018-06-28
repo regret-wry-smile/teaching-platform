@@ -11,9 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.BrowserManager;
-import com.ejet.cache.RedisMapAnswer;
 import com.ejet.cache.RedisMapAttendance;
 import com.ejet.cache.RedisMapQuick;
+import com.ejet.cache.RedisMapSingleAnswer;
 import com.ejet.core.util.ICallBack;
 import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.comm.ListUtils;
@@ -27,9 +27,10 @@ import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxlteck.scdll.ScDll;
-import com.zkxlteck.thread.AnswerThread;
+import com.zkxlteck.thread.MultipleAnswerThread;
 import com.zkxlteck.thread.AttendanceThread;
 import com.zkxlteck.thread.QuickThread;
+import com.zkxlteck.thread.singleAnswerThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -294,17 +295,45 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             r.setMessage("缺少参数,题目类型不能为空");
             return r;
         }
+        //传入类型 ,清空数据
+        RedisMapSingleAnswer.setAnswer(answer);
+        RedisMapSingleAnswer.clearSingleAnswerMap();
+        RedisMapSingleAnswer.clearStudentInfoMap();
         String type = answer.getType();
         int status = -1;
         switch (type) {
             case Constant.ANSWER_CHAR_TYPE:
                 status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
+                if (status == Constant.SEND_ERROR) {
+                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
+                }
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_A, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_B, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_C, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_D, 0);
                 break;
             case Constant.ANSWER_NUMBER_TYPE:
                 status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
+                if (status == Constant.SEND_ERROR) {
+                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
+                }
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_1, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_2, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_3, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_4, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_5, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_6, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_7, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_8, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_9, 0);
                 break;
             case Constant.ANSWER_JUDGE_TYPE:
                 status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
+                if (status == Constant.SEND_ERROR) {
+                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
+                }
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.JUDGE_TRUE, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.JUDGE_FALSE, 0);
                 break;
             default:
                 r.setMessage("参数错误");
@@ -314,11 +343,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             r.setMessage("指令发送失败");
             return r;
         }
-        //传入类型 ,清空数据
-        RedisMapAnswer.setAnswer(answer);
-        RedisMapAnswer.clearSingleAnswerMap();
-        RedisMapAnswer.clearStudentInfoMap();
-        thread = new AnswerThread();
+        
+        thread = new singleAnswerThread();
         thread.start();
         r.setRet(Constant.SUCCESS);
         return r;
@@ -344,9 +370,14 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         //开始签到接口有问题,暂用按任意键
         int answer_start = ScDll.intance.answer_start(0, Constant.ANSWER_STR);
         if (answer_start == Constant.SEND_ERROR) {
-            r.setMessage("指令发送失败");
-            return r;
+            int answer_start2 = ScDll.intance.answer_start(0, Constant.ANSWER_STR);
+            if (answer_start2 == Constant.SEND_ERROR) {
+                log.error("签到指令发送失败");
+                r.setMessage("指令发送失败");
+                return r;
+            }
         }
+        log.info("签到指令发送成功");
         //每次调用签到先清空数据
         RedisMapAttendance.clearAttendanceMap();
         RedisMapAttendance.clearCardIdSet();
@@ -377,15 +408,24 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         if (thread != null && thread instanceof AttendanceThread ) {
             AttendanceThread a = (AttendanceThread)thread;
             a.setFLAG(false);
+            log.info("签到线程停止成功");
+        }else{
+            log.error("签到线程停止失败");;
         }
+        
         int answer_stop = ScDll.intance.answer_stop();
-        if (answer_stop == Constant.SEND_SUCCESS) {
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("停止成功");
-            return r;
+        if (answer_stop == Constant.SEND_ERROR) {
+            int answer_stop2 = ScDll.intance.answer_stop();
+            if (answer_stop2 == Constant.SEND_ERROR) {
+                r.setRet(Constant.ERROR);
+                r.setMessage("指令发送失败");
+                log.error("\"停止签到\"指令发送失败");
+                return r;
+            }
         }
-        r.setRet(Constant.ERROR);
-        r.setMessage("停止失败");
+        log.info("\"停止签到\"指令发送成功");
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("停止成功");
         return r;
     }
     @Override
@@ -397,32 +437,37 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             return r;
         }
         int answer_start = ScDll.intance.answer_start(0, Constant.QUICK_COMMON);
-        if (answer_start == Constant.SEND_SUCCESS) {
-            //开始答题前先清空
-            RedisMapQuick.clearQuickMap();
-            RedisMapQuick.clearStudentInfoMap();
+        if (answer_start == Constant.SEND_ERROR) {
+            int answer_start2 = ScDll.intance.answer_start(0, Constant.QUICK_COMMON);
+            if (answer_start2 == Constant.SEND_ERROR) {
+                log.error("抢答指令发送失败");
+                r.setMessage("指令发送失败");
+                return r;
+            }
+        }
+        log.info("抢答指令发送成功");
+        //开始答题前先清空
+        RedisMapQuick.clearQuickMap();
+        RedisMapQuick.clearStudentInfoMap();
 //            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
 //            Result result = impl.selectStudentInfo(param);
 //            List<Object> item = (List<Object>) result.getItem();
-            List<StudentInfo> studentInfos = Global.getStudentInfos();
-            for (StudentInfo studentInfo : studentInfos) {
-                RedisMapQuick.getStudentInfoMap().put(studentInfo.getIclickerId(), studentInfo);
-            }
-            thread = new QuickThread();
-            thread.start();
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("发送成功");
-            return r;
+        List<StudentInfo> studentInfos = Global.getStudentInfos();
+        for (StudentInfo studentInfo : studentInfos) {
+            RedisMapQuick.getStudentInfoMap().put(studentInfo.getIclickerId(), studentInfo);
         }
-        r.setMessage("发送失败");
+        thread = new QuickThread();
+        thread.start();
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("发送成功");
         return r;
     }
     @Override
     public Result answerStop() {
         Result r = new Result();
         int answer_stop = ScDll.intance.answer_stop();
-        if (thread != null && thread instanceof AnswerThread) {
-            AnswerThread m = (AnswerThread)thread;
+        if (thread != null && thread instanceof MultipleAnswerThread) {
+            MultipleAnswerThread m = (MultipleAnswerThread)thread;
             m.setFLAG(false);
             log.info("\"停止答题\"线程停止成功");
         }else{
