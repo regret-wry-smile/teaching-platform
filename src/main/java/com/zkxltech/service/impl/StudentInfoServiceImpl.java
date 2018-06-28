@@ -422,15 +422,21 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     public Result answerStop() {
         Result r = new Result();
         int answer_stop = ScDll.intance.answer_stop();
+        if (thread != null && thread instanceof AnswerThread) {
+            AnswerThread m = (AnswerThread)thread;
+            m.setFLAG(false);
+            log.info("\"停止答题\"线程停止成功");
+        }else{
+            log.error("\"停止答题\"线程停止失败");
+        }
         if (answer_stop == Constant.SEND_SUCCESS) {
             //FIXME
-            if (thread != null && thread instanceof AnswerThread) {
-                AnswerThread m = (AnswerThread)thread;
-                m.setFLAG(false);
-            }
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
+            log.info("\"停止答题\"指令发送成功");
             return r;
+        }else{
+            log.error("\"停止答题\"指令发送失败");
         }
         r.setRet(Constant.ERROR);
         r.setMessage("停止失败");
