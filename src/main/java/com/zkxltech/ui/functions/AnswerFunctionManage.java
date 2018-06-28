@@ -76,7 +76,8 @@ public class AnswerFunctionManage extends BrowserFunction{
 				break;
 			case "get_everybody_answerInfo":
 				//获取每个人的作答统计
-				return answerInfoService.getEverybodyAnswerInfo();
+				result = answerInfoService.getEverybodyAnswerInfo();
+				break;
 				
 //			case "get_multiple_answer_num":
 //				//获取多选作答人数
