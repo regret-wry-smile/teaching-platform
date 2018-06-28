@@ -139,7 +139,7 @@
 								<td>{{$index+1}}</td>
 								<td>{{paperInfo.testName}}</td>
 								<td>{{paperInfo.describe}}</td>
-								<td><input type="checkbox" /></td>
+								<td class="ml5"><input type="checkbox"  style="margin-left: 0.32rem;" name="singe" ng-model="paperInfo.checked" class="ml32" ng-change="selectOne(paperInfo)" ng-click="$event.stopPropagation();userCheck(this)"></td>
 							</tr>
 							
 							</tbody>
@@ -148,14 +148,14 @@
 
 				</div>
 				<div class="operatebtn mt20 clearfix text-center">
-					<a href="../../page/answermoudle/classCheck.html">
-			  		<button class="btn savebtn" ng-click="startAnswer()">开始答题</button>
-			  		</a>
+					<!--<a href="../../page/answermoudle/classCheck.html">-->
+			  		<button class="btn savebtn" ng-click="startObjective()">开始答题</button>
+			  		<!--</a>-->
 			  		<a href="../../page/answermoudle/classCheck.html">
 			  		<button class="btn savebtn" ng-click="AnswerSrcoe()">主观题记分</button>
 			  		</a>			  		
 			  		<button class="btn savebtn" ng-click="uploadServer()">上传服务</button>
-			  	</div>
+			  </div>
 			</div>			
 		</div>
 		</body>
@@ -175,6 +175,18 @@
 			$('ul.modbox li.active').removeClass('active'); 
 			$(this).addClass('active');
 		})
+		//单选 设置name=id
+		/*function userCheck(ths) {
+		    if (ths.checked == false) {
+		        $("input[name=all]:checkbox").prop('checked', false);
+		    }
+		    else {
+		        var count = $("input[name='singe']:checkbox:checked").length;
+		        if (count == $("input[name='singe']:checkbox").length) {
+		            $("input[name=all]:checkbox").prop("checked", true);
+		        }
+		    }
+		}*/
 	})
 
 </script>
