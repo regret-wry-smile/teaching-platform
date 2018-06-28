@@ -149,8 +149,12 @@ public class RedisMapMultipleAnswer {
 		keString[0] = answerId;
 		keString[1] = "1";
 		Map<String, Object> map = (Map<String, Object>) RedisMapUtil.getRedisMap(everyBodyMap, keString, 0);
-		logger.info("作答人数："+ map.size()+"总人数:"+Global.getStudentInfos().size());
-		answerNum.put("answerNum", map.size());
+		int answerN = 0;
+		if (map != null) {
+			answerN = map.size();
+		}
+		logger.info("作答人数："+ answerN+"总人数:"+Global.getStudentInfos().size());
+		answerNum.put("answerNum", answerN);
 		answerNum.put("total", Global.getStudentInfos().size());
 		return JSONObject.fromObject(answerNum).toString();
     }
