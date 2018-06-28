@@ -154,6 +154,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         RedisMapSingleAnswer.clearStudentInfoMap();
         RedisMapSingleAnswer.clearSingleAnswerStudentNameMap();
         RedisMapSingleAnswer.cleariclickerIdsSet();
+        //总的答题人数
         List<StudentInfo> studentInfos = Global.getStudentInfos();
         if (ListUtils.isEmpty(studentInfos)) {
             r.setMessage("未获取到当前班次学生信息");

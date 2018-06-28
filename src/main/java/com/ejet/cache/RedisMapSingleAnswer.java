@@ -145,7 +145,10 @@ public class RedisMapSingleAnswer {
     }
     //获取当前提交答案的人数
     public static Object getSingleAnswerNum() {
-        return iclickerIdsSet.size();
+        JSONObject jo = new JSONObject();
+        jo.put("totalStudent", studentInfoMap.size());
+        jo.put("current", iclickerIdsSet.size());
+        return jo.toString();
     }
     //获取答案对应的学生名称
     public static Object getSingleAnswerStudentName(Object params) {
