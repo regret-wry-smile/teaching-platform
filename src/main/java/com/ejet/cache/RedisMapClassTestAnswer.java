@@ -206,8 +206,10 @@ public class RedisMapClassTestAnswer {
 					record.setStudentId(studentInfo.getStudentId());
 					record.setStudentName(studentInfo.getStudentName());
 					record.setScore(questionInfo.getScore());
-					record.setResult("2");
-					record.setTrueAnswer(questionInfo.getTrueAnswer());
+					if (!Constant.ZHUGUANTI_NUM.equals(questionInfo.getQuestionType())) { //只有客观题才有对错和正确答案
+						record.setResult("2");
+						record.setTrueAnswer(questionInfo.getTrueAnswer());
+					}
 				}
 				records.add(record);
 			}
@@ -271,6 +273,8 @@ public class RedisMapClassTestAnswer {
 				keyEveryAnswerMap[1] = questionId;
 				
 				Record record = new Record();
+				record.setClassId(studentInfo.getClassId());
+				record.setSubject(Global.getClassHour().getSubjectName());
 				record.setClassHourId(Global.getClassHour().getClassHourId());
 				record.setAnswer(answer.getAnswer());
 				record.setQuestion(questionInfo.getQuestion());
@@ -282,45 +286,49 @@ public class RedisMapClassTestAnswer {
 				record.setTestId(questionInfo.getTestId());
 				
 				RedisMapUtil.setRedisMap(everyAnswerMap, keyEveryAnswerMap, 0, record);
-				
 			}
 		}
+		
+		BrowserManager.refreClassTest();
 	}
 	
-	
-	public static void main(String[] args) {
-		/*模拟当前班级的学生信息*/
-		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
-		StudentInfo studentInfo = new StudentInfo();
-		studentInfo.setIclickerId("0000001");
-		studentInfo.setStudentId("10001");
-		studentInfo.setStudentName("学号01");
-		studentInfo.setClassId("9999");
-		studentInfos.add(studentInfo);
-		StudentInfo studentInfo2 = new StudentInfo();
-		studentInfo2.setIclickerId("0000002");
-		studentInfo2.setStudentId("10002");
-		studentInfo2.setStudentName("学号02");
-		studentInfo2.setClassId("9999");
-		studentInfos.add(studentInfo2);
-		StudentInfo studentInfo3 = new StudentInfo();
-		studentInfo3.setIclickerId("0000003");
-		studentInfo3.setStudentId("10003");
-		studentInfo3.setStudentName("学号03");
-		studentInfo3.setClassId("9999");
-		studentInfos.add(studentInfo3);
-		Global.setStudentInfos(studentInfos);
-		
-		//模拟当前课程
-		ClassHour classHour = new ClassHour();
-		classHour.setClassHourId(StringUtils.getUUID());
-		classHour.setSubjectName("语文");
-		classHour.setClassId("9999");
-		Global.setClassHour(classHour);
-		
-		/*模拟答题器发送的数据*/
-		JSONArray jsonData = new JSONArray();
-		/*客观题*/
+	/**
+	 * 客观题测试
+	 * @param args
+	 */
+//	public static void main(String[] args) {
+//		/*模拟当前班级的学生信息*/
+//		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
+//		StudentInfo studentInfo = new StudentInfo();
+//		studentInfo.setIclickerId("0000001");
+//		studentInfo.setStudentId("10001");
+//		studentInfo.setStudentName("学号01");
+//		studentInfo.setClassId("9999");
+//		studentInfos.add(studentInfo);
+//		StudentInfo studentInfo2 = new StudentInfo();
+//		studentInfo2.setIclickerId("0000002");
+//		studentInfo2.setStudentId("10002");
+//		studentInfo2.setStudentName("学号02");
+//		studentInfo2.setClassId("9999");
+//		studentInfos.add(studentInfo2);
+//		StudentInfo studentInfo3 = new StudentInfo();
+//		studentInfo3.setIclickerId("0000003");
+//		studentInfo3.setStudentId("10003");
+//		studentInfo3.setStudentName("学号03");
+//		studentInfo3.setClassId("9999");
+//		studentInfos.add(studentInfo3);
+//		Global.setStudentInfos(studentInfos);
+//		
+//		//模拟当前课程
+//		ClassHour classHour = new ClassHour();
+//		classHour.setClassHourId(StringUtils.getUUID());
+//		classHour.setSubjectName("语文");
+//		classHour.setClassId("9999");
+//		Global.setClassHour(classHour);
+//		
+//		/*模拟答题器发送的数据*/
+//		JSONArray jsonData = new JSONArray();
+//		/*客观题*/
 //		JSONObject jsonObjectStu = new JSONObject(); //学生1
 //		jsonObjectStu.put("fun", "update_answer_list");
 //		jsonObjectStu.put("card_id", "0000001");
@@ -363,58 +371,16 @@ public class RedisMapClassTestAnswer {
 //		
 //		jsonData.add(jsonObjectStu);
 //		jsonData.add(jsonObjectStu_1);
-		/*主观题*/
-		JSONObject jsonObjectStu = new JSONObject(); //学生1
-		jsonObjectStu.put("fun", "update_answer_list");
-		jsonObjectStu.put("card_id", "0000001");
-		JSONArray jsonArray = new JSONArray();
-		JSONObject jsonObject1 = new JSONObject(); //第六题
-		jsonObject1.put("type", "d");
-		jsonObject1.put("id", "6");
-		jsonObject1.put("answer", "5");
-		jsonArray.add(jsonObject1);
-		JSONObject jsonObject2 = new JSONObject(); //第七题
-		jsonObject2.put("type", "d");
-		jsonObject2.put("id", "7");
-		jsonObject2.put("answer", "4");
-		jsonArray.add(jsonObject2);
-		jsonObjectStu.put("answers", jsonArray);
-		JSONObject jsonObject3 = new JSONObject(); //第八题
-		jsonObject3.put("type", "d");
-		jsonObject3.put("id", "8");
-		jsonObject3.put("answer", "");
-		jsonArray.add(jsonObject3);
-		jsonObjectStu.put("answers", jsonArray);
-	
-		JSONObject jsonObjectStu_1 = new JSONObject();  //学生2
-		jsonObjectStu_1.put("fun", "update_answer_list");
-		jsonObjectStu_1.put("card_id", "0000002");
-		JSONArray jsonArray_1 = new JSONArray();
-		JSONObject jsonObject1_1 = new JSONObject();
-		jsonObject1_1.put("type", "d");
-		jsonObject1_1.put("id", "6");
-		jsonObject1_1.put("answer", "3");
-		jsonArray_1.add(jsonObject1_1);
-		
-		JSONObject jsonObject1_2 = new JSONObject();
-		jsonObject1_2.put("type", "d");
-		jsonObject1_2.put("id", "7");
-		jsonObject1_2.put("answer", "4");
-		jsonArray_1.add(jsonObject1_2);
-		
-		jsonObjectStu_1.put("answers", jsonArray_1);
-		
-		jsonData.add(jsonObjectStu);
-		jsonData.add(jsonObjectStu_1);
-		
-		try {
-			//获取试卷
-			QuestionInfo questionInfoParm = new QuestionInfo();
-			questionInfoParm.setTestId("4Y0001");
-			Result result = new QuestionServiceImpl().selectQuestion(questionInfoParm);	
-			if (result.getRet().equals(Constant.ERROR)) {
-				System.out.println("查询试卷题目失败!");
-			}
+//		
+//		
+//		try {
+//			//获取试卷
+//			QuestionInfo questionInfoParm = new QuestionInfo();
+//			questionInfoParm.setTestId("4Y0001");
+//			Result result = new QuestionServiceImpl().selectQuestion(questionInfoParm);	
+//			if (result.getRet().equals(Constant.ERROR)) {
+//				System.out.println("查询试卷题目失败!");
+//			}
 //			//筛选主观题
 //			List<QuestionInfo> questionInfos = (List<QuestionInfo>)result.getItem();
 //			List<QuestionInfo> questionInfos2 = new ArrayList<QuestionInfo>();
@@ -423,36 +389,145 @@ public class RedisMapClassTestAnswer {
 //					questionInfos2.add(questionInfos.get(i));
 //				}
 //			}
-			//筛选客观题
-			List<QuestionInfo> questionInfos = (List<QuestionInfo>)result.getItem();
-			List<QuestionInfo> questionInfos2 = new ArrayList<QuestionInfo>();
-			for (int i = 0; i < questionInfos.size(); i++) {
-				if (Constant.ZHUGUANTI_NUM.equals(questionInfos.get(i).getQuestionType())) {
-					questionInfos2.add(questionInfos.get(i));
-				}
-			}
-
-			startClassTest(questionInfos2);
-			
-			System.out.println("题目信息"+JSONObject.fromObject(questionInfoMap));
-			
-
-			addRedisMapClassTestAnswer1(jsonData.toString());
-			
-			System.out.println("作答信息"+JSONObject.fromObject(everyAnswerMap));
-			
-			
-			System.out.println("每个人的作答信息："+getEverybodyAnswerInfo());
-			
-			 System.out.println(JSONArray.fromObject(getRecordList()));
-			 
-			 //保存到数据库
-			 new AnswerInfoServiceImpl().stopObjectiveAnswer();
-		} catch (BusinessException e) {
-			System.out.println(e.getMessage());
-		}
-}
+//			
+//
+//			startClassTest(questionInfos2);
+//			
+//			System.out.println("题目信息"+JSONObject.fromObject(questionInfoMap));
+//			
+//
+//			addRedisMapClassTestAnswer1(jsonData.toString());
+//			
+//			System.out.println("作答信息"+JSONObject.fromObject(everyAnswerMap));
+//			
+//			
+//			System.out.println("每个人的作答信息："+getEverybodyAnswerInfo());
+//			
+//			 System.out.println(JSONArray.fromObject(getRecordList()));
+//			 
+//			 //保存到数据库
+//			 new AnswerInfoServiceImpl().stopObjectiveAnswer();
+//		} catch (BusinessException e) {
+//			System.out.println(e.getMessage());
+//		}
+//}
 	
+	/**
+	 * 主观题测试
+	 * @param args
+	 */
+//	public static void main(String[] args) {
+//		/*模拟当前班级的学生信息*/
+//		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
+//		StudentInfo studentInfo = new StudentInfo();
+//		studentInfo.setIclickerId("0000001");
+//		studentInfo.setStudentId("10001");
+//		studentInfo.setStudentName("学号01");
+//		studentInfo.setClassId("9999");
+//		studentInfos.add(studentInfo);
+//		StudentInfo studentInfo2 = new StudentInfo();
+//		studentInfo2.setIclickerId("0000002");
+//		studentInfo2.setStudentId("10002");
+//		studentInfo2.setStudentName("学号02");
+//		studentInfo2.setClassId("9999");
+//		studentInfos.add(studentInfo2);
+//		StudentInfo studentInfo3 = new StudentInfo();
+//		studentInfo3.setIclickerId("0000003");
+//		studentInfo3.setStudentId("10003");
+//		studentInfo3.setStudentName("学号03");
+//		studentInfo3.setClassId("9999");
+//		studentInfos.add(studentInfo3);
+//		Global.setStudentInfos(studentInfos);
+//		
+//		//模拟当前课程
+//		ClassHour classHour = new ClassHour();
+//		classHour.setClassHourId(StringUtils.getUUID());
+//		classHour.setSubjectName("语文");
+//		classHour.setClassId("9999");
+//		Global.setClassHour(classHour);
+//		
+//		/*模拟答题器发送的数据*/
+//		JSONArray jsonData = new JSONArray();
+//		/*主观题*/
+//		JSONObject jsonObjectStu = new JSONObject(); //学生1
+//		jsonObjectStu.put("fun", "update_answer_list");
+//		jsonObjectStu.put("card_id", "0000001");
+//		JSONArray jsonArray = new JSONArray();
+//		JSONObject jsonObject1 = new JSONObject(); //第六题
+//		jsonObject1.put("type", "d");
+//		jsonObject1.put("id", "6");
+//		jsonObject1.put("answer", "5");
+//		jsonArray.add(jsonObject1);
+//		JSONObject jsonObject2 = new JSONObject(); //第七题
+//		jsonObject2.put("type", "d");
+//		jsonObject2.put("id", "7");
+//		jsonObject2.put("answer", "4");
+//		jsonArray.add(jsonObject2);
+//		jsonObjectStu.put("answers", jsonArray);
+//		JSONObject jsonObject3 = new JSONObject(); //第八题
+//		jsonObject3.put("type", "d");
+//		jsonObject3.put("id", "8");
+//		jsonObject3.put("answer", "");
+//		jsonArray.add(jsonObject3);
+//		jsonObjectStu.put("answers", jsonArray);
+//	
+//		JSONObject jsonObjectStu_1 = new JSONObject();  //学生2
+//		jsonObjectStu_1.put("fun", "update_answer_list");
+//		jsonObjectStu_1.put("card_id", "0000002");
+//		JSONArray jsonArray_1 = new JSONArray();
+//		JSONObject jsonObject1_1 = new JSONObject();
+//		jsonObject1_1.put("type", "d");
+//		jsonObject1_1.put("id", "6");
+//		jsonObject1_1.put("answer", "3");
+//		jsonArray_1.add(jsonObject1_1);
+//		
+//		JSONObject jsonObject1_2 = new JSONObject();
+//		jsonObject1_2.put("type", "d");
+//		jsonObject1_2.put("id", "7");
+//		jsonObject1_2.put("answer", "4");
+//		jsonArray_1.add(jsonObject1_2);
+//		
+//		jsonObjectStu_1.put("answers", jsonArray_1);
+//		
+//		jsonData.add(jsonObjectStu);
+//		jsonData.add(jsonObjectStu_1);
+//		
+//		try {
+//			//获取试卷
+//			QuestionInfo questionInfoParm = new QuestionInfo();
+//			questionInfoParm.setTestId("4Y0001");
+//			Result result = new QuestionServiceImpl().selectQuestion(questionInfoParm);	
+//			if (result.getRet().equals(Constant.ERROR)) {
+//				System.out.println("查询试卷题目失败!");
+//			}
+//			//筛选客观题
+//			List<QuestionInfo> questionInfos = (List<QuestionInfo>)result.getItem();
+//			List<QuestionInfo> questionInfos2 = new ArrayList<QuestionInfo>();
+//			for (int i = 0; i < questionInfos.size(); i++) {
+//				if (Constant.ZHUGUANTI_NUM.equals(questionInfos.get(i).getQuestionType())) {
+//					questionInfos2.add(questionInfos.get(i));
+//				}
+//			}
+//
+//			startClassTest(questionInfos2);
+//			
+//			System.out.println("题目信息"+JSONObject.fromObject(questionInfoMap));
+//			
+//			addRedisMapClassTestAnswer2(jsonData.toString());
+//			
+//			System.out.println("作答信息"+JSONObject.fromObject(everyAnswerMap));
+//			
+//			
+//			System.out.println("每个人的作答信息："+getEverybodyAnswerInfo());
+//			
+//			 System.out.println(JSONArray.fromObject(getRecordList()));
+//			 
+//			 //保存到数据库
+//			 new AnswerInfoServiceImpl().stopObjectiveAnswer();
+//		} catch (BusinessException e) {
+//			System.out.println(e.getMessage());
+//		}
+//}
 	
 	/**
 	 * 判断该答题器编号是否属于当前班级
