@@ -40,12 +40,18 @@ public class AnswerFunctionManage extends BrowserFunction{
 			case "get_single_answer":
                 //result = EquipmentServiceImpl.getInstance().singleAnswer(param);
                 break;
-			case "start_multiple_answer":
+			case "start_multiple_answer": //开始多选答题
                 result = answerInfoService.startMultipleAnswer(params[1]);
                 break;
+			case "get_multiple_range":
+				//获取多选范围
+               return RedisMapMultipleAnswer.getRange();
 			case "get_multiple_answer_num":
 				//获取多选作答人数
                return RedisMapMultipleAnswer.getAnswerNum();
+			case "get_multiple_answer_detail":
+				//获取多选作答详情
+               return RedisMapMultipleAnswer.getEveryAnswerInfoBar();
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");

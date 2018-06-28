@@ -96,6 +96,11 @@ public class RedisMapMultipleAnswer {
         			RedisMapUtil.setRedisMap(everyBodyMap, keyEveryBodyMap, 0, answeJSONObject);
         			
         			String answerString = answeJSONObject.getString("answer");
+        			
+        			if (StringUtils.isEmpty(answerString)) {
+        				//过滤答案为空的数据
+        				continue;
+					}
         			char[] everyAnswer = answerString.toCharArray();
         			for (int k = 0; k < everyAnswer.length; k++) {
         				keyEveryAnswerMap[2] = String.valueOf(everyAnswer[k]);
