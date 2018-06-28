@@ -203,4 +203,21 @@ public class BrowserManager {
 		}
 	}
 	
+	/**
+	 * 刷新单题多选作答人数
+	 * @param echoRequest
+	 */
+	public static void refreClassTest() {
+		Browser b  = browerManager.get();
+		if (b!=null) {
+			shell.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					boolean  doRet = b.execute("document.getElementById('refreClassTest').click();");
+					log.info("刷新投票数据："+doRet);
+				}
+			});
+		}
+	}
+	
 }
