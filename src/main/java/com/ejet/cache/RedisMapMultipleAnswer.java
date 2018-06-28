@@ -131,7 +131,7 @@ public class RedisMapMultipleAnswer {
 		keString[1] = "1";
 		RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0);
 		logger.info("每个答案的选择信息："+JSONArray.fromObject(RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0)).toString());
-		return JSONArray.fromObject(RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0)).toString();
+		return JSONObject.fromObject(RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0)).toString();
     }
 	
 	/**

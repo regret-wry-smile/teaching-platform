@@ -3,73 +3,22 @@ package com.zkxltech.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
-import com.zkxltech.domain.AnswerInfo;
+import com.zkxltech.domain.QuestionInfo;
+import com.zkxltech.domain.Record;
 import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.AnswerInfoService;
-import com.zkxltech.sql.AnswerInfoSql;
+import com.zkxltech.sql.RecordSql;
 import com.zkxltech.ui.util.StringUtils;
 
 public class AnswerInfoServiceImpl implements AnswerInfoService{
 	private Result result;
-	private AnswerInfoSql answerInfoSql = new AnswerInfoSql();
-	@Override
-	public Result insertAnswerInfos(List<AnswerInfo> answerInfos) {
-		result = new Result();
-		try {
-			result = answerInfoSql.insertAnswerInfos(answerInfos);
-			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("批量插入答题信息成功!");
-			}else {
-				result.setMessage("批量插入答题信息失败！");
-			}
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("批量插入答题信息失败！");
-			result.setDetail(IOUtils.getError(e));
-			return result;
-		}
-	}
-	@Override
-	public Result deleteAnswerInfo(AnswerInfo answerInfo) {
-		result = new Result();
-		try {
-			result = answerInfoSql.deleteAnswerInfo(answerInfo);
-			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("删除答题信息成功!");
-			}else {
-				result.setMessage("删除答题信息失败！");
-			}
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("删除答题信息失败！");
-			result.setDetail(IOUtils.getError(e));
-			return result;
-		}
-	}
-	@Override
-	public Result selectAnswerInfo(AnswerInfo answerInfo) {
-		result = new Result();
-		try {
-			result = answerInfoSql.selectAnswerInfoInfo(answerInfo);
-			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("查询答题信息成功!");
-			}else {
-				result.setMessage("查询答题信息失败！");
-			}
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("查询答题信息失败！");
-			result.setDetail(IOUtils.getError(e));
-			return result;
-		}
-	}
+	private RecordSql recordSql = new RecordSql();
+
 	@Override
 	public Result startMultipleAnswer(Object object) {
 		result = new Result();
@@ -93,5 +42,73 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 			result.setDetail(IOUtils.getError(e));
 			return result;
 		}
+	}
+	@Override
+	public Result startObjectiveAnswer(Object testId) {
+		result = new Result();
+		try {
+			//获取试卷
+			QuestionInfo questionInfoParm = new QuestionInfo();
+			questionInfoParm.setTestId((String)testId);
+			Result result = new QuestionServiceImpl().selectQuestion(questionInfoParm);	
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setRet(Constant.ERROR);
+				result.setMessage("查询试卷题目失败!");
+				return result;
+			}
+			
+			//筛选主观题
+			List<QuestionInfo> questionInfos = (List<QuestionInfo>)result.getItem();
+			List<QuestionInfo> questionInfos2 = new ArrayList<QuestionInfo>();
+			for (int i = 0; i < questionInfos.size(); i++) {
+				if (!Constant.ZHUGUANTI_NUM.equals(questionInfos.get(i).getQuestionType())) {
+					questionInfos2.add(questionInfos.get(i));
+				}
+			}
+			
+
+			RedisMapClassTestAnswer.startClassTest(questionInfos2); //缓存初始化
+			
+			List<RequestVo> requestVos = new ArrayList<RequestVo>();
+			for (int i = 0; i < questionInfos2.size(); i++) {
+				RequestVo requestVo = new RequestVo();
+				requestVo.setId(questionInfos2.get(i).getQuestionId());
+				requestVo.setType(questionInfos2.get(i).getQuestionType());
+				requestVo.setRange(questionInfos2.get(i).getRange());
+				requestVos.add(requestVo);
+			}
+			
+			result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("硬件指令发送失败！");
+				return result;
+			}
+			result.setRet(Constant.SUCCESS);
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage(e.getMessage());
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
+	}
+
+	@Override
+	public Result stopObjectiveAnswer() {
+		result = new Result();
+		try {
+			List<Record> records = RedisMapClassTestAnswer.getRecordList();
+			result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("保存作答记录失败！");
+				return result;
+			}
+//			result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("保存作答记录失败！");
+			return result;
+		}
+		return result;
 	}
 }

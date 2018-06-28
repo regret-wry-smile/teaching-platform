@@ -1,8 +1,5 @@
 package com.zkxltech.service;
 
-import java.util.List;
-
-import com.zkxltech.domain.AnswerInfo;
 import com.zkxltech.domain.Result;
 
 public interface AnswerInfoService {
@@ -12,22 +9,16 @@ public interface AnswerInfoService {
 	 * @return
 	 */
 	Result startMultipleAnswer(Object object);
+	
 	/**
-	 * 批量插入答题信息
+	 * 开始客观答题
 	 * @param answerInfos
 	 * @return
 	 */
-	Result insertAnswerInfos(List<AnswerInfo> answerInfos);
+	Result startObjectiveAnswer(Object testId);
+	
 	/**
-	 * 删除答题信息
-	 * @param answerInfos
-	 * @return
+	 * 停止客观题答题
 	 */
-	Result deleteAnswerInfo(AnswerInfo answerInfo);
-	/**
-	 * 查询答题信息
-	 * @param answerInfos
-	 * @return
-	 */
-	Result selectAnswerInfo(AnswerInfo answerInfo);
+	Result stopObjectiveAnswer();
 }

@@ -3,7 +3,6 @@ package com.zkxltech.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ejet.cache.RedisMapClassTest;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
@@ -12,8 +11,8 @@ import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.EquipmentService;
 import com.zkxltech.sql.StudentInfoSql;
-import com.zkxlteck.thread.MultipleAnswerThread;
 import com.zkxlteck.scdll.ScDll;
+import com.zkxlteck.thread.MultipleAnswerThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -431,8 +430,6 @@ public class EquipmentServiceImpl implements EquipmentService{
 //		System.out.println(strBuilder);
         int answer_start = ScDll.intance.answer_start(1,strBuilder.toString());
         if (answer_start == Constant.SEND_SUCCESS) {
-            //开始答题前先清空
-            RedisMapClassTest.classTestAnswerMap.clear();
             t = new MultipleAnswerThread();
             t.start();
             r.setRet(Constant.SUCCESS);

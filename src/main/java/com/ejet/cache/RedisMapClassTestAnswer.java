@@ -1,5 +1,6 @@
 package com.ejet.cache;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,6 +17,8 @@ import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Answer;
+import com.zkxltech.domain.ClassHour;
+import com.zkxltech.domain.ClassTestVo;
 import com.zkxltech.domain.QuestionInfo;
 import com.zkxltech.domain.Record;
 import com.zkxltech.domain.ResponseAnswer;
@@ -36,6 +39,8 @@ public class RedisMapClassTestAnswer {
 	
 	/**
 	 * 每条作答记录缓存
+	 * -答题器编号
+	 * 			-题号
 	 */
 	private static Map<String, Object> everyAnswerMap = Collections.synchronizedMap(new HashMap<String, Object>());
 	
@@ -52,19 +57,34 @@ public class RedisMapClassTestAnswer {
 	 */
 	private static Map<String, QuestionInfo> questionInfoMap = Collections.synchronizedMap(new HashMap<String, QuestionInfo>());
 	
+	private static List<QuestionInfo> questionInfosList = new ArrayList<QuestionInfo>();
 	
+	/**
+	 * 每个人的作答进度信息
+	 */
+	private static List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
+	
+	/**
+	 * 某人的作答详情
+	 */
+//	private static List<Record>  records= new ArrayList<Record>();
 	
 	/**
 	 * 开始作答
 	 * @param testIdStr 试卷id
+	 * @throws BusinessException 
 	 */
-	public static void  startClassTest(){
+	public static void  startClassTest(List<QuestionInfo> questionInfos) throws BusinessException{
+		everyAnswerMap.clear();
 		questionInfoMap.clear();
-		
+		classTestVos.clear();
+		addQuestionIfo(questionInfos);
+
+		questionInfosList = questionInfos;
 	}
 	
 	/**
-	 * 将题目信息保存到缓存(客观题)
+	 * 将题目信息保存到缓存
 	 * @throws BusinessException 
 	 */
 	public static void addQuestionIfo(List<QuestionInfo> questionInfos) throws BusinessException{
@@ -76,14 +96,149 @@ public class RedisMapClassTestAnswer {
 			logger.error(IOUtils.getError(e));
 			throw new BusinessException(Constant.ERROR, "将题目信息保存到缓存失败！");
 		}
-		
-	}
+	}	
 	
 	
 	/**
 	 * 添加到缓存(客观题)
 	 */
-	public static void addRedisMapClassTestAnswer(String jsonData){
+	public static void addRedisMapClassTestAnswer1(String jsonData){
+		List<ResponseAnswer> responseAnswers = (List<ResponseAnswer>) JSONArray.toCollection(JSONArray.fromObject(jsonData), ResponseAnswer.class);
+		for (int i = 0; i < responseAnswers.size(); i++) {
+			ResponseAnswer responseAnswer = responseAnswers.get(i);
+
+			keyEveryAnswerMap[0] = responseAnswer.getCard_id();
+			/*判断是否属于该班*/
+			StudentInfo studentInfo = verifyCardId(responseAnswer.getCard_id());
+			if (studentInfo == null) {
+				continue;
+			}
+
+			List<Answer> answers = (List<Answer>) JSONArray.toCollection(JSONArray.fromObject(responseAnswer.getAnswers()), Answer.class);;
+			for (int j = 0; j < answers.size(); j++) {
+				Answer answer = answers.get(j);
+				String questionId = answer.getId(); //题号
+				
+				QuestionInfo questionInfo = questionInfoMap.get(questionId);
+				keyEveryAnswerMap[1] = questionId;
+				
+				Record record = new Record();
+				record.setClassId(Global.getClassHour().getClassId());
+				record.setSubject(Global.getClassHour().getSubjectName());
+				record.setClassHourId(Global.getClassHour().getClassHourId());
+				record.setTestId(questionInfo.getTestId());
+				record.setAnswer(answer.getAnswer());
+				record.setQuestion(questionInfo.getQuestion());
+				record.setQuestionId(questionId);
+				record.setQuestionType(questionInfo.getQuestionType());
+				if (questionInfo.getTrueAnswer().equals(answer.getAnswer())) {
+					record.setResult("1");
+				}else {
+					record.setResult("2");
+				}
+				record.setStudentId(studentInfo.getStudentId());
+				record.setStudentName(studentInfo.getStudentName());
+				record.setTrueAnswer(questionInfo.getTrueAnswer());
+				
+				RedisMapUtil.setRedisMap(everyAnswerMap, keyEveryAnswerMap, 0, record);
+				
+			}
+		}
+	}
+	
+	/**
+	 * 每个人的作答信息
+	 */
+	public static String getEverybodyAnswerInfo(){
+		List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
+		for (int i = 0; i < Global.studentInfos.size(); i++) {
+			StudentInfo studentInfo= Global.studentInfos.get(i);
+			ClassTestVo classTestVo = new ClassTestVo();
+			classTestVo.setStudentId(studentInfo.getStudentId());
+			classTestVo.setStudentName(studentInfo.getStudentName());
+			if (everyAnswerMap.containsKey(studentInfo.getIclickerId())) {
+				Map<String, Object> map =  (Map<String, Object>)everyAnswerMap.get(studentInfo.getIclickerId());
+				classTestVo.setAnswerCount(map.size());
+				BigDecimal decimal = new BigDecimal(map.size()).divide(new BigDecimal(questionInfoMap.size()), 2 ,BigDecimal.ROUND_HALF_UP);
+				classTestVo.setPercent(decimal.doubleValue());
+			}else {
+				classTestVo.setAnswerCount(0);
+				classTestVo.setPercent(0.0);
+			}
+			classTestVos.add(classTestVo);
+		}
+		return JSONArray.fromObject(classTestVos).toString();
+	}
+	/**
+	 * 将缓存中的数据转换为record对象list
+	 * @return
+	 */
+	public static List<Record> getRecordList(){
+		List<Record> records = new ArrayList<Record>();
+		List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
+		for (int i = 0; i < Global.studentInfos.size(); i++) { //遍历学生
+			StudentInfo studentInfo= Global.studentInfos.get(i);
+			keyEveryAnswerMap[0] = studentInfo.getIclickerId();
+			for (int j = 0; j < questionInfosList.size(); j++) {
+				QuestionInfo questionInfo = questionInfosList.get(j); 
+				keyEveryAnswerMap[1] = questionInfo.getQuestionId();
+				Record record = (Record) RedisMapUtil.getRedisMap(everyAnswerMap, keyEveryAnswerMap, 0);
+				if (record == null) {
+					record = new Record();
+					record.setClassId(studentInfo.getClassId());
+					record.setClassHourId(Global.getClassHour().getClassHourId());
+					record.setTestId(questionInfo.getTestId());
+					record.setSubject(Global.getClassHour().getSubjectName());
+					record.setQuestion(questionInfo.getQuestion());
+					record.setQuestionId(questionInfo.getQuestionId());
+					record.setQuestionType(questionInfo.getQuestionType());
+					record.setStudentId(studentInfo.getStudentId());
+					record.setStudentName(studentInfo.getStudentName());
+					record.setResult("2");
+					record.setTrueAnswer(questionInfo.getTrueAnswer());
+				}
+				records.add(record);
+			}
+			
+		}
+		return records;
+	}
+	
+//	/**
+//	 * 获取答题详情
+//	 * @param iclikerId 卡号
+//	 */
+//	public static String getEverybodyAnswerDetialInfo(String iclikerId){
+//		records.clear(); //清空
+//		List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
+//		for (int i = 0; i < Global.studentInfos.size(); i++) {
+//			StudentInfo studentInfo= Global.studentInfos.get(i);
+//			Record record = new Record();
+//			record.setQuestion(question);
+//			record.setQuestionId(questionId);
+//			record.setQuestionType(questionType);
+//			record.setTrueAnswer(trueAnswer);
+//			record.setResult(result);
+//			classTestVo.setStudentId(studentInfo.getStudentId());
+//			classTestVo.setStudentName(studentInfo.getStudentName());
+//			if (everyAnswerMap.containsKey(studentInfo.getIclickerId())) {
+//				Map<String, Object> map =  (Map<String, Object>)everyAnswerMap.get(studentInfo.getIclickerId());
+//				classTestVo.setAnswerCount(map.size());
+//				BigDecimal decimal = new BigDecimal(map.size()).divide(new BigDecimal(questionInfoMap.size()), 2 ,BigDecimal.ROUND_HALF_UP);
+//				classTestVo.setPercent(decimal.doubleValue());
+//			}else {
+//				classTestVo.setAnswerCount(0);
+//				classTestVo.setPercent(0.0);
+//			}
+//			classTestVos.add(classTestVo);
+//		}
+//		return JSONArray.fromObject(classTestVos).toString();
+//	}
+	
+	/**
+	 * 添加到缓存(主观题)
+	 */
+	public static void addRedisMapClassTestAnswer2(String jsonData){
 		List<ResponseAnswer> responseAnswers = (List<ResponseAnswer>) JSONArray.toCollection(JSONArray.fromObject(jsonData), ResponseAnswer.class);
 		for (int i = 0; i < responseAnswers.size(); i++) {
 			ResponseAnswer responseAnswer = responseAnswers.get(i);
@@ -109,15 +264,10 @@ public class RedisMapClassTestAnswer {
 				record.setQuestion(questionInfo.getQuestion());
 				record.setQuestionId(questionId);
 				record.setQuestionType(questionInfo.getQuestionType());
-				if (questionInfo.getTrueAnswer().equals(answer.getAnswer())) {
-					record.setResult("1");
-				}else {
-					record.setResult("2");
-				}
+				
 				record.setStudentId(studentInfo.getStudentId());
 				record.setStudentName(studentInfo.getStudentName());
 				record.setTestId(questionInfo.getTestId());
-				record.setTrueAnswer(questionInfo.getTrueAnswer());
 				
 				RedisMapUtil.setRedisMap(everyAnswerMap, keyEveryAnswerMap, 0, record);
 				
@@ -131,14 +281,30 @@ public class RedisMapClassTestAnswer {
 		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
 		StudentInfo studentInfo = new StudentInfo();
 		studentInfo.setIclickerId("0000001");
+		studentInfo.setStudentId("10001");
+		studentInfo.setStudentName("学号01");
+		studentInfo.setClassId("9999");
 		studentInfos.add(studentInfo);
 		StudentInfo studentInfo2 = new StudentInfo();
 		studentInfo2.setIclickerId("0000002");
+		studentInfo2.setStudentId("10002");
+		studentInfo2.setStudentName("学号02");
+		studentInfo2.setClassId("9999");
 		studentInfos.add(studentInfo2);
 		StudentInfo studentInfo3 = new StudentInfo();
 		studentInfo3.setIclickerId("0000003");
+		studentInfo3.setStudentId("10003");
+		studentInfo3.setStudentName("学号03");
+		studentInfo3.setClassId("9999");
 		studentInfos.add(studentInfo3);
 		Global.setStudentInfos(studentInfos);
+		
+		//模拟当前课程
+		ClassHour classHour = new ClassHour();
+		classHour.setClassHourId(StringUtils.getUUID());
+		classHour.setSubjectName("语文");
+		classHour.setClassId("9999");
+		Global.setClassHour(classHour);
 		
 		/*模拟答题器发送的数据*/
 		JSONArray jsonData = new JSONArray();
@@ -195,7 +361,6 @@ public class RedisMapClassTestAnswer {
 			if (result.getRet().equals(Constant.ERROR)) {
 				System.out.println("查询试卷题目失败!");
 			}
-			
 			//筛选主观题
 			List<QuestionInfo> questionInfos = (List<QuestionInfo>)result.getItem();
 			List<QuestionInfo> questionInfos2 = new ArrayList<QuestionInfo>();
@@ -205,15 +370,20 @@ public class RedisMapClassTestAnswer {
 				}
 			}
 			
-			addQuestionIfo(questionInfos2); //添加到题目缓存
+
+			startClassTest(questionInfos2);
 			
 			System.out.println("题目信息"+JSONObject.fromObject(questionInfoMap));
 			
 
-			addRedisMapClassTestAnswer(jsonData.toString());
+			addRedisMapClassTestAnswer1(jsonData.toString());
 			
-			System.out.println("作答信息"+JSONArray.fromObject(everyAnswerMap));
+			System.out.println("作答信息"+JSONObject.fromObject(everyAnswerMap));
 			
+			
+			System.out.println("每个人的作答信息："+getEverybodyAnswerInfo());
+			
+			 System.out.println(JSONArray.fromObject(getRecordList()));
 		} catch (BusinessException e) {
 			System.out.println(e.getMessage());
 		}

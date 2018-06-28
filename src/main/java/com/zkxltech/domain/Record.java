@@ -10,6 +10,14 @@ public class Record {
 	 */
 	private Integer id;
 	/**
+	 * 班级id
+	 */
+	private String classId;
+	/**
+	 * 科目
+	 */
+	private String subject;
+	/**
 	 * 课时表对应的主键
 	 */
 	private String classHourId;
@@ -114,6 +122,18 @@ public class Record {
 	}
 	public void setResult(String result) {
 		this.result = result;
+	}
+	public String getClassId() {
+		return classId;
+	}
+	public void setClassId(String classId) {
+		this.classId = classId;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 	
 }
