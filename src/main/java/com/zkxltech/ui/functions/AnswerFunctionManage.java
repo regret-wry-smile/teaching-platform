@@ -3,6 +3,7 @@ package com.zkxltech.ui.functions;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 
+import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
@@ -58,6 +59,10 @@ public class AnswerFunctionManage extends BrowserFunction{
 				//停止客观题答题
 				result = answerInfoService.stopObjectiveAnswer();
 				break;
+			case "get_everybody_answerInfo":
+				//获取每个人的作答统计
+				return RedisMapClassTestAnswer.getEverybodyAnswerInfo();
+				
 //			case "get_multiple_answer_num":
 //				//获取多选作答人数
 //               return RedisMapMultipleAnswer.getAnswerNum();
