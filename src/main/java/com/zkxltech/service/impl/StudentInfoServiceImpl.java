@@ -27,8 +27,8 @@ import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxlteck.scdll.ScDll;
-import com.zkxlteck.thread.MultipleAnswerThread;
 import com.zkxlteck.thread.AttendanceThread;
+import com.zkxlteck.thread.MultipleAnswerThread;
 import com.zkxlteck.thread.QuickThread;
 import com.zkxlteck.thread.singleAnswerThread;
 
@@ -297,8 +297,20 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }
         //传入类型 ,清空数据
         RedisMapSingleAnswer.setAnswer(answer);
-        RedisMapSingleAnswer.clearSingleAnswerMap();
+        RedisMapSingleAnswer.clearSingleAnswerNumMap();
         RedisMapSingleAnswer.clearStudentInfoMap();
+        RedisMapSingleAnswer.clearSingleAnswerStudentNameMap();
+        RedisMapSingleAnswer.cleariclickerIdsSet();
+        List<StudentInfo> studentInfos = Global.getStudentInfos();
+        if (ListUtils.isEmpty(studentInfos)) {
+            r.setMessage("未获取到当前班次学生信息");
+            return r;
+        }
+        Map<String,StudentInfo> map = new HashMap<>();
+        RedisMapSingleAnswer.setStudentInfoMap(map);
+        for (StudentInfo studentInfo : studentInfos) {
+            map.put(studentInfo.getIclickerId(), studentInfo);
+        }
         String type = answer.getType();
         int status = -1;
         switch (type) {
@@ -307,33 +319,33 @@ public class StudentInfoServiceImpl implements StudentInfoService{
                 if (status == Constant.SEND_ERROR) {
                     status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
                 }
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_A, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_B, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_C, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_D, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_A, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_B, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_C, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_D, 0);
                 break;
             case Constant.ANSWER_NUMBER_TYPE:
                 status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
                 if (status == Constant.SEND_ERROR) {
                     status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
                 }
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_1, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_2, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_3, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_4, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_5, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_6, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_7, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_8, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_9, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_1, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_2, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_3, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_4, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_5, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_6, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_7, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_8, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_9, 0);
                 break;
             case Constant.ANSWER_JUDGE_TYPE:
                 status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
                 if (status == Constant.SEND_ERROR) {
                     status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
                 }
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.JUDGE_TRUE, 0);
-                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.JUDGE_FALSE, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_TRUE, 0);
+                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_FALSE, 0);
                 break;
             default:
                 r.setMessage("参数错误");
