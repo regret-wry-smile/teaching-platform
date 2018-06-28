@@ -18,15 +18,26 @@ public interface AnswerInfoService {
 	Result startObjectiveAnswer(Object testId);
 	
 	/**
+	 * 开始记分答题
+	 */
+	Result startSubjectiveAnswer(Object testId);
+	
+	
+	/**
 	 * 停止客观题答题
 	 */
 	Result stopObjectiveAnswer();
+	
+//	/**
+//	 * 开始记分答题
+//	 */
+//	Result stopSubjectiveAnswer();
 
     Result singleAnswer(Object param);
 
     Result stopSingleAnswer();
     
     Result getEverybodyAnswerInfo();
-
+    
     Result stopMultipleAnswer();
 }
