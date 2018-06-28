@@ -240,4 +240,20 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         r.setMessage("停止成功");
         return r;
     }
+    
+    @Override
+	public Result getEverybodyAnswerInfo() {
+		result = new Result();
+		try {
+			RedisMapClassTestAnswer.getEverybodyAnswerInfo();
+			result.setRet(Constant.SUCCESS);
+			result.setMessage("获取作答数据成功！");
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("获取作答数据失败！");
+			result.setDetail(IOUtils.getError(e));
+		}
+		return result;
+	}
 }

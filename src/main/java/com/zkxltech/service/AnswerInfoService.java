@@ -25,4 +25,6 @@ public interface AnswerInfoService {
     Result singleAnswer(Object param);
 
     Result stopSingleAnswer();
+    
+    Result getEverybodyAnswerInfo();
 }
