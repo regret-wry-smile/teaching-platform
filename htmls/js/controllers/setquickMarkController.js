@@ -42,12 +42,14 @@ app.controller('quickMarkCtrl', function($rootScope,$scope,$modal,toastr) {
 //评分统计控制器
 app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.markInfo={};
-	var dom = document.getElementById("coutbar");
-	var myChart = echarts.init(dom);
+	
 	$scope.markInfoslist=[];
 	$scope.titleList=[];//标题数组
 	$scope.colors = ['#ffffff','#c4d4ef','#14c629','#f4c96d','#86daf6'];
 	$scope.data=[];
+	$scope.datalist=[];
+	var dom = document.getElementById("coutbar");
+	var myChart = echarts.init(dom);
 	var _getScoreTitleInfo=function(){
 		$scope.result=JSON.parse(execute_score("get_scoreTitleInfo"));
 		if($scope.result.ret=='success'&&$scope.result.item){		
@@ -58,9 +60,13 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		}		
 	}	
 	var _getscore=function(){
+		$scope.markInfoslist=[];
+		$scope.datalist=[];
+		$scope.data=[];
+		$scope.titleList=[];
 		$scope.result=JSON.parse(execute_score("get_score"));
 		console.log(JSON.stringify($scope.result))
-		if($scope.result.ret=='success'){		
+		if($scope.result.ret=='success'){			
 			$scope.markInfoslist=$scope.result.item;
 			if($scope.markInfoslist.length>3){
 				$scope.width="14%";
@@ -71,8 +77,13 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 			$scope.colors.push(i);
 			$scope.titleList.push($scope.markInfoslist[i].program);	
 			console.log("头部"+JSON.stringify($scope.titleList))
-			var average=($scope.markInfoslist[i].total/$scope.markInfoslist[i].peopleSum).toFixed(1);
-			
+				if($scope.markInfoslist[i].total!=0&&$scope.markInfoslist[i].peopleSum!=0){
+					var average=($scope.markInfoslist[i].total/$scope.markInfoslist[i].peopleSum).toFixed(1);
+				}else{
+					var average=$scope.markInfoslist[i].total/$scope.markInfoslist[i].peopleSum;
+				}			
+			$scope.datalist=[$scope.markInfoslist[i].total,$scope.markInfoslist[i].peopleSum,average];
+			console.log("头部"+JSON.stringify($scope.datalist))
 				var item={
 					name:$scope.markInfoslist[i].program,
 		            type:'bar',
@@ -90,11 +101,13 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 			       		}
 		    		},
 		    		
-		            data:[$scope.markInfoslist[i].total,$scope.markInfoslist[i].peopleSum,average],
+		            data:$scope.datalist,
 				}
 				$scope.data.push(item);
+				console.log(JSON.stringify($scope.data))
 				
 			}
+			
 			option = {
 		    color: $scope.colors,
 		    tooltip : {
@@ -155,7 +168,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		          	/*axisTick:{
 				        show:false
 				    },*/
-				axisLine: {
+					axisLine: {
 						lineStyle: {
 							color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
 							show: false
@@ -172,13 +185,13 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		    ],
 		    series : $scope.data
 			}
-			myChart.clear();
+			//myChart.clear();
 			if(option && typeof option === "object") {
 				myChart.setOption(option, true);
 			}
 		}else{
 			toastr.error($scope.result.message);
-			myChart.clear();
+			//myChart.clear();
 		}
 	}
 	var _init=function(){

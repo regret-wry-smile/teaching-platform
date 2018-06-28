@@ -30,7 +30,7 @@ public class PageConstant {
 	/**
 	 * 记录页面类型
 	 */
-	public static String PAGE_RECORD_URL = COMMON_URL+"/page/resultmoudle/answerCount.html";
+	public static String PAGE_RECORD_URL = COMMON_URL+"/page/resultmoudle/answerRecord.html";
 	
 	/********图片路径常量*******/
 	public static String imagePack = "/com/zkxltech/image";

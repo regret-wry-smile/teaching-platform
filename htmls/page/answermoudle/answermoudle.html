@@ -46,22 +46,32 @@
 			left: 0;
 			right: 0;
 		}
+		.tab-content .tab-pane{
+			/*display:none;
+			visibility: visible; */
+			display: block;
+			visibility: visible;
+		}
+		
 	</style>
-	<body class="bg clearfix" ng-controller="answerCtrl">
+	<body class="bg clearfix" ng-controller="mainAnswerCtrl">		
 			<div class="head clearfix bggreen">
 				<ul>
 					<li>
-						<a href="javascript:;" class="active">单题单选</a>
+						<a href="javascript:;" class="active" ng-click="selAnswerType('s')">单题单选</a>
 					</li>
 					<li>
-						<a href="javascript:;">单题多选</a>
+						<a href="javascript:;" ng-click="selAnswerType('m')">单题多选</a>
 					</li>
 					<li>
-						<a href="classCheck.html">随堂检测</a>
+						<!--<a href="classCheck.html">随堂检测</a>-->
+						<a href="javascript:;" ng-click="selAnswerType('c')">随堂检测</a>
 					</li>
 				</ul>
 			</div>
-			<div class="content clearfix">
+			<div class="tab-content">
+				<div class="tab-pane" ng-show="tabpane=='s'" ng-controller="answerCtrl">
+				<div class="content clearfix">
 				<ul class="modbox">
 					<li ng-click="changeAnswerType()">
 						<label>
@@ -96,28 +106,85 @@
 						</a>
 						</label>
 					</li>
-				</ul>
-				
-				  
-			</div>
-			<div class="operatebtn mt20 clearfix text-center">
-		  		<button class="btn savebtn" ng-click="startAnswer()">开始答题</button>
-		  	</div>
-			<div ng-spinner-loader class="loading">
-				<div class="spinner">
-					<div class="bounce1"></div>
-					<div class="bounce2"></div>
-					<div class="bounce3"></div>
+				</ul>	  
 				</div>
+				<div class="operatebtn mt20 clearfix text-center">
+			  		<button class="btn savebtn" ng-click="startAnswer()">开始答题</button>
+			  	</div>
+				<div id="refresAnswerNum" ng-click="refresAnswerNum()" style="display:none"></div>
+			</div>			
+			<div class="tab-pane" ng-show="tabpane=='m'" ng-controller="answerMutilCtrl">
+				<div class="content clearfix letter text-center" style="position:absolute ;left: 0;right: 0;top: 25%;">
+					<div class="modbox" >
+					<label class="lettercon">
+						<img src="../../image/letter.png"/>
+						<span class="title">字母</span>
+					</label>
+					<a href="javascript:;" class="letters">A</a>
+					<select class="single" select1 ng-model="range" defalutvalue='range1' ng-change="changeRange(range)" list='rangeList'>
+					<!--<option ng-repeat="item in infoAllNameList track by $index" value="{{item}}">{{item}}</option>-->
+					</select> 
+					</div>
+				</div>
+				<div class="operatebtn mt20 clearfix text-center">
+					<a href="../../page/answermoudle/stopAnswerType.html">
+			  		<button class="btn savebtn" ng-click="startAnswer()">开始答题</button>
+			  		</a>
+			  </div>
 			</div>
-	</body>
+			<div class="tab-pane" ng-show="tabpane=='c'" ng-controller="answerMutilCtrl">
+				<div class="header clearfix">
+					<div class="pull-left">
+						<img src="../../image/check.png" class="ml25 pt20" />
+						<span>请选择试卷</span>
+					</div>
+					<div class="pull-right">
+						<a href="javascript:history.go(-1);">
+						<img src="../../image/return.png" />
+						<!--<img src="../../image/return.png" ng-click="returnPage()"/>-->
+						</a>
+					</div>
+				</div>
+				<div class="content clearfix text-center">
+				<div class="col-main"  id="testlist" style="overflow-x: auto; overflow-y: auto; height:1.5rem; width:100%;padding-right: 0.05rem;">
+					<table class="table table-stripe subject">
+						<tbody>
+							<!--<tr ng-repeat="item in subjectList track by $index">
+								<td>{{$index+1}}</td>
+								<td>{{item.id}}</td>
+								<td>{{item.question}}</td>
+								<td>{{item.questionType|questionType}}</td>
+								<td ng-if="item.questionType=='3'">{{item.trueAnswer=='T'?'√':'×'}}</td>	
+								<td ng-if="item.questionType!='3'">{{item.trueAnswer}}</td>		
+							</tr>-->
+							</tbody>
+					</table>
+			  	</div>
+
+				</div>
+				<div class="operatebtn mt20 clearfix text-center">
+					<a href="../../page/answermoudle/classCheck.html">
+			  		<button class="btn savebtn" ng-click="startAnswer()">开始答题</button>
+			  		</a>
+			  		<a href="../../page/answermoudle/classCheck.html">
+			  		<button class="btn savebtn" ng-click="AnswerSrcoe()">主观题记分</button>
+			  		</a>			  		
+			  		<button class="btn savebtn" ng-click="uploadServer()">上传服务</button>
+			  	</div>
+			</div>			
+		</div>
+		</body>
 
 </html>
 <script type="text/javascript">
 	$(function(){
 		$('.head ul li a').click(function(){
+			//var index = $(".head ul li a").index($(this));
+			//console.log(JSON.stringify(index))
 			$('.head ul li a.active').removeClass('active'); 
 			$(this).addClass('active');
+			//$(".tab-content .tab-pane").eq(index).show().siblings().hide();
+			
 		})
 		$('ul.modbox li').click(function(){
 			$('ul.modbox li.active').removeClass('active'); 

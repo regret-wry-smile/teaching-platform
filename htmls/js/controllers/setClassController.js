@@ -270,14 +270,13 @@ app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
 	var _init=function(){
 		_getsignStudent();
 	}();
+	
 	 $scope.returnPage=function(){
 	 	$scope.result=JSON.parse(execute_attendance("sign_in_stop"));  
+	 	console.log("停止答题"+JSON.stringify($scope.result));
 	 	if($scope.result.ret=='success'){
-	 		history.go(-1);
-	 		console.log(JSON.stringify($scope.result));
-	 		
+	 		history.go(-1);	 		
 	 	}else{
-	 		history.go(-1);
 	 		toastr.error($scope.result.message);
 	 	}
 	 	
@@ -312,8 +311,7 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
 	},1000);
 	
 	
-	$scope.stopAnswer = function(){
-		
+	$scope.stopAnswer = function(){		
 		 //关闭定时器
 		$interval.cancel(myTimer); 
 	};

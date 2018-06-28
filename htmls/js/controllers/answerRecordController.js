@@ -1,85 +1,89 @@
 //定义模块时引入依赖  
 var app = angular.module('app', ['ui.bootstrap', 'toastr']);
-
-app.controller('mainAnswerCtrl', function($scope, toastr,$window) {
-	$scope.tabpane='s';
-	$scope.selAnswerType=function(answerType){
-		$scope.tabpane=answerType;
+//作答记录
+app.controller('answerRecordCtrl', function($scope, toastr) {
+	$scope.setClass={
+		classes:'',
+		subject:'',
+		sujectName:''
 	}
-})
-//单选
-app.controller('answerCtrl', function($scope, toastr,$window) {
-	$scope.setanwser={
-		classes:'333',
-		suject:'111',
-		sujectName:'111'
-	}
-	//跳转到答题中心页面
-	$scope.startAnswer=function(){
-		var param={
-			id:"1",
-			type:"m",
-			range:"A-E"
-		}
-		$scope.result = JSON.parse(execute_answer("start_multiple_answer",JSON.stringify(param)));
-		console.log("答题"+JSON.stringify($scope.result))
-		return false;
-		$scope.param = "classes=" + $scope.setClass.classes + "&suject=" + $scope.setClass.suject + "&sujectName=" + $scope.setClass.sujectName;
-		var objectUrl = '../../page/answermoudle/stopAnswer.html' + '?' + $scope.param;
-		console.log(JSON.stringify($scope.param))
-		$window.location.href = objectUrl;
-		
-	}
-	$scope.refresAnswerNum=function(){
-		$scope.result = JSON.parse(execute_answer("get_multiple_answer_num"));
-		console.log("获取答题"+JSON.stringify($scope.result))
-	}
-	
-})
-//多选
-app.controller('answerMutilCtrl', function($scope, toastr,$window) {
-	$scope.rangeList=["C","D","E","F"];
-	$scope.range="C";
-	$scope.range1=angular.copy($scope.range);
-	$scope.changeRange=function(range){
-		$scope.range=range;
-	}
-	//跳转到答题中心页面
-	$scope.startAnswer=function(){
-		
-		var param={
-			id:"1",
-			type:"m",//多选
-			range:"A-"+$scope.range
-		}		
-		$scope.result = JSON.parse(execute_answer("start_multiple_answer",JSON.stringify(param)));
+	//$scope.curclassName='';//当前班级
+	$scope.classList=[];//班级数组
+	$scope.subjectlists=[];//科目数组
+	$scope.classhourList=[]//课程数组
+	/*查询班级列表*/
+	var _selectClass = function() {
+		$scope.result = JSON.parse(execute_student("select_class"));
 		if($scope.result.ret=='success'){
-			var objectUrl = '../../page/answermoudle/stopAnswerType.html';
-			console.log(JSON.stringify($scope.param))
-			$window.location.href = objectUrl;
+			if($scope.result.item.length>0){
+				angular.forEach($scope.result.item,function(i){
+					var item={
+						key:i.classId,
+						value:i.className
+					}
+					$scope.classList.push(item);
+					//console.log("班级"+JSON.stringify($scope.classList))
+					$scope.setClass.classes=$scope.classList[0].key;
+					$scope.classesobject=$scope.classList[0];
+					$scope.setClass.classes1=angular.copy($scope.setClass.classes);								
+	
+				})			
+			}
+		}else{
+			toastr.error($scope.result.message);
+		}
+	};
+	//查询科目
+	var _getsubject=function(){
+		$scope.subjectlists= JSON.parse(execute_testPaper("get_subject"));
+		if($scope.subjectlists.length>0){
+			$scope.setClass.subject=$scope.subjectlists[0];
+			$scope.setClass.subject1=angular.copy($scope.setClass.subject);
+		}
+	}
+	//查询课程
+	var _selectClassHour=function(){
+		$scope.result=JSON.parse(execute_record("select_class_hour",$scope.setClass.classes,$scope.setClass.subject));
+		//console.log(JSON.stringify($scope.result))
+		if($scope.result.ret=='success'){			
+			if($scope.result.item.length>0){
+				angular.forEach($scope.result.item,function(i){
+					var item={
+						key:i.class_hour_id,
+						value:i.class_hour_name
+					}
+					$scope.classhourList.push(item);
+					$scope.setClass.sujectName=$scope.classhourList[0].key;
+					$scope.sujectNameobject=$scope.classhourList[0];
+					console.log(JSON.stringify($scope.sujectNameobject))
+					$scope.setClass.sujectName1=angular.copy($scope.setClass.sujectName);
+				})
+			}
 		}else{
 			toastr.error($scope.result.message);
 		}
 	}
-	
-	
-})
-app.controller('stopAnswerTypeCtrl', function($scope, toastr,$window) {
-	$scope.isStopAswer=false;
-	$scope.studentNum=0;
-	//获取答题人数
-	$scope.refresAnswerNum=function(){
-		$scope.result = execute_answer("get_multiple_answer_num");
-		$scope.studentNum= $scope.result;
-		console.log("获取答题"+JSON.stringify($scope.result))
+	//切换班级
+	$scope.changeClass=function(classes){
+		$scope.setClass.classes=classes;
+		angular.forEach($scope.classList,function(i){
+			if($scope.setClass.classes==i.key){
+				$scope.classesobject=i;
+				$scope.classhourList=[];
+				_selectClassHour();
+			}
+		})
+		
 	}
-	//停止答题
-	$scope.stopAnswer=function(){
-		$scope.isStopAswer=true;
+	//切换科目
+	$scope.changeSubject=function(subject){
+		$scope.setClass.subject	=subject;
 	}
-	
-	
+	var _init=function(){
+		_selectClass();
+	}
 })
+
 app.directive('select', function() {
 	return {
 		restrict: 'A',

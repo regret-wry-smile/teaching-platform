@@ -43,8 +43,8 @@ app.controller('voteCtrl', function($rootScope,$scope,$modal,toastr) {
 //投票统计控制器
 app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.voteInfo={};
-	var _getScoreTitleInfo=function(){
-		$scope.result=JSON.parse(execute_vote("get_scoreTitleInfo"));
+	var _getvoteTitleInfo=function(){
+		$scope.result=JSON.parse(execute_vote("get_voteTitleInfo"));
 		if($scope.result.ret=='success'&&$scope.result.item){		
 			$scope.voteInfo=$scope.result.item;
 		}else{
@@ -58,6 +58,9 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.colors = ['#ffffff','#c4d4ef','#14c629','#f4c96d','#86daf6'];
 	$scope.data=[];
 	var _getvote=function(){
+		$scope.voteInfoslist=[];
+		$scope.data=[];
+		$scope.titleList=[];
 		$scope.result=JSON.parse(execute_vote("get_vote"));
 		console.log(JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){		
@@ -172,16 +175,17 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		    ],
 		    series : $scope.data
 			}
-			
+			//myChart.clear();
 			if(option && typeof option === "object") {
 				myChart.setOption(option, true);
 			}
 		}else{
+			//myChart.clear();
 			toastr.error($scope.result.message);
 		}
 	}
 	var _init=function(){
-		_getScoreTitleInfo();
+		_getvoteTitleInfo();
 		_getvote();		
 	}();	
 	//$scope.voteInfoslist=[{"agree":4,"disagree":0,"num":"1","program":"张三","waiver":0},{"agree":2,"disagree":1,"num":"2","program":"李四","waiver":1},{"agree":0,"disagree":0,"num":"3","program":"王五","waiver":0}]

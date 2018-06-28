@@ -131,9 +131,12 @@ p {
 	color: #fff;
 	padding: 0.23rem 0.12rem;	
 }
+
 .head ul li a.active{
 	border-bottom: 0.04rem solid #fff;
 }
+
+
 .content{
 	margin:0 0.15rem 0.15rem;
 	padding: 0.25rem;	
@@ -280,13 +283,13 @@ button.btnfff{
 	font-size: 0.18rem;
 	width: 2.0rem;
 	height: 0.48rem;
-	position: relative;
+	/*position: relative;*/
 }
-button.btnfff:after{
+/*button.btnfff:after{
 	content: url(../image/sub.png);
 	position: absolute;
 	right: 10%;
-}
+}*/
 button.circlefff{
 	border: 3px solid #dedede;
 	width: 1.5rem;
@@ -690,6 +693,99 @@ label.circle{
 }
 .form-group label.selradio input[type='radio']{
 	cursor: pointer;
+}
+
+/*答题中心样式*/
+
+
+.letter a.letters{
+	color: #fff;
+	font-size: 0.28rem;
+	display: inline-block;
+	padding: 0.2rem ;
+	border-right: 0.01rem solid #fff;
+	margin-right: 0.10rem;
+	vertical-align: middle;
+}
+
+.lettercon .title{
+	color: #fff;
+	font-size: 0.28rem;
+	vertical-align: middle;
+}
+a.letters:hover{
+	color: #fff;
+}
+.letter .newSelect{
+	width:0.8rem !important;
+	height: 0.4rem;
+}
+.letter .newOptions{
+	width:0.8rem !important;
+}
+.letter .newSelect .newSelectTitle{
+	height: 0.45rem;
+	line-height: 0.45rem;
+	
+}
+.letter .newSelect .arrow{
+	margin-top: 0.18rem;
+}
+.letter .newSelect .newSelectTitle span{
+	font-size: 0.28rem;
+	color: #3d95ff;
+}
+div.block{
+	position: absolute;
+	bottom: 0.25rem;
+	left: 0;
+	right: 0;	
+	margin:0 0.25rem;		
+}
+ul.col-4 li{
+	float: left;
+	width: 25%;
+	text-align: center;	
+}
+ul.col-4 li a{
+	width: 2.0rem;
+	display: inline-block;
+	padding: 0.24rem 0;		
+	background: #fff;
+	border-radius: 0.10rem;
+}
+ul.col-4 li a img{
+	margin-top: -0.03rem;
+	vertical-align: middle;
+}
+ul.col-4 li a span{
+	margin-left: 0.08rem;
+	color: #90a4cc;
+	font-size: 0.32rem;
+	vertical-align: middle;
+}
+@media screen and (max-width: 920px) {
+    .head ul li a{
+		display: inline-block;
+		text-align: center;	
+		color: #fff;
+		padding: 0.10rem 0.12rem;	
+	}
+}
+@media screen and (min-width: 921px) {
+    .head ul li a{
+		display: inline-block;
+		text-align: center;	
+		color: #fff;
+		padding: 0.23rem 0.12rem;	
+	}
+	ul.modbox li a{
+		width: 4.0rem;
+	}
+	ul.col-4 li a{
+		width: 4.0rem;
+		padding: 0.4rem 0;		
+	}
 }
 /*table.classlist tbody tr:hover,
 table.userlist tbody tr:hover{
