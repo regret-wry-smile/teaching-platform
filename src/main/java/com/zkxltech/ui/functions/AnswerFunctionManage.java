@@ -3,6 +3,7 @@ package com.zkxltech.ui.functions;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 
+import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.cache.RedisMapSingleAnswer;
 import com.ejet.core.util.constant.Constant;
@@ -59,6 +60,23 @@ public class AnswerFunctionManage extends BrowserFunction{
 			case "get_multiple_answer_detail":
 				//获取多选作答详情
                return RedisMapMultipleAnswer.getEveryAnswerInfoBar();
+			case "start_class_test_objective": //开始客观答题
+                result = answerInfoService.startMultipleAnswer(params[1]);
+                break;
+			case "stop_class_test_objective":
+				//停止客观题答题
+				result = answerInfoService.stopObjectiveAnswer();
+				break;
+			case "get_everybody_answerInfo":
+				//获取每个人的作答统计
+				return RedisMapClassTestAnswer.getEverybodyAnswerInfo();
+				
+//			case "get_multiple_answer_num":
+//				//获取多选作答人数
+//               return RedisMapMultipleAnswer.getAnswerNum();
+//			case "get_multiple_answer_detail":
+//				//获取多选作答详情
+//               return RedisMapMultipleAnswer.getEveryAnswerInfoBar();
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");

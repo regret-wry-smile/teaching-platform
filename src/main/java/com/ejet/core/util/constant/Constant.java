@@ -47,6 +47,10 @@ public class Constant {
     public static final String ANSWER_JUDGE_TYPE = "judge";
     /* 多选答案*/
     public static final String ANSWER_MULTIPLE_TYPE = "multiple";
+    /* 随堂检测客观题*/
+    public static final String ANSWER_CLASS_TEST_OBJECTIVE = "class_test_objective";
+    /* 随堂检测主观题*/
+    public static final String ANSWER_CLASS_TEST_SUBJECTIVE = "class_test_subjective";
     /*字符题型*/
     public static final String SINGLE_ANSWER_CHAR = "[{'type':'s','id':'1','range':'A-D'}]";
     /* 数字题型*/
