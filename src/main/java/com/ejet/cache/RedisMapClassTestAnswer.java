@@ -144,8 +144,11 @@ public class RedisMapClassTestAnswer {
 				
 				RedisMapUtil.setRedisMap(everyAnswerMap, keyEveryAnswerMap, 0, record);
 				
+
 			}
 		}
+
+		BrowserManager.refreClassTest();
 	}
 	
 	/**
@@ -170,7 +173,6 @@ public class RedisMapClassTestAnswer {
 			classTestVos.add(classTestVo);
 		}
 		
-		BrowserManager.refreClassTest();
 		return JSONArray.fromObject(classTestVos).toString();
 	}
 	/**

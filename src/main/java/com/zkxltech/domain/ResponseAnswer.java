@@ -11,7 +11,7 @@ public class ResponseAnswer {
 	private String fun;
 	private String card_id;
 	private String rssi;
-	private String updateTime;
+	private String update_time;
 	private String raiseHand;
 	private String attendance;
 	private List<Answer> answers;
@@ -35,11 +35,12 @@ public class ResponseAnswer {
 	public void setRssi(String rssi) {
 		this.rssi = rssi;
 	}
-	public String getUpdateTime() {
-		return updateTime;
+
+	public String getUpdate_time() {
+		return update_time;
 	}
-	public void setUpdateTime(String updateTime) {
-		this.updateTime = updateTime;
+	public void setUpdate_time(String update_time) {
+		this.update_time = update_time;
 	}
 	public String getRaiseHand() {
 		return raiseHand;
