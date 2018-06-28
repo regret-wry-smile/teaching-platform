@@ -146,6 +146,8 @@ public class RedisMapClassTestAnswer {
 				
 			}
 		}
+		
+		BrowserManager.refreClassTest();
 	}
 	
 	/**
@@ -158,10 +160,17 @@ public class RedisMapClassTestAnswer {
 			ClassTestVo classTestVo = new ClassTestVo();
 			classTestVo.setStudentId(studentInfo.getStudentId());
 			classTestVo.setStudentName(studentInfo.getStudentName());
+			int answercount = 0;
 			if (everyAnswerMap.containsKey(studentInfo.getIclickerId())) {
 				Map<String, Object> map =  (Map<String, Object>)everyAnswerMap.get(studentInfo.getIclickerId());
-				classTestVo.setAnswerCount(map.size());
-				BigDecimal decimal = new BigDecimal(map.size()).divide(new BigDecimal(questionInfoMap.size()), 2 ,BigDecimal.ROUND_HALF_UP);
+				for (String questionId : map.keySet()) {
+					Record record = (Record) map.get(questionId);
+					if (!StringUtils.isEmpty(record.getAnswer())) {
+						answercount++;
+					}
+				}
+				classTestVo.setAnswerCount(answercount);
+				BigDecimal decimal = new BigDecimal(answercount).divide(new BigDecimal(questionInfoMap.size()), 2 ,BigDecimal.ROUND_HALF_UP);
 				classTestVo.setPercent(decimal.doubleValue());
 			}else {
 				classTestVo.setAnswerCount(0);
@@ -169,8 +178,6 @@ public class RedisMapClassTestAnswer {
 			}
 			classTestVos.add(classTestVo);
 		}
-		
-		BrowserManager.refreClassTest();
 		return JSONArray.fromObject(classTestVos).toString();
 	}
 	/**
@@ -375,7 +382,7 @@ public class RedisMapClassTestAnswer {
 		JSONObject jsonObject3 = new JSONObject(); //第八题
 		jsonObject3.put("type", "d");
 		jsonObject3.put("id", "8");
-		jsonObject3.put("answer", "2");
+		jsonObject3.put("answer", "");
 		jsonArray.add(jsonObject3);
 		jsonObjectStu.put("answers", jsonArray);
 	
