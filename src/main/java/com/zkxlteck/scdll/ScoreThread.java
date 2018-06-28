@@ -25,7 +25,7 @@ public class ScoreThread extends Thread {
             }
             String jsonData = ScDll.intance.get_answer_list();
             if (!StringUtils.isBlank(jsonData)) {
-//                RedisMapAttendance.addAttendance(jsonData);
+                logger.info("获取到答题数据:===>>"+jsonData);
                 RedisMapScore.addscoreDetailInfo(jsonData);
             }
         }
