@@ -15,4 +15,10 @@ public interface RecordService {
 	 * @param object 生成的文件名
 	 */
 	Result exportRecord(Object object);
+	/**
+	 * 查询作答记录（随堂检测专用）
+	 * @param object
+	 * @return
+	 */
+	Result selectRecord(Object object);
 }

@@ -13,13 +13,21 @@ import java.util.Map;
 
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
+import com.sun.org.apache.regexp.internal.recompile;
+import com.zkxltech.domain.Record;
+import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.RecordService;
+import com.zkxltech.sql.RecordSql;
 import com.zkxltech.ui.util.ExportExcel;
+import com.zkxltech.ui.util.StringUtils;
 
 public class RecordServiceImpl implements RecordService{
 	private Result result ;
+	
+	private RecordSql recordSql = new RecordSql();
 	//FIXME 导入答题记录
 	@Override
 	public Result exportRecord(Object object) {
@@ -156,9 +164,26 @@ public class RecordServiceImpl implements RecordService{
 	 * @param object
 	 * @return
 	 */
+	@Override
     public Result selectRecord(Object object) {
-        
-        return null;
+    	result = new Result();
+		try {
+			Record record = StringUtils.parseJSON(object, Record.class);
+	    	record.setClassId(Global.getClassHour().getClassId());
+	    	record.setSubject(Global.getClassHour().getSubjectName());
+			result = recordSql.selectRecord(record);
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("查询记录失败!");
+				return result;
+			}
+			result.setMessage("查询记录成功!");
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("查询记录失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
     }
 
 }
