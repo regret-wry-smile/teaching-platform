@@ -60,6 +60,7 @@ public class RedisMapVote {
 		voteInfoMap.clear();
 		voteDetailInfoMap.clear();
 		barMap.clear();
+		voteVos.clear();
 	}
 	
 	/**
