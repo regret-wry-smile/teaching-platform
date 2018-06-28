@@ -197,14 +197,14 @@ public class BrowserManager {
 				@Override
 				public void run() {
 					boolean  doRet = b.execute("document.getElementById('refresAnswerNum').click();");
-					log.info("刷新投票数据："+doRet);
+					log.info("刷新单题多选作答人数："+doRet);
 				}
 			});
 		}
 	}
 	
 	/**
-	 * 刷新单题多选作答人数
+	 * 刷新随堂检测作答进度
 	 * @param echoRequest
 	 */
 	public static void refreClassTest() {
@@ -214,7 +214,7 @@ public class BrowserManager {
 				@Override
 				public void run() {
 					boolean  doRet = b.execute("document.getElementById('refreClassTest').click();");
-					log.info("刷新投票数据："+doRet);
+					log.info("刷新随堂检测作答进度："+doRet);
 				}
 			});
 		}
