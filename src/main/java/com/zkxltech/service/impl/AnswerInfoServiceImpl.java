@@ -219,7 +219,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
     public Result stopSingleAnswer() {
         Result r = new Result();
         if (thread != null && thread instanceof SingleAnswerThread ) {
-            AttendanceThread a = (AttendanceThread)thread;
+            SingleAnswerThread a = (SingleAnswerThread)thread;
             a.setFLAG(false);
             log.info("单选线程停止成功");
         }else{
@@ -254,7 +254,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
     public Result stopMultipleAnswer() {
         Result r = new Result();
         if (EquipmentServiceImpl.getThread() != null && EquipmentServiceImpl.getThread() instanceof MultipleAnswerThread ) {
-            AttendanceThread a = (AttendanceThread)thread;
+            MultipleAnswerThread a = (MultipleAnswerThread)EquipmentServiceImpl.getThread();
             a.setFLAG(false);
             log.info("多选线程停止成功");
         }else{
