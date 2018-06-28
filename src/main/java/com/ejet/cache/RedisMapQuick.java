@@ -8,10 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.core.util.constant.Constant;
-import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
-import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
+import com.zkxlteck.scdll.ScDll;
 import com.zkxlteck.thread.QuickThread;
 
 import net.sf.json.JSONArray;
@@ -34,17 +33,23 @@ public class RedisMapQuick {
             String card_id = jo.getString("card_id");
             StudentInfo studentInfo = studentInfoMap.get(card_id);
             quickMap.put("studentName", studentInfo.getStudentName());
-            StudentInfoServiceImpl instance = new StudentInfoServiceImpl();
-            Result r = instance.answerStop();
-            if (r.getRet().equals(Constant.ERROR)) {
-                logger.error("抢答环节:关闭停止答题失败");
+            int answer_stop = ScDll.intance.answer_stop();
+            if (answer_stop == Constant.SEND_ERROR) {
+                int answer_stop2 = ScDll.intance.answer_stop();
+                if (answer_stop2 == Constant.SEND_ERROR) {
+                    logger.error("停止抢答指令发送失败");
+                }else{
+                    logger.info("停止抢答指令发送成功");
+                }
+            }else{
+                logger.info("停止抢答指令发送成功");
             }
-            if (instance.getThread()!=null && instance.getThread() instanceof QuickThread) {
-                QuickThread qt= (QuickThread)instance.getThread();
+            if (StudentInfoServiceImpl.getThread()!=null && StudentInfoServiceImpl.getThread() instanceof QuickThread) {
+                QuickThread qt= (QuickThread)StudentInfoServiceImpl.getThread();
                 qt.setFLAG(false);
-            }
-            if (Constant.ERROR.equals(r.getRet())) {
-                logger.error("-------- 停止答题线程失败 --------");
+                logger.info("抢答线程停止成功");
+            }else{
+                logger.error("抢答线程停止失败");
             }
         }
     }

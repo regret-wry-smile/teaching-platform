@@ -26,7 +26,7 @@ import com.zkxlteck.thread.CardInfoThread;
 import net.sf.json.JSONObject;
 
 public class ClassInfoServiceImpl implements ClassInfoService{
-    private static final Logger log = LoggerFactory.getLogger(StudentInfoServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ClassInfoServiceImpl.class);
 	private Result result;
 	private ClassInfoSql classInfoSql = new ClassInfoSql();
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
@@ -170,9 +170,14 @@ public class ClassInfoServiceImpl implements ClassInfoService{
         try {
             int bind_start = ScDll.intance.wireless_bind_start(1,"") ;
             if (bind_start < 1) {
-                r.setMessage("指令发送失败");
-                return r;
+                int bind_start2 = ScDll.intance.wireless_bind_start(1,"") ;
+                if (bind_start2 < 1) {
+                    log.error("\"开始绑定\"指令发送失败");
+                    r.setMessage("指令发送失败");
+                    return r;
+                }
             }
+            log.info("\"开始绑定\"指令发送成功");
             /**根据班级id查询学生信息*/
             StudentInfoServiceImpl sis= new StudentInfoServiceImpl();
             Result result = sis.selectStudentInfo(param);
@@ -230,20 +235,23 @@ public class ClassInfoServiceImpl implements ClassInfoService{
         if (thread != null && thread instanceof CardInfoThread) {
             CardInfoThread c =  (CardInfoThread)thread;
             c.setFLAG(false);
+            log.info("绑定线程停止成功");
+        }else{
+            log.error("绑定线程停止失败");
         }
         int bind_stop = ScDll.intance.wireless_bind_stop();
         if (bind_stop == Constant.SEND_ERROR) {
             int bind_stop2 = ScDll.intance.wireless_bind_stop();
             if (bind_stop2 == Constant.SEND_ERROR) {
-                r.setRet(Constant.SUCCESS);
-                r.setMessage("停止失败");
-                log.info("\"停止绑定\"停止失败");
+                r.setRet(Constant.ERROR);
+                r.setMessage("停止指令发送失败");
+                log.info("\"停止绑定\"失败");
                 return r;
             }
            
         }
-        log.info("\"停止绑定\"停止成功");
-        r.setRet(Constant.ERROR);
+        log.info("\"停止绑定\"成功");
+        r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
     }

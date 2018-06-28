@@ -344,9 +344,14 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         //开始签到接口有问题,暂用按任意键
         int answer_start = ScDll.intance.answer_start(0, Constant.ANSWER_STR);
         if (answer_start == Constant.SEND_ERROR) {
-            r.setMessage("指令发送失败");
-            return r;
+            int answer_start2 = ScDll.intance.answer_start(0, Constant.ANSWER_STR);
+            if (answer_start2 == Constant.SEND_ERROR) {
+                log.error("签到指令发送失败");
+                r.setMessage("指令发送失败");
+                return r;
+            }
         }
+        log.info("签到指令发送成功");
         //每次调用签到先清空数据
         RedisMapAttendance.clearAttendanceMap();
         RedisMapAttendance.clearCardIdSet();
@@ -377,15 +382,24 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         if (thread != null && thread instanceof AttendanceThread ) {
             AttendanceThread a = (AttendanceThread)thread;
             a.setFLAG(false);
+            log.info("签到线程停止成功");
+        }else{
+            log.error("签到线程停止失败");;
         }
+        
         int answer_stop = ScDll.intance.answer_stop();
-        if (answer_stop == Constant.SEND_SUCCESS) {
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("停止成功");
-            return r;
+        if (answer_stop == Constant.SEND_ERROR) {
+            int answer_stop2 = ScDll.intance.answer_stop();
+            if (answer_stop2 == Constant.SEND_ERROR) {
+                r.setRet(Constant.ERROR);
+                r.setMessage("指令发送失败");
+                log.error("\"停止签到\"指令发送失败");
+                return r;
+            }
         }
-        r.setRet(Constant.ERROR);
-        r.setMessage("停止失败");
+        log.info("\"停止签到\"指令发送成功");
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("停止成功");
         return r;
     }
     @Override
@@ -397,24 +411,29 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             return r;
         }
         int answer_start = ScDll.intance.answer_start(0, Constant.QUICK_COMMON);
-        if (answer_start == Constant.SEND_SUCCESS) {
-            //开始答题前先清空
-            RedisMapQuick.clearQuickMap();
-            RedisMapQuick.clearStudentInfoMap();
+        if (answer_start == Constant.SEND_ERROR) {
+            int answer_start2 = ScDll.intance.answer_start(0, Constant.QUICK_COMMON);
+            if (answer_start2 == Constant.SEND_ERROR) {
+                log.error("抢答指令发送失败");
+                r.setMessage("指令发送失败");
+                return r;
+            }
+        }
+        log.info("抢答指令发送成功");
+        //开始答题前先清空
+        RedisMapQuick.clearQuickMap();
+        RedisMapQuick.clearStudentInfoMap();
 //            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
 //            Result result = impl.selectStudentInfo(param);
 //            List<Object> item = (List<Object>) result.getItem();
-            List<StudentInfo> studentInfos = Global.getStudentInfos();
-            for (StudentInfo studentInfo : studentInfos) {
-                RedisMapQuick.getStudentInfoMap().put(studentInfo.getIclickerId(), studentInfo);
-            }
-            thread = new QuickThread();
-            thread.start();
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("发送成功");
-            return r;
+        List<StudentInfo> studentInfos = Global.getStudentInfos();
+        for (StudentInfo studentInfo : studentInfos) {
+            RedisMapQuick.getStudentInfoMap().put(studentInfo.getIclickerId(), studentInfo);
         }
-        r.setMessage("发送失败");
+        thread = new QuickThread();
+        thread.start();
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("发送成功");
         return r;
     }
     @Override
