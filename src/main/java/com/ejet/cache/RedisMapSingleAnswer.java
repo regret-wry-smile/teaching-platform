@@ -36,25 +36,13 @@ public class RedisMapSingleAnswer {
     private static Set<String> iclickerIdsSet = new HashSet<>();
     
     private static Answer answer;
-    public static final String CHAR_A = "A";
-    public static final String CHAR_B = "B";
-    public static final String CHAR_C = "C";
-    public static final String CHAR_D = "D";
-    public static final String NUMBER_1 = "1";
-    public static final String NUMBER_2 = "2";
-    public static final String NUMBER_3 = "3";
-    public static final String NUMBER_4 = "4";
-    public static final String NUMBER_5 = "5";
-    public static final String NUMBER_6 = "6";
-    public static final String NUMBER_7 = "7";
-    public static final String NUMBER_8 = "8";
-    public static final String NUMBER_9 = "9";
-    public static final String JUDGE_TRUE = "true";
-    public static final String JUDGE_FALSE = "false";
+    public static final String  CHAR_A = "A",CHAR_B = "B",CHAR_C = "C",CHAR_D = "D",
+                                NUMBER_1 = "1", NUMBER_2 = "2",NUMBER_3 = "3",NUMBER_4 = "4",NUMBER_5 = "5",
+                                NUMBER_6 = "6",NUMBER_7 = "7",NUMBER_8 = "8",NUMBER_9 = "9",
+                                JUDGE_TRUE = "true",JUDGE_FALSE = "false";
     
     public static void addAnswer(String jsonData){
         JSONArray jsonArray= JSONArray.fromObject(jsonData);
-        String type = answer.getType();
         for (Object object : jsonArray) {
             JSONObject jsonObject = JSONObject.fromObject(object);
             String card_id = jsonObject.getString("card_id");
@@ -66,14 +54,14 @@ public class RedisMapSingleAnswer {
                 continue;
             }
             JSONArray answers =  JSONArray.fromObject(jsonObject.get("answers"));
-            for (Object answer : answers) {
-                JSONObject answerJO = JSONObject.fromObject(answer);
+            for (Object answerOb : answers) {
+                JSONObject answerJO = JSONObject.fromObject(answerOb);
                 String result = answerJO.getString("answer");
                 if (StringUtils.isEmpty(result)) {
                     continue;
                 }
                 iclickerIdsSet.add(card_id);
-                switch (type) {
+                switch (answer.getType()) {
                     case Constant.ANSWER_CHAR_TYPE:
                         setCharCount(result);
                         break;
