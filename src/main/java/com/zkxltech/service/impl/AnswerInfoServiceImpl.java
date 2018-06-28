@@ -101,7 +101,18 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 			for (int i = 0; i < questionInfos2.size(); i++) {
 				RequestVo requestVo = new RequestVo();
 				requestVo.setId(questionInfos2.get(i).getQuestionId());
-				requestVo.setType(questionInfos2.get(i).getQuestionType());
+				if (Constant.DANXUANTI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
+					requestVo.setType("s");
+				}else if (Constant.DUOXUANTI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
+					requestVo.setType("m");
+				}else if (Constant.PANDUANTI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
+					requestVo.setType("j");
+				}else if (Constant.SHUZITI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
+					requestVo.setType("d");
+				}else {
+					requestVo.setType("g");
+				}
+				
 				requestVo.setRange(questionInfos2.get(i).getRange());
 				requestVos.add(requestVo);
 			}
@@ -305,7 +316,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 			for (int i = 0; i < questionInfos2.size(); i++) {
 				RequestVo requestVo = new RequestVo();
 				requestVo.setId(questionInfos2.get(i).getQuestionId());
-				requestVo.setType(questionInfos2.get(i).getQuestionType());
+				requestVo.setType("d");
 				requestVo.setRange("0-"+(int)Double.parseDouble(questionInfos2.get(i).getScore()));
 				requestVos.add(requestVo);
 			}
