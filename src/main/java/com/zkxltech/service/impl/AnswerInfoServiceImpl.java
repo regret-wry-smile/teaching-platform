@@ -83,7 +83,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 				requestVos.add(requestVo);
 			}
 			
-			result = EquipmentServiceImpl.getInstance().answerStart2(Constant.ANSWER_MULTIPLE_TYPE,requestVos); //发送硬件指令
+			result = EquipmentServiceImpl.getInstance().answerStart2(Constant.ANSWER_CLASS_TEST_OBJECTIVE,requestVos); //发送硬件指令
 			if (Constant.ERROR.equals(result.getRet())) {
 				result.setMessage("硬件指令发送失败！");
 				return result;
