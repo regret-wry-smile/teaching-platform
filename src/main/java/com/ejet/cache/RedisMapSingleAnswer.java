@@ -141,7 +141,7 @@ public class RedisMapSingleAnswer {
     }
     //获取每个答案对应的人数
     public static String getSingleAnswer(){
-        return singleAnswerNumMap.toString();
+        return JSONObject.fromObject(singleAnswerNumMap).toString();
     }
     //获取当前提交答案的人数
     public static Object getSingleAnswerNum() {
