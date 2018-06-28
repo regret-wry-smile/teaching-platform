@@ -11,9 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.BrowserManager;
-import com.ejet.cache.RedisMapAnswer;
 import com.ejet.cache.RedisMapAttendance;
 import com.ejet.cache.RedisMapQuick;
+import com.ejet.cache.RedisMapSingleAnswer;
 import com.ejet.core.util.ICallBack;
 import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.comm.ListUtils;
@@ -295,6 +295,10 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             r.setMessage("缺少参数,题目类型不能为空");
             return r;
         }
+        //传入类型 ,清空数据
+        RedisMapSingleAnswer.setAnswer(answer);
+        RedisMapSingleAnswer.clearSingleAnswerMap();
+        RedisMapSingleAnswer.clearStudentInfoMap();
         String type = answer.getType();
         int status = -1;
         switch (type) {
@@ -303,18 +307,33 @@ public class StudentInfoServiceImpl implements StudentInfoService{
                 if (status == Constant.SEND_ERROR) {
                     status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
                 }
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_A, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_B, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_C, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.CHAR_D, 0);
                 break;
             case Constant.ANSWER_NUMBER_TYPE:
                 status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
                 if (status == Constant.SEND_ERROR) {
                     status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
                 }
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_1, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_2, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_3, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_4, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_5, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_6, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_7, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_8, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.NUMBER_9, 0);
                 break;
             case Constant.ANSWER_JUDGE_TYPE:
                 status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
                 if (status == Constant.SEND_ERROR) {
                     status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
                 }
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.JUDGE_TRUE, 0);
+                RedisMapSingleAnswer.getSingleAnswerMap().put(RedisMapSingleAnswer.JUDGE_FALSE, 0);
                 break;
             default:
                 r.setMessage("参数错误");
@@ -324,10 +343,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             r.setMessage("指令发送失败");
             return r;
         }
-        //传入类型 ,清空数据
-        RedisMapAnswer.setAnswer(answer);
-        RedisMapAnswer.clearSingleAnswerMap();
-        RedisMapAnswer.clearStudentInfoMap();
+        
         thread = new singleAnswerThread();
         thread.start();
         r.setRet(Constant.SUCCESS);

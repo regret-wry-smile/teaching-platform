@@ -27,7 +27,7 @@ public class singleAnswerThread extends Thread {
             String jsonData = ScDll.intance.get_answer_list();
             if (!StringUtils.isBlank(jsonData)) {
                 logger.info("获取到答题数据:===>>"+jsonData);
-                RedisMapSingleAnswer.addEveryAnswerInfo(jsonData);
+                RedisMapSingleAnswer.addAnswer(jsonData);
             }
         }
     }
