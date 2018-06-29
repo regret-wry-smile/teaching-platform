@@ -46,6 +46,9 @@ public class TestPaperFunctionManage extends BrowserFunction{
 			case "select_paper":
 				result = testPaperService.selectTestPaper(params[1]);
 				break;
+			case "select_paper_by_classHourId":
+			    result = testPaperService.selectTestPaperByClassHourId(params[1]);
+			    break;
 			case "select_now_paper":
 				result = testPaperService.selectNowTestPaper(params[1]);
 				break;

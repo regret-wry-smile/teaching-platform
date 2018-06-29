@@ -5,17 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONArray;
-import com.sun.org.apache.regexp.internal.recompile;
-import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
-import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.domain.TestPaper;
 import com.zkxltech.jdbc.DBHelper;
-import com.zkxltech.service.impl.TestPaperServiceImpl;
-import com.zkxltech.ui.util.StringConstant;
 import com.zkxltech.ui.util.StringUtils;
-
-import net.sf.json.JSONObject;
 
 
 
@@ -44,7 +37,27 @@ public class TestPaperSql {
 		sqlBuilder.append(" order by atype desc");
 		return dbHelper.onQuery(sqlBuilder.toString(), testPaper);
 	}
-	
+	/*查询试卷*/
+    public Result selectTestPaperByClassHourId(TestPaper testPaper) throws IllegalArgumentException, IllegalAccessException{
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("select * from test_paper tp left join record r on tp.test_id = r.test_id ");
+        Field[] files = dbHelper.getFields(testPaper);
+        int index = 0;
+        for (int i = 0; i < files.length; i++) {
+            Object obj = dbHelper.getFiledValues(files[i], testPaper);
+            if (!StringUtils.isEmpty(obj)) {
+                if (index == 0) {
+                    sqlBuilder.append(" where ");
+                }else {
+                    sqlBuilder.append(" and ");
+                }
+                sqlBuilder.append(dbHelper.HumpToUnderline(files[i].getName())+" = ?");
+                index++;
+            }
+        }
+        sqlBuilder.append(" group by tp.test_id");
+        return dbHelper.onQuery(sqlBuilder.toString(), testPaper);
+    }
 	/*新增试卷*/
 	public Result insertTestPaper(TestPaper testPaper) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder(0);

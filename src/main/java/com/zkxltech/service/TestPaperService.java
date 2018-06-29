@@ -49,4 +49,10 @@ public interface TestPaperService {
 	 * @return
 	 */
 	Result updateTestPaper(Object testInfo);
+	/**
+	 * 关联查询,查询作答记录的试卷信息
+	 * @param object
+	 * @return
+	 */
+    Result selectTestPaperByClassHourId(Object object);
 }
