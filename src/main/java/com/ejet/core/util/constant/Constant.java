@@ -59,4 +59,9 @@ public class Constant {
     public static final String SINGLE_ANSWER_JUDGE = "[{'type':'j','id':'1','range':''}]";
     /*考勤抢答用*/
     public static final String ANSWER_STR = "[{'type':'g','id':'1','range':''}]";
+    /*试卷题目  状态启用*/
+    public static final String STATUS_ENABLED = "1";
+    /*试卷题目   未启用*/
+    public static final String STATUS_NOT_ENABLED = "0";
+    
 }
