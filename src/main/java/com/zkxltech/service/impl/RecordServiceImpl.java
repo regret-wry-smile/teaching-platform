@@ -195,15 +195,17 @@ public class RecordServiceImpl implements RecordService{
     				String result = (String) answerMapList.get(j).getResult();
     				int questionId = Integer.parseInt((String) answerMapList.get(j).getQuestionId());
     				if (score != null && !"".equals(score) && !"null".equals(score)) {
-    					if ("1".equals(type)) { //客观题得分需要正确
-    						if ("正确".equals(result)) {
+    					if (!Constant.ZHUGUANTI_NUM.equals(type)) { //客观题得分需要正确
+    						if (Constant.RESULT_TRUE.equals(result)) {
     							scoreSum += Double.parseDouble(score);
     						}
-    					}else if ("2".equals(type)) { //主观题得分
-    						scoreSum += Double.parseDouble(score);
+    					}else { //主观题得分
+    					    if (!StringUtils.isBlank(answer)) {
+    					        scoreSum += Double.parseDouble(answer);
+                            }
     					}
     				}
-    				if ("正确".equals(result)) {
+    				if (Constant.RESULT_TRUE.equals(result)) {
     					trueSum ++;
     				}
     				map.put("type", type);
@@ -259,6 +261,7 @@ public class RecordServiceImpl implements RecordService{
             wb.write(out);// 将数据写出去  
             out.flush();// 将数据写出去
         }catch (Exception e) {
+            log.error("", e);
             r.setMessage("导出失败");
             r.setDetail(IOUtils.getError(e));
         }finally {
