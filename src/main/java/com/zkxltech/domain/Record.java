@@ -26,6 +26,10 @@ public class Record {
 	 */
 	private String testId;
 	/**
+	 * 试卷名称
+	 */
+	private String testName;
+	/**
 	 * 题目id
 	 */
 	private String questionId;
@@ -61,6 +65,8 @@ public class Record {
 	 * 作答结果1正确，2错误
 	 */
 	private String result;
+	
+	private String time ;
 	public Integer getId() {
 		return id;
 	}
@@ -145,5 +151,24 @@ public class Record {
 	public void setScore(String score) {
 		this.score = score;
 	}
-	
+    public String getTestName() {
+        return testName;
+    }
+    public void setTestName(String testName) {
+        this.testName = testName;
+    }
+    public String getTime() {
+        return time;
+    }
+    public void setTime(String time) {
+        this.time = time;
+    }
+    @Override
+    public String toString() {
+        return "Record [id=" + id + ", classId=" + classId + ", subject=" + subject + ", classHourId=" + classHourId
+                + ", testId=" + testId + ", testName=" + testName + ", questionId=" + questionId + ", question="
+                + question + ", questionType=" + questionType + ", studentId=" + studentId + ", studentName="
+                + studentName + ", trueAnswer=" + trueAnswer + ", score=" + score + ", answer=" + answer + ", result="
+                + result + ", time=" + time + "]";
+    }
 }

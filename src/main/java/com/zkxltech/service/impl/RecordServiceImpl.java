@@ -2,6 +2,7 @@ package com.zkxltech.service.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,13 +11,28 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.poi.hssf.record.SelectionRecord;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+
+import com.ejet.core.util.comm.ListUtils;
+import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
+import com.zkxltech.domain.ClassHour;
+import com.zkxltech.domain.QuestionInfo;
+import com.zkxltech.domain.Record;
 import com.zkxltech.domain.Result;
+import com.zkxltech.domain.TestPaper;
 import com.zkxltech.service.RecordService;
+import com.zkxltech.sql.ClassHourSql;
+import com.zkxltech.sql.QuestionInfoSql;
+import com.zkxltech.sql.RecordSql;
+import com.zkxltech.sql.TestPaperSql;
 import com.zkxltech.ui.util.ExportExcel;
+
+import net.sf.json.JSONObject;
 
 public class RecordServiceImpl implements RecordService{
 	private Result result ;
@@ -156,9 +172,101 @@ public class RecordServiceImpl implements RecordService{
 	 * @param object
 	 * @return
 	 */
-    public Result selectRecord(Object object) {
-        
-        return null;
+    public static Result selectRecord(Object object) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+        if (StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getTestId())) {
+            r.setMessage("缺少参数:课程id和试卷id不能为空");
+            return r;
+        }
+        try {
+            //查询课程的开始时间
+            ClassHourSql classHourSql = new ClassHourSql();
+            ClassHour classHour = new ClassHour();
+            classHour.setClassHourId(record.getClassHourId());
+            r = classHourSql.selectClassHour(classHour);
+            if (r.getRet().equals(Constant.ERROR)) {
+                return r;
+            }
+            List<ClassHour>  classHours = (List<ClassHour>) r.getItem();
+            classHour = classHours.get(0);
+            if (classHour == null) {
+                r.setMessage("未查询到该课时信息");
+                return r;
+            }
+            //查试卷的详情
+            TestPaperSql testPaperSql = new TestPaperSql();
+            TestPaper testPaper = new TestPaper();
+            testPaper.setTestId(record.getTestId());
+            r = testPaperSql.selectTestPaper(testPaper);
+            if (r.getRet().equals(Constant.ERROR)) {
+                return r;
+            }
+            List<TestPaper> testPapers = (List<TestPaper>) r.getItem();
+            testPaper = testPapers.get(0);
+            if (testPaper == null) {
+                r.setMessage("未查询到该试卷信息");
+                return r;
+            }
+            //查试卷的题目总数
+            QuestionInfoSql questionInfoSql = new QuestionInfoSql();
+            QuestionInfo questionInfo = new QuestionInfo();
+            questionInfo.setTestId(record.getTestId());
+            questionInfo.setStatus(Constant.STATUS_ENABLED);
+            r = questionInfoSql.selectQuestionInfo(questionInfo);
+            if (r.getRet().equals(Constant.ERROR)) {
+                return r;
+            }
+            List<QuestionInfo> questInfos = (List<QuestionInfo>) r.getItem();
+            if (ListUtils.isEmpty(questInfos)) {
+                r.setMessage("该试卷没有对应题目");
+                return r;
+            }
+            //查试卷的所有答题记录
+            RecordSql recordSql = new RecordSql();
+            r = recordSql.selectRecord(record);
+            if (r.getRet().equals(Constant.ERROR)) {
+                return r;
+            }
+            //查询到所有学生的所有答题数据
+            List<Record> records = (List<Record>) r.getItem();
+            if (ListUtils.isEmpty(records)) {
+                r.setMessage("未查询到该试卷任意答题记录");
+                return r;
+            }
+            //根据学生id进行分组,分别计算每个学生的正确率
+            Map<Object, List<Record>> studentRecordMap = ListUtils.getClassificationMap(records, "studentId");
+            //用来存返回数据
+            List<Record> result = new ArrayList<>();
+            for (Object key : studentRecordMap.keySet()) {
+                List<Record> list = studentRecordMap.get(key);//得到每个学生的所有答题记录
+                //按正确和错误进行分类
+                Map<Object, List<Record>> resultMap = ListUtils.getClassificationMap(list, "result");
+                List<Record> corrects = resultMap.get("2");//得到所有正确的答案总数
+                float b = (float)corrects.size() / questInfos.size();
+                Record resultRocord = new Record();
+                resultRocord.setStudentName(list.get(0).getStudentName());
+                resultRocord.setResult(formattedDecimalToPercentage(b));
+                resultRocord.setTestName(testPaper.getTestName());
+                resultRocord.setTime(classHour.getStartTime());
+                result.add(resultRocord);
+            }
+            r.setItem(result);
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("查询成功");
+            return r;
+        } catch (Exception e) {
+            r.setMessage("查询数据库失败");
+            r.setDetail(IOUtils.getError(e));
+        }
+        return r;
     }
-
+    private static String formattedDecimalToPercentage(double decimal) {
+        //获取格式化对象
+        NumberFormat nt = NumberFormat.getPercentInstance();
+        //设置百分数精确度2即保留两位小数
+        nt.setMinimumFractionDigits(2);
+        return nt.format(decimal);
+    }
 }
