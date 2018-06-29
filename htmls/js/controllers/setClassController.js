@@ -101,6 +101,41 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 		})
 		
 	}
+	
+	//跳转到答题中心页面
+	$scope.startClass=function(){
+		/*var classInfo={
+			classitem:$scope.setClass.classesobject,
+			houritem:$scope.setClass.sujectNameobject,
+			sujectitem:$scope.setClass.subject
+		}*/
+		// $cookieStore.put('classInfo',classInfo);
+        // Get cookie
+        //var favoriteCookie = $cookieStore.get('myFavorite');
+        // Removing a cookie
+       // $cookieStore.remove('myFavorite');
+       var param={
+       	classId:$scope.setClass.classes,
+       	className:$scope.classesobject.value,
+       	subjectName:$scope.setClass.subject,
+       	classHourId:$scope.sujectNameobject.key,
+       	classHourName:$scope.sujectNameobject.value
+       }
+       console.log(JSON.stringify(param))
+      	$scope.result=JSON.parse(execute_record("start_class",JSON.stringify(param))); 
+      	//console.log(JSON.stringify($scope.result))
+	    if($scope.result.ret=='success'){
+	      	$scope.objectUrl = '../../page/answermoudle/answerCenter.html';
+	      	$window.location.href = $scope.objectUrl;	
+	    }
+		//$scope.param = "classId=" + $scope.classesobject.key + "&className=" + $scope.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
+		//console.log(JSON.stringify($scope.param))
+		//$scope.objectUrl = '../../page/answermoudle/answerCenter.html' + '?' + $scope.param;
+		
+		
+		//window.location.href = "../../page/answermoudle/answerCenter.html?backurl=" + window.location.href;
+		
+	}
 	//打开添加课时弹框
 	$scope.addClassHour=function(){
 		var item={
@@ -122,6 +157,10 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 		modalInstance.result.then(function(info) {
 			$scope.classhourList=[];
 			_selectClassHour();
+			$scope.setClass.sujectName=$scope.classhourList[$scope.classhourList.length-1].key;
+			$scope.sujectNameobject=$scope.classhourList[$scope.classhourList.length-1];
+			$scope.setClass.sujectName1=angular.copy($scope.setClass.sujectName);
+			$scope.startClass();
 		}, function() {
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
@@ -133,36 +172,7 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 		_selectClassHour();
 		_isStartClass();
 	}();
-	//跳转到答题中心页面
-	$scope.startClass=function(){
-		/*var classInfo={
-			classitem:$scope.setClass.classesobject,
-			houritem:$scope.setClass.sujectNameobject,
-			sujectitem:$scope.setClass.subject
-		}*/
-		// $cookieStore.put('classInfo',classInfo);
-        // Get cookie
-        //var favoriteCookie = $cookieStore.get('myFavorite');
-        // Removing a cookie
-       // $cookieStore.remove('myFavorite');
-       var param={
-       	classHourId:$scope.sujectNameobject.key,
-       	classHourName:$scope.sujectNameobject.value
-       }
-       console.log(JSON.stringify($scope.setClass.classes))
-      $scope.result=JSON.parse(execute_record("start_class",$scope.setClass.classes,JSON.stringify(param))); 
-	    if($scope.result.ret=='success'){
-	      	$scope.objectUrl = '../../page/answermoudle/answerCenter.html';
-	      	$window.location.href = $scope.objectUrl;	
-	    }
-		//$scope.param = "classId=" + $scope.classesobject.key + "&className=" + $scope.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
-		//console.log(JSON.stringify($scope.param))
-		//$scope.objectUrl = '../../page/answermoudle/answerCenter.html' + '?' + $scope.param;
-		
-		
-		//window.location.href = "../../page/answermoudle/answerCenter.html?backurl=" + window.location.href;
-		
-	}
+	
 	//签到	
 	$scope.signIn=function(){
 		var param={

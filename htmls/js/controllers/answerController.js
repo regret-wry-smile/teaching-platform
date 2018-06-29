@@ -466,10 +466,10 @@ app.controller('classuserCheckCtrl', function($scope, toastr, $window,$location)
 			toastr.error($scope.result.message);
 		}
 	}
-	for(var i=0;i<120;i++){
+	/*for(var i=0;i<120;i++){
 		var item={"answerCount":0,"percent":0,"studentId":"10000002","studentName":"学002"};	
 		$scope.AllanswerInfo.push(item);
-	}
+	}*/
 
 	
 	//收取试卷

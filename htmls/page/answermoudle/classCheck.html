@@ -46,7 +46,7 @@
 				</div>
 			</div>
 			<div class="content bgf5 clearfix" style="margin: 0;">
-				<div class="modbox clearfix ml20 mr20">
+				<div class="modbox clearfix ml20 mr20 checkclass" id="checkclass">
 				<div class="progresscon clearfix" ng-repeat="item in AllanswerInfo track by $index">
 					<p class="clearfix">
 						<span class="pull-left">{{item.studentName}}</span>
@@ -83,7 +83,7 @@
 <script type="text/javascript">
 	$(function(){
 		var nice = $("html").niceScroll();  // The document page (body)
-	 	$("#answerlist").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable 	
+	 	$("#checkclass").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable 	
 		$('.head ul li a').click(function(){
 			$('.head ul li a.active').removeClass('active'); 
 			$(this).addClass('active');

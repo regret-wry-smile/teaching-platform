@@ -774,6 +774,14 @@ ul.col-4 li a span{
 		color: #fff;
 		padding: 0.10rem 0.12rem;	
 	}
+	.progresscon{
+		width: 0.90rem;
+		padding: 0.08rem 0.10rem;
+	}
+	.modbox.checkclass{
+		max-height: 3.5rem;
+		overflow-y: auto;
+	}
 }
 @media screen and (min-width: 921px) {
     .head ul li a{
