@@ -29,6 +29,14 @@ public interface TestPaperService {
 	 * @return
 	 */
 	Result selectTestPaper(Object testInfo);
+	
+	/**
+	 * 查询当前科目的试卷
+	 * @param testInfo
+	 * @return
+	 */
+	Result selectNowTestPaper(Object testInfo);
+	
 	/**
 	 * 删除试卷
 	 * @param testInfo
