@@ -133,10 +133,17 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	}
 
 	@Override
-	public Result stopObjectiveAnswer() {
+	public Result stopObjectiveAnswer(Object testId) {
 		result = new Result();
 		try {
+			//删除原来的记录
 			List<Record> records = RedisMapClassTestAnswer.getObjectiveRecordList();
+			Record recordParam = new Record();
+			recordParam.setClassId(Global.getClassId());
+			recordParam.setSubject(Global.getClassHour().getSubjectName());
+			recordParam.setTestId((String)testId);
+			recordSql.deleteRecord(recordParam);
+			
 			result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
 			if (Constant.ERROR.equals(result.getRet())) {
 				result.setMessage("保存作答记录失败！");
@@ -152,10 +159,17 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	}
 	
 	@Override
-	public Result stopSubjectiveAnswer() {
+	public Result stopSubjectiveAnswer(Object testId) {
 		result = new Result();
 		try {
+			//删除原来的记录
 			List<Record> records = RedisMapClassTestAnswer.getSubjectiveRecordList();
+			Record recordParam = new Record();
+			recordParam.setClassId(Global.getClassId());
+			recordParam.setSubject(Global.getClassHour().getSubjectName());
+			recordParam.setTestId((String)testId);
+			recordSql.deleteRecord(recordParam);
+			
 			result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
 			if (Constant.ERROR.equals(result.getRet())) {
 				result.setMessage("保存作答记录失败！");
