@@ -378,6 +378,16 @@ label.area a.active{
 	margin-top: 0.03rem;
 	vertical-align: middle;
 }
+.delbtn{
+	position: absolute;
+	bottom: 0.10rem;
+	left: 0.10rem;
+	width:0.30rem ;
+	height: auto;
+	cursor: pointer;
+	margin-top: 0.03rem;
+	vertical-align: middle;
+}
 .mt5{
 	margin-top: 0.05rem;
 }

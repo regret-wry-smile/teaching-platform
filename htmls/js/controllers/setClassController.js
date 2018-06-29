@@ -79,6 +79,8 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 	//切换科目
 	$scope.changeSubject=function(subject){
 		$scope.setClass.subject	=subject;
+		$scope.classhourList=[];
+		_selectClassHour();
 	}
 	
 	//查询当前上课班级
@@ -167,6 +169,42 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
 		
+	}
+	//删除课时
+	$scope.delClassHour=function(){
+		if($scope.setClass.sujectName){
+			var content="删除题目";
+			var modalInstance = $modal.open({
+				templateUrl: 'sureModal.html',
+				controller: 'sureModalCtrl',
+				size: 'sm',
+				backdrop:false,
+				resolve: {
+					content: function() {
+						return content;
+					}
+				}
+			});
+			modalInstance.result.then(function(info) {
+				var param={
+					classHourId:$scope.setClass.sujectName,
+				}
+				console.log(JSON.stringify(param))
+				param=JSON.stringify(param)			
+				$scope.result=JSON.parse(execute_record("delete_class_hour",param));
+				if($scope.result.ret=='success'){
+					toastr.success($scope.result.message);
+					_selectClassHour();
+				}else{
+					toastr.error($scope.result.message);
+					console.log($scope.result.detail);
+				}
+			}, function() {
+				//$log.info('Modal dismissed at: ' + new Date());
+			});
+		}else{
+			toastr.success("当前没有可删除的课程")
+		}
 	}
 	var _init=function(){
 		_selectClass();
@@ -345,6 +383,16 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
         $interval.cancel(myTimer);
     })
 	
+})
+//确认弹出框
+app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
+	$scope.content='是否进行'+angular.copy(content)+'操作？';
+	$scope.ok = function() {
+		$modalInstance.close('success');
+	}
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	}
 })
 app.directive('select', function() {
 	return {
