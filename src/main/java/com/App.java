@@ -38,11 +38,10 @@ public class App {
 	 * 启动程序
 	 */
 	public static void startNetty() {
-		System.out.println( "===================== 系统启动" + Global.VERSION + " =======================" );
         try {
         	//加载log4j日志配置
     		PropertyConfigurator.configure(ConfigConstant.log4jFile);
-    		logger.info("系统启动 {} =======================", Global.VERSION );
+    		logger.info("======================= {} =======================", Global.VERSION );
 			//程序启动模式，服务端还是客户端
 //			new Thread(new Runnable() {
 //				@Override
