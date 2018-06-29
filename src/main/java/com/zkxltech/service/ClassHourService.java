@@ -7,7 +7,7 @@ public interface ClassHourService {
 	/**
 	 * 开始上课
 	 */
-	Result startClass (Object classId,Object classHour);
+	Result startClass (Object classHour);
 	/**
 	 * 查询课程列表
 	 * @param classId 班级id

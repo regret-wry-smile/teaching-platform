@@ -6,6 +6,7 @@ import org.eclipse.swt.browser.BrowserFunction;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.ClassHourService;
+import com.zkxltech.service.RecordService;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.service.impl.ClassHourServiceImpl;
 import com.zkxltech.service.impl.RecordServiceImpl;
@@ -20,6 +21,7 @@ import net.sf.json.JSONObject;
 public class RecordFunctionManage extends BrowserFunction{
 	
 	private ClassHourService classHourService = new ClassHourServiceImpl();
+	private RecordService recordService = new RecordServiceImpl();
 	public RecordFunctionManage(Browser browser, String name) {
 		super(browser, name);
 	}
@@ -31,12 +33,12 @@ public class RecordFunctionManage extends BrowserFunction{
 			switch (method) {
 			case "start_class":
 				//上课
-				if (params.length != 3) {
+				if (params.length != 2) {
 					result.setRet(Constant.ERROR);
 					result.setMessage("参数个数有误！");
 					break;
 				}
-				result = classHourService.startClass(params[1], params[2]);
+				result = classHourService.startClass(params[1]);
 				break;
 			case "end_class":
 				//下课
@@ -76,10 +78,13 @@ public class RecordFunctionManage extends BrowserFunction{
 				}
 				result = classHourService.deleteClassInfo(params[1]);
 				break;
-			case "select_record":
-			    RecordServiceImpl impl = new RecordServiceImpl();
-			    /*查询答题记录*/
-			    result = impl.selectRecord(params[1]);
+			case "select_subjective_record":
+			    /*查询主观题答题记录*/
+			    result = recordService.selectSubjectiveRecord(params[1]);
+			    break;
+			case "select_objective_record":
+			    /*查询客观题答题记录*/
+			    result = recordService.selectObjectiveRecord(params[1]);
 			    break;
 			default:
 				result.setRet(Constant.ERROR);

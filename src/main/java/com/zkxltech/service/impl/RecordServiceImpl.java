@@ -19,10 +19,14 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.ClassHour;
 import com.zkxltech.domain.QuestionInfo;
 import com.zkxltech.domain.Record;
+import com.sun.org.apache.regexp.internal.recompile;
+import com.zkxltech.domain.Record;
+import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.TestPaper;
 import com.zkxltech.service.RecordService;
@@ -30,12 +34,14 @@ import com.zkxltech.sql.ClassHourSql;
 import com.zkxltech.sql.QuestionInfoSql;
 import com.zkxltech.sql.RecordSql;
 import com.zkxltech.sql.TestPaperSql;
+import com.zkxltech.sql.RecordSql;
 import com.zkxltech.ui.util.ExportExcel;
-
 import net.sf.json.JSONObject;
 
 public class RecordServiceImpl implements RecordService{
 	private Result result ;
+	
+	private RecordSql recordSql = new RecordSql();
 	//FIXME 导入答题记录
 	@Override
 	public Result exportRecord(Object object) {
@@ -261,6 +267,60 @@ public class RecordServiceImpl implements RecordService{
             r.setDetail(IOUtils.getError(e));
         }
         return r;
+    }
+	@Override
+    public Result selectSubjectiveRecord(Object object) {
+    	result = new Result();
+		try {
+			Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+	    	record.setClassId(Global.getClassId());
+	    	record.setSubject(Global.getClassHour().getSubjectName());
+	    	record.setQuestionType("4");
+	    	record.setClassHourId(Global.getClassHour().getClassHourId());
+			result = recordSql.selectRecord(record);
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("查询记录失败!");
+				return result;
+			}
+			result.setMessage("查询记录成功!");
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("查询记录失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
+    }
+	
+	@Override
+    public Result selectObjectiveRecord(Object object) {
+    	result = new Result();
+		try {
+			Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+	    	record.setClassId(Global.getClassId());
+	    	record.setSubject(Global.getClassHour().getSubjectName());
+	    	record.setClassHourId(Global.getClassHour().getClassHourId());
+			result = recordSql.selectRecord(record);
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("查询记录失败!");
+				return result;
+			}
+			List<Record> records = (List<Record>) result.getItem();
+			List<Record> retList = new ArrayList<Record>();
+	    	for (int i = 0; i < records.size(); i++) {
+	    		if (!Constant.ZHUGUANTI_NUM.equals(records.get(i).getQuestionType())) {
+	    			retList.add(records.get(i));
+				}
+			}
+	    	result.setItem(retList);
+			result.setMessage("查询记录成功!");
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("查询记录失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
     }
     private static String formattedDecimalToPercentage(double decimal) {
         //获取格式化对象
