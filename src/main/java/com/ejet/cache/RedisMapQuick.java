@@ -48,7 +48,7 @@ public class RedisMapQuick {
         }
     }
     public static String getQuickAnswer(){
-        return quickMap.toString();
+        return JSONObject.fromObject(quickMap).toString();
     }
     public static Map<String, String> getQuickMap() {
         return quickMap;
