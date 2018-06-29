@@ -7,6 +7,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ejet.core.util.constant.Constant;
+import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
@@ -24,22 +26,25 @@ public class RedisMapQuick {
 	private static Map<String,String> quickMap = Collections.synchronizedMap(new HashMap<>());
 	/**学生信息*/
 	private static Map<String,StudentInfo> studentInfoMap = new HashMap<>(); 
-	
+	private static boolean flag = false;
     public static void addQuickAnswer(String jsonData){
-        JSONArray jsonArray = JSONArray.fromObject(jsonData);
-        for (Object object : jsonArray) {
-            JSONObject jo = JSONObject.fromObject(object);
-            String card_id = jo.getString("card_id");
-            StudentInfo studentInfo = studentInfoMap.get(card_id);
-            quickMap.put("studentName", studentInfo.getStudentName());
-            if (StudentInfoServiceImpl.getThread()!=null && StudentInfoServiceImpl.getThread() instanceof QuickThread) {
-                QuickThread qt= (QuickThread)StudentInfoServiceImpl.getThread();
-                qt.setFLAG(false);
-                logger.info("抢答线程停止成功");
-            }else{
-                logger.error("抢答线程停止失败");
+        if (flag) {
+            JSONArray jsonArray = JSONArray.fromObject(jsonData);
+            for (Object object : jsonArray) {
+                JSONObject jo = JSONObject.fromObject(object);
+                String card_id = jo.getString("card_id");
+                StudentInfo studentInfo = studentInfoMap.get(card_id);
+                quickMap.put("studentName", studentInfo.getStudentName());
+                if (StudentInfoServiceImpl.getThread()!=null && StudentInfoServiceImpl.getThread() instanceof QuickThread) {
+                    QuickThread qt= (QuickThread)StudentInfoServiceImpl.getThread();
+                    qt.setFLAG(false);
+                    logger.info("抢答线程停止成功");
+                }else{
+                    logger.error("抢答线程停止失败");
+                }
+                EquipmentServiceImpl.getInstance().answer_stop();
+                flag = false ;
             }
-            EquipmentServiceImpl.getInstance().answer_stop();
         }
     }
     public static String getQuickAnswer(){
@@ -62,5 +67,12 @@ public class RedisMapQuick {
     }
     public static void clearStudentInfoMap() {
         studentInfoMap.clear();
+    }
+    public static Result setFlagStartQuick(){
+        flag = true;
+        Result r = new Result();
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("设置抢答成功");
+        return r;
     }
 }
