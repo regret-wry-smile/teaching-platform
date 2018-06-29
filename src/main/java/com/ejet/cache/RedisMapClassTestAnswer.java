@@ -181,10 +181,10 @@ public class RedisMapClassTestAnswer {
 		return JSONArray.fromObject(classTestVos).toString();
 	}
 	/**
-	 * 将缓存中的数据转换为record对象list
+	 * 将缓存中的数据转换为record对象list(客观题)
 	 * @return
 	 */
-	public static List<Record> getRecordList(){
+	public static List<Record> getObjectiveRecordList(){
 		List<Record> records = new ArrayList<Record>();
 		List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
 		for (int i = 0; i < Global.studentInfos.size(); i++) { //遍历学生
@@ -206,16 +206,48 @@ public class RedisMapClassTestAnswer {
 					record.setStudentId(studentInfo.getStudentId());
 					record.setStudentName(studentInfo.getStudentName());
 					record.setScore(questionInfo.getScore());
-					if (!Constant.ZHUGUANTI_NUM.equals(questionInfo.getQuestionType())) { //只有客观题才有对错和正确答案
-						record.setResult("2");
-						record.setTrueAnswer(questionInfo.getTrueAnswer());
-					}
+					record.setResult("2");
+					record.setTrueAnswer(questionInfo.getTrueAnswer());
 				}
 				records.add(record);
 			}
 			
 		}
-		logger.info("要保存的作答记录："+JSONArray.fromObject(records));
+		logger.info("要保存的客观题作答记录："+JSONArray.fromObject(records));
+		return records;
+	}
+	/**
+	 * 将缓存中的数据转换为record对象list(主观题)
+	 * @return
+	 */
+	public static List<Record> getSubjectiveRecordList(){
+		List<Record> records = new ArrayList<Record>();
+		List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
+		for (int i = 0; i < Global.studentInfos.size(); i++) { //遍历学生
+			StudentInfo studentInfo= Global.studentInfos.get(i);
+			keyEveryAnswerMap[0] = studentInfo.getIclickerId();
+			for (int j = 0; j < questionInfosList.size(); j++) {
+				QuestionInfo questionInfo = questionInfosList.get(j); 
+				keyEveryAnswerMap[1] = questionInfo.getQuestionId();
+				Record record = (Record) RedisMapUtil.getRedisMap(everyAnswerMap, keyEveryAnswerMap, 0);
+				if (record == null) {
+					record = new Record();
+					record.setClassId(studentInfo.getClassId());
+					record.setClassHourId(Global.getClassHour().getClassHourId());
+					record.setTestId(questionInfo.getTestId());
+					record.setSubject(Global.getClassHour().getSubjectName());
+					record.setQuestion(questionInfo.getQuestion());
+					record.setQuestionId(questionInfo.getQuestionId());
+					record.setQuestionType(questionInfo.getQuestionType());
+					record.setStudentId(studentInfo.getStudentId());
+					record.setStudentName(studentInfo.getStudentName());
+					record.setScore(questionInfo.getScore());
+				}
+				records.add(record);
+			}
+			
+		}
+		logger.info("要保存的主观题作答记录："+JSONArray.fromObject(records));
 		return records;
 	}
 	

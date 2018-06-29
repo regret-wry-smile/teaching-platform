@@ -136,7 +136,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	public Result stopObjectiveAnswer() {
 		result = new Result();
 		try {
-			List<Record> records = RedisMapClassTestAnswer.getRecordList();
+			List<Record> records = RedisMapClassTestAnswer.getObjectiveRecordList();
 			result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
 			if (Constant.ERROR.equals(result.getRet())) {
 				result.setMessage("保存作答记录失败！");
@@ -150,6 +150,26 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 		}
 		return result;
 	}
+	
+	@Override
+	public Result stopSubjectiveAnswer() {
+		result = new Result();
+		try {
+			List<Record> records = RedisMapClassTestAnswer.getSubjectiveRecordList();
+			result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("保存作答记录失败！");
+				return result;
+			}
+//			result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("保存作答记录失败！");
+			return result;
+		}
+		return result;
+	}
+	
 	@Override
     public Result singleAnswer(Object param) {
         Result r = new Result();
@@ -336,22 +356,5 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 		}
 	}
 
-//	@Override
-//	public Result stopSubjectiveAnswer() {
-//		result = new Result();
-//		try {
-//			List<Record> records = RedisMapClassTestAnswer.getRecordList();
-//			result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
-//			if (Constant.ERROR.equals(result.getRet())) {
-//				result.setMessage("保存作答记录失败！");
-//				return result;
-//			}
-////			result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
-//		} catch (Exception e) {
-//			result.setRet(Constant.ERROR);
-//			result.setMessage("保存作答记录失败！");
-//			return result;
-//		}
-//		return result;
-//	}
+	
 }
