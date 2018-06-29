@@ -94,6 +94,10 @@ public class RecordFunctionManage extends BrowserFunction{
 			    /*批量删除学生的试卷作答记录*/
 			    result = recordService.deleteRecord(params[1]);
 			    break;
+			case "test_export":
+			    /*导出作答记录*/
+			    result = recordService.testExport(params[1]);
+			    break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");

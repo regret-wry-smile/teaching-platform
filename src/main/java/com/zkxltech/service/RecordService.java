@@ -40,4 +40,10 @@ public interface RecordService {
      * @return
      */
     Result deleteRecord(Object object);
+    /**
+     * 导出试卷
+     * @param object
+     * @return
+     */
+    Result testExport(Object object);
 }
