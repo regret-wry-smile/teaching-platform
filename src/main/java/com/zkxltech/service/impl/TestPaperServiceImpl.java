@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapPaper;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
 import com.zkxltech.domain.QuestionInfo;
@@ -117,6 +118,26 @@ public class TestPaperServiceImpl implements TestPaperService{
             return result;
         }
     }
+	public Result selectNowTestPaper(Object object) {
+		result = new Result();
+		try {
+			TestPaper testPaper =  (TestPaper) StringUtils.parseJSON(object, TestPaper.class);
+			testPaper.setSubject(Global.getClassHour().getSubjectName());
+			result = testPaperSql.selectTestPaper(testPaper);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				result.setMessage("查询试卷成功!");
+			}else {
+				result.setMessage("查询试卷失败！");
+			}
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("查询试卷失败！");
+			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
+			return result;
+		}
+	}
 
 	@Override
 	public Result deleteTestPaper(Object object) {

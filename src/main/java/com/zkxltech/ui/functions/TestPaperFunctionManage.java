@@ -49,6 +49,9 @@ public class TestPaperFunctionManage extends BrowserFunction{
 			case "select_paper_by_classHourId":
 			    result = testPaperService.selectTestPaperByClassHourId(params[1]);
 			    break;
+			case "select_now_paper":
+				result = testPaperService.selectNowTestPaper(params[1]);
+				break;
 			case "select_paper_server":
 				/*服务器查询试卷列表*/
 				if (params.length != 3) {
