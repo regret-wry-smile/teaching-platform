@@ -36,6 +36,8 @@ import com.zkxltech.sql.RecordSql;
 import com.zkxltech.sql.TestPaperSql;
 import com.zkxltech.sql.RecordSql;
 import com.zkxltech.ui.util.ExportExcel;
+
+import io.netty.util.internal.StringUtil;
 import net.sf.json.JSONObject;
 
 public class RecordServiceImpl implements RecordService{
@@ -327,7 +329,24 @@ public class RecordServiceImpl implements RecordService{
 
     @Override
     public Result deleteRecord(Object object) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
         Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
-        return null;
+        if (StringUtils.isBlank(record.getTestId())||record.getStudentIds()== null || record.getStudentIds().size() < 1) {
+            r.setMessage("试卷id和学生id参数不能为空");
+            return r;
+        }
+        RecordSql sql = new RecordSql();
+        try {
+            r = sql.deleteRecord(record);
+            if (r.getRet().equals(Constant.ERROR)) {
+                return r;
+            }
+        } catch (Exception e) {
+            r.setMessage("删除失败");
+            r.setDetail(IOUtils.getError(e));
+        }
+        return r;
     }
+
 }
