@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.core.util.StringUtils;
+import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.StudentInfo;
@@ -156,11 +157,13 @@ public class RedisMapSingleAnswer {
         JSONObject jo = JSONObject.fromObject(params);
         if (!jo.containsKey("answer")) {
             logger.error("缺少参数答案 :\"answer\"");
-            return new ArrayList<>().toString();   
+            return JSONArray.fromObject(new ArrayList<>()).toString();   
         }
-        String answer = jo.getString("answer");
-        List<String> list = singleAnswerStudentNameMap.get(answer);
-        return list.toString();
+        List<String> list = singleAnswerStudentNameMap.get(jo.getString("answer"));
+        if (ListUtils.isEmpty(list)) {
+            return JSONArray.fromObject(new ArrayList<>()).toString();
+        }
+        return JSONArray.fromObject(list).toString();
     }
     public static Map<String, StudentInfo> getStudentInfoMap() {
         return studentInfoMap;
