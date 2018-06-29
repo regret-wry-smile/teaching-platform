@@ -120,6 +120,10 @@ public class ClassHourServiceImpl implements ClassHourService{
 			
 			result = refreshGload();
 			
+			if (Constant.ERROR.equals(result.getRet())) {
+				return result;
+			}
+			
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("开始上课！");
 		} catch (Exception e) {
@@ -160,6 +164,11 @@ public class ClassHourServiceImpl implements ClassHourService{
 			studentInfo.setClassId(Global.classId);
 			result = new StudentInfoServiceImpl().selectStudentInfo(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
+				if (StringUtils.isEmptyList(result.getItem())) {
+					result.setMessage("该班级没有学生！");
+					result.setRet(Constant.ERROR);
+					return result;
+				}
 				Global.setStudentInfos((List<StudentInfo>)result.getItem());
 			}else {
 				result.setMessage("查询学生信息失败！");
