@@ -33,7 +33,7 @@ public class RecordFunctionManage extends BrowserFunction{
 			switch (method) {
 			case "start_class":
 				//上课
-				if (params.length != 3) {
+				if (params.length != 2) {
 					result.setRet(Constant.ERROR);
 					result.setMessage("参数个数有误！");
 					break;
@@ -78,9 +78,13 @@ public class RecordFunctionManage extends BrowserFunction{
 				}
 				result = classHourService.deleteClassInfo(params[1]);
 				break;
-			case "select_record":
-			    /*查询答题记录*/
-			    result = recordService.selectRecord(params[1]);
+			case "select_subjective_record":
+			    /*查询主观题答题记录*/
+			    result = recordService.selectSubjectiveRecord(params[1]);
+			    break;
+			case "select_objective_record":
+			    /*查询客观题答题记录*/
+			    result = recordService.selectObjectiveRecord(params[1]);
 			    break;
 			default:
 				result.setRet(Constant.ERROR);

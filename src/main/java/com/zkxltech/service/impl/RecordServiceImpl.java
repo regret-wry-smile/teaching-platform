@@ -159,13 +159,33 @@ public class RecordServiceImpl implements RecordService{
         out.flush();// 将数据写出去
         out.close(); 
 	}
-	/**
-	 * 查询答题记录
-	 * @param object
-	 * @return
-	 */
+	
 	@Override
-    public Result selectRecord(Object object) {
+    public Result selectSubjectiveRecord(Object object) {
+    	result = new Result();
+		try {
+			Record record = StringUtils.parseJSON(object, Record.class);
+	    	record.setClassId(Global.getClassId());
+	    	record.setSubject(Global.getClassHour().getSubjectName());
+	    	record.setQuestionType("4");
+	    	record.setClassHourId(Global.getClassHour().getClassHourId());
+			result = recordSql.selectRecord(record);
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("查询记录失败!");
+				return result;
+			}
+			result.setMessage("查询记录成功!");
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("查询记录失败！");
+			result.setDetail(IOUtils.getError(e));
+			return result;
+		}
+    }
+	
+	@Override
+    public Result selectObjectiveRecord(Object object) {
     	result = new Result();
 		try {
 			Record record = StringUtils.parseJSON(object, Record.class);
@@ -177,6 +197,14 @@ public class RecordServiceImpl implements RecordService{
 				result.setMessage("查询记录失败!");
 				return result;
 			}
+			List<Record> records = (List<Record>) result.getItem();
+			List<Record> retList = new ArrayList<Record>();
+	    	for (int i = 0; i < records.size(); i++) {
+	    		if (!Constant.ZHUGUANTI_NUM.equals(records.get(i).getQuestionType())) {
+	    			retList.add(records.get(i));
+				}
+			}
+	    	result.setItem(retList);
 			result.setMessage("查询记录成功!");
 			return result;
 		} catch (Exception e) {
