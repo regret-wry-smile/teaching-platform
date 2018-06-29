@@ -109,20 +109,16 @@ public class ClassHourServiceImpl implements ClassHourService{
 	}
 
 	@Override
-	public Result startClass(Object classId, Object classHourObj) {
+	public Result startClass(Object classHourObj) {
 		try {
 			
 			ClassHour classHour = (ClassHour) StringUtils.parseJSON(classHourObj, ClassHour.class);
 			
-			Global.setClassId((String)classId);
-			
-			classHour.setClassId((String)classId);
-			
-			result = refreshGload();
+			Global.setClassId(classHour.getClassId());
 			
 			Global.setClassHour(classHour);
 			
-//			classHourSql.insertClassHour(classHour);
+			result = refreshGload();
 			
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("开始上课！");

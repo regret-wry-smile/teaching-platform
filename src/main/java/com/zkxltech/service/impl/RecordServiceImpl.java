@@ -169,8 +169,9 @@ public class RecordServiceImpl implements RecordService{
     	result = new Result();
 		try {
 			Record record = StringUtils.parseJSON(object, Record.class);
-	    	record.setClassId(Global.getClassHour().getClassId());
+	    	record.setClassId(Global.getClassId());
 	    	record.setSubject(Global.getClassHour().getSubjectName());
+	    	record.setClassHourId(Global.getClassHour().getClassHourId());
 			result = recordSql.selectRecord(record);
 			if (Constant.ERROR.equals(result.getRet())) {
 				result.setMessage("查询记录失败!");

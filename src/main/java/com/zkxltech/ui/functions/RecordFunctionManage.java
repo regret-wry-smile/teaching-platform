@@ -38,7 +38,7 @@ public class RecordFunctionManage extends BrowserFunction{
 					result.setMessage("参数个数有误！");
 					break;
 				}
-				result = classHourService.startClass(params[1], params[2]);
+				result = classHourService.startClass(params[1]);
 				break;
 			case "end_class":
 				//下课

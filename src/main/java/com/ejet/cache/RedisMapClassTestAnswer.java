@@ -215,7 +215,7 @@ public class RedisMapClassTestAnswer {
 			}
 			
 		}
-		logger.info("要保存的作答记录："+JSONArray.fromObject(getRecordList()).toString());
+		logger.info("要保存的作答记录："+JSONArray.fromObject(records));
 		return records;
 	}
 	
