@@ -3,7 +3,10 @@ package com.zkxltech.ui;
 import java.awt.Toolkit;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.TraverseEvent;
@@ -33,7 +36,6 @@ import com.zkxltech.ui.functions.TestPaperFunctionManage;
 import com.zkxltech.ui.functions.VoteFunctionManage;
 import com.zkxltech.ui.util.PageConstant;
 import com.zkxltech.ui.util.SwtTools;
-import org.eclipse.swt.browser.Browser;
 
 public class MainPage extends Dialog {
 
@@ -103,7 +105,20 @@ public class MainPage extends Dialog {
 		shell.setLocation(Display.getCurrent().getClientArea().width / 2 - shell.getShell().getSize().x / 2,
 				Display.getCurrent().getClientArea().height / 2 - shell.getSize().y / 2);
 		shell.setLayout(new FormLayout());
-
+		
+				
+		Composite composite_set = new Composite(shell, SWT.NONE);
+		composite_set.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		FormData fd_composite_set = new FormData();
+		composite_set.setLayoutData(fd_composite_set);
+		fd_composite_set.bottom = new FormAttachment(0, 34);
+		fd_composite_set.right =new FormAttachment(100, -24);
+		fd_composite_set.top = new FormAttachment(0,23);
+		
+		fd_composite_set.width = 50;
+		fd_composite_set.height = 11;
+		composite_set.setLayoutData(fd_composite_set);
+		
 		// 头部
 		Composite composite_top = new Composite(shell, SWT.NONE);
 		composite_top.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -140,13 +155,14 @@ public class MainPage extends Dialog {
 		titleText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		titleText.setText("电子答题器");
 
-		CLabel closeLabel = new CLabel(composite_top, SWT.NONE);
-		FormData fd_closeLabel = new FormData();
-		fd_closeLabel.bottom = new FormAttachment(0, 34);
-		fd_closeLabel.right = new FormAttachment(100, -23);
-		fd_closeLabel.width = 11;
-		fd_closeLabel.top = new FormAttachment(0, 23);
-		closeLabel.setLayoutData(fd_closeLabel);
+		CLabel closeLabel = new CLabel(composite_set, SWT.NONE);
+//		FormData fd_closeLabel = new FormData();
+//		fd_closeLabel.bottom = new FormAttachment(0, 34);
+//		fd_closeLabel.right = new FormAttachment(100, -23);
+//		fd_closeLabel.width = 11;
+//		fd_closeLabel.top = new FormAttachment(0, 23);
+//		closeLabel.setLayoutData(fd_closeLabel);
+		closeLabel.setBounds(37, 0, 11, 11);
 		closeLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		closeLabel.setBackground(SWTResourceManager.getImage(MainPage.class, PageConstant.close_black));
 		closeLabel.setAlignment(SWT.CENTER);
@@ -162,14 +178,17 @@ public class MainPage extends Dialog {
 		});
 		
 		//最大化
-		CLabel maxShow = new CLabel(composite_top, SWT.NONE);
-		FormData fd_maxShow = new FormData();
-		fd_maxShow.bottom = new FormAttachment(0, 34);
-		fd_maxShow.top = new FormAttachment(0, 23);
-		fd_maxShow.right = new FormAttachment(100, -59);
-		fd_maxShow.width = 11;
-		fd_maxShow.width = 11;
-		maxShow.setLayoutData(fd_maxShow);
+		CLabel maxShow = new CLabel(composite_set, SWT.NONE);
+//		FormData fd_maxShow = new FormData();
+//		fd_maxShow.bottom = new FormAttachment(0, 34);
+//		fd_maxShow.top = new FormAttachment(0, 23);
+//		fd_maxShow.right = new FormAttachment(100, -59);
+		maxShow.setBounds(19, 0, 11, 11);
+//		fd_maxShow.top = new FormAttachment(0);
+//		fd_maxShow.right = new FormAttachment(0);
+//		fd_maxShow.width = 11;
+//		fd_maxShow.width = 11;
+//		maxShow.setLayoutData(fd_maxShow);
 		maxShow.setBackground(SWTResourceManager.getImage(MainPage.class, PageConstant.max_white));
 		maxShow.addMouseTrackListener(SwtTools.showHand(maxShow));
 		maxShow.addMouseListener(new MouseAdapter() {
@@ -178,10 +197,12 @@ public class MainPage extends Dialog {
 				if(!isMax){
 					shell.setSize(Window_Width, Window_Height);
 					shell.setLocation(0, 0);
+					composite_top.setEnabled(false);
 				}else {
 					shell.setSize(shellWidth, shellHeight);
 					shell.setLocation(Display.getCurrent().getClientArea().width / 2 - shell.getShell().getSize().x / 2,
 							Display.getCurrent().getClientArea().height / 2 - shell.getSize().y / 2);
+					composite_top.setEnabled(true);
 				}
 				isMax = !isMax;
 			}
@@ -189,14 +210,14 @@ public class MainPage extends Dialog {
 		});
 		
 		// 最小化
-		CLabel changeMin = new CLabel(composite_top, SWT.CENTER);
-		FormData fd_changeMin = new FormData();
-		fd_changeMin.bottom = new FormAttachment(0, 34);
-		fd_changeMin.right = new FormAttachment(100, -41);
-		fd_changeMin.top = new FormAttachment(0, 23);
-		fd_changeMin.width = 11;
-		changeMin.setLayoutData(fd_changeMin);
-
+		CLabel changeMin = new CLabel(composite_set, SWT.CENTER);
+//		FormData fd_changeMin = new FormData();
+//		fd_changeMin.bottom = new FormAttachment(0, 34);
+//		fd_changeMin.right = new FormAttachment(100, -41);
+//		fd_changeMin.top = new FormAttachment(0, 23);
+//		fd_changeMin.width = 11;
+//		changeMin.setLayoutData(fd_changeMin);
+		changeMin.setBounds(0, 0, 11, 11);
 		changeMin.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		changeMin.setBackground(SWTResourceManager.getImage(MainPage.class, PageConstant.min_black));
 		// 最小化
@@ -226,6 +247,7 @@ public class MainPage extends Dialog {
 			});
 		}
 		
+		
 		Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayout(new FormLayout());
 		FormData fd_composite = new FormData();
@@ -235,7 +257,9 @@ public class MainPage extends Dialog {
 		fd_composite.left = new FormAttachment(0);
 		composite.setLayoutData(fd_composite);
 		
-		PageConstant.browser = new Browser(composite, SWT.NONE);
+		Browser browser = new Browser(composite, SWT.NONE);
+		browser.setLayoutData(new FormData());
+		PageConstant.browser = browser;
 		FormData fd_browser = new FormData();
 		fd_browser.bottom = new FormAttachment(100);
 		fd_browser.top = new FormAttachment(0);
@@ -278,7 +302,26 @@ public class MainPage extends Dialog {
 		new TestPaperFunctionManage(PageConstant.browser, "execute_testPaper");//试卷模块
 		new RecordFunctionManage(PageConstant.browser, "execute_record");//记录模块
 		new VoteFunctionManage(PageConstant.browser, "execute_vote");//投票模块
-	
-		 
+		
+		
+		//去除浏览器鼠标右键
+		PageConstant.browser.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mouseDown(MouseEvent e) {
+			if (e.button == 3)  
+				PageConstant.browser.execute("document.oncontextmenu = function() {return false;}");  
+	     	} 
+		});
+		//去除键盘f5刷新浏览器事件
+		PageConstant.browser.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == 16777230) {
+					e.doit = false;
+				}
+			}
+		});
+		
+		
 	}
 }
