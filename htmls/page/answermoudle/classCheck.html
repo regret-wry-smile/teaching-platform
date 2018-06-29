@@ -36,18 +36,64 @@
 		
 	</head>
 	<body class="bg clearfix" ng-controller="classuserCheckCtrl">
+		<!--个人答题详情-->
+			<script type="text/ng-template" id="oneAnswerDetailModal.html">
+					<div class="modal-header">
+						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+						<h4 class="modal-title">答题详情</h4>
+					</div>
+					<div class="modal-body" id="oneanswer" style="max-height: 3.0rem;overflow: auto;" >
+						<table class="table">
+							<thead>
+								<tr>
+									<!--客观题-->
+									<th>题号</th>
+									<th>题目</th>
+									<th>题目类型</th>
+									<th ng-show="answerType=='1'">正确答案</th>
+									<th ng-show="answerType=='1'">作答答案</th>									
+									<th ng-show="answerType=='1'">作答结果</th>
+									<!--主观题-->
+									<th ng-show="answerType=='0'">最高分</th>
+									<th ng-show="answerType=='0'">得分</th>									
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in oneanswerLists track by $index">
+									<td>{{item.questionId}}</td>
+									<td>{{item.question}}</td>
+									<td>{{item.questionType|questionType}}</td>
+									<td ng-show="answerType=='1'">{{item.trueAnswer|AnswerType}}</td>
+									<td ng-show="answerType=='1'">{{item.answer}}</td>
+									<td ng-show="answerType=='1'">{{item.result}}</td>
+									<td ng-show="answerType=='0'">{{item.score}}</td>									
+									<td ng-show="answerType=='0'">{{item.answer}}</td>
+								</tr>
+							</tbody>
+							
+						</table>
+						
+					</div>
+					<div class="modal-footer text-center">
+						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>			
+					</div>
+			</script>
+		
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/check.png" class="ml25 pt20" />
 					<span>检测</span>
 				</div>
 				<div class="pull-right">
-					<button class="btn savebtn" class="mr5" ng-click="gatherPaper()">收取试卷</button>
+					<button class="btn savebtn" class="mr5" ng-show="isgatherPaper" ng-click="gatherPaper()">收取试卷</button>
+					<a href="javascript:history.go(-1);"  ng-show="!isgatherPaper">
+					<img src="../../image/return.png" />
+					</a>
 				</div>
 			</div>
 			<div class="content bgf5 clearfix" style="margin: 0;">
 				<div class="modbox clearfix ml20 mr20 checkclass" id="checkclass">
-				<div class="progresscon clearfix" ng-repeat="item in AllanswerInfo track by $index">
+				<div class="progresscon clearfix" ng-repeat="item in AllanswerInfo track by $index" ng-click="selectRecord(item)">
 					<p class="clearfix">
 						<span class="pull-left">{{item.studentName}}</span>
 						<span class="pull-right">{{item.percent*100}}%</span>
@@ -84,6 +130,8 @@
 	$(function(){
 		var nice = $("html").niceScroll();  // The document page (body)
 	 	$("#checkclass").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable 	
+ 		$("#oneanswer").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable 	
+	 	
 		$('.head ul li a').click(function(){
 			$('.head ul li a.active').removeClass('active'); 
 			$(this).addClass('active');

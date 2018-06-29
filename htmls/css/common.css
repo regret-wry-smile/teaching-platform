@@ -514,8 +514,11 @@ a.del{
 a:active{
 	color: #ff6600;
 }
-
-
+.view,.view:hover{
+	color: #04BE02;
+	font-size: 0.28rem;
+	cursor: pointer;
+}
 /*学生管理*/
 /*.pannel table.table thead tr th{
 	height:0.24rem;
@@ -775,7 +778,7 @@ ul.col-4 li a span{
 		padding: 0.10rem 0.12rem;	
 	}
 	.progresscon{
-		width: 0.90rem;
+		width: 1.0rem;
 		padding: 0.08rem 0.10rem;
 	}
 	.modbox.checkclass{

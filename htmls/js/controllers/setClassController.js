@@ -127,6 +127,8 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 	    if($scope.result.ret=='success'){
 	      	$scope.objectUrl = '../../page/answermoudle/answerCenter.html';
 	      	$window.location.href = $scope.objectUrl;	
+	    }else{
+	    	toastr.error($scope.result.message);
 	    }
 		//$scope.param = "classId=" + $scope.classesobject.key + "&className=" + $scope.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
 		//console.log(JSON.stringify($scope.param))
@@ -283,9 +285,11 @@ app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
 	
 	 $scope.returnPage=function(){
 	 	$scope.result=JSON.parse(execute_attendance("sign_in_stop"));  
-	 	console.log("停止答题"+JSON.stringify($scope.result));
+	 	//console.log("停止答题"+JSON.stringify($scope.result));
 	 	if($scope.result.ret=='success'){
-	 		history.go(-1);	 		
+	 		window.history.go(-1);	 	
+			window.history.back();  //返回上一页
+			window.location.href = "../../page/answermoudle/answerCenter.html";
 	 	}else{
 	 		toastr.error($scope.result.message);
 	 	}
@@ -300,23 +304,34 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
 	var myTimer;
 	$scope.time=3;
 	var _stopAnswer=function(){
-		if($scope.time<=0||($scope.studentName&&$scope.studentName!="抢答中")){
-		$interval.cancel(myTimer); 
+//		if($scope.time<=0||($scope.studentName&&$scope.studentName!="抢答中")){
+//		$interval.cancel(myTimer); 
+//		}
+		if($scope.studentName&&$scope.studentName!="抢答中"){
+			$interval.cancel(myTimer); 
 		}
+
 	}
 	//定时器
 	myTimer = $interval(function(){	
 		$scope.result=JSON.parse(execute_preemptive("get_quick_answer_studentName"));
 		$scope.time=$scope.time-1;
 		console.log(JSON.stringify($scope.result))
-		if(JSON.stringify($scope.result)!="{}"){
+		if($scope.result.studentName){
 			$scope.studentName=$scope.result.studentName;
 			_stopAnswer();
 		}else{
 			console.log($scope.time)		
 			if($scope.time<1){
-				$scope.studentName="抢答中...";
-			}	
+				$scope.studentName="抢答中...";							
+			}
+			if($scope.time==1){
+				$scope.result=JSON.parse(execute_preemptive("set_flag_start_quick"));	
+				if($scope.result.ret=='success'){					
+				}else{
+					toastr.error($scope.result.message);
+				}
+			}			
 		}
 	},1000);
 	
