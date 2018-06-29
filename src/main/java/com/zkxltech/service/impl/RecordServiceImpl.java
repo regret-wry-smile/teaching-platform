@@ -253,7 +253,7 @@ public class RecordServiceImpl implements RecordService{
                 float b = (float)corrects.size() / questInfos.size();
                 Record resultRocord = new Record();
                 resultRocord.setStudentName(list.get(0).getStudentName());
-                resultRocord.setResult(formattedDecimalToPercentage(b));
+                resultRocord.setResult(StringUtils.formattedDecimalToPercentage(b));
                 resultRocord.setTestName(testPaper.getTestName());
                 resultRocord.setTime(classHour.getStartTime());
                 result.add(resultRocord);
@@ -321,12 +321,5 @@ public class RecordServiceImpl implements RecordService{
 			result.setDetail(IOUtils.getError(e));
 			return result;
 		}
-    }
-    private static String formattedDecimalToPercentage(double decimal) {
-        //获取格式化对象
-        NumberFormat nt = NumberFormat.getPercentInstance();
-        //设置百分数精确度2即保留两位小数
-        nt.setMinimumFractionDigits(2);
-        return nt.format(decimal);
     }
 }

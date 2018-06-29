@@ -2,6 +2,7 @@ package com.ejet.core.util.comm;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.NumberFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -330,6 +331,17 @@ public class StringUtils {
 		}
 		return src;
 	}
-    
+	/**
+	 * 格式化百分比
+	 * @param decimal
+	 * @return
+	 */
+	public static String formattedDecimalToPercentage(double decimal) {
+        //获取格式化对象
+        NumberFormat nt = NumberFormat.getPercentInstance();
+        //设置百分数精确度2即保留两位小数
+        nt.setMinimumFractionDigits(2);
+        return nt.format(decimal);
+    }
     
 }
