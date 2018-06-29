@@ -30,6 +30,9 @@ public class TestPaper {
 	 * 0:本地添加;1:服务器导入
 	 */
 	private String atype;
+	
+	private String classHourId;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -73,5 +76,10 @@ public class TestPaper {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	
+    public String getClassHourId() {
+        return classHourId;
+    }
+    public void setClassHourId(String classHourId) {
+        this.classHourId = classHourId;
+    }
 }

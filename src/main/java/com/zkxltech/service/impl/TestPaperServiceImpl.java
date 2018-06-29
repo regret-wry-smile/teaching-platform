@@ -96,6 +96,27 @@ public class TestPaperServiceImpl implements TestPaperService{
 			return result;
 		}
 	}
+	
+	@Override
+    public Result selectTestPaperByClassHourId(Object object) {
+        result = new Result();
+        try {
+            TestPaper testPaper =  (TestPaper) StringUtils.parseJSON(object, TestPaper.class);
+            result = testPaperSql.selectTestPaperByClassHourId(testPaper);
+            if (Constant.SUCCESS.equals(result.getRet())) {
+                result.setMessage("查询试卷成功!");
+            }else {
+                result.setMessage("查询试卷失败！");
+            }
+            return result;
+        } catch (Exception e) {
+            result.setRet(Constant.ERROR);
+            result.setMessage("查询试卷失败！");
+            result.setDetail(IOUtils.getError(e));
+            log.error(IOUtils.getError(e));
+            return result;
+        }
+    }
 
 	@Override
 	public Result deleteTestPaper(Object object) {
