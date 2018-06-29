@@ -352,7 +352,7 @@ public class RecordServiceImpl implements RecordService{
                 List<Record> list = studentRecordMap.get(key);//得到每个学生的所有答题记录
                 //按正确和错误进行分类
                 Map<Object, List<Record>> resultMap = ListUtils.getClassificationMap(list, "result");
-                List<Record> corrects = resultMap.get("2");//得到所有正确的答案总数
+                List<Record> corrects = resultMap.get(Constant.RESULT_TRUE);//得到所有正确的答案总数
                 float b = (float)corrects.size() / questInfos.size();
                 Record resultRocord = new Record();
                 resultRocord.setStudentId((String)key);
