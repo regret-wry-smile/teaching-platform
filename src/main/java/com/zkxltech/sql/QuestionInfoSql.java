@@ -39,6 +39,7 @@ public class QuestionInfoSql {
 				//0单选；1多选；2判断；3数字；4主观题
 				String type = (String) rowList.get(i).get(2);
 				String  trueAnswer = "";
+				trueAnswer = (String) rowList.get(i).get(3);
 				switch (type) {
 				case "单选":
 					type = "0";
@@ -48,7 +49,6 @@ public class QuestionInfoSql {
 					break;
 				case "判断":
 					type = "2";
-					trueAnswer = (String) rowList.get(i).get(3);
 					if ("对".equals(trueAnswer)) {
 						trueAnswer = "T";
 					}else if("错".equals(trueAnswer)){
