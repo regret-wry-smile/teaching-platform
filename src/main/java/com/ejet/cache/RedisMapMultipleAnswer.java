@@ -41,6 +41,11 @@ public class RedisMapMultipleAnswer {
 	public static Map<String, Object> everyAnswerMap = Collections.synchronizedMap(new HashMap<String, Object>());
 	
 	/**
+	 * 每个答案作答信息
+	 */
+	public static Map<String, Object> answerMap = Collections.synchronizedMap(new HashMap<String, Object>());
+	
+	/**
 	 * 作答计数
 	 */
 	private static Map<String, Object> answerNum = Collections.synchronizedMap(new HashMap<String, Object>());
@@ -50,9 +55,11 @@ public class RedisMapMultipleAnswer {
 	public static Map<String, Object> everyBodyMap = Collections.synchronizedMap(new HashMap<String, Object>());
 	
 	
-	private static String[] keyEveryAnswerMap = {"uuid","questionId","answer"};
+	private static String[] keyEveryAnswerMap = {"uuid","questionId","everyAnswer"};
 	
 	private static String[] keyEveryBodyMap = {"uuid","questionId","iclicker"};
+	
+	private static String[] keyAnswerMap = {"uuid","questionId","answer"};
 	
 	/**
 	 * 开始答题
@@ -78,12 +85,13 @@ public class RedisMapMultipleAnswer {
 
 	
 	/**
-	 * 添加评分详情
+	 * 添加多选作答详情
 	 * @param score
 	 */
 	public static void addEveryAnswerInfo(String jsonData){
 		keyEveryBodyMap[0] = answerId; //主题编号
 		keyEveryAnswerMap[0] = answerId;
+		keyAnswerMap[0] = answerId;
 		JSONArray jsonArray = JSONArray.fromObject(jsonData); 
         for (int  i= 0; i < jsonArray.size(); i++) {
         	JSONObject jsonObject = jsonArray.getJSONObject(i); //，每个学生的作答信息
@@ -97,6 +105,7 @@ public class RedisMapMultipleAnswer {
         			
         			keyEveryBodyMap[1] = num;
         			keyEveryAnswerMap[1] = num;
+        			keyAnswerMap[1] = num;
         			keyEveryBodyMap[2] = carId;
         			Answer answer = (Answer) JSONObject.toBean((JSONObject) RedisMapUtil.getRedisMap(everyBodyMap, keyEveryBodyMap, 0), Answer.class);
         			if (answer!= null && !StringUtils.isEmpty(answer.getAnswer())) {
@@ -111,6 +120,16 @@ public class RedisMapMultipleAnswer {
         				//过滤答案为空的数据
         				continue;
 					}
+        			keyAnswerMap[2] = answerString;
+        			List<StudentInfo> studentInfos2 = (List<StudentInfo>) RedisMapUtil.getRedisMap(answerMap, keyAnswerMap, 0);
+    				if (com.zkxltech.ui.util.StringUtils.isEmptyList(studentInfos2)) {
+    					studentInfos2 = new ArrayList<StudentInfo>();
+					}
+    				studentInfos2.add(studentInfo);
+    				
+    				RedisMapUtil.setRedisMap(answerMap, keyAnswerMap, 0, studentInfos2);
+        			
+        			
         			char[] everyAnswer = answerString.toCharArray();
         			for (int k = 0; k < everyAnswer.length; k++) {
         				keyEveryAnswerMap[2] = String.valueOf(everyAnswer[k]);
@@ -124,7 +143,7 @@ public class RedisMapMultipleAnswer {
 				}
 			}
         }
-        BrowserManager.refresAnswerNum();
+//        BrowserManager.refresAnswerNum();
     }
 	
 	/**
@@ -138,6 +157,19 @@ public class RedisMapMultipleAnswer {
 		RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0);
 		logger.info("每个答案的选择信息："+JSONArray.fromObject(RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0)).toString());
 		return JSONObject.fromObject(RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0)).toString();
+    }
+	
+	/**
+	 * 获取选择答案对应的人数
+	 * @param score
+	 */
+	public static String getAnswerInfoSum(){
+		String[] keString = new String[2];
+		keString[0] = answerId;
+		keString[1] = "1";
+		RedisMapUtil.getRedisMap(answerMap, keString, 0);
+		logger.info("每个答案的选择信息："+JSONArray.fromObject(RedisMapUtil.getRedisMap(answerMap, keString, 0)).toString());
+		return JSONObject.fromObject(RedisMapUtil.getRedisMap(answerMap, keString, 0)).toString();
     }
 	
 	/**
@@ -159,54 +191,56 @@ public class RedisMapMultipleAnswer {
 		return JSONObject.fromObject(answerNum).toString();
     }
 	
-	public static void main(String[] args) {	
-		
-		startAnswer("A-F");
-		
-		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
-		StudentInfo studentInfo = new StudentInfo();
-		studentInfo.setIclickerId("0000001");
-		studentInfos.add(studentInfo);
-		StudentInfo studentInfo2 = new StudentInfo();
-		studentInfo2.setIclickerId("0000002");
-		studentInfos.add(studentInfo2);
-		Global.setStudentInfos(studentInfos);
-		
-		JSONArray jsonData = new JSONArray();
-		
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("fun", "update_answer_list");
-		jsonObject.put("card_id", "0000001");
-		JSONArray jsonArray = new JSONArray();
-		JSONObject jsonObject2 = new JSONObject();
-		jsonObject2.put("type", "s");
-		jsonObject2.put("id", "1");
-		jsonObject2.put("answer", "ABC");
-		jsonArray.add(jsonObject2);
-		jsonObject.put("answers", jsonArray);
-	
-		JSONObject jsonObject_1 = new JSONObject();
-		jsonObject_1.put("fun", "update_answer_list");
-		jsonObject_1.put("card_id", "0000002");
-		JSONArray jsonArray_1 = new JSONArray();
-		JSONObject jsonObject2_1 = new JSONObject();
-		jsonObject2_1.put("type", "s");
-		jsonObject2_1.put("id", "1");
-		jsonObject2_1.put("answer", "ABCF");
-		jsonArray_1.add(jsonObject2_1);
-		jsonObject_1.put("answers", jsonArray_1);
-		
-		jsonData.add(jsonObject);
-		jsonData.add(jsonObject_1);
-		
-		
-		
-		addEveryAnswerInfo(jsonData.toString());
-		
-		System.out.println("每个人的作答详情"+JSONObject.fromObject(everyBodyMap));
-		System.out.println("每个答案的作答详情"+JSONObject.fromObject(everyAnswerMap));
-		System.out.println("作答统计"+JSONObject.fromObject(getAnswerNum()));
-	}
+//	public static void main(String[] args) {	
+//		
+//		startAnswer("A-F");
+//		
+//		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
+//		StudentInfo studentInfo = new StudentInfo();
+//		studentInfo.setIclickerId("0000001");
+//		studentInfos.add(studentInfo);
+//		StudentInfo studentInfo2 = new StudentInfo();
+//		studentInfo2.setIclickerId("0000002");
+//		studentInfos.add(studentInfo2);
+//		Global.setStudentInfos(studentInfos);
+//		
+//		JSONArray jsonData = new JSONArray();
+//		
+//		JSONObject jsonObject = new JSONObject();
+//		jsonObject.put("fun", "update_answer_list");
+//		jsonObject.put("card_id", "0000001");
+//		JSONArray jsonArray = new JSONArray();
+//		JSONObject jsonObject2 = new JSONObject();
+//		jsonObject2.put("type", "s");
+//		jsonObject2.put("id", "1");
+//		jsonObject2.put("answer", "ABC");
+//		jsonArray.add(jsonObject2);
+//		jsonObject.put("answers", jsonArray);
+//	
+//		JSONObject jsonObject_1 = new JSONObject();
+//		jsonObject_1.put("fun", "update_answer_list");
+//		jsonObject_1.put("card_id", "0000002");
+//		JSONArray jsonArray_1 = new JSONArray();
+//		JSONObject jsonObject2_1 = new JSONObject();
+//		jsonObject2_1.put("type", "s");
+//		jsonObject2_1.put("id", "1");
+//		jsonObject2_1.put("answer", "ABCF");
+//		jsonArray_1.add(jsonObject2_1);
+//		jsonObject_1.put("answers", jsonArray_1);
+//		
+//		jsonData.add(jsonObject);
+//		jsonData.add(jsonObject_1);
+//		
+//		
+//		
+//		addEveryAnswerInfo(jsonData.toString());
+//		
+//		System.out.println("每个人的作答详情"+JSONObject.fromObject(everyBodyMap));
+//		System.out.println("每个答案的作答详情"+JSONObject.fromObject(everyAnswerMap));
+//		System.out.println("作答统计"+JSONObject.fromObject(getAnswerNum()));
+//		
+//		System.out.println("答案："+JSONObject.fromObject(getAnswerInfoSum()));
+//	}
 	
 	/**
 	 * 判断该答题器编号是否属于当前班级
