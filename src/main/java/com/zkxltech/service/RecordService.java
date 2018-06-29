@@ -28,4 +28,16 @@ public interface RecordService {
 	 * @return
 	 */
 	Result selectObjectiveRecord(Object object);
+	/**
+	 * 查询每个学生的答题记录情况
+	 * @param object
+	 * @return
+	 */
+    Result selectRecord(Object object);
+    /**
+     * 批量删除学生的试卷作答记录
+     * @param object
+     * @return
+     */
+    Result deleteRecord(Object object);
 }
