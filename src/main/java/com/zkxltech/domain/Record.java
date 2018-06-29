@@ -1,4 +1,7 @@
 package com.zkxltech.domain;
+
+import java.util.List;
+
 /**
  * 作答记录
  * @author zkxl
@@ -67,6 +70,9 @@ public class Record {
 	private String result;
 	
 	private String time ;
+	
+	private List<String> studentIds;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -162,6 +168,13 @@ public class Record {
     }
     public void setTime(String time) {
         this.time = time;
+    }
+    
+    public List getStudentIds() {
+        return studentIds;
+    }
+    public void setStudentIds(List studentIds) {
+        this.studentIds = studentIds;
     }
     @Override
     public String toString() {

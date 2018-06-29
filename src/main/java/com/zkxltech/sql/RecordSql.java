@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
+
 import com.zkxltech.domain.AnswerInfo;
 import com.zkxltech.domain.Record;
 import com.zkxltech.domain.Result;
@@ -88,4 +90,39 @@ public class RecordSql {
 //		}
 //		return dbHelper.onUpdate(sqlBuilder.toString(), answerInfo);
 //	}
+	
+	public Result deleteRecord(Record record) throws IllegalArgumentException, IllegalAccessException{
+	     StringBuilder sqlBuilder = new StringBuilder();
+          sqlBuilder.append("delete from record");
+          Field[] files = dbHelper.getFields(record);
+          int index = 0;
+          for (int i = 0; i < files.length; i++) {
+              Object obj = dbHelper.getFiledValues(files[i], record);
+              if (!StringUtils.isEmpty(obj)) {
+                  if (index == 0) {
+                      sqlBuilder.append(" where ");
+                  }else {
+                      sqlBuilder.append(" and ");
+                  }
+                  Class<?> type = files[i].getType();
+                  if (type == List.class) {
+                      sqlBuilder.append("student_id in (");
+                      List<Object> list = (List<Object>) obj;
+                      for (int j = 0; j < list.size(); j++) {
+                          Object object = list.get(j);
+                          sqlBuilder.append(object);
+                          if (j < list.size() -1) {
+                              sqlBuilder.append(",");
+                          }
+                    }
+                    sqlBuilder.append(") ");  
+                  }else{
+                      sqlBuilder.append(dbHelper.HumpToUnderline(files[i].getName())+" = ?");
+                  }
+                  index++;
+              }
+          }
+          record.setStudentIds(null); //sql拼接完,置空
+          return dbHelper.onUpdate(sqlBuilder.toString(), record);
+  }
 }
