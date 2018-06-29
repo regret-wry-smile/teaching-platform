@@ -75,6 +75,7 @@ public class RedisMapSingleAnswer {
                List<String> list = singleAnswerStudentNameMap.get(result);
                if (list == null) {
                    list = new ArrayList<>();
+                   singleAnswerStudentNameMap.put(result, list);
                }
                list.add(studentInfo.getStudentName());
             }
