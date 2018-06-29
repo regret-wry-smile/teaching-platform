@@ -120,6 +120,8 @@ public class ClassHourServiceImpl implements ClassHourService{
 			
 			result = refreshGload();
 			
+			Thread.sleep(20000);
+			
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("开始上课！");
 		} catch (Exception e) {

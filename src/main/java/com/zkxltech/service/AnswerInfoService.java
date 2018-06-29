@@ -26,12 +26,12 @@ public interface AnswerInfoService {
 	/**
 	 * 停止客观题答题
 	 */
-	Result stopObjectiveAnswer();
+	Result stopObjectiveAnswer(Object testId);
 	
 	/**
 	 * 停止主观题答题
 	 */
-	Result stopSubjectiveAnswer();
+	Result stopSubjectiveAnswer(Object testId);
 	
 //	/**
 //	 * 开始记分答题

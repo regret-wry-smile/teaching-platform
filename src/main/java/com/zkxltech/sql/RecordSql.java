@@ -66,26 +66,26 @@ public class RecordSql {
 		}
 		return dbHelper.onQuery(sqlBuilder.toString(), record);
 	}
-//	
-//	
-//	/*删除答题信息*/
-//	public Result deleteAnswerInfo(AnswerInfo answerInfo) throws IllegalArgumentException, IllegalAccessException{
-//		StringBuilder sqlBuilder = new StringBuilder();
-//		sqlBuilder.append("delete from answer_info");
-//		Field[] files = dbHelper.getFields(answerInfo);
-//		int index = 0;
-//		for (int i = 0; i < files.length; i++) {
-//			Object obj = dbHelper.getFiledValues(files[i], answerInfo);
-//			if (!StringUtils.isEmpty(obj)) {
-//				if (index == 0) {
-//					sqlBuilder.append(" where ");
-//				}else {
-//					sqlBuilder.append(" and ");
-//				}
-//				sqlBuilder.append(dbHelper.HumpToUnderline(files[i].getName())+" = ?");
-//				index++;
-//			}
-//		}
-//		return dbHelper.onUpdate(sqlBuilder.toString(), answerInfo);
-//	}
+	
+	
+	/*删除答题信息*/
+	public Result deleteRecord(Record record) throws IllegalArgumentException, IllegalAccessException{
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("delete from record");
+		Field[] files = dbHelper.getFields(record);
+		int index = 0;
+		for (int i = 0; i < files.length; i++) {
+			Object obj = dbHelper.getFiledValues(files[i], record);
+			if (!StringUtils.isEmpty(obj)) {
+				if (index == 0) {
+					sqlBuilder.append(" where ");
+				}else {
+					sqlBuilder.append(" and ");
+				}
+				sqlBuilder.append(dbHelper.HumpToUnderline(files[i].getName())+" = ?");
+				index++;
+			}
+		}
+		return dbHelper.onUpdate(sqlBuilder.toString(), record);
+	}
 }

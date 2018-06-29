@@ -72,7 +72,7 @@ public class AnswerFunctionManage extends BrowserFunction{
                 break;
 			case "stop_class_test_objective":
 				//停止客观题答题
-				result = answerInfoService.stopObjectiveAnswer();
+				result = answerInfoService.stopObjectiveAnswer(params[1]);
 				break;
 			case "get_everybody_answerInfo":
 				//获取每个人的作答统计
@@ -83,7 +83,7 @@ public class AnswerFunctionManage extends BrowserFunction{
                 break;
 			case "stop_class_test_subjective":
 				//停止主答题答题
-				result = answerInfoService.stopSubjectiveAnswer();
+				result = answerInfoService.stopSubjectiveAnswer(params[1]);
 				break;	
 			default:
 				result.setRet(Constant.ERROR);
