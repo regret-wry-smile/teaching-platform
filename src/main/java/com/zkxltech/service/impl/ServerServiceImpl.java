@@ -134,40 +134,40 @@ public class ServerServiceImpl implements ServerService{
 //		
 //	}
 	
-	public static void main(String[] args) {
-		/*模拟当前班级的学生信息*/
-		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
-		StudentInfo studentInfo = new StudentInfo();
-		studentInfo.setIclickerId("0000001");
-		studentInfo.setStudentId("10001");
-		studentInfo.setStudentName("学号01");
-		studentInfo.setClassId("9999");
-		studentInfos.add(studentInfo);
-		StudentInfo studentInfo2 = new StudentInfo();
-		studentInfo2.setIclickerId("0000002");
-		studentInfo2.setStudentId("10002");
-		studentInfo2.setStudentName("学号02");
-		studentInfo2.setClassId("9999");
-		studentInfos.add(studentInfo2);
-		StudentInfo studentInfo3 = new StudentInfo();
-		studentInfo3.setIclickerId("0000003");
-		studentInfo3.setStudentId("10003");
-		studentInfo3.setStudentName("学号03");
-		studentInfo3.setClassId("9999");
-		studentInfos.add(studentInfo3);
-		Global.setStudentInfos(studentInfos);
-		
-		Result result = new ServerServiceImpl().uploadServer( "4Y0001","语文","9999");
-		System.out.println(net.sf.json.JSONObject.fromObject(result));
-	}
+//	public static void main(String[] args) {
+//		/*模拟当前班级的学生信息*/
+//		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
+//		StudentInfo studentInfo = new StudentInfo();
+//		studentInfo.setIclickerId("0000001");
+//		studentInfo.setStudentId("10001");
+//		studentInfo.setStudentName("学号01");
+//		studentInfo.setClassId("9999");
+//		studentInfos.add(studentInfo);
+//		StudentInfo studentInfo2 = new StudentInfo();
+//		studentInfo2.setIclickerId("0000002");
+//		studentInfo2.setStudentId("10002");
+//		studentInfo2.setStudentName("学号02");
+//		studentInfo2.setClassId("9999");
+//		studentInfos.add(studentInfo2);
+//		StudentInfo studentInfo3 = new StudentInfo();
+//		studentInfo3.setIclickerId("0000003");
+//		studentInfo3.setStudentId("10003");
+//		studentInfo3.setStudentName("学号03");
+//		studentInfo3.setClassId("9999");
+//		studentInfos.add(studentInfo3);
+//		Global.setStudentInfos(studentInfos);
+//		
+//		Result result = new ServerServiceImpl().uploadServer( "4Y0001","语文","9999");
+//		System.out.println(net.sf.json.JSONObject.fromObject(result));
+//	}
 	
 	@Override
-	public Result uploadServer(Object testId,Object subject,Object classId) {
+	public Result uploadServer(Object testId) {
 		Result result = new Result();
 		try {
 //			String testId = "4Y0001";
-//			String subject = "语文";
-//			String classId = "9999";
+			String subject = Global.getClassHour().getSubjectName();
+			String classId = Global.getClassHour().getClassId();
 			// 客观题参数
 			List<String> paramList1 = concatParamData1((String)testId, (String)subject, (String)classId);
 			System.out.println(JSONArray.toJSONString(paramList1));

@@ -9,8 +9,10 @@ import com.ejet.cache.RedisMapSingleAnswer;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.AnswerInfoService;
+import com.zkxltech.service.ServerService;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.service.impl.AnswerInfoServiceImpl;
+import com.zkxltech.service.impl.ServerServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
@@ -21,6 +23,7 @@ import net.sf.json.JSONObject;
  */
 public class AnswerFunctionManage extends BrowserFunction{
 	private AnswerInfoService answerInfoService = new AnswerInfoServiceImpl();
+	private ServerService serverService = new ServerServiceImpl();
 	public AnswerFunctionManage(Browser browser, String name) {
 		super(browser, name);
 	}
@@ -29,14 +32,12 @@ public class AnswerFunctionManage extends BrowserFunction{
 		Result result = new Result();
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
-			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数
-			StudentInfoService service = new StudentInfoServiceImpl();
 			switch (method) {
-			case "import_paper":
-				result = service.selectStudentInfo(param);
+			case "upload_server":
+				result = serverService.uploadServer(params[1]);
 				break;
 			case "single_answer": //开始单题单选答题
-			    result = answerInfoService.singleAnswer(param);
+			    result = answerInfoService.singleAnswer(params[1]);
                 break;
 			case "stop_single_answer":
 			    //获取每个答案对应的作答人数

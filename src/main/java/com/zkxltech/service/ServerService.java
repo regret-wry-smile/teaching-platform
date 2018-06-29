@@ -25,5 +25,5 @@ public interface ServerService {
 	/**
 	 * 上传服务器
 	 */
-	Result uploadServer(Object testId,Object subject,Object classId);
+	Result uploadServer(Object testId);
 }
