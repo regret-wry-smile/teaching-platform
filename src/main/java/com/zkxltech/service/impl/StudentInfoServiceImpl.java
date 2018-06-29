@@ -360,6 +360,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         //开始答题前先清空
         RedisMapQuick.clearQuickMap();
         RedisMapQuick.clearStudentInfoMap();
+        RedisMapQuick.getQuickMap().put("studentName", "");
 //            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
 //            Result result = impl.selectStudentInfo(param);
 //            List<Object> item = (List<Object>) result.getItem();
@@ -373,6 +374,25 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         r.setMessage("发送成功");
         return r;
     }
+    @Override
+    public Result stopQuickAnswer() {
+        Result r = new Result();
+        if (thread != null && thread instanceof QuickThread) {
+            QuickThread m = (QuickThread)thread;
+            m.setFLAG(false);
+            log.info("\"停止答题\"线程停止成功");
+        }else{
+            log.error("\"停止答题\"线程停止失败");
+        }
+        r = EquipmentServiceImpl.getInstance().answer_stop();
+        if (r.getRet().equals(Constant.ERROR)) {
+            return r;
+        }
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("停止成功");
+        return r;
+    }
+    
     @Override
     public Result answerStop() {
         Result r = new Result();
@@ -397,4 +417,5 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         r.setMessage("停止失败");
         return r;
     }
+
 }

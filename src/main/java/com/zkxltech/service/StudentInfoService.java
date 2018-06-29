@@ -59,4 +59,5 @@ public interface StudentInfoService {
     Result signInStop();
     Result quickAnswer(Object param);
     Result answerStop();
+    Result stopQuickAnswer();
 }
