@@ -178,7 +178,8 @@ public class RecordServiceImpl implements RecordService{
 	 * @param object
 	 * @return
 	 */
-    public static Result selectRecord(Object object) {
+	@Override
+    public Result selectRecord(Object object) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
         Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
@@ -252,6 +253,7 @@ public class RecordServiceImpl implements RecordService{
                 List<Record> corrects = resultMap.get("2");//得到所有正确的答案总数
                 float b = (float)corrects.size() / questInfos.size();
                 Record resultRocord = new Record();
+                resultRocord.setStudentId((String)key);
                 resultRocord.setStudentName(list.get(0).getStudentName());
                 resultRocord.setResult(StringUtils.formattedDecimalToPercentage(b));
                 resultRocord.setTestName(testPaper.getTestName());
@@ -321,5 +323,11 @@ public class RecordServiceImpl implements RecordService{
 			result.setDetail(IOUtils.getError(e));
 			return result;
 		}
+    }
+
+    @Override
+    public Result deleteRecord(Object object) {
+        Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+        return null;
     }
 }

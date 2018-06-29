@@ -86,6 +86,14 @@ public class RecordFunctionManage extends BrowserFunction{
 			    /*查询客观题答题记录*/
 			    result = recordService.selectObjectiveRecord(params[1]);
 			    break;
+			case "select_record":
+			    /*查询每个学生的试卷答题记录情况所占比*/
+			    result = recordService.selectRecord(params[1]);
+			    break;
+			case "delete_record":
+			    /*批量删除学生的试卷作答记录*/
+			    result = recordService.deleteRecord(params[1]);
+			    break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");
