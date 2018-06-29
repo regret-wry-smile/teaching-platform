@@ -81,16 +81,10 @@ public class AnswerFunctionManage extends BrowserFunction{
 			case "start_class_test_subjective": //开始主答题
                 result = answerInfoService.startSubjectiveAnswer(params[1]);
                 break;
-//			case "stop_class_test_subjective":
-//				//停止客观题答题
-//				result = answerInfoService.stopSubjectiveAnswer();
-//				break;	
-//			case "get_multiple_answer_num":
-//				//获取多选作答人数
-//               return RedisMapMultipleAnswer.getAnswerNum();
-//			case "get_multiple_answer_detail":
-//				//获取多选作答详情
-//               return RedisMapMultipleAnswer.getEveryAnswerInfoBar();
+			case "stop_class_test_subjective":
+				//停止主答题答题
+				result = answerInfoService.stopSubjectiveAnswer();
+				break;	
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");

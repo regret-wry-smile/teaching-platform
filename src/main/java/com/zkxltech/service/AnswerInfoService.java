@@ -28,6 +28,11 @@ public interface AnswerInfoService {
 	 */
 	Result stopObjectiveAnswer();
 	
+	/**
+	 * 停止主观题答题
+	 */
+	Result stopSubjectiveAnswer();
+	
 //	/**
 //	 * 开始记分答题
 //	 */
