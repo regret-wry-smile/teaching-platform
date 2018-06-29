@@ -63,5 +63,8 @@ public class Constant {
     public static final String STATUS_ENABLED = "1";
     /*试卷题目   未启用*/
     public static final String STATUS_NOT_ENABLED = "0";
+    /*答题结果*/
+    public static final String RESULT_TRUE = "1";
     
+    public static final String RESULT_FALSE = "2";
 }

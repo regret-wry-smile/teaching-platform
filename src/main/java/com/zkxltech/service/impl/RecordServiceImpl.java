@@ -195,15 +195,17 @@ public class RecordServiceImpl implements RecordService{
     				String result = (String) answerMapList.get(j).getResult();
     				int questionId = Integer.parseInt((String) answerMapList.get(j).getQuestionId());
     				if (score != null && !"".equals(score) && !"null".equals(score)) {
-    					if ("1".equals(type)) { //客观题得分需要正确
-    						if ("正确".equals(result)) {
+    					if (!Constant.ZHUGUANTI_NUM.equals(type)) { //客观题得分需要正确
+    						if (Constant.RESULT_TRUE.equals(result)) {
     							scoreSum += Double.parseDouble(score);
     						}
-    					}else if ("2".equals(type)) { //主观题得分
-    						scoreSum += Double.parseDouble(score);
+    					}else { //主观题得分
+    					    if (!StringUtils.isBlank(answer)) {
+    					        scoreSum += Double.parseDouble(answer);
+                            }
     					}
     				}
-    				if ("正确".equals(result)) {
+    				if (Constant.RESULT_TRUE.equals(result)) {
     					trueSum ++;
     				}
     				map.put("type", type);
@@ -259,6 +261,7 @@ public class RecordServiceImpl implements RecordService{
             wb.write(out);// 将数据写出去  
             out.flush();// 将数据写出去
         }catch (Exception e) {
+            log.error("", e);
             r.setMessage("导出失败");
             r.setDetail(IOUtils.getError(e));
         }finally {
@@ -349,7 +352,7 @@ public class RecordServiceImpl implements RecordService{
                 List<Record> list = studentRecordMap.get(key);//得到每个学生的所有答题记录
                 //按正确和错误进行分类
                 Map<Object, List<Record>> resultMap = ListUtils.getClassificationMap(list, "result");
-                List<Record> corrects = resultMap.get("2");//得到所有正确的答案总数
+                List<Record> corrects = resultMap.get(Constant.RESULT_TRUE);//得到所有正确的答案总数
                 float b = (float)corrects.size() / questInfos.size();
                 Record resultRocord = new Record();
                 resultRocord.setStudentId((String)key);

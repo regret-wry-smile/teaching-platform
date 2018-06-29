@@ -50,7 +50,7 @@ public class AnswerFunctionManage extends BrowserFunction{
 			    //获取每个答案对应的作答人数
 			    return RedisMapSingleAnswer.getSingleAnswer();
 			case "get_single_answer_studentName":
-                //获取每个答案对应的作答人数
+                //获取每个答案对应的学生名称
                 return RedisMapSingleAnswer.getSingleAnswerStudentName(params[1]);
 			case "start_multiple_answer": //开始多选答题
                 result = answerInfoService.startMultipleAnswer(params[1]);
