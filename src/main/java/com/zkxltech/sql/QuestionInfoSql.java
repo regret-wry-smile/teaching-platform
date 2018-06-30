@@ -60,6 +60,9 @@ public class QuestionInfoSql {
 					}
 					break;
 				case "数字":
+					type = "3";
+					break;
+				case "主观题":
 					type = "4";
 					break;
 				default:

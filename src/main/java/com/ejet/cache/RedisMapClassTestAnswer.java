@@ -178,6 +178,7 @@ public class RedisMapClassTestAnswer {
 			}
 			classTestVos.add(classTestVo);
 		}
+		logger.info("每个人的作答情况："+JSONArray.fromObject(classTestVos).toString());
 		return JSONArray.fromObject(classTestVos).toString();
 	}
 	/**

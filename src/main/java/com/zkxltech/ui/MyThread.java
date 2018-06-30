@@ -158,10 +158,10 @@ class MyThread extends Thread {
 					/*多选*/
 					RedisMapMultipleAnswer.addEveryAnswerInfo(jsonData);
 					break;
-				case "客观题":
+				case "字母题":
 					RedisMapClassTestAnswer.addRedisMapClassTestAnswer1(jsonData);
 					break;
-				case "主观题":
+				case "数字题":
 					RedisMapClassTestAnswer.addRedisMapClassTestAnswer2(jsonData);
 					break;
 				default:

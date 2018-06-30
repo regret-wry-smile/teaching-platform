@@ -76,36 +76,37 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	public Result startObjectiveAnswer(Object testId) {
 		result = new Result();
 		try {
-			if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-				TestMachineThread.startThread(80,"字母题");
-			}else {
-				//获取试卷
-				QuestionInfo questionInfoParm = new QuestionInfo();
-				questionInfoParm.setTestId((String)testId);
-				Result result = new QuestionServiceImpl().selectQuestion(questionInfoParm);	
-				if (Constant.ERROR.equals(result.getRet())) {
-					result.setRet(Constant.ERROR);
-					result.setMessage("查询试卷题目失败!");
-					return result;
+			//获取试卷
+			QuestionInfo questionInfoParm = new QuestionInfo();
+			questionInfoParm.setTestId((String)testId);
+			Result result = new QuestionServiceImpl().selectQuestion(questionInfoParm);	
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setRet(Constant.ERROR);
+				result.setMessage("查询试卷题目失败!");
+				return result;
+			}
+			
+			//筛选主观题
+			List<QuestionInfo> questionInfos = (List<QuestionInfo>)result.getItem();
+			List<QuestionInfo> questionInfos2 = new ArrayList<QuestionInfo>();
+			for (int i = 0; i < questionInfos.size(); i++) {
+				if (!Constant.ZHUGUANTI_NUM.equals(questionInfos.get(i).getQuestionType())) {
+					questionInfos2.add(questionInfos.get(i));
 				}
-				
-				//筛选主观题
-				List<QuestionInfo> questionInfos = (List<QuestionInfo>)result.getItem();
-				List<QuestionInfo> questionInfos2 = new ArrayList<QuestionInfo>();
-				for (int i = 0; i < questionInfos.size(); i++) {
-					if (!Constant.ZHUGUANTI_NUM.equals(questionInfos.get(i).getQuestionType())) {
-						questionInfos2.add(questionInfos.get(i));
-					}
-				}
-				
-				if (StringUtils.isEmptyList(questionInfos2)) {
-					result.setMessage("该试卷没有客观题目！");
-					result.setRet(Constant.ERROR);
-					return result;
-				}
+			}
+			
+			if (StringUtils.isEmptyList(questionInfos2)) {
+				result.setMessage("该试卷没有客观题目！");
+				result.setRet(Constant.ERROR);
+				return result;
+			}
 
-				RedisMapClassTestAnswer.startClassTest(questionInfos2); //缓存初始化
-				
+
+			RedisMapClassTestAnswer.startClassTest(questionInfos2); //缓存初始化
+			
+			if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
+				TestMachineThread.startThread(40,"字母题");
+			}else {
 				List<RequestVo> requestVos = new ArrayList<RequestVo>();
 				for (int i = 0; i < questionInfos2.size(); i++) {
 					RequestVo requestVo = new RequestVo();
@@ -339,35 +340,36 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	public Result startSubjectiveAnswer(Object testId) {
 		result = new Result();
 		try {
+			//获取试卷
+			QuestionInfo questionInfoParm = new QuestionInfo();
+			questionInfoParm.setTestId((String)testId);
+			Result result = new QuestionServiceImpl().selectQuestion(questionInfoParm);	
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setRet(Constant.ERROR);
+				result.setMessage("查询试卷题目失败!");
+				return result;
+			}
+			
+			//筛选客观题
+			List<QuestionInfo> questionInfos = (List<QuestionInfo>)result.getItem();
+			List<QuestionInfo> questionInfos2 = new ArrayList<QuestionInfo>();
+			for (int i = 0; i < questionInfos.size(); i++) {
+				if (Constant.ZHUGUANTI_NUM.equals(questionInfos.get(i).getQuestionType())) {
+					questionInfos2.add(questionInfos.get(i));
+				}
+			}
+			
+			if (StringUtils.isEmptyList(questionInfos2)) {
+				result.setMessage("该试卷没有主观题目！");
+				result.setRet(Constant.ERROR);
+				return result;
+			}
+			
+			RedisMapClassTestAnswer.startClassTest(questionInfos2); //缓存初始化
+			
 			if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-				TestMachineThread.startThread(80,"数字题");
+				TestMachineThread.startThread(5,"数字题");
 			}else {
-				//获取试卷
-				QuestionInfo questionInfoParm = new QuestionInfo();
-				questionInfoParm.setTestId((String)testId);
-				Result result = new QuestionServiceImpl().selectQuestion(questionInfoParm);	
-				if (Constant.ERROR.equals(result.getRet())) {
-					result.setRet(Constant.ERROR);
-					result.setMessage("查询试卷题目失败!");
-					return result;
-				}
-				
-				//筛选客观题
-				List<QuestionInfo> questionInfos = (List<QuestionInfo>)result.getItem();
-				List<QuestionInfo> questionInfos2 = new ArrayList<QuestionInfo>();
-				for (int i = 0; i < questionInfos.size(); i++) {
-					if (Constant.ZHUGUANTI_NUM.equals(questionInfos.get(i).getQuestionType())) {
-						questionInfos2.add(questionInfos.get(i));
-					}
-				}
-				
-				if (StringUtils.isEmptyList(questionInfos2)) {
-					result.setMessage("该试卷没有主观题目！");
-					result.setRet(Constant.ERROR);
-					return result;
-				}
-
-				RedisMapClassTestAnswer.startClassTest(questionInfos2); //缓存初始化
 				
 				List<RequestVo> requestVos = new ArrayList<RequestVo>();
 				for (int i = 0; i < questionInfos2.size(); i++) {
