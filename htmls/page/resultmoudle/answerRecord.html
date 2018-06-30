@@ -21,8 +21,9 @@
 		<link rel="stylesheet" href="../../js/select/style.css" />
 		<link href="../../js/select/font-awesome.min.css" />
 		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
-		<script src="../../js/common.js"></script>
-		<script src="../../js/ui-validate.js"></script>
+		<script src="../../js/common.js"></script><br />
+		<script src="../../js/jquery.nicescroll.min.js"></script>
+		<!--<script src="../../js/ui-validate.js"></script>-->
 		<script src="../../js/vconsole.min.js"></script>
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<script type="text/javascript" src="../../js/app.js" ></script>
@@ -34,13 +35,30 @@
 	</head>
 	<style>
 		.newSelect{
-			width: 1.0rem !important;
+			width: 1.5rem !important;
 		}
 		.newOptions{
-			width: 1.0rem !important;
+			width: 1.5rem !important;
 		}
 	</style>
 	<body class="bg" ng-controller="answerRecordCtrl">
+		<!--确认弹框-->
+			<script type="text/ng-template" id="sureModal.html">
+				<form name="myForm" novalidate="novalidate">
+					<div class="modal-header">
+						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+						<h4 class="modal-title">确认</h4>
+					</div>
+					<div class="modal-body">
+						{{content}}
+					</div>
+					<div class="modal-footer text-center">
+						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
+						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+			
+					</div>
+			</form>
+			</script>
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/set.png" class="ml25" />
@@ -54,64 +72,55 @@
 			</div>
 			<div class="content bgf5 clearfix">		
 				<div class="searchbar">
-					<form class="form-horizontal clearfix" role="form">
-				  	<div class="form-group">
-				  		
-				    <label for="firstname" class="col-sm-2 control-label">班级</label>			    	
-			    	<select class="single" select2 ng-model="setClass.classes" defalutvalue='setClass.classes1' ng-change="changeClass(classId)" list='classList'>
-						<!--<option ng-repeat="item in infoAllNameList track by $index" value="{{item}}">{{item}}</option>-->
+				    <label >班级</label>			    	
+			    	<select class="single" select2 ng-model="setClass.classes" defalutvalue='setClass.classes1' ng-change="changeClass(setClass.classes)" list='classList'>
+						<option ng-repeat="item in classList track by $index" value="{{item}}">{{item.value}}</option>
 					</select>
-					<label for="firstname" class="col-sm-2 control-label">科目</label>
-					<select class="single" select ng-model="chain" defalutvalue='chain1' ng-change="changeChain(chain)" list='infoAllNameList'>
-						<!--<option ng-repeat="item in infoAllNameList track by $index" value="{{item}}">{{item}}</option>-->
+					<label >科目</label>
+					<select class="single" select1 ng-model="setClass.subject" defalutvalue='setClass.subject1' list="subjectlists" ng-change="changeSubject(setClass.subject)">
+				   			<option ng-repeat="subjectitem in subjectlists track by $index" value="{{subjectitem}}">{{subjectitem}}</option>
 					</select>
-					<label for="firstname" class="col-sm-2 control-label">课程</label>
-				    
-			    	<select class="single" select ng-model="chain" defalutvalue='chain1' ng-change="changeChain(chain)" list='infoAllNameList'>
-						<!--<option ng-repeat="item in infoAllNameList track by $index" value="{{item}}">{{item}}</option>-->
-					</select>					
-					<label for="firstname" class="col-sm-2 control-label">试卷</label>
-			    	<select class="single" select ng-model="chain" defalutvalue='chain1' ng-change="changeChain(chain)" list='infoAllNameList'>
-						<!--<option ng-repeat="item in infoAllNameList track by $index" value="{{item}}">{{item}}</option>-->
+					<label>课程</label>
+				    <select class="single" select2 ng-model="setClass.sujectHour" defalutvalue='setClass.sujectHour1' list="classhourList" ng-change="changeClassHour(setClass.sujectHour)">
+			   			<option ng-repeat="houritem in classhourList track by $index" value="{{houritem}}">{{houritem.value}}</option>
+					</select>		
+					<label >试卷</label>
+			    	<select class="single" select2 ng-model="setClass.paper" defalutvalue='setClass.paper1' list='paperList' ng-change="changePaper(setClass.paper)">
+						<option ng-repeat="paperitem in paperList track by $index" value="{{paperitem}}">{{paperitem.value}}</option>
 					</select>
-					</div>
-				</form>
+					<a href="javascript:;" class="del">删除</a>
+					<a href="javascript:;" class="edit">导出</a>
 				</div>
-					
-				</div>
-			  		<div class="col-main" id="testlist" style="overflow-x: auto; overflow-y: auto; height:1.5rem; width:100%;padding-right: 0.05rem;">
+				<div class="col-main" id="testlist" style="overflow-x: auto; overflow-y: auto; height:1.5rem; width:100%;padding-right: 0.05rem;">
 					<table class="table table-stripe subject">
 						<thead>
 							<tr >
 								<th class="wd20">序号</th>
-								<th class="wd20">题号</th>
-								<th class="wd130">题目内容</th>
-								<th class="wd60">答案类型</th>
-								<th class="wd20">答案</th>
+								<th class="wd20">姓名</th>
+								<th class="wd130">试卷名称</th>
+								<th class="wd60">正确率</th>
+								<th class="wd20">时间</th>
+								<th class="wd80" class="pr1">全选
+								<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="item in subjectList track by $index">
+							<tr ng-repeat="item in recordList track by $index">
 								<td>{{$index+1}}</td>
-								<td>{{item.id}}</td>
-								<td>{{item.question}}</td>
-								<td>{{item.questionType}}</td>
-								<td ng-if="item.questionType=='3'">{{item.trueAnswer=='T'?'√':'×'}}</td>	
-								<td ng-if="item.questionType!='3'">{{item.trueAnswer}}</td>		
+								<td>{{item.studentName}}</td>
+								<td>{{item.testName}}</td>
+								<td>{{item.result}}</td>
+								<td>{{item.time}}</td>	
+								<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
 							</tr>
 							</tbody>
 					</table>
 			  	</div>
-			  	<div class="opbtn clearfix pt10">
-				  	<a href="javascript:;"  ng-click="addSubject()">新增</a>
-			  	</div>
-			  	<div class="operatebtn pt10 clearfix">			  		
-			  		<button class="btn btn-primary btn-lg" ng-click="savePaper()" ng-disabled="!myForm.$valid">保存</button>
-			  	</div>
+				</div>
 			  </div>
 	</body>
 </html>
-<script src="../../js/jquery.nicescroll.min.js"></script>
+
 <script>
 	 $(document).ready(function() { 
 	var nice = $("html").niceScroll();  // The document page (body)

@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.core.util.StringUtils;
+import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.StudentInfo;
@@ -75,6 +76,7 @@ public class RedisMapSingleAnswer {
                List<String> list = singleAnswerStudentNameMap.get(result);
                if (list == null) {
                    list = new ArrayList<>();
+                   singleAnswerStudentNameMap.put(result, list);
                }
                list.add(studentInfo.getStudentName());
             }
@@ -88,7 +90,7 @@ public class RedisMapSingleAnswer {
                 singleAnswerNumMap.put(JUDGE_TRUE, singleAnswerNumMap.get(JUDGE_TRUE)+1);
                 break;
             case JUDGE_FALSE:
-                singleAnswerNumMap.put(JUDGE_FALSE, singleAnswerNumMap.get(CHAR_B)+1);
+                singleAnswerNumMap.put(JUDGE_FALSE, singleAnswerNumMap.get(JUDGE_FALSE)+1);
                 break;
         }
     }
@@ -104,7 +106,7 @@ public class RedisMapSingleAnswer {
                 singleAnswerNumMap.put(NUMBER_3, singleAnswerNumMap.get(NUMBER_3)+1);
                 break;
             case NUMBER_4:
-                singleAnswerNumMap.put(NUMBER_4, singleAnswerNumMap.get(NUMBER_4));
+                singleAnswerNumMap.put(NUMBER_4, singleAnswerNumMap.get(NUMBER_4)+1);
                 break;
             case NUMBER_5:
                 singleAnswerNumMap.put(NUMBER_5, singleAnswerNumMap.get(NUMBER_5)+1);
@@ -155,11 +157,13 @@ public class RedisMapSingleAnswer {
         JSONObject jo = JSONObject.fromObject(params);
         if (!jo.containsKey("answer")) {
             logger.error("缺少参数答案 :\"answer\"");
-            return new ArrayList<>().toString();   
+            return JSONArray.fromObject(new ArrayList<>()).toString();   
         }
-        String answer = jo.getString("answer");
-        List<String> list = singleAnswerStudentNameMap.get(answer);
-        return list.toString();
+        List<String> list = singleAnswerStudentNameMap.get(jo.getString("answer"));
+        if (ListUtils.isEmpty(list)) {
+            return JSONArray.fromObject(new ArrayList<>()).toString();
+        }
+        return JSONArray.fromObject(list).toString();
     }
     public static Map<String, StudentInfo> getStudentInfoMap() {
         return studentInfoMap;

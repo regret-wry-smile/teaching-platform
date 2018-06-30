@@ -73,6 +73,23 @@
 					</div>
 				</form>
 			</script>
+			<!--确认弹框-->
+			<script type="text/ng-template" id="sureModal.html">
+				<form name="myForm" novalidate="novalidate">
+					<div class="modal-header">
+						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+						<h4 class="modal-title">确认</h4>
+					</div>
+					<div class="modal-body">
+						{{content}}
+					</div>
+					<div class="modal-footer text-center">
+						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
+						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+			
+					</div>
+			</form>
+			</script>
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/set.png" class="ml25" />
@@ -102,6 +119,9 @@
 				   			<option ng-repeat="houritem in classhourList track by $index" value="{{houritem}}">{{houritem.value}}</option>
 						</select>			
 					</p>
+					<a href="javascript:;" ng-click="delClassHour()">
+					<img src="../../image/delbtn.png" class="delbtn" />
+					</a>
 					<a href="javascript:;" ng-click="addClassHour()">
 					<img src="../../image/answer.png" class="editbtn" />
 					</a>

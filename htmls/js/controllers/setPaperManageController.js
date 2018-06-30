@@ -87,7 +87,8 @@ app.controller('setPaperManageCtrl', function($rootScope,$scope,$modal,toastr,$w
 		});
 		modalInstance.result.then(function(info) {
 			var param={
-				id:item.id
+				id:item.id,
+				testId:item.testId
 			}
 			console.log(JSON.stringify(param))
 			param=JSON.stringify(param)			

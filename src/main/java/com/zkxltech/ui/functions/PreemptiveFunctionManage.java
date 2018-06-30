@@ -38,6 +38,9 @@ public class PreemptiveFunctionManage extends BrowserFunction{
 			    return RedisMapQuick.getQuickAnswer();
 			case "set_flag_start_quick":
 			    return RedisMapQuick.setFlagStartQuick();
+			case "stop_quick_answer":
+			    result = service.stopQuickAnswer();
+			    break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");

@@ -48,7 +48,7 @@ public class RedisMapQuick {
         }
     }
     public static String getQuickAnswer(){
-        return quickMap.toString();
+        return JSONObject.fromObject(quickMap).toString();
     }
     public static Map<String, String> getQuickMap() {
         return quickMap;
@@ -68,11 +68,11 @@ public class RedisMapQuick {
     public static void clearStudentInfoMap() {
         studentInfoMap.clear();
     }
-    public static Result setFlagStartQuick(){
+    public static String setFlagStartQuick(){
         flag = true;
         Result r = new Result();
         r.setRet(Constant.SUCCESS);
         r.setMessage("设置抢答成功");
-        return r;
+        return JSONObject.fromObject(r).toString();
     }
 }

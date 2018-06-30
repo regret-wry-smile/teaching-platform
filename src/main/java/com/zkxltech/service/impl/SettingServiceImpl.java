@@ -1,5 +1,8 @@
 package com.zkxltech.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
@@ -14,6 +17,7 @@ import com.zkxlteck.scdll.ScDll;
 import net.sf.json.JSONObject;
 
 public class SettingServiceImpl implements SettingService{
+    private static final Logger log = LoggerFactory.getLogger(SettingServiceImpl.class);
 	private Result result;
 	
 	@Override
@@ -56,9 +60,10 @@ public class SettingServiceImpl implements SettingService{
 			//发送功率
 			Result get_device_info = EquipmentServiceImpl.getInstance().get_device_info();
 			Object item = get_device_info.getItem();
-			if (item == null) {
+			if (StringUtils.isEmpty(item)) {
                 result.setRet(Constant.ERROR);
                 result.setMessage("设备故障,请重启");
+                log.error("获取设备信息指令发送失败");
                 return result;
             }
 			JSONObject jo = JSONObject.fromObject(item);
@@ -75,11 +80,13 @@ public class SettingServiceImpl implements SettingService{
 			result.setItem(setting);
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("读取成功！");
+			log.info("读取成功");
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
 			result.setMessage("读取失败!");
 			result.setDetail(IOUtils.getError(e));
+			log.error("读取异常", e);
 			return result;
 		}
 	}
@@ -117,6 +124,7 @@ public class SettingServiceImpl implements SettingService{
 			int set_tx_power = ScDll.intance.set_tx_power(tx_power);
 			if (set_tx_power == Constant.SEND_ERROR) {
 			    result.setMessage("设置功率失败");
+			    log.error("设置功率失败");
 			    return result;
             }
 			result.setRet(Constant.SUCCESS);
@@ -125,6 +133,7 @@ public class SettingServiceImpl implements SettingService{
 		} catch (Exception e) {
 			result.setMessage("设置失败!");
 			result.setDetail(IOUtils.getError(e));
+			log.error("设置信息和功率失败", e);
 			return result;
 		}
 	}
@@ -164,8 +173,9 @@ public class SettingServiceImpl implements SettingService{
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("设置失败!");
+			result.setMessage("设置默认值失败!");
 			result.setDetail(IOUtils.getError(e));
+			log.error("设置默认值失败!",e);
 			return result;
 		}
 	}
