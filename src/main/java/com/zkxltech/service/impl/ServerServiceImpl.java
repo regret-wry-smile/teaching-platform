@@ -88,19 +88,28 @@ public class ServerServiceImpl implements ServerService{
 				result.setMessage("从服务器中获取标准答案失败！");
 				return result;
 			}else {
-				testPaperSql.deleteTestPaper(testId,subjectName);//根据试卷id和科目删除原来的试卷
-
+				result = testPaperSql.deleteTestPaper(testId,subjectName);//根据试卷id和科目删除原来的试卷
+				if (Constant.ERROR.equals(result.getRet())) {
+					result.setMessage("删除原来的试卷失败!");
+					return result;
+				}
 				TestPaper testPaper = new TestPaper();
 				testPaper.setTestId(testId);
 				testPaper.setAtype("1");
 				testPaper.setSubject(subjectName);
 				testPaper.setTestName(responseTestPaper.getXm());
-				testPaperSql.insertTestPaper(testPaper);
-				
+				result = testPaperSql.insertTestPaper(testPaper);
+				if (Constant.ERROR.equals(result.getRet())) {
+					result.setMessage("插入试卷信息失败!");
+					return result;
+				}
 				QuestionInfo questionInfo = new QuestionInfo();
 				questionInfo.setTestId(testId);
-				questionInfoSql.deleteQuestionInfo(questionInfo); //删除原来的题目
-				
+				result = questionInfoSql.deleteQuestionInfo(questionInfo); //删除原来的题目
+				if (Constant.ERROR.equals(result.getRet())) {
+					result.setMessage("删除原来的题目失败!");
+					return result;
+				}
 				result = testPaperSql.saveTitlebyBatch(responseTestPaper.getXmid(), answersInfo);
 				if (Constant.ERROR.equals(result.getRet())) {
 					result.setMessage("保存服务器中的题目信息失败！");

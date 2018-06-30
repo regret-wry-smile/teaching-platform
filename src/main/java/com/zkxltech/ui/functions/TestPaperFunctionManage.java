@@ -2,7 +2,10 @@ package com.zkxltech.ui.functions;
 
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.cache.RedisMapPaper;
 import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.constant.Constant;
@@ -25,7 +28,7 @@ import net.sf.json.JSONObject;
  *	import_paper 导入试卷
  */
 public class TestPaperFunctionManage extends BrowserFunction{
-	
+	private static final Logger logger = LoggerFactory.getLogger(TestPaperFunctionManage.class);
 	private TestPaperService testPaperService = new TestPaperServiceImpl();
 	private QuestionService questionService = new QuestionServiceImpl();
 	private ServerService serverService = new ServerServiceImpl();
@@ -153,6 +156,7 @@ public class TestPaperFunctionManage extends BrowserFunction{
 			result.setRet(Constant.ERROR);
 			result.setMessage("参数不能为空！");
 		}
+		logger.info("返回给页面的数据："+JSONObject.fromObject(result).toString());
 		return JSONObject.fromObject(result).toString();
 	}
 }

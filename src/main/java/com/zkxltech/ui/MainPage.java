@@ -230,22 +230,22 @@ public class MainPage extends Dialog {
 		});
 		changeMin.addMouseTrackListener(SwtTools.showHand(changeMin));
 		
-		if(isTest){
-			//FIXME /*测试部分*/
-			CLabel refresh = new CLabel(shell, SWT.NONE);
-			FormData fd_refresh = new FormData();
-			fd_refresh.left = new FormAttachment(50);
-			fd_refresh.top = new FormAttachment(50);
-			refresh.setLayoutData(fd_refresh);
-			refresh.setText("刷新");
-			//FIXME /*测试部分*/
-			refresh.addMouseListener(new MouseAdapter() {
-				 @Override
-				 public void mouseDown(MouseEvent e) {
-					 PageConstant.browser.refresh();
-				 }
-			});
-		}
+//		if(isTest){
+//			//FIXME /*测试部分*/
+//			CLabel refresh = new CLabel(shell, SWT.NONE);
+//			FormData fd_refresh = new FormData();
+//			fd_refresh.left = new FormAttachment(50);
+//			fd_refresh.top = new FormAttachment(50);
+//			refresh.setLayoutData(fd_refresh);
+//			refresh.setText("刷新");
+//			//FIXME /*测试部分*/
+//			refresh.addMouseListener(new MouseAdapter() {
+//				 @Override
+//				 public void mouseDown(MouseEvent e) {
+//					 PageConstant.browser.refresh();
+//				 }
+//			});
+//		}
 		
 		
 		Composite composite = new Composite(shell, SWT.NONE);
@@ -267,26 +267,40 @@ public class MainPage extends Dialog {
 		fd_browser.left = new FormAttachment(0);
 		PageConstant.browser.setLayoutData(fd_browser);
 		
-		if (isTest) {
-			PageConstant.browser.setUrl(PageConstant.TEST_PAGE_URL);
-		}else {
-			switch (pageType) {
-			case "1":
-				if (ClassHourServiceImpl.isStartClass()) {
-					PageConstant.browser.setUrl(PageConstant.PAGE_ANSWER_URL_START);
-				}else {
-					PageConstant.browser.setUrl(PageConstant.PAGE_ANSWER_URL_NO_START);
-				}
-				break;
-			case "2":
-				PageConstant.browser.setUrl(PageConstant.PAGE_SET_URL);
-				break;
-			case "3":
-				PageConstant.browser.setUrl(PageConstant.PAGE_RECORD_URL);
-				break;
+//		if (isTest) {
+//			PageConstant.browser.setUrl(PageConstant.TEST_PAGE_URL);
+//		}else {
+//			switch (pageType) {
+//			case "1":
+//				if (ClassHourServiceImpl.isStartClass()) {
+//					PageConstant.browser.setUrl(PageConstant.PAGE_ANSWER_URL_START);
+//				}else {
+//					PageConstant.browser.setUrl(PageConstant.PAGE_ANSWER_URL_NO_START);
+//				}
+//				break;
+//			case "2":
+//				PageConstant.browser.setUrl(PageConstant.PAGE_SET_URL);
+//				break;
+//			case "3":
+//				PageConstant.browser.setUrl(PageConstant.PAGE_RECORD_URL);
+//				break;
+//			}
+//		}
+		switch (pageType) {
+		case "1":
+			if (ClassHourServiceImpl.isStartClass()) {
+				PageConstant.browser.setUrl(PageConstant.PAGE_ANSWER_URL_START);
+			}else {
+				PageConstant.browser.setUrl(PageConstant.PAGE_ANSWER_URL_NO_START);
 			}
+			break;
+		case "2":
+			PageConstant.browser.setUrl(PageConstant.PAGE_SET_URL);
+			break;
+		case "3":
+			PageConstant.browser.setUrl(PageConstant.PAGE_RECORD_URL);
+			break;
 		}
-		
 		
 		/* 创建java调用页面的方法 */
 		BrowserManager.setBrower(PageConstant.browser);

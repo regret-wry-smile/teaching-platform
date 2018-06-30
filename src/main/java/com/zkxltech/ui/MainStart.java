@@ -21,6 +21,8 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -284,6 +286,8 @@ public class MainStart {
 
 		// //显示手状
 		panel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		
+		frame.repaint();
 	
 	}
 	
@@ -305,6 +309,7 @@ public class MainStart {
 			}
 		});
 		
+		 
 		//关闭
 		CLabel cLabel01 = new CLabel(shell, SWT.NONE);
 		cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
@@ -324,6 +329,29 @@ public class MainStart {
 				}
 			}
 		});
+		
+//		Region allRegion = new Region();      
+//		allRegion.add(0, 0, shell.getSize().x, shell.getSize().y);   
+//		
+//		 Region region = new Region();      
+//	        final ImageData imageData = new ImageData("E:/git/teaching_platform/src/main/java/com/zkxltech/image/粘贴图片.png");      
+//	        if (imageData.alphaData != null) {      
+//	            org.eclipse.swt.graphics.Rectangle pixel = new org.eclipse.swt.graphics.Rectangle(0, 0, 1, 1);      
+//	           
+//	            for (int y = 0; y < imageData.height; y++) {      
+//	                for (int x = 0; x < imageData.width; x++) {
+//	                	System.out.println(imageData.getAlpha(x, y));
+//	                    if (imageData.getAlpha(x, y) != 255 ) {      
+//	                        pixel.x = imageData.x + x ;       
+//	                        pixel.y = imageData.y + y ;    
+//	                        region.add(pixel);
+//	                    }      
+//	                 }      
+//	             }      
+//	         }      
+//	        allRegion.subtract(region); 
+//	        shell.setRegion(allRegion);
+		
 		//答题
 		CLabel cLabel02 = new CLabel(shell, SWT.NONE);
 		cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
