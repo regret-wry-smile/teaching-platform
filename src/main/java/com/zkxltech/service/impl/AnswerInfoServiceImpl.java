@@ -8,6 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ejet.cache.BrowserManager;
 import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.cache.RedisMapSingleAnswer;
@@ -147,33 +148,38 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 
 	@Override
 	public Result stopObjectiveAnswer(Object testId) {
+
 		result = new Result();
-		try {
-			if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-	        	 TestMachineThread.stopThread();
-			}else {
-				//FIXME 调用硬件停止指令
-//				result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
+			        	 TestMachineThread.stopThread();
+					}else {
+						//FIXME 调用硬件停止指令
+//						result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
+					}
+					//删除原来的记录
+					List<Record> records = RedisMapClassTestAnswer.getObjectiveRecordList();
+					Record recordParam = new Record();
+					recordParam.setClassId(Global.getClassId());
+					recordParam.setSubject(Global.getClassHour().getSubjectName());
+					recordParam.setTestId((String)testId);
+					recordSql.deleteRecord(recordParam);
+					
+					result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
+					if (Constant.ERROR.equals(result.getRet())) {
+						BrowserManager.showMessage(false, "保存作答记录失败！");
+					}
+//					result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
+				} catch (Exception e) {
+					BrowserManager.showMessage(false, "保存作答记录失败！");
+				}finally {
+					BrowserManager.removeLoading();
+				}
 			}
-			//删除原来的记录
-			List<Record> records = RedisMapClassTestAnswer.getObjectiveRecordList();
-			Record recordParam = new Record();
-			recordParam.setClassId(Global.getClassId());
-			recordParam.setSubject(Global.getClassHour().getSubjectName());
-			recordParam.setTestId((String)testId);
-			recordSql.deleteRecord(recordParam);
-			
-			result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
-			if (Constant.ERROR.equals(result.getRet())) {
-				result.setMessage("保存作答记录失败！");
-				return result;
-			}
-//			result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("保存作答记录失败！");
-			return result;
-		}
+		}).start();
 		return result;
 	}
 	
