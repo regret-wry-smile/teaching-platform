@@ -377,14 +377,16 @@ public class EquipmentServiceImpl implements EquipmentService{
 		}
 		strBuilder = new StringBuilder(strBuilder.substring(0, strBuilder.lastIndexOf(",")));
 //		System.out.println(strBuilder);
-        int answer_start = ScDll.intance.answer_start(1,strBuilder.toString());
-        if (answer_start == Constant.SEND_SUCCESS) {
+        //int answer_start = ScDll.intance.answer_start(1,strBuilder.toString());
+        r = answer_start(1, strBuilder.toString());
+        if ( r.getRet()== Constant.SUCCESS) {
             thread = new MultipleAnswerThread(answerType);
             thread.start();
             r.setRet(Constant.SUCCESS);
             r.setMessage("发送成功");
             return r;
         }
+        
         r.setMessage("发送失败");
         return r;
 	}
@@ -394,6 +396,11 @@ public class EquipmentServiceImpl implements EquipmentService{
         Result r = new Result();
         int answer_stop = ScDll.intance.answer_stop();
         if (answer_stop == Constant.SEND_ERROR) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                log.error("线程休眠失败[尝试第二次发送停止答题指令]");
+            }
             int answer_stop2 = ScDll.intance.answer_stop();
             if (answer_stop2 == Constant.SEND_ERROR) {
                 r.setRet(Constant.ERROR);
@@ -412,6 +419,11 @@ public class EquipmentServiceImpl implements EquipmentService{
         r.setRet(Constant.ERROR);
         int answer_start = ScDll.intance.answer_start(is_quick_response, answer_str);
         if (answer_start == Constant.SEND_ERROR) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                log.error("线程休眠失败[尝试第二次发送答题指令]");
+            }
             int answer_start2 = ScDll.intance.answer_start(is_quick_response, answer_str);
             if (answer_start2 == Constant.SEND_ERROR) {
                 log.error("开始答题指令发送失败");

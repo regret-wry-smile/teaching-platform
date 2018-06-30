@@ -235,23 +235,16 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
             map.put(studentInfo.getIclickerId(), studentInfo);
         }
         String type = answer.getType();
-        int status = -1;
         switch (type) {
             case Constant.ANSWER_CHAR_TYPE:
-                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
-                if (status == Constant.SEND_ERROR) {
-                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_CHAR);
-                }
+                r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_CHAR);
                 RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_A, 0);
                 RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_B, 0);
                 RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_C, 0);
                 RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_D, 0);
                 break;
             case Constant.ANSWER_NUMBER_TYPE:
-                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
-                if (status == Constant.SEND_ERROR) {
-                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
-                }
+                r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
                 RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_1, 0);
                 RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_2, 0);
                 RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_3, 0);
@@ -263,10 +256,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
                 RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_9, 0);
                 break;
             case Constant.ANSWER_JUDGE_TYPE:
-                status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
-                if (status == Constant.SEND_ERROR) {
-                    status = ScDll.intance.answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
-                }
+                r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
                 RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_TRUE, 0);
                 RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_FALSE, 0);
                 break;
@@ -274,8 +264,9 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
                 r.setMessage("参数错误");
                 return r;
         }
-        if (status == Constant.SEND_ERROR) {
+        if (r.getRet() == Constant.ERROR) {
             r.setMessage("指令发送失败");
+            log.error("单题单选指令发送失败");
             return r;
         }
         
