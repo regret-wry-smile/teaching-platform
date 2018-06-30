@@ -90,7 +90,7 @@ public class RedisMapSingleAnswer {
                 singleAnswerNumMap.put(JUDGE_TRUE, singleAnswerNumMap.get(JUDGE_TRUE)+1);
                 break;
             case JUDGE_FALSE:
-                singleAnswerNumMap.put(JUDGE_FALSE, singleAnswerNumMap.get(CHAR_B)+1);
+                singleAnswerNumMap.put(JUDGE_FALSE, singleAnswerNumMap.get(JUDGE_FALSE)+1);
                 break;
         }
     }
@@ -106,7 +106,7 @@ public class RedisMapSingleAnswer {
                 singleAnswerNumMap.put(NUMBER_3, singleAnswerNumMap.get(NUMBER_3)+1);
                 break;
             case NUMBER_4:
-                singleAnswerNumMap.put(NUMBER_4, singleAnswerNumMap.get(NUMBER_4));
+                singleAnswerNumMap.put(NUMBER_4, singleAnswerNumMap.get(NUMBER_4)+1);
                 break;
             case NUMBER_5:
                 singleAnswerNumMap.put(NUMBER_5, singleAnswerNumMap.get(NUMBER_5)+1);
