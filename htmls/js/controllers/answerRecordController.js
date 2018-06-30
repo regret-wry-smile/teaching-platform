@@ -136,6 +136,9 @@ app.controller('answerRecordCtrl', function($scope, toastr) {
 		angular.forEach($scope.classList,function(i){
 			if($scope.setClass.classes==i.key){
 				$scope.classesobject=i;
+			 	$scope.classhourList=[];
+				$scope.setClass.sujectHour="";
+				$scope.sujectHourobject=="";
 				_selectClassHour();
 				
 			}
@@ -146,6 +149,8 @@ app.controller('answerRecordCtrl', function($scope, toastr) {
 	$scope.changeSubject=function(subject){
 		$scope.setClass.subject	=subject;
 		$scope.classhourList=[];
+		$scope.setClass.sujectHour="";
+		$scope.sujectHourobject=="";
 		_selectClassHour();
 	}
 	
@@ -156,6 +161,8 @@ app.controller('answerRecordCtrl', function($scope, toastr) {
 			if($scope.setClass.sujectHour==i.key){
 				$scope.sujectHourobject=i;
 				$scope.paperList=[];
+				$scope.setClass.paper='';
+				$scope.paperobject='';
 				_selectPaper();
 			}
 		})

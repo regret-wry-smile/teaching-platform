@@ -155,10 +155,10 @@
 						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
 						<h4 class="modal-title">{{title}}</h4>
 					</div>
-					<div class="modal-body">						
-						<div class="form-group">
+					<div class="modal-body">
+						<div class="form-group"  >
 					  	<label for="firstname" class="col-sm-3 control-label">学号</label>
-					    <div class="col-sm-8">
+					    <div class="col-sm-8" ng-class="{warning:((myForm.studentId.$error.required||myForm.studentId.$error.pattern) && errorState)}">
 				    	<input type="number" autocomplete="off" name="studentId" id="" value=""  class="form-control" ng-model="student.studentId" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurStunum()"/>					
 						</div>
 						<span ng-show="myForm.studentId.$invalid" class="warning">*</span>
@@ -179,7 +179,7 @@
 						</div>
 					</div>
 					<div class="modal-footer text-center">
-						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
+						<button type="button" class="btn btn-primary" ng-click="ok(myForm.$valid)" >确定</button><!--ng-disabled="!myForm.$valid"-->
 						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
 		
 					</div>

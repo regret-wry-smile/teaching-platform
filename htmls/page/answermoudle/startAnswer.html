@@ -44,10 +44,10 @@
 			right: 0;
 		}
 		.newSelect{
-			width:4.0rem !important;
+			width:3.9rem !important;
 		}
 		.newOptions{
-			width:4.0rem !important;
+			width:3.9rem !important;
 		}
 	</style>
 	<body class="bg clearfix" ng-controller="setClassCtrl" >
@@ -100,24 +100,28 @@
 				</div>-->
 			</div>
 			<div class="content  clearfix">
+				<form name="myForm" novalidate>
 				<div class="modboxs bgfff">
 					<p class="text clearfix">
 						<label class="labelwd pull-left">班级</label>
-						<select class="single" select2 ng-model="setClass.classes" defalutvalue='setClass.classes1' list="classList" ng-change="changeClass(setClass.classes)" >
+						<select class="single" select2 ng-model="setClass.classes" name="classes" defalutvalue='setClass.classes1' list="classList" ng-change="changeClass(setClass.classes)" required>
 				   			<option ng-repeat="classitem in classList track by $index" value="{{classitem}}">{{classitem.value}}</option>
-						</select>						
+						</select>
+						<span ng-show="myForm.classes.$invalid" class="warning">*</span>
 					</p>
 					<p class="text clearfix">
 						<label class="labelwd pull-left">科目</label>
-						<select class="single" select1 ng-model="setClass.subject" defalutvalue='setClass.subject1' list="subjectlists" ng-change="changeSubject(setClass.subject)" >
+						<select class="single" select1 ng-model="setClass.subject" name="subject" defalutvalue='setClass.subject1' list="subjectlists" ng-change="changeSubject(setClass.subject)" required>
 				   			<option ng-repeat="subjectitem in subjectlists track by $index" value="{{subjectitem}}">{{subjectitem}}</option>
 						</select>
+						<span ng-show="myForm.subject.$invalid" class="warning">*</span>
 					</p>
 					<p class="text clearfix">
-						<label class="labelwd pull-left">课程名</label>
-						<select class="single" select2 ng-model="setClass.sujectName" defalutvalue='setClass.sujectName1' list="classhourList" ng-change="changeClassHour(setClass.sujectName)" >
+						<label class="labelwd pull-left">课程名</label>{{setClass.sujectName}}{{myForm.sujectName.$invalid}}
+						<select class="single" select2 ng-model="setClass.sujectName" name="sujectName" defalutvalue='setClass.sujectName1' list="classhourList" ng-change="changeClassHour(setClass.sujectName)" required>
 				   			<option ng-repeat="houritem in classhourList track by $index" value="{{houritem}}">{{houritem.value}}</option>
-						</select>			
+						</select>	
+						<span ng-show="myForm.sujectName.$invalid" class="warning">*</span>
 					</p>
 					<a href="javascript:;" ng-click="delClassHour()">
 					<img src="../../image/delbtn.png" class="delbtn" />
@@ -130,8 +134,9 @@
 				  
 			</div>
 			<div class="operatebtn mt20 text-center clearfix">
-		  		<button class="btn savebtn mr5" ng-click="startClass()">开始上课</button>
+		  		<button class="btn savebtn mr5" ng-click="startClass()" ng-disabled="!myForm.$valid">开始上课</button>
 		  	</div>
+		  	</form>
 			<div ng-spinner-loader class="loading">
 				<div class="spinner">
 					<div class="bounce1"></div>

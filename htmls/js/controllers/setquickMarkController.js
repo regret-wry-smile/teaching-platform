@@ -123,7 +123,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		        	color:'#fff'
 		        }
 		    },
-		  	toolbox: {
+		  	/*toolbox: {
 		        show : true,
 		        feature : {
 		            mark : {show: true},
@@ -132,7 +132,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		            restore : {show: true},
 		            saveAsImage : {show: true}
 		        }
-		    },
+		    },*/
 		    grid: {
 		        left: '3%',
 		        right: '4%',

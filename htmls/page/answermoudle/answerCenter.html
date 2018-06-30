@@ -41,14 +41,16 @@
 		}
 	</style>
 	<body class="bg clearfix" ng-controller="setClassCtrl">
+		<div ng-show="!isSign" >
 			<div class="header clearfix">
 				<div class="pull-left">
-					<button class="btn btnfff" class="mr25">{{curclassName}}</button>
+					<a class="btn btnfff" class="mr25">{{curclassName}}</a>
 				</div>
 				<div class="pull-right">
-					<a href="../../page/answermoudle/userAttend.html" ng-click="signIn()">
-					<button class="btn whitebtn mr25" >
-					</button></a>
+					<!--<a href="../../page/answermoudle/userAttend.html" ng-click="signIn()">-->
+					<button class="btn whitebtn mr25"  ng-click="signIn()">
+					</button>
+					<!--</a>-->
 				</div>				
 			</div>
 			<div class="content text-center">
@@ -83,13 +85,29 @@
 		  		</li>
 		  	</ul>
 		  	</div>
-			<div ng-spinner-loader class="loading">
-				<div class="spinner">
-					<div class="bounce1"></div>
-					<div class="bounce2"></div>
-					<div class="bounce3"></div>
+		  	</div>
+		<div ng-show="isSign" ng-controller="userAttendCtrl">
+			<div class="header clearfix">
+				<div class="pull-left">
+					<img src="../../image/menu.png" class="ml25 pt20" />
+					<span class="mr10">人员列表</span>
+				</div>
+				<div class="pull-right">
+					<a href="javascript:;" ng-click="returnPage()">
+					<img src="../../image/return.png" />
+					<!--<img src="../../image/return.png" ng-click="returnPage()"/>-->
+					</a>
 				</div>
 			</div>
+			<div class="content clearfix" style="margin: 0;padding: 0;position: relative;">
+				<div class="modboxs clearfix " style="margin: 0.0rem 0.05rem;padding: 0;position: absolute;left: 0.18rem;">
+					<div class="box" ng-repeat="item in studentAttendList track by $index" ng-class="{'YES':'green','NO':'' }[item.status]">
+						{{item.studentName}}
+					</div>
+			  	</div>
+			</div>
+			<div id="refresAttendance" ng-click="refresAttendance()" style="display:none"></div>
+		</div>
 	</body>
 
 </html>
