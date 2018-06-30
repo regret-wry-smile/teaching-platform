@@ -115,6 +115,7 @@ public class BrowserManager {
 				@Override
 				public void run() {
 					boolean  doRet = b.execute("var message = '正在导入';document.getElementById('showLoading').click();");
+					log.info("弹出正在加载页面："+doRet);
 				}
 			});
 				
@@ -129,6 +130,7 @@ public class BrowserManager {
 				@Override
 				public void run() {
 					boolean  doRet = b.execute("document.getElementById('removeLoading').click();");
+					log.info("移除正在加载页面："+doRet);
 				}
 			});
 				

@@ -3,11 +3,12 @@ package com.zkxltech.sql;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.QuestionInfo;
 import com.zkxltech.domain.Result;
-import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.jdbc.DBHelper;
 import com.zkxltech.ui.util.StringUtils;
 
@@ -19,6 +20,10 @@ public class QuestionInfoSql {
 	/*批量插入题目*/
 	public Result importQuestion(List<List<Object>> rowList){
 		Result result = new Result();
+		result = verifyQuetion(rowList); //校验模板格式
+		if (Constant.ERROR.equals(result.getRet())) {
+			return result;
+		}
 		List<String> sqls = new ArrayList<String>();
 		String sql = "";
 		String testId = "";
@@ -53,10 +58,6 @@ public class QuestionInfoSql {
 						trueAnswer = "T";
 					}else if("错".equals(trueAnswer)){
 						trueAnswer = "F";
-					}else {
-						result.setRet(Constant.ERROR);
-						result.setMessage((i+2)+"行正确答案格式有误!");
-						return result;
 					}
 					break;
 				case "数字":
@@ -67,7 +68,7 @@ public class QuestionInfoSql {
 					break;
 				default:
 					result.setRet(Constant.ERROR);
-					result.setMessage((i+2)+"行题目类型有误!");
+					result.setMessage((i+1)+"行题目类型有误!");
 					return result;
 				}
 				//插入题目信息
@@ -78,6 +79,207 @@ public class QuestionInfoSql {
 		}
 		return DBHelper.onUpdateByGroup(sqls);
 	}
+	
+	
+	public Result verifyQuetion(List<List<Object>> rowList){
+		Result result = new Result();
+		int rows = rowList.size();
+		if (rows < 2) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("题目信息为空！");
+			return result;
+		}
+		for (int i = 0; i < rowList.size(); i++) {
+			if(i == 0){
+				if (rowList.get(i).size() != 4) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("第"+(i+1)+"行试卷信息格式错误！");
+					return result;
+				}
+			}else{
+				String range = "";
+				//0单选；1多选；2判断；3数字；4主观题
+				String type = (String) rowList.get(i).get(2);
+				String trueAnswer = (String) rowList.get(i).get(3);
+				switch (type) {
+				case "单选":
+					if(rowList.get(i).size() != 5){
+						result.setRet(Constant.ERROR);
+						result.setMessage("第"+(i+1)+"行列数格式错误！");
+						return result;
+					}
+					range = (String) rowList.get(i).get(4);
+					if (!verifySingleRange(range)) {
+						result.setRet(Constant.ERROR);
+						result.setMessage("第"+(i+1)+"行答案范围格式错误！");
+						return result;
+					}
+					if (!verifySingleAnswer(trueAnswer)) {
+						result.setRet(Constant.ERROR);
+						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
+						return result;
+					}
+					break;
+				case "多选":
+					if(rowList.get(i).size() != 5){
+						result.setRet(Constant.ERROR);
+						result.setMessage("第"+(i+1)+"行列数格式错误！");
+						return result;
+					}
+					range = (String) rowList.get(i).get(4);
+					if (!verifyMultipleRange(range)) {
+						result.setRet(Constant.ERROR);
+						result.setMessage("第"+(i+1)+"行答案范围格式错误！");
+						return result;
+					}
+					if (!verifyMultipleAnswer(trueAnswer,range)) {
+						result.setRet(Constant.ERROR);
+						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
+						return result;
+					}
+					break;
+				case "判断":
+					if(rowList.get(i).size() != 4){
+						result.setRet(Constant.ERROR);
+						result.setMessage("第"+(i+1)+"行列数格式错误！");
+						return result;
+					}
+					if (!verifyCheckAnswer(trueAnswer)) {
+						result.setRet(Constant.ERROR);
+						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
+						return result;
+					}
+					break;
+				case "数字":
+					if (!verifyNumRange(range)) {
+						result.setRet(Constant.ERROR);
+						result.setMessage("第"+(i+1)+"行答案范围格式错误！");
+						return result;
+					}
+					if (!verifyNumAnswer(trueAnswer,range)) {
+						result.setRet(Constant.ERROR);
+						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
+						return result;
+					}
+					break;
+				default:
+					result.setRet(Constant.ERROR);
+					result.setMessage((i+1)+"行题目类型有误!");
+					return result;
+				}
+			}
+		}	
+		return result;
+	}
+	
+	/**
+	 * 校验单选答案
+	 * @param answer
+	 * @return
+	 */
+	private boolean verifySingleAnswer(String answer){
+		if (StringUtils.isEmpty(answer)) {
+			return false;
+		}
+		Pattern p = Pattern.compile("^[A-D]+$");
+		Matcher m = p.matcher(answer);
+		return m.matches();
+	}
+	
+	/**
+	 * 校验单选范围
+	 * @param answer
+	 * @return
+	 */
+	private boolean verifySingleRange(String answer){
+		if (StringUtils.isEmpty(answer)) {
+			return false;
+		}
+		Pattern p = Pattern.compile("^[A][-][D]+$");
+		Matcher m = p.matcher(answer);
+		return m.matches();
+	}
+	
+	/**
+	 * 校验多选范围
+	 * @param answer
+	 * @return
+	 */
+	private boolean verifyMultipleRange(String range){
+		if (StringUtils.isEmpty(range)) {
+			return false;
+		}
+		Pattern p = Pattern.compile("^[A][-][C-F]+$");
+		Matcher m = p.matcher(range);
+		return m.matches();
+	}
+	/**
+	 * 校验多选答案
+	 * @param answer
+	 * @return
+	 */
+	private boolean verifyMultipleAnswer(String answer,String range){
+		if (StringUtils.isEmpty(answer)) {
+			return false;
+		}
+		Pattern p = Pattern.compile("^["+range+"]*+$");
+		Matcher m = p.matcher(answer);
+		return m.matches();
+	}
+	
+//	/**
+//	 * 校验判断范围
+//	 * @param answer
+//	 * @return
+//	 */
+//	private boolean verifCheckRange(String range){
+//		if (StringUtils.isEmpty(range)) {
+//			return false;
+//		}
+//		Pattern p = Pattern.compile("^[A][-][C-F]+$");
+//		Matcher m = p.matcher(range);
+//		return m.matches();
+//	}
+	/**
+	 * 校验判断答案
+	 * @param answer
+	 * @return
+	 */
+	private boolean verifyCheckAnswer(String answer){
+		if (StringUtils.isEmpty(answer)) {
+			return false;
+		}
+		return "对".equals(answer) || "错".equals(answer);
+	}
+	
+	/**
+	 * 校验数字范围
+	 * @param answer
+	 * @return
+	 */
+	private boolean verifyNumRange(String range){
+		if (StringUtils.isEmpty(range)) {
+			return false;
+		}
+		Pattern p = Pattern.compile("^[0][-][1-9]+$");
+		Matcher m = p.matcher(range);
+		return m.matches();
+	}
+	
+	/**
+	 * 校验数字答案
+	 * @param answer
+	 * @return
+	 */
+	private  boolean verifyNumAnswer(String answer,String range){
+		if (StringUtils.isEmpty(answer)) {
+			return false;
+		}
+		Pattern p = Pattern.compile("^["+range+"]*+$");
+		Matcher m = p.matcher(answer);
+		return m.matches();
+	}
+	
 	
 	/*查询题目*/
 	public Result selectQuestionInfo(QuestionInfo questionInfo) throws IllegalArgumentException, IllegalAccessException{

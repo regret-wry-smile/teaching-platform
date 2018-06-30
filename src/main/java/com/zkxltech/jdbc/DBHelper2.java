@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,8 +63,8 @@ public class DBHelper2{
 		try {
 			Class.forName(driver);
 			conn = getConnection();
-			conn.setAutoCommit(false);
 	//	    System.out.println("Opened database successfully");
+			conn.setAutoCommit(false);
 
 		    pStmt = conn.prepareStatement(sql);
 		    if(param == null){
@@ -91,6 +92,7 @@ public class DBHelper2{
 		  } catch ( Exception e ) {
 			  log.error(IOUtils.getError(e));
 			  result.setRet("ERROR");
+			  result.setMessage("sql执行失败！");
 			  result.setDetail(e.getMessage());
 		  }finally {
 				try {
@@ -152,15 +154,8 @@ public class DBHelper2{
 		}
 	}
 	
-	public static Connection getConnection(){
-		Connection conn = null;
-		try {
-			Class.forName(driver);
-			conn = DriverManager.getConnection(url,userName,password);
-			return conn ;
-		}catch(Exception e){
-			log.error(IOUtils.getError(e));
-		}
-		return null ;
+	public static Connection getConnection() throws ClassNotFoundException, SQLException{
+		Class.forName(driver);
+		return DriverManager.getConnection(url,userName,password);
 	}
 }

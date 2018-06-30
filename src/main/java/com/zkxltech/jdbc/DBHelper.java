@@ -75,6 +75,7 @@ public class DBHelper<T> {
 			result.setItem(retList);
 		} catch (Exception e) {
 			logger.error(IOUtils.getError(e));
+			result.setMessage("sql执行错误！");
 			result.setRet(Constant.ERROR);
 			result.setDetail(IOUtils.getError(e));
 		} finally {
@@ -134,6 +135,7 @@ public class DBHelper<T> {
 		    result.setRet(Constant.SUCCESS);
 		  } catch ( Exception e ) {
 			  logger.error(IOUtils.getError(e));
+			  result.setMessage("sql执行错误！");
 			  result.setRet(Constant.ERROR);
 		  }finally {
 			  try {
@@ -184,6 +186,7 @@ public class DBHelper<T> {
 			return result;
 		} catch (Exception e) {
 			logger.error(IOUtils.getError(e));
+			result.setMessage("sql执行错误！");
 			result.setRet(Constant.ERROR);
 			result.setDetail(IOUtils.getError(e));
 			return result;
@@ -226,6 +229,7 @@ public class DBHelper<T> {
 			return result;
 		} catch (Exception e) {
 			logger.error(IOUtils.getError(e));
+			result.setMessage("sql执行错误！");
 			result.setRet(Constant.ERROR);
 			result.setDetail(IOUtils.getError(e));
 			return result;
@@ -272,6 +276,7 @@ public class DBHelper<T> {
 			return result;
 		} catch (Exception e) {
 			logger.error(IOUtils.getError(e));
+			result.setMessage("sql执行错误！");
 			result.setRet(Constant.ERROR);
 			result.setDetail(IOUtils.getError(e));
 			return result;

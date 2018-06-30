@@ -2,12 +2,10 @@ package com.zkxltech.service.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ejet.cache.RedisMapPaper;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
@@ -20,7 +18,7 @@ import com.zkxltech.sql.QuestionInfoSql;
 import com.zkxltech.sql.TestPaperSql;
 import com.zkxltech.ui.util.StringUtils;
 
-import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class TestPaperServiceImpl implements TestPaperService{
 	private static final Logger log = LoggerFactory.getLogger(TestPaperServiceImpl.class);
@@ -64,7 +62,6 @@ public class TestPaperServiceImpl implements TestPaperService{
 			String fileName = String.valueOf(object);
 			result = questionInfoSql.importQuestion(ImportExcelUtils.getBankListByExcel2(new FileInputStream(new File(fileName)), fileName));
 			if (Constant.ERROR.equals(result.getRet())) {
-				result.setMessage("添加试卷信息失败！");
 				return result;
 			}
 			result.setMessage("添加试卷成功！");
