@@ -691,18 +691,24 @@ app.controller('uploadfileModalCtrl', function($rootScope,$scope,$modalInstance,
 				if(ext != ".XLS" && ext != ".XLSX") {
 					toastr.warning("只能导入.XLSX、.XLS类型文件");
 					return ;
-				}else{
-					//console.log("参数"+JSON.stringify($scope.filepath))
-					$scope.result=JSON.parse(execute_testPaper("import_paper",$scope.filepath));
-					if($scope.result.ret=='success'){
-						toastr.success($scope.result.message);
-						 window.location.href="../../page/setmodule/testPaperManage.html"; 						
-						$modalInstance.close('success');
-					}else{
-						console.log($scope.result.detail);
-						toastr.error($scope.result.message);
-					}					
-					//$('#myModal').modal('show');
+				}else{					
+					$('#myModal').modal('show');
+						setTimeout(function(){
+							//console.log("参数"+JSON.stringify($scope.filepath))
+							$scope.result=JSON.parse(execute_testPaper("import_paper",$scope.filepath));
+							console.log(JSON.stringify($scope.result))
+							if($scope.result.ret=='success'){
+								$('#myModal').modal('hide');
+								toastr.success($scope.result.message);
+								 window.location.href="../../page/setmodule/testPaperManage.html"; 						
+								$modalInstance.close('success');
+								
+							}else{
+								console.log($scope.result.detail);
+								toastr.error($scope.result.message);
+								$('#myModal').modal('hide');
+							}
+						},500)		
 				}
 			}else{
 				toastr.warning("请选择文件");

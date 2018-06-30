@@ -12,7 +12,8 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 		<link rel="stylesheet" href="../../css/bootstrap.css" />
 		<link rel="stylesheet" href="../../css/common.css" />
-		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
+		<link rel="stylesheet" href="../../css/page.css" />
+		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
 		<script src="../../js/angular-toastr/angular-toastr.min.js"></script>
@@ -20,59 +21,60 @@
 		<script src="../../js/jquery-1.11.1.min.js"></script>
 		<link rel="stylesheet" href="../../js/select/style.css" />
 		<link href="../../js/select/font-awesome.min.css" />
-		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
+		<script type="text/javascript" src="../../js/select/select.jquery.js"></script>
 		<!--<script src="../../js/select/jquery.select.js"></script>-->
 		<script src="../../js/jquery.nicescroll.min.js"></script>
 		<script src="../../js/common.js"></script>
 		<script src="../../js/vconsole.min.js"></script>
-		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
-		<script type="text/javascript" src="../../js/app.js" ></script>
+		<script type="text/javascript" src="../../js/bootstrap.js"></script>
+		<script type="text/javascript" src="../../js/app.js"></script>
 		<script src="../../js/controllers/setStuManageController.js"></script>
 		<!--<script src="../../js/controllers/uploadfileModalCtrl.js"></script>-->
-		  <!--[if IE 8]>
+		<!--[if IE 8]>
         <script src="js/es5-shim.min.js"></script>        
     	<![endif]-->
 	</head>
-	<body class="bg" ng-controller="setStuManageCtrl">
+
+	<body class="bg" ng-controller="setStuManageCtrl" >
 		<script type="text/ng-template" id="addClassModal.html">
 			<!--新增班级start-->
-				<form name="myForm"  class="form-horizontal clearfix" role="form" novalidate="novalidate">
-					<div class="modal-header">
-						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-						<h4 class="modal-title">{{title}}</h4>
-					</div>
-					<div class="modal-body" >
-						<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">班级ID</label>
-					    <div class="col-sm-8">
-				    	<input type="text" autocomplete="off" name="classId" id="" value=""  class="form-control" ng-model="classInfo.classId" required  ng-blur="selectClass()"/>			
+			<form name="myForm" class="form-horizontal clearfix" role="form" novalidate="novalidate">
+				<div class="modal-header">
+					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+					<h4 class="modal-title">{{title}}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="firstname" class="col-sm-3 control-label">班级ID</label>
+						<div class="col-sm-8">
+							<input type="text" autocomplete="off" name="classId" id="" value="" class="form-control" ng-model="classInfo.classId" required maxlength="10" ng-blur="selectClass()" />
 						</div>
 						<span ng-show="myForm.classId.$invalid" class="warning">*</span>
-						</div>
-						<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">名称</label>
-					    <div class="col-sm-8">
-				    	<input type="text" autocomplete="off" name="name" id="" value=""  class="form-control" ng-model="classInfo.className" required maxlength="10" placeholder="长度不能超过10位"/>			
+					</div>
+					<div class="form-group">
+						<label for="firstname" class="col-sm-3 control-label">名称</label>
+						<div class="col-sm-8">
+							<input type="text" autocomplete="off" name="name" id="" value="" class="form-control" ng-model="classInfo.className" required maxlength="10" placeholder="长度不能超过10位" />
 						</div>
 						<span ng-show="myForm.name.$invalid" class="warning">*</span>
-						</div>
-						<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">选择状态</label>
-					    <div class="col-sm-8">
-					    	<select class="single" select  ng-model="classInfo.atype" defalutvalue='classInfo.atype1'>
+					</div>
+					<div class="form-group">
+						<label for="firstname" class="col-sm-3 control-label">选择状态</label>
+						<div class="col-sm-8">
+							<select class="single" select ng-model="classInfo.atype" defalutvalue='classInfo.atype1'>
 								<option value="0">本地</option>
 								<option value="1">在线</option>
 							</select>
-							</div>
 						</div>
 					</div>
-					<div class="modal-footer text-center">
-						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
-						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
-		
-					</div>
-				</form>
-			</script>
+				</div>
+				<div class="modal-footer text-center">
+					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
+					<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+
+				</div>
+			</form>
+		</script>
 		<!--导入学生-->
 		<script type="text/ng-template" id="importFile.html">
 			<form name="myForm" class="form-horizontal clearfix" role="form" novalidate="novalidate">
@@ -80,143 +82,144 @@
 					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
 					<h4 class="modal-title">导入学生</h4>
 				</div>
-				<div class="modal-body" >
+				<div class="modal-body">
 					<div class="form-group" ng-show="isfileType==true">
-					  	<label for="firstname" class="col-sm-3 control-label">选择类型</label>
-					    <div class="col-sm-8">
-				    	<select class="single" select ng-model="fileType" defalutvalue='fileType1' ng-change="changefileType(fileType)" >
-				   			<option value="0">本地导入</option>
-				   			<option value="1">服务导入</option>
-						</select>
+						<label for="firstname" class="col-sm-3 control-label">选择类型</label>
+						<div class="col-sm-8">
+							<select class="single" select ng-model="fileType" defalutvalue='fileType1' ng-change="changefileType(fileType)">
+								<option value="0">本地导入</option>
+								<option value="1">服务导入</option>
+							</select>
 						</div>
 					</div>
 					<div class="form-group" ng-show="fileType=='0'">
-					  	<label for="firstname" class="col-sm-3 control-label">选择文件</label>
-					    <div class="col-sm-8">
-				    	<input type="file" class="form-control" name="file" id="uploadFile" value="" validFile ng-model="filepath"  onchange='angular.element(this).scope().fileChanged(this)' />				
+						<label for="firstname" class="col-sm-3 control-label">选择文件</label>
+						<div class="col-sm-8">
+							<input type="file" class="form-control" name="file" id="uploadFile" value="" validFile ng-model="filepath" onchange='angular.element(this).scope().fileChanged(this)' />
 						</div>
 						<span ng-show="myForm.file.$invalid" class="warning">*</span>
-					</div>
-				<div class="modal-footer text-center">
-					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
-					<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
-		
-				</div>
-			</form>
-			</script>
-			<!--确认弹框-->
-			<script type="text/ng-template" id="sureModal.html">
-				<form name="myForm" novalidate="novalidate">
-					<div class="modal-header">
-						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-						<h4 class="modal-title">确认</h4>
-					</div>
-					<div class="modal-body">
-						{{content}}
 					</div>
 					<div class="modal-footer text-center">
 						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
 						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
-			
+
 					</div>
 			</form>
-			</script>
-			<!--配对绑定弹框-->
-			<script type="text/ng-template" id="findBindModal.html">
-				<form name="myForm" novalidate="novalidate">
-					<div class="modal-header">
-						<button type="button" class="close" style="margin-top: -0.10rem;" ng-click="ok()"><span aria-hidden="true" >×</span><span class="sr-only">关闭</span></button>
-					</div>
-					<div class="modal-body" id="Modal">
-						<p class="clearfix">
-							<span class="tip pull-left">正在匹配...</span>
-							<span class="pull-right pr20 mb20" >识别码{{bindInfo.code}}</span>
-						</p>
-						<div class="clearfix pt5">
-							<div class="pull-left">
-								<h4>{{bindInfo.studentName}}</h4>
-								<span>答题器</span>
-							</div>
-							<div class="pull-right">
-								<img src="../../image/datiqi.png" />
-							</div>
+		</script>
+		<!--确认弹框-->
+		<script type="text/ng-template" id="sureModal.html">
+			<form name="myForm" novalidate="novalidate">
+				<div class="modal-header">
+					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+					<h4 class="modal-title">确认</h4>
+				</div>
+				<div class="modal-body">
+					{{content}}
+				</div>
+				<div class="modal-footer text-center">
+					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
+					<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+
+				</div>
+			</form>
+		</script>
+		<!--配对绑定弹框-->
+		<script type="text/ng-template" id="findBindModal.html">
+			<form name="myForm" novalidate="novalidate">
+				<div class="modal-header">
+					<button type="button" class="close" style="margin-top: -0.10rem;" ng-click="ok()"><span aria-hidden="true" >×</span><span class="sr-only">关闭</span></button>
+				</div>
+				<div class="modal-body" id="Modal">
+					<p class="clearfix">
+						<span class="tip pull-left">正在匹配...</span>
+						<span class="pull-right pr20 mb20">识别码{{bindInfo.code}}</span>
+					</p>
+					<div class="clearfix pt5">
+						<div class="pull-left">
+							<h4>{{bindInfo.studentName}}</h4>
+							<span>答题器</span>
 						</div>
-						<h4 class="clearfix text-center">
+						<div class="pull-right">
+							<img src="../../image/datiqi.png" />
+						</div>
+					</div>
+					<h4 class="clearfix text-center">
 							<span>{{bindInfo.accomplish}}位完成配对</span>/<span>{{bindInfo.notAccomplish}}位未完成配对</span>						
 						</h4>
-						<div id="refreshBindCard" ng-click="refreshBindCard()" style="display:none;"></div>
-					</div>
+					<div id="refreshBindCard" ng-click="refreshBindCard()" style="display:none;"></div>
+				</div>
 			</form>
-			</script>
-			<!--新增学生start-->
-			<script type="text/ng-template" id="addStudentModal.html">
-				<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
-					<div class="modal-header">
-						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-						<h4 class="modal-title">{{title}}</h4>
-					</div>
-					<div class="modal-body">
-						<div class="form-group"  >
-					  	<label for="firstname" class="col-sm-3 control-label">学号</label>
-					    <div class="col-sm-8" ng-class="{warning:((myForm.studentId.$error.required||myForm.studentId.$error.pattern) && errorState)}">
-				    	<input type="number" autocomplete="off" name="studentId" id="" value=""  class="form-control" ng-model="student.studentId" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurStunum()"/>					
+		</script>
+		<!--新增学生start-->
+		<script type="text/ng-template" id="addStudentModal.html">
+			<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
+				<div class="modal-header">
+					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+					<h4 class="modal-title">{{title}}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="firstname" class="col-sm-3 control-label">学号</label>
+						<div class="col-sm-8" ng-class="{warning:((myForm.studentId.$error.required||myForm.studentId.$error.pattern) && errorState)}">
+							<input type="number" autocomplete="off" name="studentId" id="" value="" class="form-control" ng-model="student.studentId" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurStunum()" />
 						</div>
 						<span ng-show="myForm.studentId.$invalid" class="warning">*</span>
-						</div>
-						<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">姓名</label>
-					    <div class="col-sm-8">
-				    	<input type="text" autocomplete="off" name="studentName" id="" value=""  class="form-control" ng-model="student.studentName" required maxlength="10" placeholder="请输入长度不能超过10位字符" ng-blur="blurStuname()"/>
+					</div>
+					<div class="form-group">
+						<label for="firstname" class="col-sm-3 control-label">姓名</label>
+						<div class="col-sm-8">
+							<input type="text" autocomplete="off" name="studentName" id="" value="" class="form-control" ng-model="student.studentName" required maxlength="10" placeholder="请输入长度不能超过10位字符" ng-blur="blurStuname()" />
 						</div>
 						<span ng-show="myForm.studentName.$invalid" class="warning">*</span>
-						</div>
-						<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">答题器编号</label>
-					    <div class="col-sm-8">
-				    	<input type="number" autocomplete="off" name="iclickerId" id="" value=""  class="form-control" ng-model="student.iclickerId" required ng-pattern="/^\d{10}$/" placeholder="请输入长度为10位的数字" ng-blur="blurDevicenum()"/>
+					</div>
+					<div class="form-group">
+						<label for="firstname" class="col-sm-3 control-label">答题器编号</label>
+						<div class="col-sm-8">
+							<input type="number" autocomplete="off" name="iclickerId" id="" value="" class="form-control" ng-model="student.iclickerId" required ng-pattern="/^\d{10}$/" placeholder="请输入长度为10位的数字" ng-blur="blurDevicenum()" />
 						</div>
 						<span ng-show="myForm.iclickerId.$invalid" class="warning">*</span>
-						</div>
 					</div>
-					<div class="modal-footer text-center">
-						<button type="button" class="btn btn-primary" ng-click="ok(myForm.$valid)" >确定</button><!--ng-disabled="!myForm.$valid"-->
-						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
-		
-					</div>
-				</form>
-			</script>
-			<div class="header clearfix">
-				<div class="pull-left">
-					<img src="../../image/set.png" class="ml25" />
-					<span>学生管理</span>
 				</div>
-				<div class="pull-right">
-					<img src="../../image/return.png" ng-click="returnPage()"/>
+				<div class="modal-footer text-center">
+					<button type="button" class="btn btn-primary" ng-click="ok(myForm.$valid)">确定</button>
+					<!--ng-disabled="!myForm.$valid"-->
+					<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+
 				</div>
+			</form>
+		</script>
+		<div class="header clearfix">
+			<div class="pull-left">
+				<img src="../../image/set.png" class="ml25" />
+				<span>学生管理</span>
 			</div>
-			<div class="content bgf5 clearfix">
-				<div class="opbtn clearfix mb20">
-				  	<a href="javascript:;" ng-click="addClass()">添加班级</a>
-				  	<a href="javascript:;" ng-click="quickBind()">一键配对</a>
-				  	<a href="javascript:;" ng-click="patchImport()">导入学生</a>
-				  <!--	<a href="javascript:;" ng-click="serverImport()">服务获取学生</a>-->
-			  		<a href="javascript:;" ng-click="addStudent()">新增学生</a>
-			  		<a href="javascript:;" class="warning" ng-click="deleteStudent()">删除</a>
-			  		<a href="javascript:;" class="warning" ng-click="unbindStu()">解绑</a>
-			  		<a href="javascript:;" class="warning" ng-click="clearStu()">清除白名单</a>
-			  	</div>
-			  	<div class="pannel clearfix">
-				<div class="col-sub pull-left" id="classlist" style="overflow-x: auto; overflow-y: auto; height:3.1rem; width:20%;">
-					<table class="table table-stripe classlist" >
+			<div class="pull-right">
+				<img src="../../image/return.png" ng-click="returnPage()" />
+			</div>
+		</div>
+		<div class="content content1 bgf5 clearfix">
+			<div class="opbtn clearfix mb20 bgf5">
+				<a href="javascript:;" ng-click="addClass()">添加班级</a>
+				<a href="javascript:;" ng-click="quickBind()">一键配对</a>
+				<a href="javascript:;" ng-click="patchImport()">导入学生</a>
+				<!--	<a href="javascript:;" ng-click="serverImport()">服务获取学生</a>-->
+				<a href="javascript:;" ng-click="addStudent()">新增学生</a>
+				<a href="javascript:;" class="warning" ng-click="deleteStudent()">删除</a>
+				<a href="javascript:;" class="warning" ng-click="unbindStu()">解绑</a>
+				<a href="javascript:;" class="warning" ng-click="clearStu()">清除白名单</a>
+			</div>
+			<div class="pannel clearfix" style="position: absolute; top:.5rem ; left: 0.20rem; right: 0; bottom: .25rem;overflow-x: hidden">
+				<div class="col-sub pull-left" id="classlist" style="overflow-x: hidden; overflow-y: auto;  width:20%; height: 100%;">
+					<table class="table table-stripe classlist">
 						<thead>
 							<tr>
 								<th>班级列表</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="item in classList track by $index"  ng-click="changeClass(item,$index)">
+							<tr ng-repeat="item in classList track by $index" ng-click="changeClass(item,$index)">
 								<td>
-									<span class="sub" ng-class="{'1': 'green', '0': 'grey'}[item.atype]"></span> 
+									<span class="sub" ng-class="{'1': 'green', '0': 'grey'}[item.atype]"></span>
 									<span class="name" ng-class="{active:isActive == $index}">{{item.className}}</span>
 									<a href="javascript:;" class="del pull-right pr5" ng-click="$event.stopPropagation();deleteClass(item)">删除</a>
 									<!--<a href="javascript:;" class="edit pull-right pr5" ng-click="$event.stopPropagation();editClass(item,$index)">编辑</a>-->
@@ -225,44 +228,47 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="col-main pull-left"  id="userlist" style="overflow-x: auto; overflow-y: auto; height:3.1rem; width:80%;padding-right: 0.2rem;">
-				<table class="table table-stripe userlist">
-					<thead>
-						<tr >
-							<th class="wd60">序号</th>
-							<th class="wd80">学号</th>
-							<th class="wd100">姓名</th>
-							<th class="wd100">答题器编号</th>
-							<th class="wd100">配对情况</th>
-							<th class="wd60">操作</th>
-							<th class="wd80" class="pr1">全选
-							<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>						
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="item in studentList track by $index" ng-click="$event.stopPropagation();">
-							<td>{{$index+1}}</td>
-							<td>{{item.studentId}}</td>
-							<td>{{item.studentName}}</td>
-							<td>{{item.iclickerId}}</td>
-							<td>{{item.status=='1'?'已绑定':'未绑定'}}</td>
-							<td><a href="javascript:;" class="edit" ng-click="updateStdent(item)">编辑</a></td>
-							<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>  
-			</div>
-		<div ng-spinner-loader class="loading">
-			<div class="spinner">
-				<div class="bounce1"></div>
-				<div class="bounce2"></div>
-				<div class="bounce3"></div>
+				<div class="col-main pull-left" style=" overflow-x: hidden;overflow-y: auto;height: 100%; width:80%;padding-right: 0.2rem;  position: absolute; left: 20%; top: 0; bottom: 0; right: 0; ">
+					<table class="table table-stripe userlist" style="overflow-x: hidden !important;">
+						<thead>
+							<tr>
+								<th class="wd60">序号</th>
+								<th class="wd80">学号</th>
+								<th class="wd100">姓名</th>
+								<th class="wd100">答题器编号</th>
+								<th class="wd100">配对情况</th>
+								<th class="wd60">操作</th>
+								<th class="wd80" class="pr1">全选
+									<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>
+							</tr>
+						</thead>
+					</table>
+					<div style="overflow-x: hidden;position: absolute; top: .4rem; left: 0; right: 0; bottom: 0; overflow-y: auto;;"  id="userlist">
+						<table class="table table-stripe userlist" style="overflow-x: hidden;">
+							<tbody>
+								<tr ng-repeat="item in studentList track by $index" ng-click="$event.stopPropagation();">
+									<td>{{$index+1}}</td>
+									<td>{{item.studentId}}</td>
+									<td>{{item.studentName}}</td>
+									<td>{{item.iclickerId}}</td>
+									<td>{{item.status=='1'?'已绑定':'未绑定'}}</td>
+									<td>
+										<a href="javascript:;" class="edit" ng-click="updateStdent(item)">编辑</a>
+									</td>
+									<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
-		
-		
+
+		</div>
+		<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div id="loading" class="loading">加载中</div>
+		</div>
+
 		<div id="refreshClass" ng-click="refreshClass()" style="display:none;"></div>
 		<div id="refreshStudent" ng-click="refreshStudent()" style="display:none;"></div>
 	</body>
@@ -270,14 +276,25 @@
 </html>
 
 <script>
-	 $(document).ready(function() { 
-	var nice = $("html").niceScroll();  // The document page (body)
-/*	$("userlist").html($("#userlist").html()+' '+nice.version);*/
-	$("#userlist").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable 
-	$("#classlist").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable DIV
-	$('.classlist tbody tr td').click(function(){
-		$(this).find('span.name').addClass('active').siblings().removeClass('active');
-	})
-	 $('.single1').multiselect({multiple:false,selectedHtmlValue:'请选择'});
-  });
+	$(document).ready(function() {
+		var nice = $("html").niceScroll(); // The document page (body)
+		/*	$("userlist").html($("#userlist").html()+' '+nice.version);*/
+		$("#userlist").niceScroll({
+			cursorborder: "",
+			cursorcolor: "#d9d9d9",
+			boxzoom: true
+		}); // First scrollable 
+		$("#classlist").niceScroll({
+			cursorborder: "",
+			cursorcolor: "#d9d9d9",
+			boxzoom: true
+		}); // First scrollable DIV
+		$('.classlist tbody tr td').click(function() {
+			$(this).find('span.name').addClass('active').siblings().removeClass('active');
+		})
+		$('.single1').multiselect({
+			multiple: false,
+			selectedHtmlValue: '请选择'
+		});
+	});
 </script>

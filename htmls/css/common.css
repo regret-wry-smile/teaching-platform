@@ -141,6 +141,17 @@ p {
 	margin:0 0.15rem 0.15rem;
 	padding: 0.25rem;	
 	color: #3e3e3e;
+	
+} 
+.content1{
+	/*margin:0 0.15rem 0.15rem;*/
+	padding: 0.25rem;	
+	color: #3e3e3e;
+	position: absolute;
+	top: 1.10rem;
+	bottom:  0.15rem;
+	left: 0.15rem;
+	right:  0.15rem;
 } 
 ul.modbox li{
 	float: left;
@@ -816,7 +827,7 @@ a.rebtn{
 		padding: 0.10rem 0.12rem;	
 	}
 	.progresscon{
-		width: 1.0rem;
+		width: 1.2rem;
 		padding: 0.08rem 0.10rem;
 	}
 	.modbox.checkclass{

@@ -501,6 +501,7 @@ app.controller('stopSingeAnswerCtrl', function($scope,$location, toastr, $window
 app.controller('classCheckCtrl', function($scope, toastr, $window) {
 	$scope.classInfo = {}; //班级信息
 	$scope.paperInfoList = []; //试卷数组
+	$('#myModal').modal('hide');
 	//获取当前班级信息
 	var _isStartClass = function() {
 			$scope.result = JSON.parse(execute_record("get_classInfo"));
@@ -578,6 +579,23 @@ app.controller('classCheckCtrl', function($scope, toastr, $window) {
 		}
 		
 	}
+	
+	//上传服务
+	$scope.uploadServer=function(){
+		$('#myModal').modal('show');
+		setTimeout(function(){
+			$scope.result=JSON.parse(execute_answer("upload_server", $scope.onePaperInfo.testId));		
+			console.log(JSON.stringify($scope.result))
+			if($scope.result.ret=='success'){
+				$('#myModal').modal('hide');
+			}else{
+				toastr.error($scope.result.message);
+				$('#myModal').modal('hide');
+			}
+		},500)		
+		
+		
+	}
 
 })
 app.config(['$locationProvider', function($locationProvider) {  
@@ -594,6 +612,15 @@ app.controller('classuserCheckCtrl', function($scope, toastr,$location, $window,
 	}
 	$scope.AllanswerInfo = []; //作答信息数组	
 	$scope.oneanswerList=[];//个人答题详情
+	$('#myModal').modal('hide');//默认隐藏loading
+	//隐藏loading
+	var _hideModal=function(){
+		$('#myModal').modal('hide');
+	}
+	//显示loading
+	var _showModal=function(){
+		$('#myModal').modal('show');
+	}
 	//查询每个人的个人信息
 	var _getAllanswerInfo = function() {
 		$scope.result = JSON.parse(execute_answer("get_everybody_answerInfo"));
@@ -602,7 +629,7 @@ app.controller('classuserCheckCtrl', function($scope, toastr,$location, $window,
 			$scope.AllanswerInfo = $scope.result.item;
 			if($scope.result.item.length>0){
 				angular.forEach($scope.AllanswerInfo,function(i){
-					i.style1={
+					i.style={
 						width:i.percent*100 +'%',
 						background:'#7ee074'
 					}
@@ -616,12 +643,13 @@ app.controller('classuserCheckCtrl', function($scope, toastr,$location, $window,
 	}	
 	//收取试卷
 	$scope.isgatherPaper=true;//是否是收取试卷按钮
+	
 	$scope.gatherPaper=function(){
-	if($scope.paperInfo.answerType=="1"){			
-		$scope.result = JSON.parse(execute_answer("stop_class_test_objective",$scope.paperInfo.testId));
+	if($scope.paperInfo.answerType=="1"){	
+		$scope.result = JSON.parse(execute_answer("stop_class_test_objective",$scope.paperInfo.testId));	
 	}else{
 		$scope.result = JSON.parse(execute_answer("stop_class_test_subjective",$scope.paperInfo.testId));
-	}	
+	}
 	console.log(JSON.stringify($scope.result))
 	if($scope.result.ret == 'success') {
 		$scope.isgatherPaper=false;
@@ -678,6 +706,26 @@ app.controller('classuserCheckCtrl', function($scope, toastr,$location, $window,
 		_getAllanswerInfo();
 	}
 	
+	//移除loading
+	$scope.removeLoading=function(){
+		_hideModal();
+	}
+	//显示loading
+	$scope.showLoading=function(){
+		_showModal();
+	}
+	
+	//提示框
+	$scope.getTip = function() {
+		if (ret == 'true') {
+			toastr.success(message);
+			$scope.isgatherPaper=false;
+		}
+		else {
+			$scope.isgatherPaper=true;
+			toastr.error(message);
+		}
+	}
 })
 //个人答题详情
 app.controller('oneAnswerDetailCtrl', function($scope,$modalInstance,toastr,infos,type) {

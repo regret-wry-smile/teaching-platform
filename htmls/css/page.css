@@ -1,0 +1,23 @@
+.loading {
+    width: 1.60rem;
+    height: 0.56rem;
+    position: absolute;
+    top: 35%;
+    left:45%;
+    right: 0;
+    line-height: 0.56rem;
+    color: #fff;
+    padding-left: 0.40rem;
+    font-size: 0.15rem;
+    background: #000 url(../../image/loading.gif) no-repeat 90px 50%;
+    opacity: 0.5;
+    z-index: 9999;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=10);
+}
+.modal-backdrop.in {
+  opacity: 0.1;
+  filter: alpha(opacity=10);
+}

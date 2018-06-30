@@ -12,6 +12,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 		<link rel="stylesheet" href="../../css/bootstrap.css" />
 		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../css/page.css" />
 		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
 		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
@@ -42,6 +43,9 @@
 		}
 	</style>
 	<body class="bg" ng-controller="answerRecordCtrl">
+		<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div id="loading" class="loading">加载中</div>
+		</div>
 		<!--确认弹框-->
 			<script type="text/ng-template" id="sureModal.html">
 				<form name="myForm" novalidate="novalidate">
@@ -70,28 +74,30 @@
 					</a>-->
 				</div>
 			</div>
-			<div class="content bgf5 clearfix">		
+			<div class="content content1 bgf5 clearfix" style="top: 1.2rem;">		
 				<div class="searchbar">
 				    <label >班级</label>			    	
 			    	<select class="single" select2 ng-model="setClass.classes" defalutvalue='setClass.classes1' ng-change="changeClass(setClass.classes)" list='classList'>
-						<option ng-repeat="item in classList track by $index" value="{{item}}">{{item.value}}</option>
+						<!--<option ng-repeat="item in classList track by $index" value="{{item}}">{{item.value}}</option>-->
 					</select>
 					<label >科目</label>
 					<select class="single" select1 ng-model="setClass.subject" defalutvalue='setClass.subject1' list="subjectlists" ng-change="changeSubject(setClass.subject)">
 				   			<option ng-repeat="subjectitem in subjectlists track by $index" value="{{subjectitem}}">{{subjectitem}}</option>
 					</select>
 					<label>课程</label>
-				    <select class="single" select2 ng-model="setClass.sujectHour" defalutvalue='setClass.sujectHour1' list="classhourList" ng-change="changeClassHour(setClass.sujectHour)">
-			   			<option ng-repeat="houritem in classhourList track by $index" value="{{houritem}}">{{houritem.value}}</option>
+				   <select class="single" select2 ng-model="setClass.sujectHour" defalutvalue='setClass.sujectHour1'  ng-change="changeClassHour(setClass.sujectHour)" list="classhourList" >
+			   			<!--<option ng-repeat="houritem in classhourList track by $index" value="{{houritem}}">{{houritem.value}}</option>-->
 					</select>		
+					<!--<select class="single" select2 ng-model="setClass.sujectHour" defalutvalue='setClass.sujectHour1' list='classhourList' ng-change="changeClassHour(setClass.sujectHour)" >
+						</select>-->
 					<label >试卷</label>
-			    	<select class="single" select2 ng-model="setClass.paper" defalutvalue='setClass.paper1' list='paperList' ng-change="changePaper(setClass.paper)">
-						<option ng-repeat="paperitem in paperList track by $index" value="{{paperitem}}">{{paperitem.value}}</option>
+			    	<select class="single" select2 ng-model="setClass.paper" defalutvalue='setClass.paper1'  ng-change="changePaper(setClass.paper)" list='paperList'>
+						<!--<option ng-repeat="paperitem in paperList track by $index" value="{{paperitem}}">{{paperitem.value}}</option>-->
 					</select>
-					<a href="javascript:;" class="del">删除</a>
-					<a href="javascript:;" class="edit">导出</a>
+					<a href="javascript:;" class="del ml20 mr10" ng-click="deleteRcord()">删除</a>
+					<a href="javascript:;" class="edit" ng-click="exportRecord()">导出</a>
 				</div>
-				<div class="col-main" id="testlist" style="overflow-x: auto; overflow-y: auto; height:1.5rem; width:100%;padding-right: 0.05rem;">
+				<div class="col-main" id="testlist" style="overflow-x: auto; overflow-y: auto; height:3.0rem; width:100%;padding-right: 0.05rem;">
 					<table class="table table-stripe subject">
 						<thead>
 							<tr >
@@ -105,7 +111,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="item in recordList track by $index">
+							<tr ng-repeat="item in recordList track by $index" ng-click="$event.stopPropagation();">
 								<td>{{$index+1}}</td>
 								<td>{{item.studentName}}</td>
 								<td>{{item.testName}}</td>

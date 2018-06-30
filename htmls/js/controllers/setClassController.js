@@ -165,6 +165,8 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 		});
 		modalInstance.result.then(function(info) {
 			$scope.classhourList=[];
+			$scope.setClass.sujectName="";
+			$scope.sujectNameobject="";
 			_selectClassHour();
 			$scope.setClass.sujectName=$scope.classhourList[$scope.classhourList.length-1].key;
 			$scope.sujectNameobject=$scope.classhourList[$scope.classhourList.length-1];
@@ -200,6 +202,9 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 				$scope.result=JSON.parse(execute_record("delete_class_hour",param));
 				if($scope.result.ret=='success'){
 					toastr.success($scope.result.message);
+					$scope.classhourList=[];
+					$scope.setClass.sujectName="";
+					$scope.sujectNameobject="";
 					_selectClassHour();
 				}else{
 					toastr.error($scope.result.message);

@@ -5,13 +5,14 @@
 		<meta charset="UTF-8">
 		<title></title>		
 		<meta name="format-detection" content="telephone=no" />
-		<meta name="viewport" content="user-scalable=no,width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<meta name="viewport" id="view" content="user-scalable=no,width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
 		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 		<link rel="stylesheet" href="../../css/bootstrap.css" />
 		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../css/page.css" />
 		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
 		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
@@ -33,7 +34,15 @@
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<script type="text/javascript" src="../../js/app.js" ></script>
 		<script src="../../js/controllers/answerController.js"></script>
-		
+		<!--<script>
+			var fontSize=parseInt($(window).width()/920*100);
+			$('html').css('fontSize',fontSize+'px');
+			$(window).resize(function(){
+			    var fontSize=parseInt($(window).width()/920*100);
+			    $('html').css('fontSize',fontSize+'px');
+			})
+			
+		</script>-->
 	</head>
 	<body class="bg clearfix" ng-controller="classuserCheckCtrl">
 		<!--个人答题详情-->
@@ -100,7 +109,7 @@
 					</p>					
 					<div class="progress mt5">
 					   <!-- <div class="progress-bar" ng-style="{width:{{item.percent}}*100 +'%'}" style="width:'%';background: #7ee074;">{{item.percent*100}}%</div>	-->
-					    <div class="progress-bar" ng-style="{{item.style}}" style="width:'%';background: #7ee074;">{{item.percent*100}}%</div>	
+					    <div class="progress-bar" ng-style="item.style" style="width:'%';background: #7ee074;">{{item.percent*100}}%</div>	
 					     <!--<div class="progress-bar" ng-style="{width:{{item.count}}*100/{{questionSum}}+'%'}" style="width:'%';background: green;">{{item.count*100/questionSum | number:1}}%</div>		-->
 					 </div>
 				</div>			
@@ -116,13 +125,8 @@
 			  </div>
 			</div>
 			<div id="refreClassTest" ng-click="refreClassTest()" style="display:none"></div>
-			<div ng-spinner-loader class="loading">
-				<div class="spinner">
-					<div class="bounce1"></div>
-					<div class="bounce2"></div>
-					<div class="bounce3"></div>
-				</div>
-			</div>
+			<div id="removeLoading" ng-click="removeLoading()" style="display:none"></div>
+			<div id="getTip" ng-click="getTip()" style="display:none"></div>
 	</body>
 
 </html>

@@ -1,198 +1,200 @@
 //定义模块时引入依赖  
 var app = angular.module('app', ['ui.bootstrap', 'toastr']);
 //作答记录
-app.controller('answerRecordCtrl', function($scope, toastr) {
-	$scope.setClass={
-		classes:'',//班级id
-		subject:'',//科目名称
-		sujectHour:'',//课程id
-		paper:'',//试卷id
-		sujectHour1:''
+app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
+	$scope.setClass = {
+		classes: '', //班级id
+		subject: '', //科目名称
+		sujectHour: '', //课程id
+		paper: '', //试卷id
+		sujectHour1: ''
 	}
-	$scope.classList=[];//班级数组
-	$scope.subjectlists=[];//科目数组
-	$scope.classhourList=[]//课程数组
-	$scope.paperList=[];//试卷数组
-	$scope.recordList=[]//作答记录数组
-	/*查询班级列表*/
+	$scope.classList = []; //班级数组
+	$scope.subjectlists = []; //科目数组
+	$scope.classhourList = [] //课程数组
+	$scope.paperList = []; //试卷数组
+	$scope.recordList = [] //作答记录数组
+	$scope.onechecked = [];
+	$scope.checkedId = [];
+	$('#myModal').modal('hide');
+	//隐藏loading
+	var _hideModal=function(){
+		$('#myModal').modal('hide');
+	}
+	//显示loading
+	var _showModal=function(){
+		$('#myModal').modal('show');
+	}
+		/*查询班级列表*/
 	var _selectClass = function() {
 		$scope.result = JSON.parse(execute_student("select_class"));
-		if($scope.result.ret=='success'){
-			if($scope.result.item.length>0){
-				angular.forEach($scope.result.item,function(i){
-					var item={
-						key:i.classId,
-						value:i.className
+		if($scope.result.ret == 'success') {
+			$scope.classList=[];
+			if($scope.result.item.length > 0) {
+				angular.forEach($scope.result.item, function(i) {
+					var item = {
+						key: i.classId,
+						value: i.className
 					}
+				
 					$scope.classList.push(item);
 					//console.log("班级"+JSON.stringify($scope.classList))
-					$scope.setClass.classes=$scope.classList[0].key;
-					$scope.classesobject=$scope.classList[0];
-					$scope.setClass.classes1=angular.copy($scope.setClass.classes);								
-	
-				})			
+					$scope.setClass.classes = $scope.classList[0].key;
+					$scope.classesobject = $scope.classList[0];
+					$scope.setClass.classes1 = angular.copy($scope.setClass.classes);
+
+				})
 			}
-		}else{
+		} else {
 			toastr.error($scope.result.message);
 		}
 	};
-	_selectClass();
-	//查询科目
-	var _getsubject=function(){
-		$scope.subjectlists= JSON.parse(execute_testPaper("get_subject"));
-		if($scope.subjectlists.length>0){
-			$scope.setClass.subject=$scope.subjectlists[0];
-			$scope.setClass.subject1=angular.copy($scope.setClass.subject);
-			$scope.classhourList=[];
-			//_selectClassHour();
-		}
-	}
-	_getsubject();
 	//查询课程
-	var _selectClassHour=function(){
-		$scope.result=JSON.parse(execute_record("select_class_hour",$scope.setClass.classes,$scope.setClass.subject));
+	var _selectClassHour = function() {
+		$scope.result = JSON.parse(execute_record("select_class_hour", $scope.setClass.classes, $scope.setClass.subject));
 		//console.log(JSON.stringify($scope.result))
-		if($scope.result.ret=='success'){			
-			if($scope.result.item.length>0){
-				angular.forEach($scope.result.item,function(i){
-					console.log('122333'+JSON.stringify(i));
-					var item={
-						key:i.class_hour_id,
-						value:i.class_hour_name
-					}
-				    $scope.classhourList.push(item);
-						if($scope.classhourList.length>0){
-						$scope.setClass.sujectHour=$scope.classhourList[0].key;
-						$scope.sujectHourobject=$scope.classhourList[0]||{};
-						$scope.setClass.sujectHour1=angular.copy($scope.setClass.sujectHour);
-						
+		if($scope.result.ret == 'success') {
+			$scope.classhourList=[];
+			if($scope.result.item.length > 0) {
+				angular.forEach($scope.result.item, function(i) {
+					var item = {
+						key: i.class_hour_id,
+						value: i.class_hour_name
 					}
 					
+					$scope.classhourList.push(item);
+					if($scope.classhourList.length > 0) {
+						$scope.setClass.sujectHour = $scope.classhourList[0].key;
+						$scope.sujectHourobject = $scope.classhourList[0] || {};
+						$scope.setClass.sujectHour1 = angular.copy($scope.setClass.sujectHour);						
+					}
+
 				})
 			}
-		}else{
+		} else {
 			toastr.error($scope.result.message);
 		}
 	}
-	_selectClassHour();
 	
+	//查询科目
+	var _getsubject = function() {
+		$scope.subjectlists=[];
+		$scope.subjectlists = JSON.parse(execute_testPaper("get_subject"));
+		if($scope.subjectlists.length > 0) {
+			$scope.setClass.subject = $scope.subjectlists[0];
+			$scope.setClass.subject1 = angular.copy($scope.setClass.subject);
+			_selectClassHour();
+		}
+	}
+	
+
 	//查询试卷
-	var _selectPaper=function(){
-		var param={
-			classHourId:$scope.setClass.sujectHour
+	var _selectPaper = function() {
+		var param = {
+			classHourId: $scope.setClass.sujectHour
 		}
-		console.log(JSON.stringify(param))
-		$scope.result=JSON.parse(execute_testPaper("select_paper_by_classHourId",JSON.stringify(param)));
+		//console.log(JSON.stringify(param))
+		$scope.result = JSON.parse(execute_testPaper("select_paper_by_classHourId", JSON.stringify(param)));
 		console.log(JSON.stringify($scope.result));
-		if($scope.result.ret=='success'){			
-			if($scope.result.item.length>0){
-				angular.forEach($scope.result.item,function(i){
-					var item={
-						key:i.testId,
-						value:i.testName
-					}
-					$scope.paperList=[];
-					$scope.paperList.push(item);
-					if($scope.paperList.length>0){
-						$scope.setClass.paper=$scope.paperList[0].key;
-						$scope.paperobject=$scope.paperList[0];
-						console.log("试卷"+JSON.stringify($scope.paperobject));
-						$scope.setClass.paper1=angular.copy($scope.setClass.paper);
+		if($scope.result.ret == 'success') {
+			$scope.paperList=[];
+			if($scope.result.item.length > 0) {
+				angular.forEach($scope.result.item, function(i) {
+					var item = {
+						key: i.testId,
+						value: i.testName
 					}
 					
+					$scope.paperList.push(item);
+					if($scope.paperList.length > 0) {
+						$scope.setClass.paper = $scope.paperList[0].key;
+						$scope.paperobject = $scope.paperList[0];
+						console.log("试卷" + JSON.stringify($scope.paperobject));
+						$scope.setClass.paper1 = angular.copy($scope.setClass.paper);
+					}
+
 				})
-			}else{
-				$scope.paperList=[];
+			} else {
+				$scope.paperList = [];
 			}
-		}else{
+		} else {
 			toastr.error($scope.result.message);
 		}
 	}
-	_selectPaper();
 	
-	
+
 	//查询记录
-	var _selectRecord=function(){
-		if($scope.setClass.sujectHour&&$scope.setClass.paper){
-			var param={
-				classId:$scope.setClass.classes,
-				subjectName:$scope.setClass.subject,
-				testId:$scope.setClass.paper,
-				classHourId:$scope.setClass.sujectHour
+	var _selectRecord = function() {
+		if($scope.setClass.sujectHour && $scope.setClass.paper) {
+			var param = {
+				classId: $scope.setClass.classes,
+				subjectName: $scope.setClass.subject,
+				testId: $scope.setClass.paper,
+				classHourId: $scope.setClass.sujectHour
 			}
-			console.log("记录"+JSON.stringify(param))
-			$scope.result=JSON.parse(execute_record("select_record",JSON.stringify(param)));
-			if($scope.result.ret=='success'){
-				$scope.recordList=$scope.result.item;
-			}else{
+			console.log("记录" + JSON.stringify(param))
+			$scope.result = JSON.parse(execute_record("select_record", JSON.stringify(param)));
+			console.log("记录" + JSON.stringify($scope.result))
+			if($scope.result.ret == 'success') {
+				$scope.recordList=[];
+				$scope.recordList = $scope.result.item;
+			} else {
 				toastr.error($scope.result.message);
 			}
-		}		
+		}
 	}
-	_selectRecord();
+	//_selectRecord();
 	//切换班级
-	$scope.changeClass=function(classes){
-		$scope.setClass.classes=classes;
-		angular.forEach($scope.classList,function(i){
-			if($scope.setClass.classes==i.key){
-				$scope.classesobject=i;
-			 	$scope.classhourList=[];
-				$scope.setClass.sujectHour="";
-				$scope.sujectHourobject=="";
-				_selectClassHour();
-				
-			}
-		})
-		
-	}
-	//切换科目
-	$scope.changeSubject=function(subject){
-		$scope.setClass.subject	=subject;
-		$scope.classhourList=[];
-		$scope.setClass.sujectHour="";
-		$scope.sujectHourobject=="";
+
+	$scope.changeClass = function(classes) {
+			$scope.setClass.classes = classes;
+			angular.forEach($scope.classList, function(i) {
+				if($scope.setClass.classes == i.key) {
+					$scope.classesobject = i;			
+					_selectClassHour();
+					_selectRecord();
+
+				}
+			})
+
+		}
+		//切换科目
+	$scope.changeSubject = function(subject) {
+		$scope.setClass.subject = subject;
 		_selectClassHour();
+		_selectRecord();
 	}
-	
+
 	//切换课程
-	$scope.changeClassHour=function(sujectHour){
-		$scope.setClass.sujectHour=sujectHour;
-		angular.forEach($scope.classhourList,function(i){
-			if($scope.setClass.sujectHour==i.key){
-				$scope.sujectHourobject=i;
-				$scope.paperList=[];
-				$scope.setClass.paper='';
-				$scope.paperobject='';
+	$scope.changeClassHour = function(sujectHour) {
+		$scope.setClass.sujectHour = sujectHour;
+		angular.forEach($scope.classhourList, function(i) {
+			if($scope.setClass.sujectHour == i.key) {
+				$scope.sujectHourobject = i;
 				_selectPaper();
+				_selectRecord();
 			}
 		})
-		
+
 	}
-	
-	return false;
-	
-	
-	
-	
-		var _init=function(){
-		_selectClass();
-		_getsubject();
-		_selectRecord();
-	}();
-	
-	
-	
-	
 	//切换试卷
 	$scope.changePaper=function(paper){
-		$scope.setClass.paper=paper;
-		angular.forEach($scope.paperList,function(i){
-			if($scope.setClass.paper==i.key){
-				$scope.paperobject=i;
+		$scope.setClass.paper = paper;		
+		angular.forEach($scope.paperList, function(i) {
+			if($scope.setClass.paper == i.key) {
+				$scope.paperobject = i;
+				_selectRecord();
 			}
 		})
 	}
-	//全选
+	var _init = function() {
+		_selectClass();
+		_getsubject();
+		_selectClassHour();
+		_selectPaper();
+		_selectRecord();
+	}();
+		//全选
 	$scope.selectAll = function(data) {
 		if($scope.selected) {
 			$scope.onechecked = [];
@@ -216,7 +218,7 @@ app.controller('answerRecordCtrl', function($scope, toastr) {
 	$scope.selectOne = function(param) {
 		$scope.onechecked = [];
 		$scope.checkedId = [];
-		angular.forEach($scope.studentList, function(i) {
+		angular.forEach($scope.recordList, function(i) {
 			var index = $scope.checkedId.indexOf(i.studentId);
 			if(i.checked && index === -1) {
 				var item = i;
@@ -236,11 +238,12 @@ app.controller('answerRecordCtrl', function($scope, toastr) {
 			$scope.selected = false;
 		}
 	}
-	
+
 	//删除记录
-	$scope.deleteRcord=function(){
-		if($scope.checkedId.length>0){
-			var content="删除选中记录";
+	$scope.deleteRcord = function() {
+		alert($scope.checkedId.length)
+		if($scope.checkedId.length > 0) {
+			var content = "删除选中记录";
 			var modalInstance = $modal.open({
 				templateUrl: 'sureModal.html',
 				controller: 'sureModalCtrl',
@@ -253,34 +256,68 @@ app.controller('answerRecordCtrl', function($scope, toastr) {
 			});
 
 			modalInstance.result.then(function(info) {
-				var param={
-					testId:$scope.setClass.paper,
-					studentIds:$scope.checkedId
+				var param = {
+					testId: $scope.setClass.paper,
+					studentIds: $scope.checkedId
 				}
 				console.log(JSON.stringify(param))
-				$scope.result = JSON.parse(execute_record("delete_record",param));
-				if($scope.result.ret=='success'){					
+				$scope.result = JSON.parse(execute_record("delete_record", param));
+				if($scope.result.ret == 'success') {
 					toastr.success($scope.result.message);
 					_selectRecord();
 					$scope.onechecked = [];
 					$scope.checkedId = [];
-					$scope.selected=false;
-				}else{
+					$scope.selected = false;
+				} else {
 					toastr.error($scope.result.message);
 				}
-				
+
 			}, function() {
 
 				//$log.info('Modal dismissed at: ' + new Date());
 			});
-		}else{
+		} else {
 			toastr.warning("请选择记录");
+		}
+
+	}
+	
+	//导出
+	$scope.exportRecord=function(){		
+		if($scope.setClass.classes&&$scope.setClass.paper&&$scope.setClass.sujectHour&&$scope.setClass.classes){
+			var param={
+				classId:$scope.setClass.classes,
+				subject:$scope.setClass.subject,
+				classHourId:$scope.setClass.sujectHour,
+				testId:$scope.setClass.paper
+			}	
+			_showModal();
+			$scope.result=JSON.parse(execute_record('test_export',JSON.stringify(param)));
+			if($scope.result.ret=='success'){
+				_hideModal();
+				toastr.success($scope.result.message);
+			}else{
+				_hideModal();
+				toastr.error($scope.result.message);
+				console.log(JSON.stringify($scope.result.message))
+			}
+		}else{
+			toastr.warning("缺少必要条件，不能导出");
 		}
 		
 	}
 })
-
-app.directive('select', function() {
+//确认弹出框
+app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
+	$scope.content='是否进行'+angular.copy(content)+'操作？';
+	$scope.ok = function() {
+		$modalInstance.close('success');
+	}
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	}
+})
+/*app.directive('select', function() {
 	return {
 		restrict: 'A',
 		require: 'ngModel',
@@ -313,38 +350,36 @@ app.directive('select', function() {
 			
 		}
 	}
-})
+})*/
 app.directive('select', function() {
 	return {
 		restrict: 'A',
 		require: 'ngModel',
-		scope:{
-			defalutvalue:'=?'
+		scope: {
+			defalutvalue: '=?'
 		},
 		link: function(scope, element, attrs, ngModelCtr) {
-		scope.$watch('defalutvalue',function(){
-			if(scope.defalutvalue){
-				$(element).multiselect({
-				width: "10rem",
-				multiple: false,
-				selectedHtmlValue: '请选择',
-				defalutvalue:scope.defalutvalue,
-				change: function() {
-					$(element).val($(this).val());
-					scope.$apply();
-					if(ngModelCtr) {
-						ngModelCtr.$setViewValue($(element).val());
-						if(!scope.$root.$$phase) {
+			scope.$watch('defalutvalue', function() {
+				if(scope.defalutvalue) {
+					$(element).multiselect({
+						width: "10rem",
+						multiple: false,
+						selectedHtmlValue: '请选择',
+						defalutvalue: scope.defalutvalue,
+						change: function() {
+							$(element).val($(this).val());
 							scope.$apply();
+							if(ngModelCtr) {
+								ngModelCtr.$setViewValue($(element).val());
+								if(!scope.$root.$$phase) {
+									scope.$apply();
+								}
+							}
 						}
-					}
+					});
 				}
-			});
-			}
-		})
-			
-			
-			
+			})
+
 		}
 	}
 })
@@ -352,41 +387,41 @@ app.directive('select1', function() {
 	return {
 		restrict: 'A',
 		require: 'ngModel',
-		scope:{
-			defalutvalue:'=?',
-			list:'=?'
+		scope: {
+			defalutvalue: '=?',
+			list: '=?'
 		},
 		link: function(scope, element, attrs, ngModelCtr) {
-		scope.$watch('defalutvalue+list',function(){
-			if(scope.defalutvalue){
-				if(scope.list){
-					var str='';
-					for(var i=0;i<scope.list.length;i++){
-						str+='<option value="'+scope.list[i]+'">'+scope.list[i]+'</option>';
-					}
-					$(element).html(str);
-				}
-				
-				$(element).multiselect({
-				multiple: false,
-				selectedHtmlValue: '请选择',
-				defalutvalue:scope.defalutvalue,
-				change: function() {
-					$(element).val($(this).val());
-					scope.$apply();
-					if(ngModelCtr) {
-						ngModelCtr.$setViewValue($(element).val());
-						if(!scope.$root.$$phase) {
-							scope.$apply();
+			scope.$watch('defalutvalue+list', function() {
+
+				if(scope.defalutvalue) {
+					if(scope.list) {
+						var str = '';
+						for(var i = 0; i < scope.list.length; i++) {
+							str += '<option value="' + scope.list[i] + '">' + scope.list[i] + '</option>';
+						}
+						if(str) {
+							$(element).html(str);
 						}
 					}
+
+					$(element).multiselect({
+						multiple: false,
+						selectedHtmlValue: '请选择',
+						defalutvalue: scope.defalutvalue,
+						change: function() {
+							$(element).val($(this).val());
+							scope.$apply();
+							if(ngModelCtr) {
+								ngModelCtr.$setViewValue($(element).val());
+								if(!scope.$root.$$phase) {
+									scope.$apply();
+								}
+							}
+						}
+					});
 				}
-			});
-			}
-		})
-			
-			
-			
+			})
 		}
 	}
 })
@@ -394,41 +429,38 @@ app.directive('select2', function() {
 	return {
 		restrict: 'A',
 		require: 'ngModel',
-		scope:{
-			defalutvalue:'=?',
-			list:'=?'
+		scope: {
+			defalutvalue: '=?',
+			list: '=?'
 		},
 		link: function(scope, element, attrs, ngModelCtr) {
-		scope.$watch('defalutvalue+list',function(){
-			if(scope.defalutvalue){
-				if(scope.list){
-					var str='';
-					for(var i=0;i<scope.list.length;i++){
-						str+='<option value="'+scope.list[i].key+'">'+scope.list[i].value+'</option>';
-					}
-					$(element).html(str);
-				}
-				
-				$(element).multiselect({
-				multiple: false,
-				selectedHtmlValue: '请选择',
-				defalutvalue:scope.defalutvalue,
-				change: function() {
-					$(element).val($(this).val());
-					scope.$apply();
-					if(ngModelCtr) {
-						ngModelCtr.$setViewValue($(element).val());
-						if(!scope.$root.$$phase) {
-							scope.$apply();
+			scope.$watch('defalutvalue+list', function() {
+				if(scope.defalutvalue) {
+					if(scope.list) {
+						var str = '';
+						for(var i = 0; i < scope.list.length; i++) {
+							str += '<option value="' + scope.list[i].key + '">' + scope.list[i].value + '</option>';
 						}
+						$(element).html(str);
 					}
+					$(element).multiselect({
+						multiple: false,
+						selectedHtmlValue: '请选择',
+						defalutvalue: scope.defalutvalue,
+						change: function() {
+							$(element).val($(this).val());
+							scope.$apply();
+							if(ngModelCtr) {
+								ngModelCtr.$setViewValue($(element).val());
+								if(!scope.$root.$$phase) {
+									scope.$apply();
+								}
+							}
+						}
+					});
 				}
-			});
-			}
-		})
-			
-			
-			
+			})
+
 		}
 	}
 })

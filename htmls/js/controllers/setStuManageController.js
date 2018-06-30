@@ -7,6 +7,15 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	$scope.classList=[];//班级列表数组
 	$scope.isActive = 0;
 	$scope.classobject='';
+	$('#myModal').modal('hide');//默认隐藏loading
+	//隐藏loading
+	var _hideModal=function(){
+		$('#myModal').modal('hide');
+	}
+	//显示loading
+	var _showModal=function(){
+		$('#myModal').modal('show');
+	}
 	/*$scope.refreshStudent = function(){
 		var param = {
 				classId:classId
@@ -67,17 +76,47 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	var _init=function(){
 		_selectClass();
 		_selectStudent();
-	}();
-
+	}();		
+	//打开添加班级弹框
+	$scope.addClass = function() {
+		var modalInstance = $modal.open({
+			templateUrl: 'addClassModal.html',
+			controller: 'addClassModalCtrl',
+			size: 'md',
+			backdrop:false,
+			/*resolve: {
+				infos: function() {
+					return $scope.classes.length;
+				}
+			}*/
+		});
+		modalInstance.result.then(function(info) {
+			console.log("班级id"+JSON.stringify(info))
+			_selectClass();
+			for(var i=0;i<$scope.classList.length;i++){
+				if(info==$scope.classList[i].classId){
+					$scope.classId=info;
+					$scope.classobject=$scope.classList[i];
+					$scope.isActive =$scope.classList.length-1;
+					_selectStudent();
+					
+				}
+			}
+			
+			
+		}, function() {
+			//$log.info('Modal dismissed at: ' + new Date());
+		});
+	};
 	/*切换班级*/
-	$scope.changeClass=function(item,$index){	
-		
+	$scope.changeClass=function(item,$index){			
 		$scope.isActive = $index; 
 		$scope.classId=item.classId;
 		$scope.classobject=item;
-		console.log(JSON.stringify(item))
+		console.log("时告诉刚刚说"+JSON.stringify($scope.classobject))
 		_selectStudent();
 	}
+	
 	//本地导入学生
 	$scope.patchImport = function() {
 			var modalInstance = $modal.open({
@@ -94,49 +133,20 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		
 			modalInstance.result.then(function(info) {
 				if(info){
+					console.log(JSON.stringify(info))
 					_selectClass();
 					for(var i=0;i<$scope.classList.length;i++){
 						if(info==$scope.classList[i].classId){
 						$scope.classId=info;
 						$scope.classobject=$scope.classList[i];
 						$scope.isActive =$scope.classList.length-1;
-						$scope.changeClass($scope.classobject,$scope.isActive);
+						_selectStudent();
 					}
 					}
-					
 				}
 			}, function() {
 		});
-		}		
-	//打开添加班级弹框
-	$scope.addClass = function() {
-		var modalInstance = $modal.open({
-			templateUrl: 'addClassModal.html',
-			controller: 'addClassModalCtrl',
-			size: 'md',
-			backdrop:false,
-			/*resolve: {
-				infos: function() {
-					return $scope.classes.length;
-				}
-			}*/
-		});
-		modalInstance.result.then(function(info) {			
-			_selectClass();
-			for(var i=0;i<$scope.classList.length;i++){
-				if(info==$scope.classList[i].classId){
-					$scope.classId=info;
-					$scope.isActive =$scope.classList.length-1;
-					_selectStudent();
-					
-				}
-			}
-			
-			
-		}, function() {
-			//$log.info('Modal dismissed at: ' + new Date());
-		});
-	};
+		}
 	//打开编辑班级弹框
 	$scope.editClass = function(item,$index) {
 		var modalInstance = $modal.open({
@@ -423,8 +433,17 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 })
 //导入学生控制器	
 app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,infos) {
+	
 	$scope.isfileType=false;
-	console.log(JSON.stringify(infos))
+	//隐藏loading
+	var _hideModal=function(){
+		$('#myModal').modal('hide');
+	}
+	//显示loading
+	var _showModal=function(){
+		$('#myModal').modal('show');
+	}
+	console.log("吃哈哈哈"+JSON.stringify(infos));
 	if(infos){
 		$scope.fileType=angular.copy(infos.atype);
 		$scope.fileType1=angular.copy($scope.fileType);
@@ -459,8 +478,7 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 				if(ext != ".XLS" && ext != ".XLSX") {
 					toastr.warning("只能导入.XLSX、.XLS类型文件");
 					return ;
-				}else{
-					
+				}else{	
 					$scope.result=JSON.parse(execute_student("import_student",$scope.filepath));
 					console.log("哈哈哈哈"+JSON.stringify($scope.result))
 					if($scope.result.ret=='success'){
@@ -476,12 +494,16 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 				toastr.warning("请选择文件");
 			}
 		}else{
+			_showModal();
 			$scope.result=JSON.parse(execute_student("import_server",infos.classId));
+			console.log(JSON.stringify($scope.result))
 			if($scope.result.ret=='success'){
-				toastr.success($scope.result.message);
-				$modalInstance.close($scope.result.remak);
+				toastr.success($scope.result.message);				
+				$modalInstance.close($scope.result.remark);
+				_hideModal();
 			}else{
 				toastr.error($scope.result.message);
+				_hideModal();
 			}
 		}
 	}
@@ -679,6 +701,7 @@ app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toa
 	}
 	$scope.ok = function() {
 		var param = $scope.classInfo;
+		console.log("参数"+JSON.stringify(param))
 		$scope.result= JSON.parse(execute_student("insert_class",JSON.stringify(param)));
 		console.log("滴滴滴滴"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){

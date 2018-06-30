@@ -12,6 +12,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 		<link rel="stylesheet" href="../../css/bootstrap.css" />
 		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../css/page.css" />
 		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
 		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
@@ -53,7 +54,6 @@
 			display: block;
 			visibility: visible;
 		}
-		
 	</style>
 	<body class="bg clearfix" ng-controller="mainAnswerCtrl">		
 			<div class="head clearfix bggreen">
@@ -156,7 +156,13 @@
 			  		<button class="btn savebtn" ng-click="uploadServer()">上传服务</button>
 			  </div>
 			</div>			
-		</div>
+		</div>	
+		<div id="myModal" class="modal fade" data-keyboard="false"
+	        data-backdrop="static" data-role="dialog"
+	        aria-labelledby="myModalLabel" aria-hidden="true">
+	        <div id="loading" class="loading">加载中</div>
+	    </div>
+
 		</body>
 
 </html>
