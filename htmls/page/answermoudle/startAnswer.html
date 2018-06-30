@@ -117,7 +117,7 @@
 						<span ng-show="myForm.subject.$invalid" class="warning">*</span>
 					</p>
 					<p class="text clearfix">
-						<label class="labelwd pull-left">课程名</label>{{setClass.sujectName}}{{myForm.sujectName.$invalid}}
+						<label class="labelwd pull-left">课程名</label>
 						<select class="single" select2 ng-model="setClass.sujectName" name="sujectName" defalutvalue='setClass.sujectName1' list="classhourList" ng-change="changeClassHour(setClass.sujectName)" required>
 				   			<option ng-repeat="houritem in classhourList track by $index" value="{{houritem}}">{{houritem.value}}</option>
 						</select>	
