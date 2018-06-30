@@ -99,7 +99,8 @@
 						<span class="pull-right">{{item.percent*100}}%</span>
 					</p>					
 					<div class="progress mt5">
-					    <div class="progress-bar" ng-style="{width:{{item.percent}}*100 +'%'}" style="width:'%';background: #7ee074;">{{item.percent*100}}%</div>	
+					   <!-- <div class="progress-bar" ng-style="{width:{{item.percent}}*100 +'%'}" style="width:'%';background: #7ee074;">{{item.percent*100}}%</div>	-->
+					    <div class="progress-bar" ng-style="{{item.style}}" style="width:'%';background: #7ee074;">{{item.percent*100}}%</div>	
 					     <!--<div class="progress-bar" ng-style="{width:{{item.count}}*100/{{questionSum}}+'%'}" style="width:'%';background: green;">{{item.count*100/questionSum | number:1}}%</div>		-->
 					 </div>
 				</div>			

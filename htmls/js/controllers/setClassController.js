@@ -2,7 +2,7 @@
 //var app = angular.module('app', ['ngCookies','ui.bootstrap', 'toastr']);
 var app = angular.module('app', ['ui.bootstrap', 'toastr']);
 //app.controller('setClassCtrl', function($scope, toastr,$cookies, $cookieStore,$modal,$window) {
-app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
+app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window) {
 	$scope.setClass={
 		classes:'',
 		subject:'',
@@ -12,6 +12,7 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 	$scope.classList=[];//班级数组
 	$scope.subjectlists=[];//科目数组
 	$scope.classhourList=[]//课程数组
+	$rootScope.isSign=false;//是否是签到
 	/*查询班级列表*/
 	var _selectClass = function() {
 		$scope.result = JSON.parse(execute_student("select_class"));
@@ -45,7 +46,7 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 	//查询课程
 	var _selectClassHour=function(){
 		$scope.result=JSON.parse(execute_record("select_class_hour",$scope.setClass.classes,$scope.setClass.subject));
-		//console.log(JSON.stringify($scope.result))
+		console.log("课程"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){			
 			if($scope.result.item.length>0){
 				angular.forEach($scope.result.item,function(i){
@@ -71,6 +72,8 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 			if($scope.setClass.classes==i.key){
 				$scope.classesobject=i;
 				$scope.classhourList=[];
+				$scope.setClass.sujectName="";
+				$scope.sujectNameobject="";
 				_selectClassHour();
 			}
 		})
@@ -80,6 +83,8 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 	$scope.changeSubject=function(subject){
 		$scope.setClass.subject	=subject;
 		$scope.classhourList=[];
+		$scope.setClass.sujectName="";
+		$scope.sujectNameobject="";
 		_selectClassHour();
 	}
 	
@@ -172,8 +177,9 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 	}
 	//删除课时
 	$scope.delClassHour=function(){
+		console.log(JSON.stringify($scope.sujectNameobject))
 		if($scope.setClass.sujectName){
-			var content="删除题目";
+			var content="删除课程";
 			var modalInstance = $modal.open({
 				templateUrl: 'sureModal.html',
 				controller: 'sureModalCtrl',
@@ -189,7 +195,7 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 				var param={
 					classHourId:$scope.setClass.sujectName,
 				}
-				console.log(JSON.stringify(param))
+				
 				param=JSON.stringify(param)			
 				$scope.result=JSON.parse(execute_record("delete_class_hour",param));
 				if($scope.result.ret=='success'){
@@ -220,11 +226,13 @@ app.controller('setClassCtrl', function($scope, toastr,$modal,$window) {
 		}
 		$scope.result=JSON.parse(execute_attendance("sign_in_start",JSON.stringify(param)));
 		if($scope.result.ret=='success'){
+			$rootScope.isSign=true;
 			toastr.success($scope.result.message);
 			/*$scope.param = "classId=" + $scope.setClass.classesobject.key + "&className=" + $scope.setClass.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
 			$scope.objectUrl = '../../page/answermoudle/userAttend.html' + '?' + $scope.param;
 			$window.location.href =$scope.objectUrl;*/
 		}else{
+			$rootScope.isSign=false;
 			toastr.error($scope.result.message);	
 		}
 	}
@@ -315,7 +323,7 @@ app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.studentAttendList=[];//签到学生数组
 	var _getsignStudent=function(){
 		$scope.studentAttendList=JSON.parse(execute_attendance("get_sign_in"));
-		console.log("哈哈哈"+JSON.stringify($scope.studentAttendList))
+		//console.log("哈哈哈"+JSON.stringify($scope.studentAttendList))
 	}
 	var _init=function(){
 		_getsignStudent();
@@ -323,12 +331,11 @@ app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
 	
 	 $scope.returnPage=function(){
 	 	$scope.result=JSON.parse(execute_attendance("sign_in_stop"));  
-	 	//console.log("停止答题"+JSON.stringify($scope.result));
+	 	console.log("停止答题"+JSON.stringify($scope.result));
 	 	if($scope.result.ret=='success'){
-	 		window.history.go(-1);	 	
-			window.history.back();  //返回上一页
-			window.location.href = "../../page/answermoudle/answerCenter.html";
+			$rootScope.isSign=false;
 	 	}else{
+	 		$rootScope.isSign=true;
 	 		toastr.error($scope.result.message);
 	 	}
 	 	
@@ -342,14 +349,12 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
 	var myTimer;
 	$scope.time=3;
 	var _stopAnswer=function(){
-//		if($scope.time<=0||($scope.studentName&&$scope.studentName!="抢答中")){
-//		$interval.cancel(myTimer); 
-//		}
 		if($scope.studentName&&$scope.studentName!="抢答中"){
 			$interval.cancel(myTimer); 
 		}
 
 	}
+	$scope.isStopAswer=true;//是否是停止按钮
 	//定时器
 	myTimer = $interval(function(){	
 		$scope.result=JSON.parse(execute_preemptive("get_quick_answer_studentName"));
@@ -377,6 +382,14 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
 	$scope.stopAnswer = function(){		
 		 //关闭定时器
 		$interval.cancel(myTimer); 
+			$scope.result=JSON.parse(execute_preemptive("stop_quick_answer"));	
+			if($scope.result.ret=='success'){
+				$scope.isStopAswer=false;
+				toastr.success($scope.result.message);
+			}else{
+				$scope.isStopAswer=true;
+				toastr.error()
+			}
 	};
 	
 	$scope.$on('$destroy',function(){

@@ -276,7 +276,7 @@ button.whitebtn{
 button.whitebtn:hover{
 	opacity: 0.8;
 }
-button.btnfff{
+button.btnfff,a.btnfff,a.hover{
 	background: #fff;
 	border-radius: 0.10rem;
 	color: #90a4cc;
@@ -284,6 +284,13 @@ button.btnfff{
 	width: 2.0rem;
 	height: 0.48rem;
 	/*position: relative;*/
+}
+a.btnfff,a.btnfff:active{
+	cursor: default;
+	height: 0.48rem;
+	line-height: 0.48rem;
+	padding: 0px 12px;
+	color: #90a4cc;
 }
 /*button.btnfff:after{
 	content: url(../image/sub.png);
@@ -371,18 +378,25 @@ label.area a.active{
 .editbtn{
 	position: absolute;
 	bottom: 0.10rem;
-	right: 0.10rem;
-	width:0.30rem ;
+	right: 0.40rem;
+	width:0.20rem ;
 	height: auto;
 	cursor: pointer;
 	margin-top: 0.03rem;
 	vertical-align: middle;
 }
+.editbtn:active,.delbtn:active{
+	border: 1px solid #0088CC;
+	border-radius: 100%;
+}
+.editbtn:active{
+	border-radius:0.05rem;
+}
 .delbtn{
 	position: absolute;
 	bottom: 0.10rem;
-	left: 0.10rem;
-	width:0.30rem ;
+	right: 0.10rem;
+	width:0.20rem ;
 	height: auto;
 	cursor: pointer;
 	margin-top: 0.03rem;
@@ -615,7 +629,11 @@ table.answer{
 .modal-body .form-group label{
 	text-align: right !important;
 }
-
+.modal-body .form-group div.warning{
+	border-color: #a94442;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
 /*课程设置*/
 .modboxs{
 	margin: 0.1rem 1.6rem;
@@ -763,12 +781,16 @@ ul.col-4 li{
 	width: 25%;
 	text-align: center;	
 }
+ul.col-4 li:hover a{
+	opacity: 0.8;
+}
 ul.col-4 li a{
 	width: 2.0rem;
 	display: inline-block;
 	padding: 0.24rem 0;		
 	background: #fff;
 	border-radius: 0.10rem;
+	
 }
 ul.col-4 li a img{
 	margin-top: -0.03rem;
@@ -779,6 +801,12 @@ ul.col-4 li a span{
 	color: #90a4cc;
 	font-size: 0.32rem;
 	vertical-align: middle;
+}
+a.rebtn{
+	display: block;
+	width: 100px;
+	background: #fff;
+	opacity: 0.8;
 }
 @media screen and (max-width: 920px) {
     .head ul li a{
@@ -807,8 +835,17 @@ ul.col-4 li a span{
 		width: 4.0rem;
 	}
 	ul.col-4 li a{
-		width: 4.0rem;
+		width: 3.8rem;
 		padding: 0.4rem 0;		
+	}
+	.content button.circlefff{
+		margin: 8%;
+		width: 2.8rem;
+		height: 2.8rem;
+		border-radius: 100%;
+		background: #fff;
+		color: #90a4cc;
+		font-size: 0.30rem;
 	}
 }
 /*table.classlist tbody tr:hover,

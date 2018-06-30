@@ -64,7 +64,9 @@
 			</label>
 			</div>
 			<div class="operatebtn  clearfix text-center">
-		  		<button class="btn savebtn" ng-click="stopAnswer()">停止答题</button>
+		  		<button class="btn savebtn" ng-show="isStopAswer" ng-click="stopAnswer()">停止答题</button>
+		  		<a href="../../page/answermoudle/answerCenter.html"  ng-show="!isStopAswer">
+		  		<button class="btn savebtn">返回</button></a>
 		 	</div>
 	</body>
 

@@ -65,7 +65,7 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $window) {
 		$scope.data = []; //柱状图数据
 		$scope.resultmap = {};
 		$scope.rangeList=[];
-		var colors=[];
+		var colors=[];//颜色数组
 		var letterlist=[];//选择的字母数组
 		$scope.answerResult=[];//选择的作答结果
 		$scope.answerRate=0;//正确率
@@ -214,83 +214,61 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $window) {
 					}]
 
 				};
+				var str;
+				//查询正确答案人数
+				var _getanswerinfo=function(){
+					$scope.selresultmap = JSON.parse(execute_answer("get_answer_info_sum"));
+						console.log(JSON.stringify($scope.selresultmap));
+						if($scope.selresultmap!=null){										
+							if($scope.selresultmap[str]){
+								$scope.answerResult=$scope.selresultmap[str];
+							}else{
+								$scope.answerResult=[];
+							}
+							//正确率
+			              	$scope.answerRate=($scope.answerResult.length/$scope.studentCount)*100;
+							
+						}
+				}
 				/*柱状图点击事件*/
 				myChart.on('click', function(params) {
 				var objs=option.xAxis;		
-				 console.log("阿山海上海:"+JSON.stringify(params.name));
 					for(var i=0;i<objs.data.length;i++){						
 					  var datavalue = objs.data[i];		
-					   console.log("value:"+JSON.stringify(datavalue));
 		              if(datavalue == params.name){
 		              	if(option.series[0].data[params.dataIndex].itemStyle.normal.color=='#fff'){
 		              		option.series[0].data[params.dataIndex].itemStyle.normal.color = '#5ed6be';
-		              		letterlist.push(datavalue);
-						      letterlist = letterlist.sort(function (item1, item2) {
-						          return item1.localeCompare(item2)
-						      })						 
-								$scope.selresultmap = JSON.parse(execute_answer("get_answer_info_sum"));
-								console.log(JSON.stringify(letterlist));
-								console.log(JSON.stringify($scope.selresultmap));
-								if($scope.selresultmap!=null){
-									for(var j=0;j<letterlist.length;j++){
-										console.log("啥哈哈"+JSON.stringify(letterlist[j]))
-										if($scope.selresultmap[letterlist[j]]){
-											$scope.answerResult=$scope.selresultmap[letterlist[j]];
-										}else{
-											$scope.answerResult=[];
-										}
-										
-									}									
-									console.log("哈哈哈"+JSON.stringify($scope.answerResult))
-					              	$scope.answerRate=($scope.answerResult.length/$scope.studentCount)*100;
-					              	//监听正确率
-									$scope.$watch('answerRate',function(newvalue,oldvalue){
-										if(newvalue=oldvalue){
-											$scope.answerRate=newvalue;
-										}
-									},true)
-									
-								}
-		              	}else{
-		              		option.series[0].data[params.dataIndex].itemStyle.normal.color='#fff';
-		              		if(option.series[0].data[params.dataIndex].itemStyle.normal.color == '#5ed6be'){
 		              			letterlist.push(datavalue);
-							      letterlist = letterlist.sort(function (item1, item2) {
-							          return item1.localeCompare(item2)
-							      })						 
-									$scope.selresultmap = JSON.parse(execute_answer("get_answer_info_sum"));
-									console.log(JSON.stringify(letterlist));
-									console.log(JSON.stringify($scope.selresultmap));
-									if($scope.selresultmap!=null){
-										for(var j=0;j<letterlist.length;j++){
-											console.log("啥哈哈"+JSON.stringify(letterlist[j]))
-											if($scope.selresultmap[letterlist[j]]){
-												$scope.answerResult=$scope.selresultmap[letterlist[j]];
-											}else{
-												$scope.answerResult=[];
-											}
-											
-										}									
-										console.log("哈哈哈"+JSON.stringify($scope.answerResult))
-						              	$scope.answerRate=($scope.answerResult.length/$scope.studentCount)*100;
-						              	//监听正确率
-										$scope.$watch('answerRate',function(newvalue,oldvalue){
-											if(newvalue=oldvalue){
-												$scope.answerRate=newvalue;
-											}
-										},true)
-										
-									}
+		              			//按ABC排序
+						      	letterlist = letterlist.sort(function (item1, item2) {
+						          return item1.localeCompare(item2)
+						      })
+						      	//转换成字符串
+						     str=letterlist.toString().replace(/,/g,'');			     
+						     _getanswerinfo();
+						     $scope.$apply();//刷新正确率
+		              	}else{	              					              		
+		              		for(var i=0;i<letterlist.length;i++){
+		              			if(datavalue==letterlist[i]){
+		              				letterlist.splice(i,1);
+		              				option.series[0].data[params.dataIndex].itemStyle.normal.color='#fff';
+		              			}
 		              		}
+		              		//按ABC排序
+		              		letterlist = letterlist.sort(function (item1, item2) {
+						          return item1.localeCompare(item2)
+						      })
+	              			//转换成字符串
+						     str=letterlist.toString().replace(/,/g,'');
+		              		_getanswerinfo();
+		              		$scope.$apply();//刷新正确率
 		              		
-		              	}
-		              	
+		              	}	
 						continue;
 		              }
-		               console.log("选择的答案:"+JSON.stringify(option.series[0].data[params.dataIndex]));		        
-					  /*option.series[0].data[i].itemStyle.normal.color = '#fff';*/
 		           }
 					myChart.setOption(option);
+					
 				});
 			if(option && typeof option === "object") {
 					myChart.setOption(option, true);
@@ -325,6 +303,7 @@ app.controller('stopSingeAnswerCtrl', function($scope,$location, toastr, $window
 		var colors=[];//颜色数组
 		$scope.answerResult=[];//选择的正确人数数组
 		$scope.answerRate=0;
+		var rangeLists=[];
 		//获取答题人数
 		$scope.refresAnswerNum = function() {
 			$scope.result = JSON.parse(execute_answer("get_single_answer_num"));
@@ -340,63 +319,41 @@ app.controller('stopSingeAnswerCtrl', function($scope,$location, toastr, $window
 			$scope.result = JSON.parse(execute_answer("stop_single_answer"));
 			if($scope.result.ret == 'success') {
 				$scope.isStopAswer = true;
+				$scope.resultmap = JSON.parse(execute_answer("get_single_answer"));
+				console.log("data" + JSON.stringify($scope.resultmap));
 				if($scope.answerType=='char'){
 					rangeList = ["A", "B", "C", "D"];
 				}else if($scope.answerType=='number'){
 					rangeList = ["1", "2", "3", "4","5","6","7","8","9"];
 				}else if($scope.answerType=='judge'){
 					rangeList = ["对", "错"];
-				}
-				
-				console.log("答题范围" + JSON.stringify(rangeList))
-					//$scope.rangeList=["A","B","C","D","E"];
-				$scope.resultmap = JSON.parse(execute_answer("get_single_answer"));
-				//$scope.resultmap={"A":10,"B":3};
-				console.log("data" + JSON.stringify($scope.resultmap));
-				$scope.data = [];
-				/*if(rangeList.length > 0) {
-					for(var i = 0; i < rangeList.length; i++) {
-						if($scope.resultmap != null) {
-							console.log("item" + JSON.stringify($scope.resultmap))
-							if($scope.resultmap[rangeList[i]]) {
-								var item = $scope.resultmap[rangeList[i]];
-							} else {
-								var item = 0;
-							}
-						} else {
-							var item = 0;
-						}
-
-						$scope.data.push(item);
-
+					$scope.resultmap={
+						"对":$scope.resultmap["true"],
+						"错":$scope.resultmap["false"]
 					}
-				} else {
-					var item = 0;
-					$scope.data.push(item);
-				}*/
-				
-				
+				}
+				//$scope.rangeList=["A","B","C","D","E"];
+				console.log("答题范围" + JSON.stringify(rangeList))								
+				//$scope.resultmap={"A":10,"B":3};				
+				$scope.data = [];				
 				if(rangeList.length > 0) {
 					for(var i = 0; i < rangeList.length; i++) {
 						if($scope.resultmap != null) {
 							//console.log("item" + JSON.stringify($scope.resultmap))
 							if($scope.resultmap[rangeList[i]]) {
-								//var item = $scope.resultmap[rangeList[i]];
 								var item={
 									value:$scope.resultmap[rangeList[i]],
 									itemStyle:{normal:{color:'#fff'}
 									}
 								}
-							} else {
-								//var item = 0;
+						} else {
 								var item={
 									value:0,
 									itemStyle:{normal:{color:'#fff'}
 									}
 								}
 							}
-						} else {
-							//var item = 0;
+					} else {
 							var item={
 								value:0,
 								itemStyle:{normal:{color:'#fff'}
@@ -408,7 +365,6 @@ app.controller('stopSingeAnswerCtrl', function($scope,$location, toastr, $window
 						colors.push(coloritem);
 					}
 				} else {
-					//var item = 0;
 					var item={
 						value:0,
 						itemStyle:{normal:{color:'#fff'}
@@ -416,9 +372,6 @@ app.controller('stopSingeAnswerCtrl', function($scope,$location, toastr, $window
 					}
 					$scope.data.push(item);
 				}
-				
-				
-				/*var colors = ['#5793f3', '#d14a61', '#675bba'];*/
 				option = {
 					color: ['#fff'],
 					tooltip: {
@@ -458,9 +411,6 @@ app.controller('stopSingeAnswerCtrl', function($scope,$location, toastr, $window
 						show: false,
 						type: 'value',
 						splitLine: false, //是否显示网格线
-						/*axisTick:{
-				        show:false
-				    },*/
 						axisLine: {
 							lineStyle: {
 								color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
@@ -504,32 +454,26 @@ app.controller('stopSingeAnswerCtrl', function($scope,$location, toastr, $window
 				};
 				/*柱状图点击事件*/
 				myChart.on('click', function(params) {
-				var objs=option.xAxis;		
-				 console.log("阿山海上海:"+JSON.stringify(params.name));
-				 /*if(params.name=="对"){
-				   	params.name="true";
-				   }else{
-			   	 	params.name="false";
-				   }*/
+				var objs=option.xAxis;				 
 					for(var i=0;i<objs.data.length;i++){						
-					  var datavalue = objs.data[i];		
-					  console.log(JSON.stringify(objs.data[i]))
-					  
+					  var datavalue = objs.data[i];							 
 		              if(datavalue == params.name){
-		              	console.log("value:"+JSON.stringify(datavalue));
 		              	option.series[0].data[params.dataIndex].itemStyle.normal.color = '#5ed6be';
+		              	if($scope.answerType=='judge'){
+		              		if(datavalue=="对"){
+			              		datavalue="true";
+			              	}else{
+			              		datavalue="false";
+			              	}
+		              	}		              	
 		              	var dataparam={
 		              		answer:datavalue
 		              	}
+		              	//作答正确人员
 		              	$scope.answerResult=JSON.parse(execute_answer("get_single_answer_studentName",JSON.stringify(dataparam)));
-		              	console.log("哈哈哈"+JSON.stringify($scope.answerResult))
+		              	//正确率
 		              	$scope.answerRate=($scope.answerResult.length/$scope.totalStudent)*100;
-		              	//监听正确率
-						$scope.$watch('answerRate',function(newvalue,oldvalue){
-							if(newvalue=oldvalue){
-								$scope.answerRate=newvalue;
-							}
-						},true)
+		              	$scope.$apply();//刷新正确率
 						continue;
 		              }	        
 					  option.series[0].data[i].itemStyle.normal.color = '#fff';
@@ -656,16 +600,20 @@ app.controller('classuserCheckCtrl', function($scope, toastr,$location, $window,
 		//console.log(JSON.stringify($scope.result))
 		if($scope.result.ret == 'success') {
 			$scope.AllanswerInfo = $scope.result.item;
+			if($scope.result.item.length>0){
+				angular.forEach($scope.AllanswerInfo,function(i){
+					i.style1={
+						width:i.percent*100 +'%',
+						background:'#7ee074'
+					}
+					console.log(JSON.stringify($scope.AllanswerInfo))
+				})
+				
+			}
 		} else {
 			toastr.error($scope.result.message);
 		}
-	}
-	/*for(var i=0;i<120;i++){
-		var item={"answerCount":0,"percent":0,"studentId":"10000002","studentName":"学002"};	
-		$scope.AllanswerInfo.push(item);
-	}*/
-
-	
+	}	
 	//收取试卷
 	$scope.isgatherPaper=true;//是否是收取试卷按钮
 	$scope.gatherPaper=function(){

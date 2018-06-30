@@ -523,12 +523,14 @@ app.controller('findBindModalCtrl',function($scope,$modalInstance,toastr){
 })
 //添加学生控制器
 app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos){
+	$scope.errorState = false; /*点击确认按钮,表单校验中必填或必选边框红色*/
 	console.log(JSON.stringify(infos))
 	$scope.title="添加学生";
 	if(infos){
 		$scope.classId=infos.classId;
 		$scope.className=infos.className;
 	}
+	
 	$scope.student={		
 //		studentId:'',
 		studentName:'',
@@ -536,7 +538,46 @@ app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos
 		classId:$scope.classId,
 		className:$scope.className
 	}
-	$scope.ok = function() {
+	
+	/*查询学生列表*/
+	var _selectStudent = function() {
+		if($scope.student.studentId){
+			var param = {
+				classId:$scope.classId,
+				studentId:$scope.student.studentId
+			}
+		}
+		if($scope.student.iclickerId){
+			var param = {
+				classId:$scope.classId,
+				iclickerId:$scope.student.iclickerId
+			}
+		}
+		
+		console.log(JSON.stringify(param))
+		param =JSON.stringify(param);
+		$scope.result = JSON.parse(execute_student("select_student",param));
+		console.log("學生"+JSON.stringify($scope.result))
+		if($scope.result.ret=='success'){
+			if($scope.result.item.length>0){
+				$scope.errorState=true;
+			}
+			
+		}else{
+			
+			toastr.error($scope.result.message);
+		}
+		
+	};
+	//校验学号
+	$scope.blurStunum=function(){
+		_selectStudent();
+	}
+	$scope.ok = function(state) {
+		if(state == false) {
+			$scope.errorState = true;
+		} else {
+			$scope.errorState = false;
 		if(typeof $scope.student.studentId=='number'){
 			$scope.student.studentIdint=JSON.stringify($scope.student.studentId)
 		}
@@ -559,6 +600,7 @@ app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos
 		}else{
 			console.log(JSON.stringify($scope.result.detail))
 			toastr.error($scope.result.message);
+		}
 		}
 	}
 	$scope.cancel = function() {
