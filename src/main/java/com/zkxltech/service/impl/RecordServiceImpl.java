@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ejet.cache.BrowserManager;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
@@ -76,204 +77,210 @@ public class RecordServiceImpl implements RecordService{
         }
 	}
 	@Override
-	public Result testExport(Object object) {
-	    //查询
-		String fileName = "";
-		String titleName = "课程名称为[";
-		String testName = "试卷名称："; //FIXME 试卷名称
-		String className = "班级名称:"; //FIXME 班级名称
-		String studentSum = "学生人数:";//FIXME 学生人数
-		String dates = "";
-		Result r = new Result();
-		r.setRet(Constant.ERROR);
-		Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
-		if (StringUtils.isBlank(record.getClassId())||StringUtils.isBlank(record.getSubject())
-		        ||StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getTestId())) {
-            r.setMessage("缺少参数,请检查班次id,科目,课程id,试卷id四个参数");
-            return r;
-        }
-		//查询课程名称
-        ClassHourSql classHourSql = new ClassHourSql();
-        ClassHour classHour = new ClassHour();
-        classHour.setClassHourId(record.getClassHourId());
-        FileOutputStream out = null ;
-        try{
-            r = classHourSql.selectClassHour(classHour);
-            List<ClassHour> classHours = (List<ClassHour>) r.getItem();
-            if (ListUtils.isEmpty(classHours)) {
-                r.setMessage("未查询到该课程");
-                return r;
-            }
-            classHour = classHours.get(0);
-            titleName+=classHour.getClassHourName()+"]的作答详情";
-            //查询试卷名称
-            TestPaperSql testPaperSql = new TestPaperSql();
-            TestPaper testPaper = new TestPaper();
-            testPaper.setTestId(record.getTestId());
-            List<TestPaper> testPapers = (List<TestPaper>) testPaperSql.selectTestPaper(testPaper).getItem();
-            testPaper = testPapers.get(0);
-            testName+=testPaper.getTestName();
-            //查询班级名称
-            ClassInfoSql classInfoSql = new ClassInfoSql();
-            ClassInfo classInfo = new ClassInfo();
-            classInfo.setClassId(record.getClassId());
-             List<ClassInfo> classInfos= (List<ClassInfo>) classInfoSql.selectClassInfo(classInfo).getItem();
-             classInfo = classInfos.get(0);
-             className+=classInfo.getClassName();
-             
-             SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-             String date = format.format(new Date());
-             fileName += classInfo.getClassName()+classHour.getSubjectName()+classHour.getClassHourName()+date+".xls";
-             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-             dates = "创建时间:"+date+"  作答时间:"+classHours.get(0).getStartTime();
-    		//FIXEME 列数 = 6 + 该试卷的所有题目个数
-    		QuestionInfoSql questionInfoSql = new QuestionInfoSql();
-    		QuestionInfo questionInfo = new QuestionInfo();
-    		questionInfo.setTestId(record.getTestId());
-    		questionInfo.setStatus(Constant.STATUS_ENABLED);
-    		r = questionInfoSql.selectQuestionInfo(questionInfo);
-    		List<QuestionInfo> questionInfos = (List<QuestionInfo>) r.getItem();
-    		if (ListUtils.isEmpty(questionInfos)) {
-    		    r.setMessage("该试卷下没有任何题目信息");
-                return r;
-            }
-    		int columnNumber = 6 + questionInfos.size();
-            int[] columnWidth = new int[columnNumber];// 行宽
-            for (int i = 0; i < columnWidth.length; i++) {
-            	if (i==0) {
-            		columnWidth[i] = 12;	
-    			}else {
-    				columnWidth[i] = 10;	
-    			}
-    		}
-            String[] columnName = new String[columnNumber];// 标题
-            columnName[0] = "键盘";columnName[1] = "学号";columnName[2] = "姓名";
-            columnName[3] = "得分";columnName[4] = "正确率";columnName[5] = "排名";
-            for (int i = 6; i < columnName.length; i++) {
-            	columnName[i] = "题目"+(i-5);
-    		}
-    		List<List<Object>> lists = new ArrayList<List<Object>>();
-    		//FIXME 获取所有学生信息
-    		//List<Map<String, Object>> studentInfos = new ArrayList<Map<String,Object>>();
-    		List<StudentInfo> studentInfos = Global.getStudentInfos();
-    		if (ListUtils.isEmpty(studentInfos)) {
-                StudentInfoSql studentInfoSql = new StudentInfoSql();
-                StudentInfo studentInfo = new StudentInfo();
-                studentInfo.setClassId(record.getClassId());
-                r = studentInfoSql.selectStudentInfo(studentInfo);
-                studentInfos = (List<StudentInfo>) r.getItem();
-                if (ListUtils.isEmpty(studentInfos)) {
-                    r.setRet(Constant.ERROR);
-                    r.setMessage("未查到该班级下的学生信息");
-                   return r;
+	public void testExport(Object object) {
+	    new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //查询
+                String fileName = "";
+                String titleName = "课程名称为[";
+                String testName = "试卷名称："; //FIXME 试卷名称
+                String className = "班级名称:"; //FIXME 班级名称
+                String studentSum = "学生人数:";//FIXME 学生人数
+                String dates = "";
+                Result r = new Result();
+                r.setRet(Constant.ERROR);
+                Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+                if (StringUtils.isBlank(record.getClassId())||StringUtils.isBlank(record.getSubject())
+                        ||StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getTestId())) {
+                    BrowserManager.showMessage(false,"缺少参数,请检查班次id,科目,课程id,试卷id四个参数");
+                    return;
+                }
+                //查询课程名称
+                ClassHourSql classHourSql = new ClassHourSql();
+                ClassHour classHour = new ClassHour();
+                classHour.setClassHourId(record.getClassHourId());
+                FileOutputStream out = null ;
+                try{
+                    r = classHourSql.selectClassHour(classHour);
+                    List<ClassHour> classHours = (List<ClassHour>) r.getItem();
+                    if (ListUtils.isEmpty(classHours)) {
+                        BrowserManager.showMessage(false,"未查询到该课程");
+                        return ;
+                    }
+                    classHour = classHours.get(0);
+                    titleName+=classHour.getClassHourName()+"]的作答详情";
+                    //查询试卷名称
+                    TestPaperSql testPaperSql = new TestPaperSql();
+                    TestPaper testPaper = new TestPaper();
+                    testPaper.setTestId(record.getTestId());
+                    List<TestPaper> testPapers = (List<TestPaper>) testPaperSql.selectTestPaper(testPaper).getItem();
+                    testPaper = testPapers.get(0);
+                    testName+=testPaper.getTestName();
+                    //查询班级名称
+                    ClassInfoSql classInfoSql = new ClassInfoSql();
+                    ClassInfo classInfo = new ClassInfo();
+                    classInfo.setClassId(record.getClassId());
+                     List<ClassInfo> classInfos= (List<ClassInfo>) classInfoSql.selectClassInfo(classInfo).getItem();
+                     classInfo = classInfos.get(0);
+                     className+=classInfo.getClassName();
+                     
+                     SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+                     String date = format.format(new Date());
+                     fileName += classInfo.getClassName()+classHour.getSubjectName()+classHour.getClassHourName()+date+".xls";
+                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                     dates = "创建时间:"+date+"  作答时间:"+classHours.get(0).getStartTime();
+                    //FIXEME 列数 = 6 + 该试卷的所有题目个数
+                    QuestionInfoSql questionInfoSql = new QuestionInfoSql();
+                    QuestionInfo questionInfo = new QuestionInfo();
+                    questionInfo.setTestId(record.getTestId());
+                    questionInfo.setStatus(Constant.STATUS_ENABLED);
+                    r = questionInfoSql.selectQuestionInfo(questionInfo);
+                    List<QuestionInfo> questionInfos = (List<QuestionInfo>) r.getItem();
+                    if (ListUtils.isEmpty(questionInfos)) {
+                        BrowserManager.showMessage(false,"该试卷下没有任何题目信息");
+                        return ;
+                    }
+                    int columnNumber = 6 + questionInfos.size();
+                    int[] columnWidth = new int[columnNumber];// 行宽
+                    for (int i = 0; i < columnWidth.length; i++) {
+                        if (i==0) {
+                            columnWidth[i] = 12;    
+                        }else {
+                            columnWidth[i] = 10;    
+                        }
+                    }
+                    String[] columnName = new String[columnNumber];// 标题
+                    columnName[0] = "键盘";columnName[1] = "学号";columnName[2] = "姓名";
+                    columnName[3] = "得分";columnName[4] = "正确率";columnName[5] = "排名";
+                    for (int i = 6; i < columnName.length; i++) {
+                        columnName[i] = "题目"+(i-5);
+                    }
+                    List<List<Object>> lists = new ArrayList<List<Object>>();
+                    //FIXME 获取所有学生信息
+                    //List<Map<String, Object>> studentInfos = new ArrayList<Map<String,Object>>();
+                    List<StudentInfo> studentInfos = Global.getStudentInfos();
+                    if (ListUtils.isEmpty(studentInfos)) {
+                        StudentInfoSql studentInfoSql = new StudentInfoSql();
+                        StudentInfo studentInfo = new StudentInfo();
+                        studentInfo.setClassId(record.getClassId());
+                        r = studentInfoSql.selectStudentInfo(studentInfo);
+                        studentInfos = (List<StudentInfo>) r.getItem();
+                        if (ListUtils.isEmpty(studentInfos)) {
+                            BrowserManager.showMessage(false,"未查到该班级下的学生信息");
+                           return;
+                        }
+                    }
+                    int questionSum = columnNumber - 6;//题数
+                    studentSum = String.valueOf(studentInfos.size()); //学生人数
+                    for (int i = 0; i < studentInfos.size(); i++) {
+                        List<Object> listMaps = new ArrayList<Object>();
+                        while (columnNumber > listMaps.size()) {
+                            listMaps.add(null);
+                        }
+                        listMaps.set(0,(String) studentInfos.get(i).getIclickerId()); //答题器编号
+                        String studentId = (String)studentInfos.get(i).getStudentId();//学号
+                        listMaps.set(1, studentId); 
+                        listMaps.set(2,(String) studentInfos.get(i).getStudentName());//姓名
+                        //FIXME 每个学生的所有答题详情
+                        //List<Map<String, Object>> answerMapList = new ArrayList<Map<String,Object>>();
+                        RecordSql recordSql = new RecordSql();
+                        record.setStudentId(studentInfos.get(i).getStudentId());
+                        Result re = recordSql.selectRecord(record);
+                        List<Record> answerMapList = (List<Record>) re.getItem();
+                        double scoreSum = 0;
+                        double trueSum = 0; //正确题数
+                        for (int j = 0; j < answerMapList.size(); j++) {
+                            Map<String, Object> map = new HashMap<String, Object>();
+                            String answer = (String) answerMapList.get(j).getAnswer();
+                            String score = (String) answerMapList.get(j).getScore();
+                            String type = (String) answerMapList.get(j).getQuestionType();
+                            String result = (String) answerMapList.get(j).getResult();
+                            int questionId = Integer.parseInt((String) answerMapList.get(j).getQuestionId());
+                            if (score != null && !"".equals(score) && !"null".equals(score)) {
+                                if (!Constant.ZHUGUANTI_NUM.equals(type)) { //客观题得分需要正确
+                                    if (Constant.RESULT_TRUE.equals(result)) {
+                                        scoreSum += Double.parseDouble(score);
+                                    }
+                                }else { //主观题得分
+                                    if (!StringUtils.isBlank(answer)) {
+                                        scoreSum += Double.parseDouble(answer);
+                                    }
+                                }
+                            }
+                            if (Constant.RESULT_TRUE.equals(result)) {
+                                trueSum ++;
+                            }
+                            map.put("type", type);
+                            if ( answer == null ||answer.equals("null") || answer.equals("")) {
+                                answer = "";
+                            }
+                            map.put("answer", answer);
+                            map.put("result", result);
+                            listMaps.set(5+questionId,map);
+                        }
+                        listMaps.set(3,String.valueOf(scoreSum));//总分
+                        listMaps.set(4,String.format("%.2f",trueSum * 100/questionSum)+"%");//正确率
+                        lists.add(listMaps);
+                    }
+                    /*按分数降序排序*/
+                    Collections.sort(lists, new Comparator<Object>(){  
+                        @Override  
+                        public int compare(Object o1, Object o2) { 
+                            @SuppressWarnings("unchecked")
+                            double score1=Double.parseDouble(((List<String>)o1).get(3));  
+                            @SuppressWarnings("unchecked")
+                            double score2=Double.parseDouble(((List<String>)o2).get(3)); 
+                              if(score1<score2){
+                                    return 1;
+                                }else if(score1==score2){
+                                    return 0;
+                                }else{
+                                    return -1;
+                                }
+                        }             
+                    });
+                    /*计算名次*/
+                    int rank = 1;
+                    for (int i = 0; i < lists.size(); i++) {
+                        if (i != lists.size()-1) {
+                            double score1 = Double.parseDouble((String) lists.get(i).get(3));
+                            double score2 = Double.parseDouble((String) lists.get(i+1).get(3));
+                            lists.get(i).set(5,String.valueOf(rank));
+                            if (score1 != score2) {
+                                rank = i+2;
+                            }
+                        }else {
+                            lists.get(i).set(5,String.valueOf(rank));
+                        }
+                    }
+                    String flieUrl = System.getProperty("user.dir").replaceAll("\\\\", "/") + "/"+"excels/";
+                    SXSSFWorkbook wb = ExportExcel.ExportWithResponse("成绩明细表", titleName,testName ,dates,className, studentSum, testName, columnNumber, columnWidth, columnName , lists);   
+                    File file = new File(flieUrl);
+                    if (!file.exists()) {
+                        file.mkdirs();
+                    }
+                    out = new FileOutputStream(new File(flieUrl,fileName));
+                    wb.write(out);// 将数据写出去  
+                    out.flush();// 将数据写出去
+                    BrowserManager.showMessage(true,"导出成功");
+                }catch (Exception e) {
+                    log.error("", e);
+                    r.setMessage("导出失败");
+                    r.setDetail(IOUtils.getError(e));
+                    BrowserManager.showMessage(false,"导出失败");
+                }finally {
+                    if (out != null) {
+                        try {
+                            out.close();
+                        } catch (IOException e) {
+                            log.error("输出流关闭失败", e);
+                        } 
+                    }
                 }
             }
-    		int questionSum = columnNumber - 6;//题数
-    		studentSum = String.valueOf(studentInfos.size()); //学生人数
-    		for (int i = 0; i < studentInfos.size(); i++) {
-    			List<Object> listMaps = new ArrayList<Object>();
-    			while (columnNumber > listMaps.size()) {
-    				listMaps.add(null);
-    			}
-    			listMaps.set(0,(String) studentInfos.get(i).getIclickerId()); //答题器编号
-    			String studentId = (String)studentInfos.get(i).getStudentId();//学号
-    			listMaps.set(1, studentId); 
-    			listMaps.set(2,(String) studentInfos.get(i).getStudentName());//姓名
-    			//FIXME 每个学生的所有答题详情
-    			//List<Map<String, Object>> answerMapList = new ArrayList<Map<String,Object>>();
-    			RecordSql recordSql = new RecordSql();
-    			record.setStudentId(studentInfos.get(i).getStudentId());
-    			Result re = recordSql.selectRecord(record);
-    			List<Record> answerMapList = (List<Record>) re.getItem();
-    			double scoreSum = 0;
-    			double trueSum = 0; //正确题数
-    			for (int j = 0; j < answerMapList.size(); j++) {
-    				Map<String, Object> map = new HashMap<String, Object>();
-    				String answer = (String) answerMapList.get(j).getAnswer();
-    				String score = (String) answerMapList.get(j).getScore();
-    				String type = (String) answerMapList.get(j).getQuestionType();
-    				String result = (String) answerMapList.get(j).getResult();
-    				int questionId = Integer.parseInt((String) answerMapList.get(j).getQuestionId());
-    				if (score != null && !"".equals(score) && !"null".equals(score)) {
-    					if (!Constant.ZHUGUANTI_NUM.equals(type)) { //客观题得分需要正确
-    						if (Constant.RESULT_TRUE.equals(result)) {
-    							scoreSum += Double.parseDouble(score);
-    						}
-    					}else { //主观题得分
-    					    if (!StringUtils.isBlank(answer)) {
-    					        scoreSum += Double.parseDouble(answer);
-                            }
-    					}
-    				}
-    				if (Constant.RESULT_TRUE.equals(result)) {
-    					trueSum ++;
-    				}
-    				map.put("type", type);
-    				if ( answer == null ||answer.equals("null") || answer.equals("")) {
-    					answer = "";
-    				}
-    				map.put("answer", answer);
-    				map.put("result", result);
-    				listMaps.set(5+questionId,map);
-    			}
-    			listMaps.set(3,String.valueOf(scoreSum));//总分
-    			listMaps.set(4,String.format("%.2f",trueSum * 100/questionSum)+"%");//正确率
-    			lists.add(listMaps);
-    		}
-    		/*按分数降序排序*/
-    		Collections.sort(lists, new Comparator<Object>(){  
-    	        @Override  
-    	        public int compare(Object o1, Object o2) { 
-    	        	@SuppressWarnings("unchecked")
-    				double score1=Double.parseDouble(((List<String>)o1).get(3));  
-    	        	@SuppressWarnings("unchecked")
-    	        	double score2=Double.parseDouble(((List<String>)o2).get(3)); 
-    	        	  if(score1<score2){
-    	                    return 1;
-    	                }else if(score1==score2){
-    	                    return 0;
-    	                }else{
-    	                    return -1;
-    	                }
-    	        }             
-    	    });
-    		/*计算名次*/
-    		int rank = 1;
-    		for (int i = 0; i < lists.size(); i++) {
-    			if (i != lists.size()-1) {
-    				double score1 = Double.parseDouble((String) lists.get(i).get(3));
-    				double score2 = Double.parseDouble((String) lists.get(i+1).get(3));
-    				lists.get(i).set(5,String.valueOf(rank));
-    				if (score1 != score2) {
-    					rank = i+2;
-    				}
-    			}else {
-    				lists.get(i).set(5,String.valueOf(rank));
-    			}
-    		}
-    		String flieUrl = System.getProperty("user.dir").replaceAll("\\\\", "/") + "/"+"excels/";
-    		SXSSFWorkbook wb = ExportExcel.ExportWithResponse("成绩明细表", titleName,testName ,dates,className, studentSum, testName, columnNumber, columnWidth, columnName , lists);	
-    		File file = new File(flieUrl);
-    		if (!file.exists()) {
-                file.mkdirs();
-            }
-    		out = new FileOutputStream(new File(flieUrl,fileName));
-            wb.write(out);// 将数据写出去  
-            out.flush();// 将数据写出去
-        }catch (Exception e) {
-            log.error("", e);
-            r.setMessage("导出失败");
-            r.setDetail(IOUtils.getError(e));
-        }finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    log.error("输出流关闭失败", e);
-                } 
-            }
-        }
-        return r;
+        }).start();;
+	   
 	}
 	/**
 	 * 查询答题记录

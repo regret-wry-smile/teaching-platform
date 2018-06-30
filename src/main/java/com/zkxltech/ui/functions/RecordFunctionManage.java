@@ -96,7 +96,7 @@ public class RecordFunctionManage extends BrowserFunction{
 			    break;
 			case "test_export":
 			    /*导出作答记录*/
-			    result = recordService.testExport(params[1]);
+			    recordService.testExport(params[1]);
 			    break;
 			default:
 				result.setRet(Constant.ERROR);
