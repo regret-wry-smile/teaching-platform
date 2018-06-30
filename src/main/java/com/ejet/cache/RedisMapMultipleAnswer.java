@@ -143,7 +143,7 @@ public class RedisMapMultipleAnswer {
 				}
 			}
         }
-//        BrowserManager.refresAnswerNum();
+        BrowserManager.refresAnswerNum();
     }
 	
 	/**
