@@ -109,7 +109,7 @@ public class ClassHourSql {
 	 */
 	public Result deleteAnswerInfo(ClassHour classHour) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder();
-		sqlBuilder.append("delete from answer_info");
+		sqlBuilder.append("delete from class_hour");
 		Field[] files = dbHelper.getFields(classHour);
 		int index = 0;
 		for (int i = 0; i < files.length; i++) {
