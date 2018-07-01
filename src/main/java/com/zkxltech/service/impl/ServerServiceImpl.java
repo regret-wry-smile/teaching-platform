@@ -132,6 +132,7 @@ public class ServerServiceImpl implements ServerService{
 			}
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("保存服务器中的题目信息成功！");
+			result.setRemak(testId);
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
@@ -157,30 +158,30 @@ public class ServerServiceImpl implements ServerService{
 //		
 //	}
 	
-//	public static void main(String[] args) {
-//		/*模拟当前班级的学生信息*/
-//		StudentInfo studentInfo = new StudentInfo();
-//		studentInfo.setClassId("9999");
-//		ClassHour classHour = new ClassHour();
-//		classHour.setClassHourId("3d123895edc04d748cdc9875bebbba6d");
-//		classHour.setSubjectName("语文");
-//		classHour.setClassId("9999");
-//		Global.setClassId("9999");
-//		Global.setClassHour(classHour);
-//		
-//		try {
-//			Global.setStudentInfos((List<StudentInfo>)new StudentInfoSql().selectStudentInfo(studentInfo).getItem());
-//		} catch (IllegalArgumentException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		Result result = new ServerServiceImpl().uploadServer( "T11");
-//		System.out.println(net.sf.json.JSONObject.fromObject(result));
-//	}
+	public static void main(String[] args) {
+		/*模拟当前班级的学生信息*/
+		StudentInfo studentInfo = new StudentInfo();
+		studentInfo.setClassId("9999");
+		ClassHour classHour = new ClassHour();
+		classHour.setClassHourId("3d123895edc04d748cdc9875bebbba6d");
+		classHour.setSubjectName("语文");
+		classHour.setClassId("9999");
+		Global.setClassId("9999");
+		Global.setClassHour(classHour);
+		
+		try {
+			Global.setStudentInfos((List<StudentInfo>)new StudentInfoSql().selectStudentInfo(studentInfo).getItem());
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Result result = new ServerServiceImpl().uploadServer( "T11");
+		System.out.println(net.sf.json.JSONObject.fromObject(result));
+	}
 	
 	@Override
 	public Result uploadServer(Object testId) {

@@ -100,21 +100,27 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	@Override
 	public Result importStudentInfoByServer(Object object) {
 		result = new Result();
-		try {
-			String classId = (String) object;
-			result = copeServerStudentData(classId);
-			if(Constant.SUCCESS.equals(result.getRet())){
-//				BrowserManager.refreshStudent(className);
-//				BrowserManager.showMessage(true,"从服务器中获取学生信息成功！");
-//				getBindInfoAndRefresh(className);
-			}else{
-//				BrowserManager.showMessage(false,"从服务器中获取学生信息失败！");
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					String classId = (String) object;
+					result = copeServerStudentData(classId);
+					if(Constant.SUCCESS.equals(result.getRet())){
+//						BrowserManager.refreshClass();
+						BrowserManager.refreshStudent(classId);
+						BrowserManager.showMessage(true,"从服务器中获取学生信息成功！");
+					}else{
+						BrowserManager.showMessage(false,"从服务器中获取学生信息失败！");
+					}
+				} catch (Exception e) {
+					BrowserManager.showMessage(false,"从服务器中获取学生信息失败！");
+				}finally {
+					BrowserManager.removeLoading();
+				}
 			}
-		} catch (Exception e) {
-//			BrowserManager.showMessage(false,"从服务器中获取学生信息失败！");
-		}finally {
-//			BrowserManager.removeLoading();
-		}
+		}).start();
 		return result;
 	}
 	@Override
