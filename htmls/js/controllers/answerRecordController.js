@@ -265,7 +265,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 					studentIds: $scope.checkedstudentIds
 				}
 				console.log(JSON.stringify(param))
-				$scope.result = JSON.parse(execute_record("delete_record", param));
+				$scope.result = JSON.parse(execute_record("delete_record", JSON.stringify(param)));
 				if($scope.result.ret == 'success') {
 					toastr.success($scope.result.message);
 					_selectRecord();
