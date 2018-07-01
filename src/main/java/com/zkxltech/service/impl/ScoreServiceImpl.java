@@ -29,16 +29,16 @@ public class ScoreServiceImpl implements ScoreService{
     @Override
 	public Result startScore(Object object) {
 		result = new Result();
+		RedisMapScore.clearMap();//清除评分缓存
 		try {
 		    Score score =  (Score) StringUtils.parseJSON(object, Score.class);
+		    RedisMapScore.addScoreInfo(score); //保存评分主题信息
 		    Result reStart = scoreStart(score.getPrograms().size());
 		    if (reStart.getRet().equals(Constant.ERROR)) {
                result.setMessage(reStart.getMessage());
                return result;
             }
-			RedisMapScore.clearMap();//清除评分缓存
 				
-			RedisMapScore.addScoreInfo(score); //保存评分主题信息
 			
 			//将评分主题相关信息保存到缓存
 			result.setMessage("开始评分！");
