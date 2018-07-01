@@ -115,11 +115,9 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		
 			modalInstance.result.then(function(info) {
 				if(info){
-					alert(222)
 					_selectClass();
 					for(var i=0;i<$scope.classList.length;i++){
 						if(info==$scope.classList[i].classId){
-							alert(555)
 						$scope.classId=info;
 						$scope.classobject=$scope.classList[i];
 						$scope.isActive =$scope.classList.length-1;
@@ -376,7 +374,6 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 					$scope.selected=false;
 				}else{
 					toastr.error($scope.result.message);
-					alert($scope.result.detail);
 				}
 			}, function() {
 			});

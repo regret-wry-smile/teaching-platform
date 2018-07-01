@@ -567,7 +567,6 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 		}
 		$scope.ok = function() {
 			if($scope.testInfo.questionType == '-1') {
-				alert($scope.testInfo.selType)
 				if($scope.testInfo.selType=='0'){
 					$scope.testInfo.questionType = '0';
 				}else{
