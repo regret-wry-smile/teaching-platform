@@ -157,8 +157,12 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 					if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
 			        	 TestMachineThread.stopThread();
 					}else {
-						//FIXME 调用硬件停止指令
-//						result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
+						//调用硬件停止指令
+						result = EquipmentServiceImpl.getInstance().answer_stop(); //发送硬件指令
+						if (Constant.ERROR.equals(result.getRet())) {
+							BrowserManager.showMessage(false, "硬件指令发送失败！");
+							return ;
+						}
 					}
 					//删除原来的记录
 					List<Record> records = RedisMapClassTestAnswer.getObjectiveRecordList();
@@ -188,32 +192,43 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	@Override
 	public Result stopSubjectiveAnswer(Object testId) {
 		result = new Result();
-		try {
+		new Thread(new Runnable() {
 			
-			if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-	        	 TestMachineThread.stopThread();
-			}else {
-				//FIXME 调用硬件停止指令
-//				result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
+			@Override
+			public void run() {
+				try {
+					if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
+			        	 TestMachineThread.stopThread();
+					}else {
+						//调用硬件停止指令
+						result = EquipmentServiceImpl.getInstance().answer_stop(); //发送硬件指令
+						if (Constant.ERROR.equals(result.getRet())) {
+							BrowserManager.showMessage(false, "硬件指令发送失败！");
+							return ;
+						}
+					}
+					//删除原来的记录
+					List<Record> records = RedisMapClassTestAnswer.getSubjectiveRecordList();
+					Record recordParam = new Record();
+					recordParam.setClassId(Global.getClassId());
+					recordParam.setSubject(Global.getClassHour().getSubjectName());
+					recordParam.setTestId((String)testId);
+					recordSql.deleteRecord(recordParam);
+					
+					result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
+					if (Constant.ERROR.equals(result.getRet())) {
+						BrowserManager.showMessage(false, "保存作答记录失败！");
+						return ;
+					}
+				} catch (Exception e) {
+					BrowserManager.showMessage(false, "保存作答记录失败！");
+					return ;
+				}finally {
+					BrowserManager.removeLoading();
+				}
 			}
-			//删除原来的记录
-			List<Record> records = RedisMapClassTestAnswer.getSubjectiveRecordList();
-			Record recordParam = new Record();
-			recordParam.setClassId(Global.getClassId());
-			recordParam.setSubject(Global.getClassHour().getSubjectName());
-			recordParam.setTestId((String)testId);
-			recordSql.deleteRecord(recordParam);
-			
-			result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
-			if (Constant.ERROR.equals(result.getRet())) {
-				result.setMessage("保存作答记录失败！");
-				return result;
-			}
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("保存作答记录失败！");
-			return result;
-		}
+		}).start();
+		
 		return result;
 	}
 	

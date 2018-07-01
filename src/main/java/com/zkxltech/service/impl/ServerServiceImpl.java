@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ejet.cache.BrowserManager;
 import com.ejet.core.util.BusinessException;
 import com.ejet.core.util.OkHttpUtils;
 import com.ejet.core.util.constant.Constant;
@@ -184,89 +185,97 @@ public class ServerServiceImpl implements ServerService{
 	@Override
 	public Result uploadServer(Object testId) {
 		Result result = new Result();
-		try {
-			String subject = Global.getClassHour().getSubjectName();
-			String classId = Global.getClassHour().getClassId();
-			// 客观题参数
-			Map<String, String> paramList1 = concatParamData1((String)testId, (String)subject, (String)classId);
-			// 主观题参数
-			Map<String, String> paramList2 = concatParamData2((String)testId, (String)subject, (String)classId);
-			// 发送http请求
-			int sucessSum = 0; //发送成功个数
-			int totalSum = paramList1.keySet().size(); //总条数
-			String message01 ="";
-			List<Record> records1 = new ArrayList<Record>(); //已经上传成功的学生id集合
-			for (String studentId : paramList1.keySet()) {
-				result = OkHttpUtils.postData(urlString, paramList1.get(studentId));
-				if (Constant.ERROR.equals(result.getRet())) {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Result result = new Result();
+					String subject = Global.getClassHour().getSubjectName();
+					String classId = Global.getClassHour().getClassId();
+					// 客观题参数
+					Map<String, String> paramList1 = concatParamData1((String)testId, (String)subject, (String)classId);
+					// 主观题参数
+					Map<String, String> paramList2 = concatParamData2((String)testId, (String)subject, (String)classId);
+					// 发送http请求
+					int sucessSum = 0; //发送成功个数
+					int totalSum = paramList1.keySet().size(); //总条数
+					String message01 ="";
+					List<Record> records1 = new ArrayList<Record>(); //已经上传成功的学生id集合
+					for (String studentId : paramList1.keySet()) {
+						result = OkHttpUtils.postData(urlString, paramList1.get(studentId));
+						if (Constant.ERROR.equals(result.getRet())) {
+							//修改记录上传状态
+							if (Constant.ERROR.equals(recordSql.updateObjectiveRecord(records1).getRet())) {
+								BrowserManager.showMessage(false, "修改记录上传状态失败");
+								return;
+							};
+							BrowserManager.showMessage(false, "上传客观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum));
+							return;
+						};
+						sucessSum++;
+						
+						Record record = new Record();
+						record.setClassId(Global.getClassId());
+						record.setSubject(Global.getClassHour().getSubjectName());
+						record.setClassHourId(Global.getClassHour().getClassHourId());
+						record.setStudentId(studentId);
+						record.setTestId((String)testId);
+						record.setIsObjectiveUpload(Constant.IS_LOAD_YES);
+						records1.add(record);
+					}
 					//修改记录上传状态
 					if (Constant.ERROR.equals(recordSql.updateObjectiveRecord(records1).getRet())) {
-						result.setMessage("修改记录上传状态失败");
-						return result;
+						BrowserManager.showMessage(false, "修改记录上传状态失败");
+						return;
 					};
-					result.setMessage("上传客观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum));
-					return result;
-				};
-				sucessSum++;
-				
-				Record record = new Record();
-				record.setClassId(Global.getClassId());
-				record.setSubject(Global.getClassHour().getSubjectName());
-				record.setClassHourId(Global.getClassHour().getClassHourId());
-				record.setStudentId(studentId);
-				record.setTestId((String)testId);
-				record.setIsObjectiveUpload(Constant.IS_LOAD_YES);
-				records1.add(record);
-			}
-			//修改记录上传状态
-			if (Constant.ERROR.equals(recordSql.updateObjectiveRecord(records1).getRet())) {
-				result.setMessage("修改记录上传状态失败");
-				return result;
-			};
-			message01 = "上传客观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum);
-			
-			sucessSum = 0; //发送成功个数
-			totalSum = paramList2.keySet().size(); //总条数
-			String message02 = "";
-			List<Record> records2 = new ArrayList<Record>(); //已经上传成功的学生id集合
-			for (String studentId : paramList2.keySet()) {
-				result = OkHttpUtils.postData(urlString, paramList2.get(studentId));
-				if (Constant.ERROR.equals(result.getRet())) {
+					message01 = "上传客观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum);
+					
+					sucessSum = 0; //发送成功个数
+					totalSum = paramList2.keySet().size(); //总条数
+					String message02 = "";
+					List<Record> records2 = new ArrayList<Record>(); //已经上传成功的学生id集合
+					for (String studentId : paramList2.keySet()) {
+						result = OkHttpUtils.postData(urlString, paramList2.get(studentId));
+						if (Constant.ERROR.equals(result.getRet())) {
+							//修改记录上传状态
+							if (Constant.ERROR.equals(recordSql.updateSubjectiveRecord(records2).getRet())) {
+								BrowserManager.showMessage(false, "修改记录上传状态失败");
+								return;
+							};
+							BrowserManager.showMessage(false, message01+"上传主观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum));
+							return;
+						};
+						sucessSum++;
+						
+						Record record = new Record();
+						record.setClassId(Global.getClassId());
+						record.setSubject(Global.getClassHour().getSubjectName());
+						record.setClassHourId(Global.getClassHour().getClassHourId());
+						record.setStudentId(studentId);
+						record.setTestId((String)testId);
+						record.setIsSubjectiveUpload(Constant.IS_LOAD_YES);
+						records2.add(record);
+					}
+					
 					//修改记录上传状态
 					if (Constant.ERROR.equals(recordSql.updateSubjectiveRecord(records2).getRet())) {
-						result.setMessage("修改记录上传状态失败");
-						return result;
+						BrowserManager.showMessage(false, "修改记录上传状态失败");
+						return;
 					};
-					result.setMessage(message01+"上传主观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum));
-					return result;
-				};
-				sucessSum++;
-				
-				Record record = new Record();
-				record.setClassId(Global.getClassId());
-				record.setSubject(Global.getClassHour().getSubjectName());
-				record.setClassHourId(Global.getClassHour().getClassHourId());
-				record.setStudentId(studentId);
-				record.setTestId((String)testId);
-				record.setIsSubjectiveUpload(Constant.IS_LOAD_YES);
-				records2.add(record);
+					message02 = "上传主观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum);
+					BrowserManager.showMessage(false, message01+message02);
+					return;
+				} catch (Exception e) {
+					BrowserManager.showMessage(false, "上传失败！");
+					return;
+				}finally {
+					BrowserManager.removeLoading();
+				}
 			}
-			
-			//修改记录上传状态
-			if (Constant.ERROR.equals(recordSql.updateSubjectiveRecord(records2).getRet())) {
-				result.setMessage("修改记录上传状态失败");
-				return result;
-			};
-			message02 = "上传主观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum);
-			
-			result.setMessage(message01+message02);
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("上传失败！");
-			result.setDetail(IOUtils.getError(e));
-			return result;
-		}
+		}).start();
+		return result;
+		
 	}
 	
 	/**
