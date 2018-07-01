@@ -110,5 +110,19 @@ public class RecordSql {
   		}
         return dbHelper.onUpdate(sqlBuilder.toString(), record);
   }
+
+    public Result deleteRecordByStudentId(Record record) throws IllegalArgumentException, IllegalAccessException {
+        StringBuilder sqlBuilder = new StringBuilder();
+        List<String> studentIds = record.getStudentIds();
+        sqlBuilder.append("delete from record where test_id = \""+record.getTestId()+"\" and student_id in (");
+        for (int i = 0; i< studentIds.size();i++) {
+            sqlBuilder.append(studentIds.get(i));
+            if (i != studentIds.size()-1) {
+                sqlBuilder.append(",");
+            }
+        }
+        sqlBuilder.append(")");
+      return dbHelper.onUpdate(sqlBuilder.toString(), null);
+    }
 	
 }

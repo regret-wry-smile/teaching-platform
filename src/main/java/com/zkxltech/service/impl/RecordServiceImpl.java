@@ -453,7 +453,7 @@ public class RecordServiceImpl implements RecordService{
         }
         RecordSql sql = new RecordSql();
         try {
-            r = sql.deleteRecord(record);
+            r = sql.deleteRecordByStudentId(record);
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }
@@ -461,6 +461,8 @@ public class RecordServiceImpl implements RecordService{
             r.setMessage("删除失败");
             r.setDetail(IOUtils.getError(e));
         }
+        r.setRet(Constant.SUCCESS);
+        r.setMessage("删除成功");
         return r;
     }
     
