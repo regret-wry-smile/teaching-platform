@@ -67,4 +67,9 @@ public class Constant {
     public static final String RESULT_TRUE = "1";
     
     public static final String RESULT_FALSE = "2";
+    
+    /*已上传*/
+    public static final String IS_LOAD_YES = "1";
+    /*未上传*/
+    public static final String IS_LOAD_NO = "0";
 }

@@ -171,6 +171,8 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 					result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
 					if (Constant.ERROR.equals(result.getRet())) {
 						BrowserManager.showMessage(false, "保存作答记录失败！");
+					}else {
+						BrowserManager.showMessage(true, "保存作答记录成功！");
 					}
 //					result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
 				} catch (Exception e) {
