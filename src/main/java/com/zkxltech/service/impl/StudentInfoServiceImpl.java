@@ -314,6 +314,9 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     public Result signInStart(Object param) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
+        //每次调用签到先清空数据
+        RedisMapAttendance.clearAttendanceMap();
+        RedisMapAttendance.clearCardIdSet();
         if (param == null) {
             r.setMessage("缺少参数");
             return r;
@@ -331,9 +334,6 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
-        //每次调用签到先清空数据
-        RedisMapAttendance.clearAttendanceMap();
-        RedisMapAttendance.clearCardIdSet();
         List<StudentInfo> studentInfos = Global.getStudentInfos();
         if (ListUtils.isEmpty(studentInfos)) {
             r.setMessage("未获取到学生信息");
@@ -372,6 +372,10 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     }
     @Override
     public Result quickAnswer(Object param) {
+        //开始答题前先清空
+        RedisMapQuick.clearQuickMap();
+        RedisMapQuick.clearStudentInfoMap();
+        RedisMapQuick.getQuickMap().put("studentName", "");
         Result r = new Result();
         r.setRet(Constant.ERROR);
         if (param == null) {
@@ -382,10 +386,6 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
-        //开始答题前先清空
-        RedisMapQuick.clearQuickMap();
-        RedisMapQuick.clearStudentInfoMap();
-        RedisMapQuick.getQuickMap().put("studentName", "");
 //            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
 //            Result result = impl.selectStudentInfo(param);
 //            List<Object> item = (List<Object>) result.getItem();

@@ -222,4 +222,21 @@ public class BrowserManager {
 		}
 	}
 	
+	/**
+	 * 刷新试卷下拉列表
+	 * @param echoRequest
+	 */
+	public static void refreTestPaper(String testinfo) {
+		Browser b  = browerManager.get();
+		if (b!=null) {
+			shell.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					boolean  doRet = b.execute("var testinfo = '"+testinfo+"';document.getElementById('refreTestPaper').click();");
+					log.info("刷新随堂检测作答进度："+doRet);
+				}
+			});
+		}
+	}
+	
 }

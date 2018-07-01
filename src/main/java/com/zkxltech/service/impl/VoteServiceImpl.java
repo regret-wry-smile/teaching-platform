@@ -28,16 +28,16 @@ public class VoteServiceImpl implements VoteService{
     @Override
 	public Result startVote(Object object) {
 		result = new Result();
+		RedisMapVote.clearMap();//清除投票缓存
 		try {
 		    Vote vote =  (Vote) StringUtils.parseJSON(object, Vote.class);
+		    RedisMapVote.addVoteInfo(vote); //投票评分主题信息
 		    Result reStart = startVote(vote.getPrograms().size());
 		    if (reStart.getRet().equals(Constant.ERROR)) {
                result.setMessage(reStart.getMessage());
                return result;
             }
-			RedisMapVote.clearMap();//清除投票缓存
 				
-			RedisMapVote.addVoteInfo(vote); //投票评分主题信息
 			
 			//将评分主题相关信息保存到缓存
 			result.setMessage("开始投票！");

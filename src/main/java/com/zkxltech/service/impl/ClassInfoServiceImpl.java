@@ -166,6 +166,9 @@ public class ClassInfoServiceImpl implements ClassInfoService{
     public Result bindStart(Object param) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
+      //每次调用绑定方法先清空,再存
+        RedisMapBind.clearCardIdMap();
+        RedisMapBind.clearBindMap();
         try {
             int bind_start = ScDll.intance.wireless_bind_start(1,"") ;
             if (bind_start < 1) {
@@ -200,9 +203,6 @@ public class ClassInfoServiceImpl implements ClassInfoService{
                 }
             }
             /**存入静态map*/
-            //每次调用绑定方法先清空,再存
-            RedisMapBind.clearCardIdMap();
-            RedisMapBind.clearBindMap();
             RedisMapBind.getBindMap().put("studentName", null);
             RedisMapBind.getBindMap().put("code", bind_start);
             RedisMapBind.getBindMap().put("accomplish", bind);

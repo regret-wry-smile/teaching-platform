@@ -41,105 +41,130 @@ public class ServerServiceImpl implements ServerService{
 	@Override
 	public Result getTestInfoFromServer(String classId,String subjectName) {
 		Result result = new Result();
-		try {
-			List<JSONObject> testList = new ArrayList<JSONObject>();//保存所有的试卷信息
-			//获取服务器上的试卷信息
-			StringBuilder params1 = new StringBuilder();
-			params1.append("Code=1006&V={\"bjID\":\""+classId+"\",\"SubName\":\""+subjectName+"\"}");
-			//[{"id":6845,"xmid":"2Y0002","xm":"test"}]
-			result = OkHttpUtils.postData(urlString, params1.toString());
-			if (Constant.ERROR.equals(result.getRet())) {
-				return result;
-			}
-			String testInfo =  (String) result.getItem();
-			if ("0".equals(testInfo)) {
-				result.setRet(Constant.ERROR);
-				result.setMessage("从服务器中获取试卷失败！");
-				return result;
-			}else {
-				JSONArray jsonArray = JSONArray.parseArray(testInfo);
-				String[] items = new String[jsonArray.size()];
-				for (int j = 0; j < jsonArray.size(); j++) {
-					JSONObject jsonObject = (JSONObject) jsonArray.get(j);
-					items[j] = jsonObject.getString("xmid");
-					testList.add(jsonObject);
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Result result = new Result();
+					List<JSONObject> testList = new ArrayList<JSONObject>();//保存所有的试卷信息
+					//获取服务器上的试卷信息
+					StringBuilder params1 = new StringBuilder();
+					params1.append("Code=1006&V={\"bjID\":\""+classId+"\",\"SubName\":\""+subjectName+"\"}");
+					//[{"id":6845,"xmid":"2Y0002","xm":"test"}]
+					result = OkHttpUtils.postData(urlString, params1.toString());
+					if (Constant.ERROR.equals(result.getRet())) {
+						BrowserManager.showMessage(false, result.getMessage());
+						return;
+					}
+					String testInfo =  (String) result.getItem();
+					if ("0".equals(testInfo)) {
+//						result.setRet(Constant.ERROR);
+//						result.setMessage("从服务器中获取试卷失败！");
+						BrowserManager.showMessage(false, "从服务器中获取试卷失败！");
+						return;
+					}else {
+						JSONArray jsonArray = JSONArray.parseArray(testInfo);
+						String[] items = new String[jsonArray.size()];
+						for (int j = 0; j < jsonArray.size(); j++) {
+							JSONObject jsonObject = (JSONObject) jsonArray.get(j);
+							items[j] = jsonObject.getString("xmid");
+							testList.add(jsonObject);
+						}
+					}
+//					result.setRet(Constant.SUCCESS);
+//					result.setMessage("从服务器中获取试卷！");
+//					result.setItem(testList);
+//					return result;
+					BrowserManager.showMessage(false, "从服务器中获取试卷成功！");
+					return;
+				} catch (Exception e) {
+					BrowserManager.showMessage(false, "从服务器中获取试卷失败！");
+					return;
+//					result.setRet(Constant.ERROR);
+//					result.setMessage("从服务器中获取试卷失败！");
+//					result.setDetail(IOUtils.getError(e));
+//					return result;
+				}finally {
+					BrowserManager.removeLoading();
 				}
 			}
-			result.setRet(Constant.SUCCESS);
-			result.setMessage("从服务器中获取试卷！");
-			result.setItem(testList);
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("从服务器中获取试卷失败！");
-			result.setDetail(IOUtils.getError(e));
-			return result;
-		}
+		}).start();
+		return result;
+		
 	}
 	@Override
 	public Result getQuestionInfoFromServer(Object object) {
 		Result result = new Result();
-		try {
-			ResponseTestPaper responseTestPaper =  (ResponseTestPaper) StringUtils.parseJSON(object, ResponseTestPaper.class);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Result result = new Result();
+					ResponseTestPaper responseTestPaper =  (ResponseTestPaper) StringUtils.parseJSON(object, ResponseTestPaper.class);
 
-			String classId = responseTestPaper.getClassId();
-			String codeId = String.valueOf(responseTestPaper.getId());
-			String subjectName = responseTestPaper.getSubjectName();
-			String testId  = responseTestPaper.getXmid();
-			String testName = responseTestPaper.getXm();
-			List<JSONObject> testList = new ArrayList<JSONObject>();//保存所有的试卷信息
-			//根据codeId获取标准答案
-			StringBuilder params = new StringBuilder();
-			params.append("Code=1002&V={\"bjID\":\""+classId+"\",\"CodeID\":"+codeId+",\"SubName\":\""+subjectName+"\"}");
-			//[{"tno":1,"tanswer":"A","tscore":5.0,"type":0,"atype":0,"partScore":0.0,"highScore":0.0,"downScore":0.0}]
-			result = OkHttpUtils.postData(urlString, params.toString());
-			if (Constant.ERROR.equals(result.getRet())) {
-				return result;
+					String classId = responseTestPaper.getClassId();
+					String codeId = String.valueOf(responseTestPaper.getId());
+					String subjectName = responseTestPaper.getSubjectName();
+					String testId  = responseTestPaper.getXmid();
+					String testName = responseTestPaper.getXm();
+					List<JSONObject> testList = new ArrayList<JSONObject>();//保存所有的试卷信息
+					//根据codeId获取标准答案
+					StringBuilder params = new StringBuilder();
+					params.append("Code=1002&V={\"bjID\":\""+classId+"\",\"CodeID\":"+codeId+",\"SubName\":\""+subjectName+"\"}");
+					//[{"tno":1,"tanswer":"A","tscore":5.0,"type":0,"atype":0,"partScore":0.0,"highScore":0.0,"downScore":0.0}]
+					result = OkHttpUtils.postData(urlString, params.toString());
+					if (Constant.ERROR.equals(result.getRet())) {
+						BrowserManager.showMessage(false, result.getMessage());
+						return;
+					}
+					String answersInfo =  (String) result.getItem();
+					if ("0".equals(answersInfo)) {
+						BrowserManager.showMessage(false, "从服务器中获取标准答案失败！");
+						return;
+					}else {
+						result = testPaperSql.deleteTestPaper(testId,subjectName);//根据试卷id和科目删除原来的试卷
+						if (Constant.ERROR.equals(result.getRet())) {
+							BrowserManager.showMessage(false, "删除原来的试卷失败!");
+							return;
+						}
+						TestPaper testPaper = new TestPaper();
+						testPaper.setTestId(testId);
+						testPaper.setAtype("1");
+						testPaper.setSubject(subjectName);
+						testPaper.setTestName(responseTestPaper.getXm());
+						result = testPaperSql.insertTestPaper(testPaper);
+						if (Constant.ERROR.equals(result.getRet())) {
+							BrowserManager.showMessage(false, "插入试卷信息失败!");
+							return;
+						}
+						QuestionInfo questionInfo = new QuestionInfo();
+						questionInfo.setTestId(testId);
+						result = questionInfoSql.deleteQuestionInfo(questionInfo); //删除原来的题目
+						if (Constant.ERROR.equals(result.getRet())) {
+							BrowserManager.showMessage(false, "删除原来的题目失败!");
+							return;
+						}
+						result = testPaperSql.saveTitlebyBatch(responseTestPaper.getXmid(), answersInfo);
+						if (Constant.ERROR.equals(result.getRet())) {
+							BrowserManager.showMessage(false, "保存服务器中的题目信息失败！");
+							return;
+						}
+					}
+					result.setRemak(testId);
+					BrowserManager.showMessage(false, "保存服务器中的题目信息成功！");
+					return;
+				} catch (Exception e) {
+					BrowserManager.showMessage(false, "保存服务器中的题目信息失败！");
+					return;
+				}finally {
+					BrowserManager.removeLoading();
+				}
 			}
-			String answersInfo =  (String) result.getItem();
-			if ("0".equals(answersInfo)) {
-				result.setRet(Constant.ERROR);
-				result.setMessage("从服务器中获取标准答案失败！");
-				return result;
-			}else {
-				result = testPaperSql.deleteTestPaper(testId,subjectName);//根据试卷id和科目删除原来的试卷
-				if (Constant.ERROR.equals(result.getRet())) {
-					result.setMessage("删除原来的试卷失败!");
-					return result;
-				}
-				TestPaper testPaper = new TestPaper();
-				testPaper.setTestId(testId);
-				testPaper.setAtype("1");
-				testPaper.setSubject(subjectName);
-				testPaper.setTestName(responseTestPaper.getXm());
-				result = testPaperSql.insertTestPaper(testPaper);
-				if (Constant.ERROR.equals(result.getRet())) {
-					result.setMessage("插入试卷信息失败!");
-					return result;
-				}
-				QuestionInfo questionInfo = new QuestionInfo();
-				questionInfo.setTestId(testId);
-				result = questionInfoSql.deleteQuestionInfo(questionInfo); //删除原来的题目
-				if (Constant.ERROR.equals(result.getRet())) {
-					result.setMessage("删除原来的题目失败!");
-					return result;
-				}
-				result = testPaperSql.saveTitlebyBatch(responseTestPaper.getXmid(), answersInfo);
-				if (Constant.ERROR.equals(result.getRet())) {
-					result.setMessage("保存服务器中的题目信息失败！");
-					return result;
-				}
-			}
-			result.setRet(Constant.SUCCESS);
-			result.setMessage("保存服务器中的题目信息成功！");
-			result.setRemak(testId);
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("保存服务器中的题目信息失败！");
-			result.setDetail(IOUtils.getError(e));
-			return result;
-		}
+		}).start();
+		return result;
 	}
 
 	

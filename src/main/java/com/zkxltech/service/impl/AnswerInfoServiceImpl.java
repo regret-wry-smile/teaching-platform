@@ -48,10 +48,12 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	@Override
 	public Result startMultipleAnswer(Object object) {
 		result = new Result();
+		RedisMapMultipleAnswer.clearMap();
 		try {
 			RequestVo requestVo = StringUtils.parseJSON(object, RequestVo.class);
 			List<RequestVo> list = new ArrayList<RequestVo>();
 			list.add(requestVo);
+			RedisMapMultipleAnswer.startAnswer(requestVo.getRange());
 			if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
 				TestMachineThread.startThread(1,"多选题");
 			}else {
@@ -62,8 +64,6 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 				result.setMessage("开始答题指令发送失败！");
 				return result;
 			}
-			RedisMapMultipleAnswer.clearMap();
-			RedisMapMultipleAnswer.startAnswer(requestVo.getRange());
 			result.setRet(Constant.SUCCESS);
 			return result;
 		} catch (Exception e) {
@@ -239,6 +239,10 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
     public Result singleAnswer(Object param) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
+        RedisMapSingleAnswer.clearSingleAnswerNumMap();
+        RedisMapSingleAnswer.clearStudentInfoMap();
+        RedisMapSingleAnswer.clearSingleAnswerStudentNameMap();
+        RedisMapSingleAnswer.cleariclickerIdsSet();
         Answer answer = com.zkxltech.ui.util.StringUtils.parseJSON(param, Answer.class);
         if (answer == null || StringUtils.isEmpty(answer.getType())) {
             r.setMessage("缺少参数,题目类型不能为空");
@@ -246,10 +250,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         }
         //传入类型 ,清空数据
         RedisMapSingleAnswer.setAnswer(answer);
-        RedisMapSingleAnswer.clearSingleAnswerNumMap();
-        RedisMapSingleAnswer.clearStudentInfoMap();
-        RedisMapSingleAnswer.clearSingleAnswerStudentNameMap();
-        RedisMapSingleAnswer.cleariclickerIdsSet();
+        
         //总的答题人数
         List<StudentInfo> studentInfos = Global.getStudentInfos();
         if (ListUtils.isEmpty(studentInfos)) {

@@ -83,92 +83,95 @@ public class QuestionInfoSql {
 	
 	public Result verifyQuetion(List<List<Object>> rowList){
 		Result result = new Result();
+		result.setRet(Constant.ERROR);
 		int rows = rowList.size();
 		if (rows < 2) {
-			result.setRet(Constant.ERROR);
 			result.setMessage("题目信息为空！");
 			return result;
 		}
 		for (int i = 0; i < rowList.size(); i++) {
 			if(i == 0){
 				if (rowList.get(i).size() != 4) {
-					result.setRet(Constant.ERROR);
 					result.setMessage("第"+(i+1)+"行试卷信息格式错误！");
 					return result;
 				}
 			}else{
 				String range = "";
 				//0单选；1多选；2判断；3数字；4主观题
-				String type = (String) rowList.get(i).get(2);
-				String trueAnswer = (String) rowList.get(i).get(3);
+				List<Object> list = rowList.get(i);
+                    
+				if (list.size() < 4) {
+                    result.setMessage("第"+(i+1)+"行题目错误,请检查题目类型,正确答案,作答范围是否有误！");
+                    return result;
+                }
+				String type = (String) list.get(2);
+				String trueAnswer = (String) list.get(3);
 				switch (type) {
 				case "单选":
+				    if (StringUtils.isEmpty(trueAnswer)) {
+                        result.setMessage("第"+(i+1)+"行正确答案不能是空的！");
+                        return result;
+                    }
+				    if (trueAnswer.length() >1) {
+                        result.setMessage("第"+(i+1)+"行单选不能是多选答案！");
+                        return result;
+                    }
 					if(rowList.get(i).size() != 5){
-						result.setRet(Constant.ERROR);
-						result.setMessage("第"+(i+1)+"行列数格式错误！");
+						result.setMessage("第"+(i+1)+"行缺少作答范围！");
 						return result;
 					}
 					range = (String) rowList.get(i).get(4);
 					if (!verifySingleRange(range)) {
-						result.setRet(Constant.ERROR);
 						result.setMessage("第"+(i+1)+"行答案范围格式错误！");
 						return result;
 					}
 					if (!verifySingleAnswer(trueAnswer)) {
-						result.setRet(Constant.ERROR);
 						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
 						return result;
 					}
 					break;
 				case "多选":
 					if(rowList.get(i).size() != 5){
-						result.setRet(Constant.ERROR);
 						result.setMessage("第"+(i+1)+"行列数格式错误！");
 						return result;
 					}
 					range = (String) rowList.get(i).get(4);
 					if (!verifyMultipleRange(range)) {
-						result.setRet(Constant.ERROR);
 						result.setMessage("第"+(i+1)+"行答案范围格式错误！");
 						return result;
 					}
 					if (!verifyMultipleAnswer(trueAnswer,range)) {
-						result.setRet(Constant.ERROR);
 						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
 						return result;
 					}
 					break;
 				case "判断":
 					if(rowList.get(i).size() != 4){
-						result.setRet(Constant.ERROR);
 						result.setMessage("第"+(i+1)+"行列数格式错误！");
 						return result;
 					}
 					if (!verifyCheckAnswer(trueAnswer)) {
-						result.setRet(Constant.ERROR);
 						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
 						return result;
 					}
 					break;
 				case "数字":
 					if (!verifyNumRange(range)) {
-						result.setRet(Constant.ERROR);
 						result.setMessage("第"+(i+1)+"行答案范围格式错误！");
 						return result;
 					}
 					if (!verifyNumAnswer(trueAnswer,range)) {
-						result.setRet(Constant.ERROR);
 						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
 						return result;
 					}
 					break;
 				default:
-					result.setRet(Constant.ERROR);
 					result.setMessage((i+1)+"行题目类型有误!");
 					return result;
 				}
 			}
 		}	
+		result.setRet(Constant.SUCCESS);
 		return result;
 	}
 	
@@ -192,9 +195,6 @@ public class QuestionInfoSql {
 	 * @return
 	 */
 	private boolean verifySingleRange(String answer){
-		if (StringUtils.isEmpty(answer)) {
-			return false;
-		}
 		Pattern p = Pattern.compile("^[A][-][D]+$");
 		Matcher m = p.matcher(answer);
 		return m.matches();
