@@ -372,6 +372,10 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     }
     @Override
     public Result quickAnswer(Object param) {
+        //开始答题前先清空
+        RedisMapQuick.clearQuickMap();
+        RedisMapQuick.clearStudentInfoMap();
+        RedisMapQuick.getQuickMap().put("studentName", "");
         Result r = new Result();
         r.setRet(Constant.ERROR);
         if (param == null) {
@@ -382,10 +386,6 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
-        //开始答题前先清空
-        RedisMapQuick.clearQuickMap();
-        RedisMapQuick.clearStudentInfoMap();
-        RedisMapQuick.getQuickMap().put("studentName", "");
 //            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
 //            Result result = impl.selectStudentInfo(param);
 //            List<Object> item = (List<Object>) result.getItem();
