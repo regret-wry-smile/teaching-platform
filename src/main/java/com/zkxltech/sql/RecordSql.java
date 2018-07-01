@@ -68,6 +68,38 @@ public class RecordSql {
 		}
 		return dbHelper.onQuery(sqlBuilder.toString(), record);
 	}
+	
+	/**
+	 * 根据班级id，科目，课时id，试卷id,学生id修改记录上传状态（客观题）
+	 * 
+	 */
+	public Result updateObjectiveRecord(List<Record> records) throws IllegalArgumentException, IllegalAccessException{
+		List<String> sqls = new ArrayList<String>();
+		for (int i = 0; i < records.size(); i++) {
+			StringBuilder sqlBuilder = new StringBuilder();
+			Record record = records.get(i);
+			sqlBuilder.append("update record set is_objective_upload = '"+record.getIsObjectiveUpload()+"' where test_id = '"+ record.getTestId()+"'"+
+					"and class_id = '"+record.getClassId()+"' and subject = '"+record.getSubject()+"' and class_hour_id = '"+record.getClassHourId()+"' and student_id = '"+record.getStudentId()+"'");
+			sqls.add(sqlBuilder.toString());
+		}
+		return DBHelper.onUpdateByGroup(sqls);
+	}
+	
+	/**
+	 * 根据班级id，科目，课时id，试卷id,学生id修改记录上传状态（主观题）
+	 * 
+	 */
+	public Result updateSubjectiveRecord(List<Record> records) throws IllegalArgumentException, IllegalAccessException{
+		List<String> sqls = new ArrayList<String>();
+		for (int i = 0; i < records.size(); i++) {
+			StringBuilder sqlBuilder = new StringBuilder();
+			Record record = records.get(i);
+			sqlBuilder.append("update record set is_subjective_upload = '"+record.getIsSubjectiveUpload()+"' where test_id = '"+ record.getTestId()+"'"+
+					"and class_id = '"+record.getClassId()+"' and subject = '"+record.getSubject()+"' and class_hour_id = '"+record.getClassHourId()+"' and student_id = '"+record.getStudentId()+"'");
+			sqls.add(sqlBuilder.toString());
+		}
+		return DBHelper.onUpdateByGroup(sqls);
+	}
 //	
 //	
 //	/*删除答题信息*/

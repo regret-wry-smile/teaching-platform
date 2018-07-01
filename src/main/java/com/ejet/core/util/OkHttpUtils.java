@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 
 import org.apache.logging.log4j.core.util.IOUtils;
 
+import com.ejet.core.util.constant.Constant;
+import com.zkxltech.domain.Result;
+
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -15,7 +18,8 @@ import okhttp3.Response;
 public class OkHttpUtils {
 
     
-    public static String postData(String url , String data) {
+    public static Result postData(String url , String data) {
+    	Result result = new Result();
         OkHttpClient client = new OkHttpClient();
 
         MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
@@ -31,11 +35,17 @@ public class OkHttpUtils {
         try {
             Response response = client.newCall(request).execute();
             InputStream input = response.body().byteStream() ;
-            String result = IOUtils.toString(new InputStreamReader(input, "gbk") ) ;
+//            System.out.println("http请求："+response.isSuccessful());
+            result.setRet(response.isSuccessful() ? Constant.SUCCESS : Constant.ERROR);
+            if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("服务器连接异常！");
+			}
+            result.setItem(IOUtils.toString(new InputStreamReader(input, "gbk") ));
             return result ;
         } catch (IOException e) {
-            e.printStackTrace();
+        	 result.setRet(Constant.ERROR);
+             result.setMessage("服务器连接异常！");
+             return result ;
         }
-        return null ;
     }
 }

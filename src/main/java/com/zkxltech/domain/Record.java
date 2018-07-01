@@ -68,7 +68,16 @@ public class Record {
 	 * 作答结果1正确，2错误
 	 */
 	private String result;
-	
+	/**
+	 * 主观题是否已上传
+	 * 0：未上传,1：
+	 */
+	private String isSubjectiveUpload;
+	/**
+	 * 客观题是否已上传
+	 * 0：未上传,1：
+	 */
+	private String isObjectiveUpload;
 	private String time ;
 	
 	private List<String> studentIds;
@@ -176,7 +185,22 @@ public class Record {
     public void setStudentIds(List studentIds) {
         this.studentIds = studentIds;
     }
-    @Override
+    
+
+	
+	public String getIsSubjectiveUpload() {
+		return isSubjectiveUpload;
+	}
+	public void setIsSubjectiveUpload(String isSubjectiveUpload) {
+		this.isSubjectiveUpload = isSubjectiveUpload;
+	}
+	public String getIsObjectiveUpload() {
+		return isObjectiveUpload;
+	}
+	public void setIsObjectiveUpload(String isObjectiveUpload) {
+		this.isObjectiveUpload = isObjectiveUpload;
+	}
+	@Override
     public String toString() {
         return "Record [id=" + id + ", classId=" + classId + ", subject=" + subject + ", classHourId=" + classHourId
                 + ", testId=" + testId + ", testName=" + testName + ", questionId=" + questionId + ", question="

@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -14,6 +16,7 @@ import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
+import com.zkxltech.domain.ClassHour;
 import com.zkxltech.domain.QuestionInfo;
 import com.zkxltech.domain.Record;
 import com.zkxltech.domain.ResponseTestPaper;
@@ -23,6 +26,7 @@ import com.zkxltech.domain.TestPaper;
 import com.zkxltech.service.ServerService;
 import com.zkxltech.sql.QuestionInfoSql;
 import com.zkxltech.sql.RecordSql;
+import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.sql.TestPaperSql;
 import com.zkxltech.ui.util.StringUtils;
 
@@ -31,6 +35,7 @@ public class ServerServiceImpl implements ServerService{
 	private String urlString  = ConfigConstant.serverDbConfig.getServer_url();
 	private QuestionInfoSql questionInfoSql = new QuestionInfoSql();
 	private TestPaperSql testPaperSql = new TestPaperSql();
+	private RecordSql recordSql = new RecordSql();
 	
 	@Override
 	public Result getTestInfoFromServer(String classId,String subjectName) {
@@ -41,7 +46,11 @@ public class ServerServiceImpl implements ServerService{
 			StringBuilder params1 = new StringBuilder();
 			params1.append("Code=1006&V={\"bjID\":\""+classId+"\",\"SubName\":\""+subjectName+"\"}");
 			//[{"id":6845,"xmid":"2Y0002","xm":"test"}]
-			String testInfo =  OkHttpUtils.postData(urlString, params1.toString());
+			result = OkHttpUtils.postData(urlString, params1.toString());
+			if (Constant.ERROR.equals(result.getRet())) {
+				return result;
+			}
+			String testInfo =  (String) result.getItem();
 			if ("0".equals(testInfo)) {
 				result.setRet(Constant.ERROR);
 				result.setMessage("从服务器中获取试卷失败！");
@@ -82,7 +91,11 @@ public class ServerServiceImpl implements ServerService{
 			StringBuilder params = new StringBuilder();
 			params.append("Code=1002&V={\"bjID\":\""+classId+"\",\"CodeID\":"+codeId+",\"SubName\":\""+subjectName+"\"}");
 			//[{"tno":1,"tanswer":"A","tscore":5.0,"type":0,"atype":0,"partScore":0.0,"highScore":0.0,"downScore":0.0}]
-			String answersInfo =  OkHttpUtils.postData(urlString, params.toString());
+			result = OkHttpUtils.postData(urlString, params.toString());
+			if (Constant.ERROR.equals(result.getRet())) {
+				return result;
+			}
+			String answersInfo =  (String) result.getItem();
 			if ("0".equals(answersInfo)) {
 				result.setRet(Constant.ERROR);
 				result.setMessage("从服务器中获取标准答案失败！");
@@ -145,28 +158,26 @@ public class ServerServiceImpl implements ServerService{
 	
 //	public static void main(String[] args) {
 //		/*模拟当前班级的学生信息*/
-//		List<StudentInfo> studentInfos = new ArrayList<StudentInfo>();
 //		StudentInfo studentInfo = new StudentInfo();
-//		studentInfo.setIclickerId("0000001");
-//		studentInfo.setStudentId("10001");
-//		studentInfo.setStudentName("学号01");
 //		studentInfo.setClassId("9999");
-//		studentInfos.add(studentInfo);
-//		StudentInfo studentInfo2 = new StudentInfo();
-//		studentInfo2.setIclickerId("0000002");
-//		studentInfo2.setStudentId("10002");
-//		studentInfo2.setStudentName("学号02");
-//		studentInfo2.setClassId("9999");
-//		studentInfos.add(studentInfo2);
-//		StudentInfo studentInfo3 = new StudentInfo();
-//		studentInfo3.setIclickerId("0000003");
-//		studentInfo3.setStudentId("10003");
-//		studentInfo3.setStudentName("学号03");
-//		studentInfo3.setClassId("9999");
-//		studentInfos.add(studentInfo3);
-//		Global.setStudentInfos(studentInfos);
+//		ClassHour classHour = new ClassHour();
+//		classHour.setClassHourId("3d123895edc04d748cdc9875bebbba6d");
+//		classHour.setSubjectName("语文");
+//		classHour.setClassId("9999");
+//		Global.setClassId("9999");
+//		Global.setClassHour(classHour);
 //		
-//		Result result = new ServerServiceImpl().uploadServer( "4Y0001","语文","9999");
+//		try {
+//			Global.setStudentInfos((List<StudentInfo>)new StudentInfoSql().selectStudentInfo(studentInfo).getItem());
+//		} catch (IllegalArgumentException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		Result result = new ServerServiceImpl().uploadServer( "T11");
 //		System.out.println(net.sf.json.JSONObject.fromObject(result));
 //	}
 	
@@ -174,37 +185,88 @@ public class ServerServiceImpl implements ServerService{
 	public Result uploadServer(Object testId) {
 		Result result = new Result();
 		try {
-//			String testId = "4Y0001";
 			String subject = Global.getClassHour().getSubjectName();
 			String classId = Global.getClassHour().getClassId();
 			// 客观题参数
-			List<String> paramList1 = concatParamData1((String)testId, (String)subject, (String)classId);
-			System.out.println(JSONArray.toJSONString(paramList1));
+			Map<String, String> paramList1 = concatParamData1((String)testId, (String)subject, (String)classId);
 			// 主观题参数
-			List<String> paramList2 = concatParamData2((String)testId, (String)subject,(String)classId);
+			Map<String, String> paramList2 = concatParamData2((String)testId, (String)subject, (String)classId);
 			// 发送http请求
-			for (int j = 0; j < paramList1.size(); j++) {
-				if (!"0".equals(OkHttpUtils.postData(urlString, paramList1.get(j)))) {
-					result.setRet(Constant.ERROR);
-					result.setMessage("上传失败！");
+			int sucessSum = 0; //发送成功个数
+			int totalSum = paramList1.keySet().size(); //总条数
+			String message01 ="";
+			List<Record> records1 = new ArrayList<Record>(); //已经上传成功的学生id集合
+			for (String studentId : paramList1.keySet()) {
+				result = OkHttpUtils.postData(urlString, paramList1.get(studentId));
+				if (Constant.ERROR.equals(result.getRet())) {
+					//修改记录上传状态
+					if (Constant.ERROR.equals(recordSql.updateObjectiveRecord(records1).getRet())) {
+						result.setMessage("修改记录上传状态失败");
+						return result;
+					};
+					result.setMessage("上传客观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum));
 					return result;
-				}
+				};
+				sucessSum++;
+				
+				Record record = new Record();
+				record.setClassId(Global.getClassId());
+				record.setSubject(Global.getClassHour().getSubjectName());
+				record.setClassHourId(Global.getClassHour().getClassHourId());
+				record.setStudentId(studentId);
+				record.setTestId((String)testId);
+				record.setIsObjectiveUpload(Constant.IS_LOAD_YES);
+				records1.add(record);
 			}
-			for (int j = 0; j < paramList2.size(); j++) {
-				if (!"0".equals(OkHttpUtils.postData(urlString, paramList2.get(j)))) {
-					result.setRet(Constant.ERROR);
-					result.setMessage("上传失败！");
+			//修改记录上传状态
+			if (Constant.ERROR.equals(recordSql.updateObjectiveRecord(records1).getRet())) {
+				result.setMessage("修改记录上传状态失败");
+				return result;
+			};
+			message01 = "上传客观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum);
+			
+			sucessSum = 0; //发送成功个数
+			totalSum = paramList2.keySet().size(); //总条数
+			String message02 = "";
+			List<Record> records2 = new ArrayList<Record>(); //已经上传成功的学生id集合
+			for (String studentId : paramList2.keySet()) {
+				result = OkHttpUtils.postData(urlString, paramList2.get(studentId));
+				if (Constant.ERROR.equals(result.getRet())) {
+					//修改记录上传状态
+					if (Constant.ERROR.equals(recordSql.updateSubjectiveRecord(records2).getRet())) {
+						result.setMessage("修改记录上传状态失败");
+						return result;
+					};
+					result.setMessage(message01+"上传主观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum));
 					return result;
-				}
+				};
+				sucessSum++;
+				
+				Record record = new Record();
+				record.setClassId(Global.getClassId());
+				record.setSubject(Global.getClassHour().getSubjectName());
+				record.setClassHourId(Global.getClassHour().getClassHourId());
+				record.setStudentId(studentId);
+				record.setTestId((String)testId);
+				record.setIsSubjectiveUpload(Constant.IS_LOAD_YES);
+				records2.add(record);
 			}
-//			System.out.println(JSONArray.toJSONString(paramList2));
+			
+			//修改记录上传状态
+			if (Constant.ERROR.equals(recordSql.updateSubjectiveRecord(records2).getRet())) {
+				result.setMessage("修改记录上传状态失败");
+				return result;
+			};
+			message02 = "上传主观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum);
+			
+			result.setMessage(message01+message02);
+			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
 			result.setMessage("上传失败！");
 			result.setDetail(IOUtils.getError(e));
 			return result;
 		}
-		return result;
 	}
 	
 	/**
@@ -223,7 +285,8 @@ public class ServerServiceImpl implements ServerService{
 	 * @throws IllegalAccessException 
 	 * @throws IllegalArgumentException 
 	 */
-	private List<String> concatParamData1(String CodeID, String SubName, String BjID) throws BusinessException, IllegalArgumentException, IllegalAccessException {
+	private Map<String,String> concatParamData1(String CodeID, String SubName, String BjID) throws BusinessException, IllegalArgumentException, IllegalAccessException {
+		Map<String,String> retMap = new HashMap<String, String>();
 		List<String> paramsList = new ArrayList<String>();
 		List<StudentInfo> studentList = Global.getStudentInfos();
 		
@@ -233,19 +296,23 @@ public class ServerServiceImpl implements ServerService{
 		recordParam.setClassId(BjID);
 		Result result = new RecordSql().selectRecord(recordParam);
 		if (Constant.ERROR.equals(result.getRet())) {
-			throw new BusinessException(Constant.ERROR, "查询作答记录失败!");
+			throw new BusinessException(Constant.ERROR, "查找做到记录失败！");
 		}
 		List<Record> list =(List<Record>) result.getItem();
+
+		
+		String studentId ;
 		for (int i = 0; i < studentList.size(); i++) {
+			studentId = studentList.get(i).getStudentId();
 			StringBuilder parmas = new StringBuilder();
 			parmas.append("Code=1004&&V=");
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("SubName", SubName);
 			jsonObject.put("CodeID", CodeID);
 			jsonObject.put("BjID", BjID);
-			String XH = (String) studentList.get(i).getStudentId();// 考号 XH
+			String KH = (String) studentList.get(i).getStudentId();// 考号 XH
 			String XM = (String) studentList.get(i).getStudentName();// 姓名 XM
-			jsonObject.put("XH", XH);
+			jsonObject.put("KH", KH);
 			jsonObject.put("XM", XM);
 			// 学生填写的答案 Daxl
 			StringBuilder Daxl = new StringBuilder();
@@ -255,10 +322,20 @@ public class ServerServiceImpl implements ServerService{
 			BigDecimal Kgf = new BigDecimal("0");
 			// Zgf:主观分
 			BigDecimal Zgf = new BigDecimal("0");
+			
+			String isLoad = Constant.IS_LOAD_NO;
+			
 			for (int j = 0; j < list.size(); j++) {
 				Record record = list.get(j);
-				if (XH.equals(record.getStudentId())) { // 判断是否为该学生的答题信息
+				if (Constant.IS_LOAD_YES.equals(record.getIsObjectiveUpload())) {
+					isLoad = Constant.IS_LOAD_YES;
+					break;
+				}
+				if (KH.equals(record.getStudentId())) { // 判断是否为该学生的答题信息
 					String answer = record.getAnswer();
+					if (StringUtils.isEmpty(answer)) {
+						answer = "";
+					}
 					String answerType = ""; // A客观题，O主观题
 					if (!Constant.ZHUGUANTI_NUM.equals(record.getQuestionType())) { // 客观题的得分就是每题的分值(答对才得分)
 						Daxl2.append(answer + "|");
@@ -282,14 +359,18 @@ public class ServerServiceImpl implements ServerService{
 					jsonObject.put(answerType + (j + 1), record.getAnswer());
 				}
 			}
-			jsonObject.put("Daxl", Daxl);
-			jsonObject.put("Daxl2", Daxl2.length() > 0 ? Daxl2.substring(0, Daxl2.lastIndexOf("|")) : Daxl);
-			jsonObject.put("Kgf", Kgf);
-			jsonObject.put("Zgf", Zgf);
-			parmas.append(jsonObject.toString());
-			paramsList.add(parmas.toString());
+			if (Constant.IS_LOAD_NO.equals(isLoad)) { //如果没有上传则加入待上传数据中
+				jsonObject.put("Daxl", Daxl);
+				jsonObject.put("Daxl2", Daxl2.length() > 0 ? Daxl2.substring(0, Daxl2.lastIndexOf("|")) : Daxl);
+				jsonObject.put("Kgf", Kgf);
+				jsonObject.put("Zgf", Zgf);
+				parmas.append(jsonObject.toString());
+				paramsList.add(parmas.toString());
+				retMap.put(studentId, parmas.toString());
+			}
 		}
-		return paramsList;
+//		return paramsList;
+		return retMap;
 	}
 
 	/**
@@ -308,39 +389,57 @@ public class ServerServiceImpl implements ServerService{
 	 * @throws IllegalArgumentException 
 	 * @throws BusinessException 
 	 */
-	private List<String> concatParamData2(String CodeID, String SubName, String BjID) throws IllegalArgumentException, IllegalAccessException, BusinessException {
-		List<String> paramsList = new ArrayList<String>();
+	private Map<String,String> concatParamData2(String CodeID, String SubName, String BjID) throws IllegalArgumentException, IllegalAccessException, BusinessException {
+		Map<String,String> retMap = new HashMap<String, String>();
+//		List<String> paramsList = new ArrayList<String>();
 		List<StudentInfo> studentList = Global.getStudentInfos();
 		List<JSONObject> answerInfoJsonObjects = new ArrayList<JSONObject>();
-		Record recordParam = new Record();
-		recordParam.setTestId(CodeID);
-		recordParam.setSubject(SubName);
-		recordParam.setClassId(BjID);
-		Result result = new RecordSql().selectRecord(recordParam);
-		if (Constant.ERROR.equals(result.getRet())) {
-			throw new BusinessException(Constant.ERROR, "查询作答记录失败!");
-		}
-		List<Record> list =(List<Record>) result.getItem();
+		
 		for (int i = 0; i < studentList.size(); i++) {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("SubName", SubName);
 			jsonObject.put("CodeID", CodeID);
 			jsonObject.put("BjID", BjID);
-			String XH = (String) studentList.get(i).getStudentId();// 考号 XH
+			String KH = (String) studentList.get(i).getStudentId();// 考号 XH
 			String XM = (String) studentList.get(i).getStudentName();// 姓名 XM
-			jsonObject.put("XH", XH);
+			jsonObject.put("KH", KH);
 			jsonObject.put("XM", XM);
 
 			// Kgf:客观分
 			BigDecimal Kgf = new BigDecimal("0");
 			// Zgf:主观分
 			BigDecimal Zgf = new BigDecimal("0");
+			
+			
+			Record recordParam = new Record();
+			recordParam.setTestId(CodeID);
+			recordParam.setSubject(SubName);
+			recordParam.setClassId(BjID);
+			recordParam.setStudentId(KH);
+			recordParam.setIsSubjectiveUpload(Constant.IS_LOAD_NO);
+			Result result = new RecordSql().selectRecord(recordParam);
+			if (Constant.ERROR.equals(result.getRet())) {
+				throw new BusinessException(Constant.ERROR, "查询作答记录失败!");
+			}
+
+			List<Record> list =(List<Record>) result.getItem();
+			String isLoad ;
+			if (StringUtils.isEmptyList(list)) {
+				isLoad = Constant.IS_LOAD_YES;
+			}else {
+				isLoad = Constant.IS_LOAD_NO;
+			}
 			for (int j = 0; j < list.size(); j++) {
 				Record record = list.get(j);
-				if (XH.equals(record.getStudentId())) { // 判断是否为该学生的答题信息
+				if (Constant.IS_LOAD_YES.equals(record.getIsSubjectiveUpload())) {
+					isLoad = Constant.IS_LOAD_YES;
+					break;
+				}
+				
+				if (KH.equals(record.getStudentId())) { // 判断是否为该学生的答题信息
 					String answer = record.getAnswer();
 					if (!Constant.ZHUGUANTI_NUM.equals(record.getQuestionType())) { // 客观题的得分就是每题的分值(答对才得分)
-						if ("1".equals(record.getResult())) {
+						if (Constant.RESULT_TRUE.equals(record.getResult())) {
 							Kgf = Kgf.add(new BigDecimal(record.getScore()));
 						}
 					} else if (Constant.ZHUGUANTI_NUM.equals(record.getQuestionType())) { // 主观题的得分就是答题器的答案
@@ -355,7 +454,10 @@ public class ServerServiceImpl implements ServerService{
 			}
 			jsonObject.put("Zgf", Zgf);
 			jsonObject.put("Zf", Kgf.add(Zgf));
-			answerInfoJsonObjects.add(jsonObject);
+			if (Constant.IS_LOAD_NO.equals(isLoad)) {
+				answerInfoJsonObjects.add(jsonObject);
+			}
+			
 		}
 		/* 按分数降序排序 */
 		Collections.sort(answerInfoJsonObjects, new Comparator<Object>() {
@@ -391,9 +493,11 @@ public class ServerServiceImpl implements ServerService{
 			StringBuilder parmas = new StringBuilder();
 			parmas.append("Code=1009&&V=");
 			parmas.append(jsonObject);
-			paramsList.add(parmas.toString());
+//			paramsList.add(parmas.toString());
+			retMap.put(jsonObject.getString("KH"), parmas.toString());
 		}
-		return paramsList;
+//		return paramsList;
+		return retMap;
 	}
 	
 	/* 答案转换 */
