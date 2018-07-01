@@ -167,23 +167,23 @@
 					<div class="form-group">
 						<label for="firstname" class="col-sm-3 control-label">学号</label>
 						<div class="col-sm-8">
-							<input type="number" autocomplete="off" name="studentId" id="" value="" class="form-control" ng-model="student.studentId" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurStunum()" />
+							<input type="number" autocomplete="off" name="studentId" id="" value="" class="form-control" ng-model="student.studentId" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurStunum(myForm.iclickerId.$dirty)" />
 						</div>
-						<span ng-show="myForm.studentId.$invalid" class="warning">*</span>
+						<span ng-show="myForm.studentId.$dirty &&myForm.studentId.$invalid" class="warning">*</span>
 					</div>
 					<div class="form-group">
 						<label for="firstname" class="col-sm-3 control-label">姓名</label>
 						<div class="col-sm-8">
 							<input type="text" autocomplete="off" name="studentName" id="" value="" class="form-control" ng-model="student.studentName" required maxlength="10" placeholder="请输入长度不能超过10位字符" />
 						</div>
-						<span ng-show="myForm.studentName.$invalid" class="warning">*</span>
+						<span ng-show="myForm.studentName.$dirty&&myForm.studentName.$invalid" class="warning">*</span>
 					</div>
 					<div class="form-group">
 						<label for="firstname" class="col-sm-3 control-label">答题器编号</label>
 						<div class="col-sm-8">
-							<input type="number" autocomplete="off" name="iclickerId" id="" value="" class="form-control" ng-model="student.iclickerId" required ng-pattern="/^\d{10}$/" placeholder="请输入长度为10位的数字" ng-blur="blurDevicenum()" />
+							<input type="number" autocomplete="off" name="iclickerId" id="" value="" class="form-control" ng-model="student.iclickerId" required ng-pattern="/^\d{10}$/" placeholder="请输入长度为10位的数字" ng-blur="blurDevicenum(myForm.iclickerId.$dirty)" />
 						</div>
-						<span ng-show="myForm.iclickerId.$invalid" class="warning">*</span>
+						<span ng-show="myForm.iclickerId.$dirty&&myForm.iclickerId.$invalid" class="warning">*</span>
 					</div>
 				</div>
 				<div class="modal-footer text-center">

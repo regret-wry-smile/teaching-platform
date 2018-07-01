@@ -13,7 +13,8 @@ app.controller('setmoduleCtrl', function($scope, toastr) {
 		if($scope.result=='success'){
 			
 		}else{
-			toastr.error($scope.result.message);
+//			toastr.error($scope.result.message);
+			toastr.error("同步数据失败");
 		}
 	}
 	_equipmentsynchron();

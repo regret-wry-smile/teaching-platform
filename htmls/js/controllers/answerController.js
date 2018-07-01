@@ -214,11 +214,11 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $window) {
 					}]
 
 				};
+				$scope.selresultmap = JSON.parse(execute_answer("get_answer_info_sum"));
+				console.log(JSON.stringify($scope.selresultmap));
 				var str;
 				//查询正确答案人数
 				var _getanswerinfo=function(){
-					$scope.selresultmap = JSON.parse(execute_answer("get_answer_info_sum"));
-						console.log(JSON.stringify($scope.selresultmap));
 						if($scope.selresultmap!=null){										
 							if($scope.selresultmap[str]){
 								$scope.answerResult=$scope.selresultmap[str];
@@ -247,21 +247,23 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $window) {
 						     str=letterlist.toString().replace(/,/g,'');			     
 						     _getanswerinfo();
 						     $scope.$apply();//刷新正确率
-		              	}else{	              					              		
+		              	}else{	
+		              		option.series[0].data[params.dataIndex].itemStyle.normal.color='#fff';		              				              		
 		              		for(var i=0;i<letterlist.length;i++){
 		              			if(datavalue==letterlist[i]){
-		              				letterlist.splice(i,1);
-		              				option.series[0].data[params.dataIndex].itemStyle.normal.color='#fff';
+		              				letterlist.splice(i,1);			    	              					
+				              		
 		              			}
+		              			//按ABC排序
+			              		letterlist = letterlist.sort(function (item1, item2) {
+							          return item1.localeCompare(item2)
+							      })
+		              			//转换成字符串
+							     str=letterlist.toString().replace(/,/g,'');
+						     	_getanswerinfo();			              		
+			              		$scope.$apply();//刷新正确率
 		              		}
-		              		//按ABC排序
-		              		letterlist = letterlist.sort(function (item1, item2) {
-						          return item1.localeCompare(item2)
-						      })
-	              			//转换成字符串
-						     str=letterlist.toString().replace(/,/g,'');
-		              		_getanswerinfo();
-		              		$scope.$apply();//刷新正确率
+		              		
 		              		
 		              	}	
 						continue;

@@ -115,14 +115,15 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		
 			modalInstance.result.then(function(info) {
 				if(info){
-					console.log(JSON.stringify(info))
+					alert(222)
 					_selectClass();
 					for(var i=0;i<$scope.classList.length;i++){
 						if(info==$scope.classList[i].classId){
+							alert(555)
 						$scope.classId=info;
 						$scope.classobject=$scope.classList[i];
 						$scope.isActive =$scope.classList.length-1;
-						_selectStudent();
+						$scope.changeClass($scope.classobject,$scope.isActive)
 					}
 					}
 				}
@@ -253,6 +254,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 				});
 				modalInstance.result.then(function(info) {
 					//_SELECTSTUDENT($rootScope.className);
+					_selectStudent();
 				}, function() {
 					//$log.info('Modal dismissed at: ' + new Date());
 				});
@@ -399,10 +401,11 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		modalInstance.result.then(function(info) {
 			//发送指令
 			var param={
-					classId:$scope.classId
+				classId:$scope.classId
 			}
 			$scope.result = JSON.parse(execute_student("clear_bind",JSON.stringify(param)));
 			if($scope.result.ret=='success'){
+				_selectStudent();
 				toastr.success($scope.result.message);
 			}else{
 				toastr.error($scope.result.message);
@@ -490,7 +493,7 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 		}
 	}
 	$scope.ok = function() {
-		$('#myModal').modal('hide');
+		//$('#myModal').modal('hide');
 		if($scope.fileType=='0'){
 			if($scope.filepath){
 				var extStart = $scope.filepath.lastIndexOf(".");
@@ -501,14 +504,14 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 				}else{	
 					_showModal();
 					$scope.result=JSON.parse(execute_student("import_student",$scope.filepath));
-					$modalInstance.close();
-					console.log("哈哈哈哈"+JSON.stringify($scope.result))
-					/*if($scope.result.ret=='success'){
+					//console.log("哈哈哈哈"+JSON.stringify($scope.result))
+					if($scope.result.ret=='success'){
 						toastr.success($scope.result.message);
+						_hideModal();
 						$modalInstance.close($scope.result.remak);
 					}else{
 						toastr.error($scope.result.message);
-					}*/
+					}
 					
 					//$('#myModal').modal('show');
 				}
@@ -716,11 +719,16 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 		
 	};
 	//校验学号
-	$scope.blurStunum=function(){
-		_selectStudent();
+	$scope.blurStunum=function(dirty){
+		if(dirty&&dirty==true){
+			_selectStudent();
+		}
 	}
-	$scope.blurDevicenum=function(){
-		_selectStudent();
+	$scope.blurDevicenum=function(dirty){
+		if(dirty&&dirty==true){
+			_selectStudent();
+		}
+		
 	}
 	$scope.ok = function() {
 		if(typeof $scope.student.studentId=='number'){
