@@ -219,6 +219,9 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 					if (Constant.ERROR.equals(result.getRet())) {
 						BrowserManager.showMessage(false, "保存作答记录失败！");
 						return ;
+					}else {
+						BrowserManager.showMessage(false, "保存作答记录成功！");
+						return ;
 					}
 				} catch (Exception e) {
 					BrowserManager.showMessage(false, "保存作答记录失败！");
