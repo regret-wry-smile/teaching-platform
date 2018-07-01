@@ -48,6 +48,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.colors = ['#ffffff','#c4d4ef','#14c629','#f4c96d','#86daf6'];
 	$scope.data=[];
 	$scope.datalist=[];
+	$scope.isStop=false;
 	var dom = document.getElementById("coutbar");
 	var myChart = echarts.init(dom);
 	var _getScoreTitleInfo=function(){
@@ -194,6 +195,10 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 			//myChart.clear();
 		}
 	}
+	// 获取到的是变更后的页面宽度
+	window.onresize = function(){
+		myChart.resize();
+	}
 	var _init=function(){
 		_getScoreTitleInfo();
 		_getscore();		
@@ -209,6 +214,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		//console.log(JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){	
 			toastr.success($scope.result.message);
+			$scope.isStop=true;
 		}else{
 			toastr.error($scope.result.message);
 		}

@@ -75,13 +75,13 @@
 					  		<a href="javascript:;" ng-click="delObject($index)">×</a>
 					  	</label>
 					    <div class="col-sm-2 pull-left" ng-show="markInfo.programs.length<5">				    	
-					    	<input type="text" autocomplete="off" name="object"  id="" value=""  class="form-control " ng-model="object" maxlength="10" ng-blur="additem()"/>						    	
+					    	<input type="text" autocomplete="off" name="object"  id="" value=""  class="form-control " ng-model="object" maxlength="5" ng-blur="additem()"/>						    	
 						</div>
 						<!--<a href="javascript:;" ng-click="addObject()"><img src="../../image/add.png"/></a>
 						<a href="javascript:;" ng-click="delObject()"><img src="../../image/del.png"/></a>-->
 						<!--<span ng-show="myForm.object.$invalid" class="warning">*</span>-->
 						</div>
-						<p class="text-center warning">说明：评分范围为0~9分；标题限制字数：20,；描述限制字数：100；评分对象限制字数：10</p>
+						<p class="text-center warning">说明：评分范围为0~9分；标题限制字数：20,；描述限制字数：100；评分对象限制字数：5</p>
 				</form>
 			  </div>
 			  <div class="operatebtn pt10 clearfix text-center">

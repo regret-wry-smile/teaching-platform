@@ -43,6 +43,7 @@ app.controller('voteCtrl', function($rootScope,$scope,$modal,toastr) {
 //投票统计控制器
 app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.voteInfo={};
+	$scope.isStop=false;
 	var _getvoteTitleInfo=function(){
 		$scope.result=JSON.parse(execute_vote("get_voteTitleInfo"));
 		if($scope.result.ret=='success'&&$scope.result.item){		
@@ -208,6 +209,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		//console.log(JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){	
 			toastr.success($scope.result.message);
+			$scope.isStop=true;
 		}else{
 			toastr.error($scope.result.message);
 		}

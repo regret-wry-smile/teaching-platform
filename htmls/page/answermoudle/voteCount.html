@@ -68,7 +68,7 @@
 							<p class="con">{{voteInfo.title}}</p>
 						</div>
 					</div>
-					<div class="text clearfix">
+					<div class="text clearfix vote">
 						<label class="pull-left">投票内容:</label>
 						<div class="pull-left" style="width: 80%; vertical-align: middle;margin-top: 0.07rem;">
 							<p class="con">{{voteInfo.describe}}</p>
@@ -81,7 +81,7 @@
 				</div>
 			</div>
 			<div class="operatebtn text-center pt20">
-				<button class="btn savebtn" ng-click="stopVoteCount()">停止投票</button>
+				<button class="btn savebtn" ng-click="stopVoteCount()" ng-disabled="isStop">停止投票</button>
 			</div>
 			<div id="refresVote" ng-click="refresVote()" style="display:none"></div>
 			
