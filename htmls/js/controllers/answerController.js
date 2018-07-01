@@ -645,18 +645,13 @@ app.controller('classuserCheckCtrl', function($scope, toastr,$location, $window,
 	$scope.isgatherPaper=true;//是否是收取试卷按钮
 	
 	$scope.gatherPaper=function(){
+		_showModal();
 	if($scope.paperInfo.answerType=="1"){	
 		$scope.result = JSON.parse(execute_answer("stop_class_test_objective",$scope.paperInfo.testId));	
 	}else{
 		$scope.result = JSON.parse(execute_answer("stop_class_test_subjective",$scope.paperInfo.testId));
 	}
 	console.log(JSON.stringify($scope.result))
-	if($scope.result.ret == 'success') {
-		$scope.isgatherPaper=false;
-		} else {
-			$scope.isgatherPaper=true;
-			toastr.error($scope.result.message);
-		}
 	}
 	//查询主观答题和客观答题的单个人的信息
 	$scope.selectRecord=function(item){
@@ -712,7 +707,7 @@ app.controller('classuserCheckCtrl', function($scope, toastr,$location, $window,
 	}
 	//显示loading
 	$scope.showLoading=function(){
-		_showModal();
+		$('#myModal').modal('show');		
 	}
 	
 	//提示框

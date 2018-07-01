@@ -38,6 +38,14 @@
 		.newOptions{
 			width: 1.2rem !important;
 		}
+		.content1 .operatebtn{
+			position: absolute;
+			bottom: 0.25rem;
+		}
+		.content1 .opbtn{
+			position: absolute;
+			bottom: 0.85rem;
+		}
 	</style>
 	<body class="bg" ng-controller="editPaperManageCtrl">
 		<!--添加题目start-->
@@ -51,17 +59,10 @@
 						<div class="form-group">
 					  	<label for="firstname" class="col-sm-3 control-label">题号</label>
 					    <div class="col-sm-8">
-				    	<input type="number" autocomplete="off" name="stunum" id="" value=""  class="form-control" ng-model="testInfo.questionId" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurStunum()"/>					
+				    	<input type="number" autocomplete="off" name="questionId" id="" value=""  class="form-control" ng-model="testInfo.questionId" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-blur="blurtitle()"/>					
 						</div>
-						<span ng-show="myForm.stunum.$invalid" class="warning">*</span>
+						<span ng-show="myForm.questionId.$invalid" class="warning">*</span>
 						</div>
-						<!--<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">题目</label>
-					    <div class="col-sm-8">
-				    	<input type="text" autocomplete="off" name="stuname" id="" value=""  class="form-control" ng-model="testInfo.question" required maxlength="10" placeholder="请输入长度不能超过10位字符" ng-blur="blurStuname()"/>
-						</div>
-						<span ng-show="myForm.stuname.$invalid" class="warning">*</span>
-						</div>-->
 						<div class="form-group">
 					  	<label for="firstname" class="col-sm-3 control-label">题目内容</label>
 					    <div class="col-sm-8">
@@ -77,27 +78,20 @@
 							<option value="-1">字母</option>
 							<option value="3">数字</option>
 						</select>
-				    	<select class="single" ng-model="testInfo.selType" select defalutvalue='testInfo.selType1' ng-if="testInfo.questionType=='-1'" ng-change="changeselType(quesInfo.selType)">
-				    		<option value="0">单选</option>
-				    		<option value="1">多选</option>
+				    	<select class="single" select2 ng-model="testInfo.selType"  defalutvalue='testInfo.selType1' ng-if="testInfo.questionType=='-1'" ng-change="changeselType(testInfo.selType)" list="letterList">
+				    		<!--<option value="0">单选</option>
+				    		<option value="1">多选</option>-->
+				    		
 				    	</select>
-				    	<select class="single" ng-model="testInfo.range" select defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'" >
-				    		<option value="A-D">A-D</option>
-				    		<option value="A-F">A-F</option>
+				    	<select class="single" select2 ng-model="testInfo.range"  defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'" list="rangeList" ng-change="changeRange(testInfo.range)">
+				    		<!--<option value="A-D">A-D</option>
+				    		<option value="A-F">A-F</option>-->
 				    	</select>
 						</div>
 						</div>
-						<!--<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">答案</label>
-					    <div class="col-sm-8">
-				    	<input type="text" autocomplete="off" name="trueAnswer" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" required  ng-blur="blurtrueAnswer(testInfo.trueAnswer)"/>
-						</div>
-						<span ng-show="myForm.trueAnswer.$invalid" class="warning">*</span>
-						</div>-->
 						<div class="form-group" ng-if="testInfo.questionType=='2'">
 					  	<label for="firstname" class="col-sm-3 control-label">答案</label>
-					    <div class="col-sm-8">
-					    	
+					    <div class="col-sm-8">				    	
 					    	<label  class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="T" ng-checked="true" required/>√</label>
 					    	<label  class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="F" required/>×</label>
 				    		<!--<input type="text" autocomplete="off" name="trueAnswer" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[TF]$/" required />-->
@@ -113,18 +107,10 @@
 						</div>
 						<div class="form-group" ng-if="testInfo.questionType=='-1'">
 					  	<label for="firstname" class="col-sm-3 control-label">答案</label>
-						<div class="col-sm-8">
-						<input type="text" autocomplete="off" name="trueAnswer"  id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ui-validate="'isLetterRange($value,testInfo.range)'" ui-validate-watch=" 'testInfo.range' " required />
+					  	<div class="col-sm-8">
+						<input type="text" autocomplete="off" name="trueAnswer" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" required  ng-blur="changeJudge(testInfo.trueAnswer)" />
 						</div>
-						<!--<div class="col-sm-8">
-				    	<input type="text" autocomplete="off" name="trueAnswer" ng-if="quesInfo.selType=='0'&&quesInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="quesInfo.trueAnswer" ng-pattern="{{pattren}}" required ng-blur="changeJudge(testInfo.trueAnswer)"/>
-						<input type="text" autocomplete="off" name="trueAnswer" ng-if="quesInfo.selType=='0'&&quesInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="quesInfo.trueAnswer" ng-pattern="/^[A-F]$/" required />
-						</div>
-						<div class="col-sm-8" >
-				    	<input type="text" autocomplete="off" name="trueAnswer" ng-if="quesInfo.selType=='1'&&quesInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="quesInfo.trueAnswer" ng-pattern="/^[A-D]$/" required />
-						<input type="text" autocomplete="off" name="trueAnswer" ng-if="quesInfo.selType=='1'&&quesInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="quesInfo.trueAnswer" ng-pattern="/^[A-F]$/" required />
-						</div>-->
-						<span ng-show="myForm.trueAnswer.$invalid" class="warning">{{quesInfo.selType='0'?"单选":"多选"}}{{quesInfo.range}}*</span>
+						<span ng-show="myForm.trueAnswer.$invalid" class="warning">{{testInfo.selType='0'?"单选":"多选"}}*</span>
 						</div>
 
 					</div>
@@ -159,11 +145,11 @@
 				</div>
 				<div class="pull-right">
 					<a href="javascript:history.go(-1);">
-					<img src="../../image/return.png"/>
+					<img src="../../image/return.png" class="rebtn"/>
 					</a>
 				</div>
 			</div>
-			<div class="content bgf5 clearfix">		
+			<div class="content content1 bgf5 clearfix">		
 				<form class="form-horizontal clearfix" name="myForm" novalidate>
 		  			<div class="form-group">
 				  	<label for="firstname" class="col-sm-2 control-label">试卷名称</label>
@@ -178,35 +164,39 @@
 				    	<textarea  class="form-control" rows="3" ng-model="paperInfo.describe"></textarea>
 					</div>
 					</div>
-			  		<div class="col-main"  id="testlist" style="overflow-x: auto; overflow-y: auto; height:1.5rem; width:100%;padding-right: 0.05rem;">
+			  		<div class="col-main" style="position: absolute;top: 1.63rem;left: 0;right: 0;bottom: .25rem;overflow-x: hidden;overflow-y: auto; width:100%;padding:0 0.25rem;">
 					<table class="table table-stripe subject" >
 						<thead>
 							<tr>
-								<th class="wd60">序号</th>
-								<th class="wd60">题号</th>
-								<th class="wd130">题目内容</th>
-								<th class="wd80">答案类型</th>
-								<th class="wd80">答案</th>
-								<th class="wd60">操作</th>
-								<th class="wd80" class="pr1">全选
+								<th style="width: 10%;">序号</th>
+								<th style="width: 10%;">题号</th>
+								<th style="width: 15%;">题目内容</th>
+								<th style="width: 10%;">答案类型</th>
+								<th style="width: 10%;">答案</th>
+								<th style="width: 10%;">操作</th>
+								<th style="width: 10%;"class="pr1">全选
 								<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>						
 							</tr>
 						</thead>
+					</table>
+					<div style="overflow-x: hidden;position: absolute; top: 0.36rem; left: 0.25rem; right: 0.25rem; bottom: 0.85rem; overflow-y: auto;" id="testlist1">
+						<table class="table table-stripe subject text-left">		
 						<tbody>
 							<tr ng-repeat="quesitem in subjectList track by $index"" ng-click="$event.stopPropagation();"> 
-								<td>{{$index+1}}</td>
-								<td>{{quesitem.questionId}}</td>
-								<td>{{quesitem.question}}</td>
-								<td>{{quesitem.questionType|questionType}}</td>
-								<td>{{quesitem.trueAnswer|AnswerType}}</td>							
-								<td><a href="javascript:;" class="edit mr5" ng-click="editSuject(quesitem)">编辑</a>									
-								<!--<a href="javascript:;" class="del" ng-click="delSuject(quesitem)">删除</a>-->
+								<td style="width: 10%;">{{$index+1}}</td>
+								<td style="width: 10%;">{{quesitem.questionId}}</td>
+								<td style="width: 15%;">{{quesitem.question}}</td>
+								<td style="width: 10%;">{{quesitem.questionType|questionType}}</td>
+								<td style="width: 10%;">{{quesitem.trueAnswer|AnswerType}}</td>							
+								<td style="width: 10%;">
+									<a href="javascript:;" class="edit mr5" ng-click="editSuject(quesitem)">编辑</a>									
+									<!--<a href="javascript:;" class="del" ng-click="delSuject(quesitem)">删除</a>-->
 								</td>
-								<td class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="quesitem.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
+								<td  style="width: 10%;" class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="quesitem.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
 							</tr>
 						</tbody>
 					</table>
-					
+					</div>
 			  	</div>
 			  	<div class="opbtn clearfix pt10">
 				  	<a href="javascript:;"  ng-click="addSubject()">新增</a>
@@ -224,6 +214,6 @@
 <script>
 	 $(document).ready(function() { 
 	var nice = $("html").niceScroll();  // The document page (body)
-	 $("#testlist").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable 	
+	 $("#testlist1").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable 	
   });
 </script>

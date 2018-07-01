@@ -156,35 +156,48 @@
 					<span>试卷管理</span>
 				</div>
 				<div class="pull-right">
-					<img src="../../image/return.png" ng-click="returnPage()"/>
+					<img src="../../image/return.png" ng-click="returnPage()" class="rebtn"/>
 				</div>
 			</div>
-			<div class="content bgf5 clearfix">
+			<div class="content content1 bgf5 clearfix">
 				<div class="opbtn clearfix mb20">
 				  	<a href="javascript:;" ng-href="{{objectUrl}}" ng-click="addTestPaper()">添加试卷</a>
 				  	<a href="javascript:;" ng-click="importPaper()">导入</a>
 			  	</div>
-			  	<div class="pannel clearfix">
-			  		<div class="col-main"  id="testlist" style="overflow-x: auto; overflow-y: auto; height:3.10rem; width:100%;padding-right:0.02rem;">
-					<table class="table table-stripe userlist">
+			  	<div class="pannel clearfix" style="position: absolute; top:0.45rem ; left: 0.20rem; right: 0.25rem; bottom: .25rem;overflow-x: hidden">
+			  		<!--<div class="col-main"   style="overflow-x: auto; overflow-y: auto; height:3.10rem; width:100%;padding-right:0.02rem;">-->
+			  			<div class="col-main" style=" overflow-x: hidden;overflow-y: auto;height: 100%; width:100%; position: absolute; left: 0; top: 0; bottom: 0; right: 0; " >
+			  			<table class="table table-stripe userlist">
 						<thead>
+							<tr >
+								<th style="width: 10%;">序号</th>
+								<th style="width: 10%;">名称</th>
+								<th style="width: 15%;">描述</th>
+								<th style="width: 10%;">操作</th>
+							</tr>
+						</thead>
+					</table>
+					<div style="overflow-x: hidden;position: absolute; top: 0.36rem; left: 0rem; right: 0rem; bottom: 0rem; overflow-y: auto;"  id="testlist">
+					<table class="table table-stripe userlist text-left" >
+						<!--<thead>
 							<tr >
 								<th class="wd20">序号</th>
 								<th class="wd80">名称</th>
 								<th class="wd130">描述</th>
 								<th class="wd20">操作</th>
 							</tr>
-						</thead>
+						</thead>-->
 						<tbody>
 							<tr ng-repeat="paperInfo in paperInfoList track by $index">
-								<td>{{$index+1}}</td>
-								<td>{{paperInfo.testName}}</td>
-								<td>{{paperInfo.describe}}</td>
-								<td><a ng-href="{{objectUrl}}" class="edit mr5" ng-click="editPaper(paperInfo)">编辑</a><a href="javascript:;" class="del" ng-click="delPaper(paperInfo)">删除</a></td>
+								<td style="width: 10%;">{{$index+1}}</td>
+								<td style="width: 10%;">{{paperInfo.testName}}</td>
+								<td style="width: 15%;">{{paperInfo.describe}}</td>
+								<td style="width: 10%;"><a ng-href="{{objectUrl}}" class="edit mr5" ng-click="editPaper(paperInfo)">编辑</a><a href="javascript:;" class="del" ng-click="delPaper(paperInfo)">删除</a></td>
 							</tr>
 							
 							</tbody>
 						</table>
+					</div>
 					</div>
 			  	</div>
 			  </div>

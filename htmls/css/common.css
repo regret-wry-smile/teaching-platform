@@ -152,7 +152,13 @@ p {
 	bottom:  0.15rem;
 	left: 0.15rem;
 	right:  0.15rem;
+	margin: 0;
 } 
+/*td.hidename{
+	white-space: nowrap;/*控制单行显示*/
+	/*overflow: hidden;/*超出隐藏*/
+	/*text-overflow: ellipsis;/*隐藏的字符用省略号表示*/
+/*}*/
 ul.modbox li{
 	float: left;
 	width: 33.33%;
@@ -565,6 +571,10 @@ table.classlist tbody tr:hover,
 table.userlist tbody tr:hover{
 	background: #eaeaea;
 }
+table.userlistchild tbody tr:first-child,
+table.classlist tbody tr:first-child{
+	border-top: none;
+}
 table tbody tr td a.del,
 table tbody tr td a.edit {
 	visibility: hidden;
@@ -573,11 +583,18 @@ table tbody tr td a.edit {
 table  tbody tr:hover td a.del,table  tbody tr:hover td a.edit{
 	visibility: visible;
 }
-table.classlist thead tr th{
-	/*height: 0.25rem;
-	line-height: 0.25rem;*/
-	padding: 0.08rem ;
-	vertical-align: middle;
+
+table.classlist thead tr th,table.userlist thead tr th{
+	height: 0.20rem;
+    line-height: 0.20rem;
+    padding: 0.08rem;
+    vertical-align: middle;
+   /* border: none;*/
+	/*border-bottom: 1px solid #f5f5f5 !important;*/
+	
+}
+table.userlist thead tr {
+	border-bottom: 2px solid #f5f5f5 !important;
 }
 table.papertable{
 	background: #fff;
@@ -612,13 +629,6 @@ table.classlist tbody tr td{
 }
 table.classlist tbody tr span.name.active{
 	color: #3d95ff;
-}
-
-table.userlist thead tr th{
-	height: 0.20rem;
-	line-height: 0.20rem;
-	padding: 0.08rem ;
-	vertical-align: middle;
 }
 table.userlist thead tr th input[type='checkbox']{
 	margin-top: -0.03rem;
@@ -813,10 +823,7 @@ ul.col-4 li a span{
 	font-size: 0.32rem;
 	vertical-align: middle;
 }
-a.rebtn{
-	display: block;
-	width: 100px;
-	background: #fff;
+img.rebtn:active{
 	opacity: 0.8;
 }
 @media screen and (max-width: 920px) {

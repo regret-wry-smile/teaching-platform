@@ -1,10 +1,11 @@
 //定义模块时引入依赖  
 var app=angular.module('app',['ui.bootstrap','toastr']);
 	app.controller('setStuManageCtrl', function($rootScope,$scope,$modal,toastr) {
-	$scope.studenList=[];//学生列表数组
+	$scope.studentList=[];//学生列表数组
 	$scope.checkedId=[];
 	$scope.onechecked = [];
 	$scope.classList=[];//班级列表数组
+/*	$scope.classList=[{"atype":"1","classId":"536666","className":"64326","id":28},{"atype":"0","classId":"77754","className":"754745","id":60}];*/
 	$scope.isActive = 0;
 	$scope.classobject='';
 	$('#myModal').modal('hide');//默认隐藏loading
@@ -16,29 +17,18 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	var _showModal=function(){
 		$('#myModal').modal('show');
 	}
-	/*$scope.refreshStudent = function(){
-		var param = {
-				classId:classId
-			}
-			param =JSON.stringify(param);
-			$scope.result = JSON.parse(execute_student("select_student",param));
-			console.log("學生"+JSON.stringify($scope.result))
-			if($scope.result.ret=='success'){
-				$scope.studentList=[];
-				$scope.studentList=$scope.result.item;
-			}else{
-				toastr.error($scope.result.message);
-			}
-	}*/
-	
 	/*查询学生列表*/
 	var _selectStudent = function() {
 		var param = {
 			classId:$scope.classId
 		}
 		console.log(JSON.stringify(param))
-		param =JSON.stringify(param);
-		$scope.result = JSON.parse(execute_student("select_student",param));
+		/*for(var i=0;i<120;i++){
+			var item={"classId":"77754","className":"754745","iclickerId":"7347734777","id":1001864,"status":"0","studentId":"43","studentName":"73"}
+			$scope.studentList.push(item);
+		}*/
+		
+		$scope.result = JSON.parse(execute_student("select_student",JSON.stringify(param)));
 		console.log("學生"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){
 			$scope.studentList=[];
@@ -92,18 +82,18 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		});
 		modalInstance.result.then(function(info) {
 			console.log("班级id"+JSON.stringify(info))
-			_selectClass();
-			for(var i=0;i<$scope.classList.length;i++){
-				if(info==$scope.classList[i].classId){
-					$scope.classId=info;
-					$scope.classobject=$scope.classList[i];
-					$scope.isActive =$scope.classList.length-1;
-					_selectStudent();
-					
+			if(info){
+				_selectClass();
+				for(var i=0;i<$scope.classList.length;i++){
+					if(info==$scope.classList[i].classId){
+						$scope.classId=info;
+						$scope.classobject=$scope.classList[i];
+						$scope.isActive =$scope.classList.length-1;
+						_selectStudent();
+						
+					}
 				}
-			}
-			
-			
+			}		
 		}, function() {
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
@@ -443,7 +433,7 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 	var _showModal=function(){
 		$('#myModal').modal('show');
 	}
-	console.log("吃哈哈哈"+JSON.stringify(infos));
+	//console.log("吃哈哈哈"+JSON.stringify(infos));
 	if(infos){
 		$scope.fileType=angular.copy(infos.atype);
 		$scope.fileType1=angular.copy($scope.fileType);
@@ -545,7 +535,6 @@ app.controller('findBindModalCtrl',function($scope,$modalInstance,toastr){
 })
 //添加学生控制器
 app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos){
-	$scope.errorState = false; /*点击确认按钮,表单校验中必填或必选边框红色*/
 	console.log(JSON.stringify(infos))
 	$scope.title="添加学生";
 	if(infos){
@@ -582,7 +571,18 @@ app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos
 		console.log("學生"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){
 			if($scope.result.item.length>0){
-				$scope.errorState=true;
+				if($scope.student.studentId){
+					toastr.warning('该学号已存在，请重新输入');
+					 $timeout(function () {
+					  $scope.student.studentId='';
+				   	}, 2000);
+				}
+				if($scope.student.iclickerId){
+					toastr.warning('该答题器编号已存在，请重新输入');
+					 $timeout(function () {
+					  $scope.student.iclickerId='';
+				   	}, 2000);
+				}
 			}
 			
 		}else{
@@ -595,11 +595,10 @@ app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos
 	$scope.blurStunum=function(){
 		_selectStudent();
 	}
-	$scope.ok = function(state) {
-		if(state == false) {
-			$scope.errorState = true;
-		} else {
-			$scope.errorState = false;
+	$scope.blurDevicenum=function(){
+		_selectStudent();
+	}
+	$scope.ok = function() {
 		if(typeof $scope.student.studentId=='number'){
 			$scope.student.studentIdint=JSON.stringify($scope.student.studentId)
 		}
@@ -623,7 +622,6 @@ app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos
 			console.log(JSON.stringify($scope.result.detail))
 			toastr.error($scope.result.message);
 		}
-		}
 	}
 	$scope.cancel = function() {
 		$modalInstance.dismiss('cancel');
@@ -641,6 +639,54 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 		if(typeof infos.iclickerId=='string'){
 			$scope.student.iclickerId=parseInt(infos.iclickerId)
 		}
+	}		
+		/*查询学生列表*/
+	var _selectStudent = function() {
+		if($scope.student.studentId){
+			var param = {
+				classId:$scope.student.classId,
+				studentId:$scope.student.studentId
+			}
+		}
+		if($scope.student.iclickerId){
+			var param = {
+				classId:$scope.classId,
+				iclickerId:$scope.student.iclickerId
+			}
+		}
+		
+		console.log(JSON.stringify(param))
+		param =JSON.stringify(param);
+		$scope.result = JSON.parse(execute_student("select_student",param));
+		console.log("學生"+JSON.stringify($scope.result))
+		if($scope.result.ret=='success'){
+			if($scope.result.item.length>0){
+				if($scope.student.studentId){
+					toastr.warning('该学号已存在，请重新输入');
+					 $timeout(function () {
+					  $scope.student.studentId='';
+				   	}, 2000);
+				}
+				if($scope.student.iclickerId){
+					toastr.warning('该答题器编号已存在，请重新输入');
+					 $timeout(function () {
+					  $scope.student.iclickerId='';
+				   	}, 2000);
+				}
+			}
+			
+		}else{
+			
+			toastr.error($scope.result.message);
+		}
+		
+	};
+	//校验学号
+	$scope.blurStunum=function(){
+		_selectStudent();
+	}
+	$scope.blurDevicenum=function(){
+		_selectStudent();
 	}
 	$scope.ok = function() {
 		if(typeof $scope.student.studentId=='number'){
@@ -681,29 +727,53 @@ app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toa
 	}
 	$scope.classInfo.atype1=angular.copy($scope.classInfo.atype);
 	$scope.title="添加班级";
-	//班级查重
+	//班级id查重
 	$scope.selectClass=function(){
-		var param={
-			classId:$scope.classInfo.classId
-		}		
-		$scope.result= JSON.parse(execute_student("select_class",JSON.stringify(param)));
-		console.log(JSON.stringify($scope.result))
-		if($scope.result.ret=='success'){
-			if($scope.result.item.length>0){
-				toastr.success('该班级已存在，请重新输入');
-				 $timeout(function () {
-				  $scope.classInfo.classId='';
-			   	}, 2000);
-			} 
-		}else{
-			toastr.error($scope.result.message);
-		}		
+		if($scope.classInfo.classId){
+			var param={
+				classId:$scope.classInfo.classId
+			}		
+			$scope.result= JSON.parse(execute_student("select_class",JSON.stringify(param)));
+			console.log(JSON.stringify($scope.result))
+			if($scope.result.ret=='success'){
+				if($scope.result.item.length>0){
+					toastr.warning('该班级已存在，请重新输入');
+					 $timeout(function () {
+					  $scope.classInfo.classId='';
+				   	}, 2000);
+				} 
+			}else{
+				toastr.error($scope.result.message);
+			}
+		}
+				
+	}
+	//班级名称查重
+	$scope.selectClassName=function(){
+		if($scope.classInfo.className){
+			var param={
+				className:$scope.classInfo.className
+			}		
+			$scope.result= JSON.parse(execute_student("select_class",JSON.stringify(param)));
+			console.log(JSON.stringify($scope.result))
+			if($scope.result.ret=='success'){
+				if($scope.result.item.length>0){
+					toastr.warning('该班级名称已存在，请重新输入');
+					 $timeout(function () {
+					  $scope.classInfo.className='';
+				   	}, 2000);
+				} 
+			}else{
+				toastr.error($scope.result.message);
+			}
+		}
+				
 	}
 	$scope.ok = function() {
 		var param = $scope.classInfo;
-		console.log("参数"+JSON.stringify(param))
+		//console.log("参数"+JSON.stringify(param))
 		$scope.result= JSON.parse(execute_student("insert_class",JSON.stringify(param)));
-		console.log("滴滴滴滴"+JSON.stringify($scope.result))
+		//console.log("滴滴滴滴"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){
 			toastr.success($scope.result.message);
 			$modalInstance.close($scope.classInfo.classId);

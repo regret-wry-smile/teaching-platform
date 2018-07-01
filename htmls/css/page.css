@@ -9,7 +9,7 @@
     color: #fff;
     padding-left: 0.40rem;
     font-size: 0.15rem;
-    background: #000 url(../../image/loading.gif) no-repeat 90px 50%;
+    background: #000 url(../image/loading.gif) no-repeat 90px 50%;
     opacity: 0.5;
     z-index: 9999;
     -moz-border-radius: 5px;
