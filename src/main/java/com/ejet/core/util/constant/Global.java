@@ -22,8 +22,20 @@ public class Global {
 	public static List<StudentInfo> studentInfos;
 	
 	public static ClassHour classHour;
+	/**
+	 * 当前设备绑定的所有答题器编号<进入设置页面后同步设备和数据库绑定状态时保存到该处,以便后期修改学生的答题器编号时进行查询更新>
+	 */    
+	private static List<String> iclickerIds;
+	
+	public static List<String> getIclickerIds() {
+        return iclickerIds;
+    }
 
-	public static ClassInfo getClassInfo() {
+    public static void setIclickerIds(List<String> iclickerIds) {
+        Global.iclickerIds = iclickerIds;
+    }
+
+    public static ClassInfo getClassInfo() {
 		return classInfo;
 	}
 

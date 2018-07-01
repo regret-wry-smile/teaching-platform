@@ -215,6 +215,16 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	public Result updateStudentById(Object param) {
 		try {
 			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseToBean(JSONObject.fromObject(param), StudentInfo.class);
+			String iclickerId = studentInfo.getIclickerId();
+			if (!StringUtils.isEmpty(iclickerId)) {
+			    //修改学生信息的时候,有可能改了卡号,但是这个卡号不一定是绑定的状态,所以要检查设备中是否绑定了
+			    List<String> iclickerIds = Global.getIclickerIds();
+			    if (ListUtils.isEmpty(iclickerIds)||!iclickerIds.contains(iclickerId)) {
+			        studentInfo.setStatus(Constant.BING_NO);
+                }else{
+                    studentInfo.setStatus(Constant.BING_YES);
+                }
+            }
 			result = studentInfoSql.updateStudentById(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("修改学生信息成功!");
