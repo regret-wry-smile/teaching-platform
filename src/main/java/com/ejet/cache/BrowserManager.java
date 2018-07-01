@@ -122,7 +122,7 @@ public class BrowserManager {
 		}
 	}
 	
-	/*移除加载图片*/
+	/*移除正在加载*/
 	public static void removeLoading(){
 		Browser b  = browerManager.get();
 		if (b!=null) {

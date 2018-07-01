@@ -96,8 +96,8 @@ public class RecordFunctionManage extends BrowserFunction{
 			    break;
 			case "test_export":
 			    /*导出作答记录*/
-			    recordService.testExport(params[1]);
-			    break;
+			    result = recordService.testExport(params[1]);
+			    break ;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");

@@ -194,18 +194,18 @@ public class StudentInfoSql {
 		}
 		return DBHelper.onUpdateByGroup(sqls);
 	}
-	public Result updateStatusByIclickerIds(List<String> uidList,String status) {
-	    return updateStatusByIclickerIds(uidList, status, "in");
+	public Result updateStatusByIclickerIds(List<String> iclickerIds,String status) {
+	    return updateStatusByIclickerIds(iclickerIds, status, "in");
 	}
 
-    public Result updateStatusByIclickerIds(List<String> uidList,String status,String inOrNotIN) {
+    public Result updateStatusByIclickerIds(List<String> iclickerIds,String status,String inOrNotIN) {
         if (StringUtils.isEmpty(status)) {
             Result r = new Result();
             r.setRet(Constant.ERROR);
             r.setMessage("缺少参数 :绑定状态不能为空");
             return r;
         }
-        if (ListUtils.isEmpty(uidList)) {
+        if (ListUtils.isEmpty(iclickerIds)) {
             Result r = new Result();
             r.setRet(Constant.ERROR);
             r.setMessage("缺少参数 :卡的编号不能为空");
@@ -214,9 +214,9 @@ public class StudentInfoSql {
         
         //update student_info set status = '0' where iclicker_id in('3429469477','6666660002','************')
         StringBuilder sb = new StringBuilder("update student_info set status = "+status+" where iclicker_id "+inOrNotIN+"(");
-        for (int i = 0; i< uidList.size();i++) {
-            sb.append(uidList.get(i));
-            if (i != uidList.size()-1) {
+        for (int i = 0; i< iclickerIds.size();i++) {
+            sb.append(iclickerIds.get(i));
+            if (i != iclickerIds.size()-1) {
                 sb.append(",");
             }
         }

@@ -179,10 +179,10 @@ public class Record {
         this.time = time;
     }
     
-    public List getStudentIds() {
+    public List<String> getStudentIds() {
         return studentIds;
     }
-    public void setStudentIds(List studentIds) {
+    public void setStudentIds(List<String> studentIds) {
         this.studentIds = studentIds;
     }
     

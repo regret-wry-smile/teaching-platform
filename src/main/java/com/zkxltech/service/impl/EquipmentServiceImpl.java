@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
@@ -305,18 +306,22 @@ public class EquipmentServiceImpl implements EquipmentService{
             return r;
         }
         StudentInfoSql studentInfoSql = new StudentInfoSql();
-        List<String> uids = getEquipmentAllUid(get_device_info);
+        List<String> iclickerIds = getEquipmentAllUid(get_device_info);
+        //将结果保存到项目全局变量中
+        
+        Global.setIclickerIds(iclickerIds);
+        
         /**如果设备没有值,直接将库全改为未绑定*/
-        if (ListUtils.isEmpty(uids)) {
+        if (ListUtils.isEmpty(iclickerIds)) {
             r = studentInfoSql.updateStatus(Constant.BING_NO);
        }else{
            /**有值的将库里对应的学生改为绑定,没值的全部是未绑定*/
            try {
-               r = studentInfoSql.updateStatusByIclickerIds(uids,Constant.BING_YES);
+               r = studentInfoSql.updateStatusByIclickerIds(iclickerIds,Constant.BING_YES);
                if (r.getRet().equals(Constant.ERROR)) {
                    return r;
                }
-               r = studentInfoSql.updateStatusByIclickerIds(uids, Constant.BING_NO," not in");
+               r = studentInfoSql.updateStatusByIclickerIds(iclickerIds, Constant.BING_NO," not in");
                if (r.getRet().equals(Constant.ERROR)) {
                    return r;
                }

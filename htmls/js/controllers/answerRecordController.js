@@ -16,6 +16,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 	$scope.recordList = [] //作答记录数组
 	$scope.onechecked = [];
 	$scope.checkedId = [];
+	$scope.checkedstudentIds=[];//学生id数组
 	$('#myModal').modal('hide');
 	//隐藏loading
 	var _hideModal=function(){
@@ -66,7 +67,8 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 					if($scope.classhourList.length > 0) {
 						$scope.setClass.sujectHour = $scope.classhourList[0].key;
 						$scope.sujectHourobject = $scope.classhourList[0] || {};
-						$scope.setClass.sujectHour1 = angular.copy($scope.setClass.sujectHour);						
+						$scope.setClass.sujectHour1 = angular.copy($scope.setClass.sujectHour);	
+						_selectPaper();
 					}
 
 				})
@@ -93,11 +95,11 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 		var param = {
 			classHourId: $scope.setClass.sujectHour
 		}
-		//console.log(JSON.stringify(param))
+		console.log("课程id"+JSON.stringify(param))
 		$scope.result = JSON.parse(execute_testPaper("select_paper_by_classHourId", JSON.stringify(param)));
 		console.log(JSON.stringify($scope.result));
-		if($scope.result.ret == 'success') {
-			$scope.paperList=[];
+		$scope.paperList=[];
+		if($scope.result.ret == 'success') {			
 			if($scope.result.item.length > 0) {
 				angular.forEach($scope.result.item, function(i) {
 					var item = {
@@ -132,9 +134,9 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 				testId: $scope.setClass.paper,
 				classHourId: $scope.setClass.sujectHour
 			}
-			console.log("记录" + JSON.stringify(param))
+			//console.log("记录" + JSON.stringify(param))
 			$scope.result = JSON.parse(execute_record("select_record", JSON.stringify(param)));
-			console.log("记录" + JSON.stringify($scope.result))
+			//console.log("记录" + JSON.stringify($scope.result))
 			if($scope.result.ret == 'success') {
 				$scope.recordList=[];
 				$scope.recordList = $scope.result.item;
@@ -201,7 +203,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 			angular.forEach($scope.recordList, function(i) {
 				i.checked = true;
 				var item = i;
-				$scope.checkedId.push(i.studentId.toString());
+				$scope.checkedId.push(i.id.toString());
 				$scope.onechecked.push(item);
 
 			})
@@ -219,12 +221,12 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 		$scope.onechecked = [];
 		$scope.checkedId = [];
 		angular.forEach($scope.recordList, function(i) {
-			var index = $scope.checkedId.indexOf(i.studentId);
+			//console.log("是什么"+JSON.stringify(i))
+			var index = $scope.checkedId.indexOf(i.id);
 			if(i.checked && index === -1) {
 				var item = i;
-				$scope.onechecked.push(item);
-				$scope.checkedId.push(i.studentId.toString());
-
+				$scope.onechecked.push(item);				
+				$scope.checkedId.push(i.id.toString());
 			} else if(!i.checked && index !== -1) {
 				$scope.selected = false;
 				$scope.onechecked.splice(index, 1);
@@ -241,8 +243,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 
 	//删除记录
 	$scope.deleteRcord = function() {
-		alert($scope.checkedId.length)
-		if($scope.checkedId.length > 0) {
+		if($scope.onechecked.length > 0) {
 			var content = "删除选中记录";
 			var modalInstance = $modal.open({
 				templateUrl: 'sureModal.html',
@@ -256,12 +257,15 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 			});
 
 			modalInstance.result.then(function(info) {
+				for(var i=0;i<$scope.onechecked.length;i++){
+					$scope.checkedstudentIds.push($scope.onechecked[i].studentId);
+				}
 				var param = {
 					testId: $scope.setClass.paper,
-					studentIds: $scope.checkedId
+					studentIds: $scope.checkedstudentIds
 				}
 				console.log(JSON.stringify(param))
-				$scope.result = JSON.parse(execute_record("delete_record", param));
+				$scope.result = JSON.parse(execute_record("delete_record", JSON.stringify(param)));
 				if($scope.result.ret == 'success') {
 					toastr.success($scope.result.message);
 					_selectRecord();
@@ -291,13 +295,11 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 				classHourId:$scope.setClass.sujectHour,
 				testId:$scope.setClass.paper
 			}	
-			_showModal();
+			
 			$scope.result=JSON.parse(execute_record('test_export',JSON.stringify(param)));
-			if($scope.result.ret=='success'){
-				_hideModal();
-				toastr.success($scope.result.message);
+			if($scope.result.ret=='success'){				
+				//toastr.success($scope.result.message);
 			}else{
-				_hideModal();
 				toastr.error($scope.result.message);
 				console.log(JSON.stringify($scope.result.message))
 			}
@@ -305,6 +307,23 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 			toastr.warning("缺少必要条件，不能导出");
 		}
 		
+	}
+	//显示loading
+	$scope.showLoading=function(){
+		_showModal();
+	}
+	//显示loading
+	$scope.removeLoading=function(){
+		_hideModal();
+	}
+	//提示框
+	$scope.getTip = function() {
+		if (ret == 'true') {
+			toastr.success(message);
+		}
+		else {
+			toastr.error(message);
+		}
 	}
 })
 //确认弹出框

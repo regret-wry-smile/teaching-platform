@@ -45,5 +45,5 @@ public interface RecordService {
      * @param object
      * @return
      */
-    void testExport(Object object);
+    Result testExport(Object object);
 }
