@@ -87,13 +87,13 @@
 							<option value="3">数字</option>
 						</select>
 				    	<select class="single" select2 ng-model="testInfo.selType"  defalutvalue='testInfo.selType1' ng-if="testInfo.questionType=='-1'" ng-change="changeselType(testInfo.selType)" list="letterList">
-				    		<!--<option value="0">单选</option>
-				    		<option value="1">多选</option>-->
+				    		<option ng-repeat="item in letterList track by $index" value="{{item}}" >{{item.value}}</option>
 				    		
 				    	</select>
 				    	<select class="single" select2 ng-model="testInfo.range"  defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'" list="rangeList" ng-change="changeRange(testInfo.range)">
 				    		<!--<option value="A-D">A-D</option>
 				    		<option value="A-F">A-F</option>-->
+				    		<option ng-repeat="item in rangeList track by $index" value="{{item}}">{{item.value}}</option>
 				    	</select>
 						</div>
 						</div>

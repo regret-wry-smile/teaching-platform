@@ -77,7 +77,9 @@ public class ServerServiceImpl implements ServerService{
 //					result.setMessage("从服务器中获取试卷！");
 //					result.setItem(testList);
 //					return result;
-					BrowserManager.showMessage(false, "从服务器中获取试卷成功！");
+					Map<String, Object> map = new HashMap<>();
+					map.put("testInfo", testList);
+					BrowserManager.refreTestPaper(net.sf.json.JSONObject.fromObject(map).toString());
 					return;
 				} catch (Exception e) {
 					BrowserManager.showMessage(false, "从服务器中获取试卷失败！");
@@ -154,7 +156,8 @@ public class ServerServiceImpl implements ServerService{
 						}
 					}
 					result.setRemak(testId);
-					BrowserManager.showMessage(false, "保存服务器中的题目信息成功！");
+					BrowserManager.showMessage(true, "导入成功！");
+					BrowserManager.refreTestPaper2();
 					return;
 				} catch (Exception e) {
 					BrowserManager.showMessage(false, "保存服务器中的题目信息失败！");

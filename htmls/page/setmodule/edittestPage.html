@@ -189,7 +189,7 @@
 								<td style="width: 10%;">{{quesitem.questionType|questionType}}</td>
 								<td style="width: 10%;">{{quesitem.trueAnswer|AnswerType}}</td>							
 								<td style="width: 10%;">
-									<a href="javascript:;" class="edit mr5" ng-click="editSuject(quesitem)">编辑</a>									
+									<a href="javascript:;" class="edit mr5" ng-click="editSuject(quesitem)" ng-show="quesitem.questionType!='4'">编辑</a>									
 									<!--<a href="javascript:;" class="del" ng-click="delSuject(quesitem)">删除</a>-->
 								</td>
 								<td  style="width: 10%;" class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="quesitem.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>

@@ -12,6 +12,7 @@
 		
 		<link rel="stylesheet" href="../../css/bootstrap.css" />
 		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../css/page.css" />
 		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
 		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
@@ -33,6 +34,9 @@
     	<![endif]-->
 	</head>
 	<body class="bg" ng-controller="setPaperManageCtrl">	
+		<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div id="loading" class="loading">加载中</div>
+		</div>
 		<!--确认弹框-->
 			<script type="text/ng-template" id="sureModal.html">
 				<form name="myForm" novalidate="novalidate">
@@ -96,7 +100,7 @@
 					<button type="button" class="btn btn-primary" ng-click="ok()" ng-if="fileType=='0'" ng-disabled="!myForm.$valid">确定</button>
 					<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
 		
-				</div>
+				</div>				
 			</form>
 			</script>
 			<!--科目列表-->
@@ -119,8 +123,7 @@
 					</div>
 					<div class="modal-footer text-center">
 						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
-						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
-			
+						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>			
 					</div>
 			</form>
 			</script>
@@ -201,6 +204,11 @@
 					</div>
 			  	</div>
 			  </div>
+			<div id="removeLoading" ng-click="removeLoading()" style="display:none;"></div>
+			<div id="showLoading" ng-click="showLoading()" style="display:none;"></div>
+			<div id="refreTestPaper" ng-click="refreTestPaper()" style="display:none;"></div>
+			<div id="getTip" ng-click="getTip()" style="display:none;"></div>
+			<div id="refreTestPaper2" ng-click="refreTestPaper2()" style="display:none;"></div>
 
 	</body>
 </html>
