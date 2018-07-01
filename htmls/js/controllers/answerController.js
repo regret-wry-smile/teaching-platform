@@ -667,7 +667,13 @@ app.controller('classuserCheckCtrl', function($scope, toastr,$location, $window,
 		} else {
 			toastr.error($scope.result.message);
 		}
-	}	
+	}
+	
+	/*for(var i=0;i<120;i++){
+		var item={"answerCount":0,"percent":0,"studentId":"10000001","studentName":"学001","style":{"width":"0%","background":"#7ee074"}}
+		$scope.AllanswerInfo.push(item)
+	}*/
+
 	//收取试卷
 	$scope.isgatherPaper=true;//是否是收取试卷按钮
 	
@@ -721,7 +727,7 @@ app.controller('classuserCheckCtrl', function($scope, toastr,$location, $window,
 	
 	
 	var _init = function() {
-		_getAllanswerInfo();
+		//_getAllanswerInfo();
 	}();
 	//刷新
 	$scope.refreClassTest = function() {

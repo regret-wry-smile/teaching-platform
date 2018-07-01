@@ -706,6 +706,7 @@ table tr td{
 	background: #fff;
 	margin:0.05rem;
 	padding: 0.08rem 0.20rem;
+	cursor: pointer;
 }
 .progresscon p span{
 	font-size: 0.16rem;
@@ -714,14 +715,15 @@ table tr td{
 .progress {
  height: auto;
   background: rgba(0, 0, 0, 0.30);
-  border-radius: 3px;
+  border-radius: 0.03rem;
+  margin-bottom: 0;
 }
 
 .progress-bar {
   position: relative;
   height: 0.15rem;
   line-height: 0.15rem;
-  border-radius: 3px;
+  border-radius: 0.03rem;
   -webkit-transition: 0.4s linear;
   -moz-transition: 0.4s linear;
   -o-transition: 0.4s linear;
