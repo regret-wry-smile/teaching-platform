@@ -272,7 +272,7 @@ public class ServerServiceImpl implements ServerService{
 								BrowserManager.showMessage(false, "修改记录上传状态失败");
 								return;
 							};
-							BrowserManager.showMessage(false, message01+"上传主观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum));
+							BrowserManager.showMessage(true, message01+"上传主观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum));
 							return;
 						};
 						sucessSum++;
@@ -293,7 +293,7 @@ public class ServerServiceImpl implements ServerService{
 						return;
 					};
 					message02 = "上传主观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum);
-					BrowserManager.showMessage(false, message01+message02);
+					BrowserManager.showMessage(true, message01+message02);
 					return;
 				} catch (Exception e) {
 					BrowserManager.showMessage(false, "上传失败！");

@@ -583,20 +583,39 @@ app.controller('classCheckCtrl', function($scope, toastr, $window) {
 	//上传服务
 	$scope.uploadServer=function(){
 		$('#myModal').modal('show');
-		setTimeout(function(){
-			$scope.result=JSON.parse(execute_answer("upload_server", $scope.onePaperInfo.testId));		
-			console.log(JSON.stringify($scope.result))
-			if($scope.result.ret=='success'){
-				$('#myModal').modal('hide');
-			}else{
-				toastr.error($scope.result.message);
-				$('#myModal').modal('hide');
-			}
-		},500)		
+		$scope.result=JSON.parse(execute_answer("upload_server", $scope.onePaperInfo.testId));		
+//		setTimeout(function(){			
+//			console.log(JSON.stringify($scope.result))
+//			if($scope.result.ret=='success'){
+//				$('#myModal').modal('hide');
+//			}else{
+//				toastr.error($scope.result.message);
+//				$('#myModal').modal('hide');
+//			}
+//		},500)	
 		
 		
 	}
-
+	//移除loading
+	$scope.removeLoading=function(){
+		$('#myModal').modal('hide');
+	}
+	//显示loading
+	$scope.showLoading=function(){
+		$('#myModal').modal('show');		
+	}
+	
+	//提示框
+	$scope.getTip = function() {
+		if (ret == 'true') {
+			toastr.success(message);
+			$scope.isgatherPaper=false;
+		}
+		else {
+			$scope.isgatherPaper=true;
+			toastr.error(message);
+		}
+	}
 })
 app.config(['$locationProvider', function($locationProvider) {  
 	    //$locationProvider.html5Mode(true);  
