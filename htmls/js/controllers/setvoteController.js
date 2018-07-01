@@ -184,6 +184,10 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 			toastr.error($scope.result.message);
 		}
 	}
+	// 获取到的是变更后的页面宽度
+		window.onresize = function(){
+			myChart.resize();
+		}
 	var _init=function(){
 		_getvoteTitleInfo();
 		_getvote();		

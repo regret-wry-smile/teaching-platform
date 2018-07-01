@@ -356,6 +356,9 @@ label.area a.active{
 	color: #3e3e3e;
 	font-weight: normal;
 }
+.text.vote{
+	font-size: 20rem;
+}
 
 .text input[type='text']{
 	height: 0.36rem;
@@ -388,6 +391,7 @@ label.area a.active{
 .text p.con{
 	color: #fff;
 	font-size: 0.16rem;
+	word-wrap:break-word;
 }
 .modboxs{
 	position: relative;
@@ -808,7 +812,7 @@ div.block{
 	bottom: 0.25rem;
 	left: 0;
 	right: 0;	
-	margin:0 0.25rem;		
+	/*margin:0 0.25rem;	*/	
 }
 ul.col-4 li{
 	float: left;
@@ -869,11 +873,12 @@ img.rebtn:active{
 		width: 4.0rem;
 	}
 	ul.col-4 li a{
-		width: 3.8rem;
-		padding: 0.4rem 0;		
+		width: 3.0rem;
+		/*width: 3.6rem;*/
+		/*padding: 0.4rem 0*/
 	}
 	.content button.circlefff{
-		margin: 8%;
+		margin: 4%;
 		width: 2.8rem;
 		height: 2.8rem;
 		border-radius: 100%;

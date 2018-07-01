@@ -154,14 +154,14 @@
 		  			<div class="form-group">
 				  	<label for="firstname" class="col-sm-2 control-label">试卷名称</label>
 				  	<div class="col-sm-9">
-			    	<input type="text" autocomplete="off" name="testName" id="" value=""  class="form-control" ng-model="paperInfo.testName" required />										
+			    	<input type="text" autocomplete="off" name="testName" id="" value=""  class="form-control" ng-model="paperInfo.testName" required maxlength="20"/>										
 				    </div>
 				    <span ng-show="myForm.testName.$invalid" class="warning">*</span>
 					</div>
 					<div class="form-group">
 				  	<label for="firstname" class="col-sm-2 control-label">试卷描述</label>
 				    <div class="col-sm-9">
-				    	<textarea  class="form-control" rows="3" ng-model="paperInfo.describe"></textarea>
+				    	<textarea  class="form-control" rows="3" ng-model="paperInfo.describe" maxlength="200"></textarea>
 					</div>
 					</div>
 			  		<div class="col-main" style="position: absolute;top: 1.63rem;left: 0;right: 0;bottom: .25rem;overflow-x: hidden;overflow-y: auto; width:100%;padding:0 0.25rem;">

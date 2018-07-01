@@ -79,6 +79,7 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $window) {
 				}
 
 			}
+		currentWidth = document.body.clientWidth; 
 			//停止答题
 		var dom = document.getElementById("recordbar");
 		var myChart = echarts.init(dom);
@@ -214,23 +215,23 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $window) {
 					}]
 
 				};
+				var str;
 				$scope.selresultmap = JSON.parse(execute_answer("get_answer_info_sum"));
 				console.log(JSON.stringify($scope.selresultmap));
-				var str;
 				//查询正确答案人数
 				var _getanswerinfo=function(){
-						if($scope.selresultmap!=null){										
-							if($scope.selresultmap[str]){
-								$scope.answerResult=$scope.selresultmap[str];
-							}else{
-								$scope.answerResult=[];
-							}
-							//正确率
-			              	$scope.answerRate=($scope.answerResult.length/$scope.studentCount)*100;
-							
+					if($scope.selresultmap){										
+						if($scope.selresultmap[str]){
+							$scope.answerResult=$scope.selresultmap[str];
+						}else{
+							$scope.answerResult=[];
 						}
+						//正确率
+		              	$scope.answerRate=($scope.answerResult.length/$scope.studentCount)*100;
+						
+					}
 				}
-				/*柱状图点击事件*/
+			/*柱状图点击事件*/
 				myChart.on('click', function(params) {
 				var objs=option.xAxis;		
 					for(var i=0;i<objs.data.length;i++){						
@@ -280,6 +281,10 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $window) {
 			}
 
 		}
+		window.onresize = function(){
+		myChart.resize();
+		}
+		
 		
 		//查看详情
 		$scope.viewDetail=function(){
@@ -313,7 +318,7 @@ app.controller('stopSingeAnswerCtrl', function($scope,$location, toastr, $window
 			$scope.totalStudent=$scope.result.totalStudent;
 			console.log("获取答题" + JSON.stringify($scope.result))
 		}
-
+		currentWidth = document.body.clientWidth; 
 		//停止答题
 		var dom = document.getElementById("recordbar");
 		var myChart = echarts.init(dom);
@@ -488,6 +493,10 @@ app.controller('stopSingeAnswerCtrl', function($scope,$location, toastr, $window
 			} else {
 				toastr.error($scope.result.message);
 			}
+		}
+		// 获取到的是变更后的页面宽度
+		window.onresize = function(){
+			myChart.resize();
 		}
 		
 		//查看详情
@@ -727,7 +736,7 @@ app.controller('classuserCheckCtrl', function($scope, toastr,$location, $window,
 	
 	
 	var _init = function() {
-		//_getAllanswerInfo();
+		_getAllanswerInfo();
 	}();
 	//刷新
 	$scope.refreClassTest = function() {
