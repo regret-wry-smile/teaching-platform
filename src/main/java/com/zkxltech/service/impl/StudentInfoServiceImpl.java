@@ -219,11 +219,20 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			if (!StringUtils.isEmpty(iclickerId)) {
 			    //修改学生信息的时候,有可能改了卡号,但是这个卡号不一定是绑定的状态,所以要检查设备中是否绑定了
 			    List<String> iclickerIds = Global.getIclickerIds();
+			    String bindStatus = "";
 			    if (ListUtils.isEmpty(iclickerIds)||!iclickerIds.contains(iclickerId)) {
-			        studentInfo.setStatus(Constant.BING_NO);
+			        bindStatus = Constant.BING_NO;
                 }else{
-                    studentInfo.setStatus(Constant.BING_YES);
+                    bindStatus = Constant.BING_YES;
                 }
+			    StudentInfoSql sql = new StudentInfoSql();
+			    iclickerIds = new ArrayList<>();
+			    iclickerIds.add(iclickerId);
+			    result = sql.updateStatusByIclickerIds(iclickerIds, bindStatus);
+			    if (result.getRet().equals(Constant.ERROR)) {
+			        return result;
+                }
+			    
             }
 			result = studentInfoSql.updateStudentById(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
