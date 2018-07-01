@@ -186,26 +186,18 @@ public class ClassInfoServiceImpl implements ClassInfoService{
                 r.setMessage("您还未上传学生信息");
                 return r;
             }
-            /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+            /**将查出来的学生信息按学生编号进行分类,并存入静态map中*/
             Map<String, StudentInfo> studentInfoMap = new HashMap<>();
             /**按绑定状态进行分类*/
             int bind = 0,notBind = 0 ;
             for (StudentInfo studentInfo : studentInfos) {
-                String iclickerId = studentInfo.getIclickerId();
-                String status = studentInfo.getStatus();
-                if (StringUtils.isEmpty(iclickerId)) {
-                    r.setMessage("学生:"+studentInfo.getStudentName()+",的答题器编号不能为空");
-                    return r;
-                }
-                if (StringUtils.isEmpty(status)) {
-                    r.setMessage("学生:"+studentInfo.getStudentName()+",的绑定状态不能为空");
-                    return r;
-                }
-                studentInfoMap.put(iclickerId, studentInfo);
                 if (studentInfo.getStatus().equals(Constant.BING_YES)) {
                     ++bind;
                 }else{
                     ++notBind;
+                }
+                if (!StringUtils.isEmpty(studentInfo.getIclickerId())) {
+                    studentInfoMap.put(studentInfo.getIclickerId(), studentInfo);
                 }
             }
             /**存入静态map*/
