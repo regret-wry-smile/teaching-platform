@@ -134,11 +134,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
     public Result clearWl(Object param) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
-        JSONObject jsono = JSONObject.fromObject(param);
-        if (!jsono.containsKey("classId")) {
-            r.setMessage("缺少班级id参数");
-            return r;
-        }
+        
         String get_device_info = ScDll.intance.get_device_info();
         if (StringUtils.isEmpty(get_device_info)) {
             r.setMessage("设备故障,请重启设备");
@@ -152,9 +148,12 @@ public class ClassInfoServiceImpl implements ClassInfoService{
             }
             int clear_wl = ScDll.intance.clear_wl();
             if (clear_wl == Constant.SEND_SUCCESS) {
+                JSONObject jsono = JSONObject.fromObject(param);
+                if (jsono.containsKey("classId")) {
+                    BrowserManager.refreshStudent(jsono.getString("classId"));
+                }
                 r.setRet(Constant.SUCCESS);
                 r.setMessage("清除成功");
-                BrowserManager.refreshStudent(jsono.getString("classId"));
                 return r;
             }
         } catch (Exception e) {
