@@ -507,7 +507,7 @@ app.controller('classCheckCtrl', function($scope, toastr, $window) {
 	//获取当前班级信息
 	var _isStartClass = function() {
 			$scope.result = JSON.parse(execute_record("get_classInfo"));
-			console.log("巴巴爸爸" + JSON.stringify($scope.result));
+			//console.log("巴巴爸爸" + JSON.stringify($scope.result));
 			if($scope.result.ret == 'success' && $scope.result.item) {
 				$scope.classInfo = $scope.result.item;
 			} else {
@@ -530,6 +530,8 @@ app.controller('classCheckCtrl', function($scope, toastr, $window) {
 		}
 
 	};
+	
+	
 	//单选试卷
 	$scope.selectOne = function(paperInfo) {
 		if(paperInfo.checked==true){
@@ -544,7 +546,11 @@ app.controller('classCheckCtrl', function($scope, toastr, $window) {
 		}
 		
 	}
-
+/*	for(var i=0;i<120;i++){
+		var item={"atype":"1","classHourId":"","describe":"哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或","id":8,"remark":"","subject":"语文","testId":"T11","testName":"景县助手器测试"};
+		$scope.paperInfoList.push(item);
+		console.log(JSON.stringify($scope.paperInfoList))
+	}*/
 	var _init = function() {
 		_isStartClass();
 		_selectPaper();

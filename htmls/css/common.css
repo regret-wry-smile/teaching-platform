@@ -687,6 +687,17 @@ label.circle{
 .modboxs .box.green{
 	color: #fff;
 }
+
+/*表格不允许换行*/
+table{
+	table-layout: fixed;  
+}
+table tr td{
+	 text-overflow: ellipsis; /* for IE */  
+    -moz-text-overflow: ellipsis; /* for Firefox,mozilla */  
+    overflow: hidden;  
+    white-space: nowrap;  
+}
 /*进度条*/
 .progresscon{
 	width: 1.30rem;
@@ -848,6 +859,9 @@ img.rebtn:active{
 		text-align: center;	
 		color: #fff;
 		padding: 0.23rem 0.12rem;	
+	}
+	.testcheck{
+		top: 1.0rem !important;
 	}
 	ul.modbox li a{
 		width: 4.0rem;

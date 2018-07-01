@@ -237,13 +237,13 @@
 					<table class="table table-stripe userlist">
 						<thead>
 							<tr>
-								<th class="wd60">序号</th>
-								<th class="wd80">学号</th>
-								<th class="wd100">姓名</th>
-								<th class="wd100">答题器编号</th>
-								<th class="wd100">配对情况</th>
-								<th class="wd60">操作</th>
-								<th class="wd80" class="pr1">全选
+								<th style="width: 10%;">序号</th>
+								<th style="width: 10%;">学号</th>
+								<th style="width: 10%;">姓名</th>
+								<th style="width: 10%;">答题器编号</th>
+								<th style="width: 10%;">配对情况</th>
+								<th style="width: 10%;">操作</th>
+								<th style="width: 10%;" class="pr1">全选
 									<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>
 							</tr>
 						</thead>
@@ -252,15 +252,15 @@
 						<table class="table table-stripe userlistchild " style="text-align: left !important;">
 							<tbody>
 								<tr ng-repeat="item in studentList track by $index" ng-click="$event.stopPropagation();">
-									<td class="wd60">{{$index+1}}</td>
-									<td class="wd80">{{item.studentId}}</td>
-									<td class="wd100 hidename">{{item.studentName}}</td>
-									<td class="wd100">{{item.iclickerId}}</td>
-									<td class="wd100">{{item.status=='1'?'已绑定':'未绑定'}}</td>
-									<td class="wd60">
+									<td style="width: 10%;">{{$index+1}}</td>
+									<td style="width: 10%;">{{item.studentId}}</td>
+									<td style="width: 10%;">{{item.studentName}}</td>
+									<td style="width: 10%;">{{item.iclickerId}}</td>
+									<td style="width: 10%;">{{item.status=='1'?'已绑定':'未绑定'}}</td>
+									<td style="width: 10%;">
 										<a href="javascript:;" class="edit" ng-click="updateStdent(item)">编辑</a>
 									</td>
-									<td class="wd80 ml5 "><input type="checkbox" style="margin-left: 0.32rem;"  ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
+									<td style="width: 10%;" class="ml5 "><input type="checkbox" style="margin-left: 0.32rem;"  ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
 								</tr>
 							</tbody>
 						</table>
