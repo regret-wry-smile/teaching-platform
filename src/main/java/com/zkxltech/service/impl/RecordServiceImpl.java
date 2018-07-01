@@ -77,7 +77,10 @@ public class RecordServiceImpl implements RecordService{
         }
 	}
 	@Override
-	public void testExport(Object object) {
+	public Result testExport(Object object) {
+	    Result r = new Result();
+	    r.setMessage("正在导出,请稍后......");
+	    r.setRet(Constant.SUCCESS);
 	    new Thread(new Runnable() {
             @Override
             public void run() {
@@ -264,11 +267,13 @@ public class RecordServiceImpl implements RecordService{
                     wb.write(out);// 将数据写出去  
                     out.flush();// 将数据写出去
                     BrowserManager.showMessage(true,"导出成功");
+                    BrowserManager.removeLoading();
                 }catch (Exception e) {
                     log.error("", e);
                     r.setMessage("导出失败");
                     r.setDetail(IOUtils.getError(e));
                     BrowserManager.showMessage(false,"导出失败");
+                    BrowserManager.removeLoading();
                 }finally {
                     if (out != null) {
                         try {
@@ -279,8 +284,8 @@ public class RecordServiceImpl implements RecordService{
                     }
                 }
             }
-        }).start();;
-	   
+        }).start();
+        return r;
 	}
 	/**
 	 * 查询答题记录
@@ -359,8 +364,11 @@ public class RecordServiceImpl implements RecordService{
                 List<Record> list = studentRecordMap.get(key);//得到每个学生的所有答题记录
                 //按正确和错误进行分类
                 Map<Object, List<Record>> resultMap = ListUtils.getClassificationMap(list, "result");
-                List<Record> corrects = resultMap.get(Constant.RESULT_TRUE);//得到所有正确的答案总数
-                float b = (float)corrects.size() / questInfos.size();
+                float b = 0;
+                if (resultMap != null && resultMap.size() < 1) {
+                    List<Record> corrects = resultMap.get(Constant.RESULT_TRUE);//得到所有正确的答案总数
+                    b = (float)corrects.size() / questInfos.size();
+                }
                 Record resultRocord = new Record();
                 resultRocord.setStudentId((String)key);
                 resultRocord.setStudentName(list.get(0).getStudentName());
