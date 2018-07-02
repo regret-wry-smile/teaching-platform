@@ -356,6 +356,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }
         thread = new AttendanceThread();
         thread.start();
+        Global.isAnswerStart = true;
         r.setRet(Constant.SUCCESS);
         r.setMessage("操作成功");
         return r;
@@ -374,6 +375,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
+        Global.isAnswerStart = false;
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
@@ -403,6 +405,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }
         thread = new QuickThread();
         thread.start();
+        Global.isAnswerStart = true;
         r.setRet(Constant.SUCCESS);
         r.setMessage("发送成功");
         return r;

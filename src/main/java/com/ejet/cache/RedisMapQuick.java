@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.Global;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.impl.EquipmentServiceImpl;
@@ -43,6 +44,7 @@ public class RedisMapQuick {
                     logger.error("抢答线程停止失败");
                 }
                 EquipmentServiceImpl.getInstance().answer_stop();
+                Global.isAnswerStart = false;
                 flag = false ;
             }
         }
