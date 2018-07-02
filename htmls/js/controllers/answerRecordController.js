@@ -294,7 +294,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 		var modalInstance = $modal.open({
 				templateUrl: 'oneAnswerDetailModal.html',
 				controller: 'oneAnswerDetailModalCtrl',
-				size: 'sm',
+				size: 'md',
 				resolve: {
 					infos: function() {
 						return item;
@@ -308,13 +308,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
-		var param={
-			classId: $scope.setClass.classes,
-			subjectName: $scope.setClass.subject,
-			testId: $scope.setClass.paper,
-			classHourId: $scope.setClass.sujectHour,
-			studentId:item.studentId			
-		}
+		
 		
 	}
 	//导出
@@ -369,10 +363,23 @@ app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
 })
 
 //个人详情控制器
-app.controller("oneAnswerDetailModalCtrl",function($scope,$modalInstance,toastr,content){
+app.controller("oneAnswerDetailModalCtrl",function($scope,$modalInstance,toastr,infos){
+	if(infos){
+		$scope.onrecordInfo=angular.copy(infos);
+	}
+	$scope.oneRecordList=[];//个人作答记录数组
+	var param={
+		classId: $scope.onrecordInfo.classId,
+		subject: $scope.onrecordInfo.subject,
+		testId: $scope.onrecordInfo.testId,
+		classHourId: $scope.onrecordInfo.classHourId,
+		studentId:$scope.onrecordInfo.studentId			
+	}
+	console.log(JSON.stringify(param))
 	$scope.result=JSON.parse(execute_record("select_student_record_detail",JSON.stringify(param)));
+	console.log(JSON.stringify($scope.result))
 	if($scope.result.ret=='success'){
-		console.log(JSON.stringify($scope.result))
+		$scope.oneRecordList=$scope.result.item;
 	}else{
 		toastr.success($scope.result.message);
 	}
@@ -531,3 +538,59 @@ app.directive('select2', function() {
 		}
 	}
 })
+app.filter('questionType', function() {
+	return function(questionType) {
+		var statename = '';
+		switch(questionType) {
+			case '2':
+				{
+					statename = '判断';
+					break;
+				}
+			case '0':
+				{
+					statename = '单选';
+					break;
+				}
+			case '1':
+				{
+					statename = '多选';
+					break;
+				}
+			case '3':
+				{
+					statename = '数字';
+					break;
+				}
+			case '4':
+				{
+					statename = '主观题';
+					break;
+				}
+		}
+		return statename;
+	}
+});
+app.filter('AnswerType', function() {
+	return function(AnswerType) {
+		var statename = '';
+		switch(AnswerType) {
+			case 'T':
+				{
+					statename = '√';
+					break;
+				}
+			case 'F':
+				{
+					statename = '×';
+					break;
+				}
+			default:
+				{
+					statename = AnswerType;
+					break;
+				}
+		}
+		return statename;
+	}
+});

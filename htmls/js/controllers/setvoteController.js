@@ -4,19 +4,16 @@ app.controller('voteCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.voteInfo={
 		title:"",//主题
 		describe:"",//主题描述
-		programs:[],
+		programs:[''],
 	}
+	$scope.object="";
 	//添加小对象
-	$scope.additem=function(){		
+	$scope.additem=function(){				
 		if($scope.voteInfo.programs.length<5){
-			if($scope.object){
-				$scope.voteInfo.programs.push($scope.object);
-				$scope.object="";
-			}	
-		}else{
-			toastr.warning("最多只能设置5个评分对象");
+			//var item=angular.copy($scope.object)
+		var item='';
+			$scope.voteInfo.programs.push(item);
 		}
-		
 	}
 	$scope.delObject=function($index){
 		$scope.voteInfo.programs.splice($index,1);
@@ -24,15 +21,19 @@ app.controller('voteCtrl', function($rootScope,$scope,$modal,toastr) {
 	}
 	//开始投票到投票统计页面
 	$scope.startVote=function(){
+		if($scope.voteInfo.programs.length>0){
 		var param=$scope.voteInfo;
-		//console.log(JSON.stringify(param))
+		console.log("参数"+JSON.stringify(param))
 		$scope.result=JSON.parse(execute_vote("start_vote",JSON.stringify(param)));
 		if($scope.result.ret=='success'){		
 			window.location.href="../../page/answermoudle/voteCount.html";
 		}else{
 			toastr.error($scope.result.message);
-			window.location.href="../../page/answermoudle/voteCount.html";
+		}	
+		}else{
+			toastr.warning("评分对象不能为空");
 		}
+		
 	}
 	//返回设置页面
 	$scope.returnPage=function(){

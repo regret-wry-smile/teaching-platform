@@ -666,6 +666,7 @@ app.controller('classuserCheckCtrl', function($scope, toastr, $location, $window
 		$scope.AllanswerInfo = []; //作答信息数组	
 		$scope.oneanswerList = []; //个人答题详情
 		$('#myModal').modal('hide'); //默认隐藏loading
+		$scope.isclick=true;//默认不能点击
 		//隐藏loading
 		var _hideModal = function() {
 				$('#myModal').modal('hide');
@@ -694,11 +695,10 @@ app.controller('classuserCheckCtrl', function($scope, toastr, $location, $window
 				toastr.error($scope.result.message);
 			}
 		}
-
-		/*for(var i=0;i<120;i++){
-			var item={"answerCount":0,"percent":0,"studentId":"10000001","studentName":"学001","style":{"width":"0%","background":"#7ee074"}}
+		for(var i=0;i<120;i++){
+			var item={"answerCount":0,"percent":0,"studentId":"10000001","studentName":"学001哈哈哈哈哈哈哈哈","style":{"width":"0%","background":"#7ee074"}}
 			$scope.AllanswerInfo.push(item)
-		}*/
+		}
 
 		//收取试卷
 		$scope.isgatherPaper = true; //是否是收取试卷按钮
@@ -714,6 +714,7 @@ app.controller('classuserCheckCtrl', function($scope, toastr, $location, $window
 			}
 			//查询主观答题和客观答题的单个人的信息
 		$scope.selectRecord = function(item) {
+			if($scope.isclick==false){
 			var param = {
 				testId: $scope.paperInfo.testId,
 				studentId: item.studentId
@@ -747,10 +748,12 @@ app.controller('classuserCheckCtrl', function($scope, toastr, $location, $window
 			} else {
 				toastr.error($scope.result.message);
 			}
+							
+			}
 		}
 
 		var _init = function() {
-			_getAllanswerInfo();
+			//_getAllanswerInfo();
 		}();
 		//刷新
 		$scope.refreClassTest = function() {
@@ -771,6 +774,7 @@ app.controller('classuserCheckCtrl', function($scope, toastr, $location, $window
 			if(ret == 'true') {
 				toastr.success(message);
 				$scope.isgatherPaper = false;
+				$scope.isclick=false;
 			} else {
 				$scope.isgatherPaper = true;
 				toastr.error(message);

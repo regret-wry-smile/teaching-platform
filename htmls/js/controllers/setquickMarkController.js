@@ -6,32 +6,35 @@ app.controller('quickMarkCtrl', function($rootScope,$scope,$modal,toastr) {
 		describe:"",//主题描述
 		programs:[],
 	}
+	
+	
+	$scope.object="";
 	//添加小对象
-	$scope.additem=function(){		
-		if($scope.markInfo.programs.length<5){
-			if($scope.object){
-				$scope.markInfo.programs.push($scope.object);
-				$scope.object="";
-			}	
-		}else{
-			toastr.warning("最多只能设置5个评分对象");
+	$scope.additem=function(){				
+		if($scope.markInfo.programs.length<4){
+			var item=angular.copy($scope.object)
+			$scope.markInfo.programs.push(item);
 		}
-		
 	}
 	$scope.delObject=function($index){
 		$scope.markInfo.programs.splice($index,1);
 
 	}
+	//开始评分到评分统计页面
 	$scope.startMark=function(){
+		if($scope.markInfo.programs.length>0){
 		var param=$scope.markInfo;
-		//console.log(JSON.stringify(param))
+		console.log("参数"+JSON.stringify(param))
 		$scope.result=JSON.parse(execute_score("start_score",JSON.stringify(param)));
 		if($scope.result.ret=='success'){		
 			window.location.href="../../page/answermoudle/markCount.html";
 		}else{
 			toastr.error($scope.result.message);
-			window.location.href="../../page/answermoudle/markCount.html";
+		}	
+		}else{
+			toastr.warning("投票对象不能为空");
 		}
+		
 	}
 	//返回设置页面
 	$scope.returnPage=function(){
