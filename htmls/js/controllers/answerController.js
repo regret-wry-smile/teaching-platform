@@ -24,12 +24,16 @@ app.controller('answerCtrl', function($scope, toastr, $window) {
 			$scope.result = JSON.parse(execute_answer("single_answer", JSON.stringify(param)));
 			console.log("答题" + JSON.stringify($scope.result));
 			if($scope.result.ret == 'success') {
-				$scope.param = "answerType=" + $scope.selType;		
+				$scope.param = "answerType=" + $scope.selType;
 				console.log(JSON.stringify($scope.param))
 				$scope.objectUrl = '../../page/answermoudle/stopsingeAnswer.html' + '?' + $scope.param;
 				$window.location.href = $scope.objectUrl;
-			}else{
+			} else {
 				toastr.error($scope.result.message);
+				$scope.param = "answerType=" + $scope.selType;
+				console.log(JSON.stringify($scope.param))
+				$scope.objectUrl = '../../page/answermoudle/stopsingeAnswer.html' + '?' + $scope.param;
+				$window.location.href = $scope.objectUrl;
 			}
 		}
 	})
@@ -58,454 +62,470 @@ app.controller('answerMutilCtrl', function($scope, toastr, $window) {
 
 	})
 	//停止多选答题
-app.controller('stopAnswerTypeCtrl', function($scope, toastr, $window) {	
-		$scope.isStopAswer = false;
-		$scope.studentNum = 0;
-		var rangeList = []; //答题范围
-		$scope.data = []; //柱状图数据
-		$scope.resultmap = {};
-		$scope.rangeList=[];
-		var colors=[];//颜色数组
-		var letterlist=[];//选择的字母数组
-		$scope.answerResult=[];//选择的作答结果
-		$scope.answerRate=0;//正确率
-		//获取答题人数
-		$scope.refresAnswerNum = function() {
-				$scope.result = JSON.parse(execute_answer("get_multiple_answer_num"));
-				if($scope.result) {
-					$scope.studentCount = $scope.result.total;
-					$scope.studentNum = $scope.result.answerNum;
-					console.log("获取答题" + JSON.stringify($scope.result))
-				}
+app.controller('stopAnswerTypeCtrl', function($scope, toastr, $window) {
+	$scope.isStopAswer = false;
+	$scope.studentNum = 0;
+	var rangeList = []; //答题范围
+	$scope.data = []; //柱状图数据
+	$scope.resultmap = {};
+	$scope.rangeList = [];
+	var colors = []; //颜色数组
+	var letterlist = []; //选择的字母数组
+	$scope.answerResult = []; //选择的作答结果
+	$scope.answerRate = 0; //正确率
+	//获取答题人数
+	$scope.refresAnswerNum = function() {
+		$scope.result = JSON.parse(execute_answer("get_multiple_answer_num"));
+		if($scope.result) {
+			$scope.studentCount = $scope.result.total;
+			$scope.studentNum = $scope.result.answerNum;
+			console.log("获取答题" + JSON.stringify($scope.result))
+		}
 
-			}
-		currentWidth = document.body.clientWidth; 
-			//停止答题
-		var dom = document.getElementById("recordbar");
-		var myChart = echarts.init(dom);
-		$scope.stopAnswer = function() {
-			$scope.result = JSON.parse(execute_answer("stop_multiple_answer"));
-			if($scope.result.ret == 'success') {
-				$scope.isStopAswer = true;
-				rangeList = JSON.parse(execute_answer("get_multiple_range"));
-				console.log("答题范围" + JSON.stringify(rangeList))
-					//$scope.rangeList=["A","B","C","D","E"];
-				$scope.resultmap = JSON.parse(execute_answer("get_multiple_answer_detail"));
-				//$scope.resultmap={"A":[{"classId":"BJ1001","className":"自动测试","iclickerId":"3429966709","id":1000662,"status":"1","studentId":"10000002","studentName":"学002"}],"E":[{"classId":"BJ1001","className":"自动测试","iclickerId":"3429469477","id":1000661,"status":"1","studentId":"10000001","studentName":"学001"}]};
-				//console.log("data"+JSON.stringify($scope.resultmap))
-				$scope.data = [];
-				if(rangeList.length > 0) {
-					for(var i = 0; i < rangeList.length; i++) {
-						if($scope.resultmap != null) {
-							//console.log("item" + JSON.stringify($scope.resultmap))
-							if($scope.resultmap[rangeList[i]]) {
-								//var item = $scope.resultmap[rangeList[i]].length;
-								var item={
-									value:$scope.resultmap[rangeList[i]].length,
-									itemStyle:{normal:{color:'#fff'}
-									}
-								}
-							} else {
-								//var item = 0;
-								var item={
-									value:0,
-									itemStyle:{normal:{color:'#fff'}
+	}
+	currentWidth = document.body.clientWidth;
+	//停止答题
+	var dom = document.getElementById("recordbar");
+	var myChart = echarts.init(dom);
+	$scope.stopAnswer = function() {
+		$scope.result = JSON.parse(execute_answer("stop_multiple_answer"));
+		if($scope.result.ret == 'success') {
+			$scope.isStopAswer = true;
+			rangeList = JSON.parse(execute_answer("get_multiple_range"));
+			console.log("答题范围" + JSON.stringify(rangeList))
+				//$scope.rangeList=["A","B","C","D","E"];
+			$scope.resultmap = JSON.parse(execute_answer("get_multiple_answer_detail"));
+			//$scope.resultmap={"A":[{"classId":"BJ1001","className":"自动测试","iclickerId":"3429966709","id":1000662,"status":"1","studentId":"10000002","studentName":"学002"}],"E":[{"classId":"BJ1001","className":"自动测试","iclickerId":"3429469477","id":1000661,"status":"1","studentId":"10000001","studentName":"学001"}]};
+			//console.log("data"+JSON.stringify($scope.resultmap))
+			$scope.data = [];
+			if(rangeList.length > 0) {
+				for(var i = 0; i < rangeList.length; i++) {
+					if($scope.resultmap != null) {
+						//console.log("item" + JSON.stringify($scope.resultmap))
+						if($scope.resultmap[rangeList[i]]) {
+							//var item = $scope.resultmap[rangeList[i]].length;
+							var item = {
+								value: $scope.resultmap[rangeList[i]].length,
+								itemStyle: {
+									normal: {
+										color: '#fff'
 									}
 								}
 							}
 						} else {
 							//var item = 0;
-							var item={
-								value:0,
-								itemStyle:{normal:{color:'#fff'}
+							var item = {
+								value: 0,
+								itemStyle: {
+									normal: {
+										color: '#fff'
+									}
 								}
 							}
 						}
-						$scope.data.push(item);
-						var coloritem="#fff";
-						colors.push(coloritem);
-					}
-				} else {
-					//var item = 0;
-					var item={
-						value:0,
-						itemStyle:{normal:{color:'#fff'}
+					} else {
+						//var item = 0;
+						var item = {
+							value: 0,
+							itemStyle: {
+								normal: {
+									color: '#fff'
+								}
+							}
 						}
 					}
 					$scope.data.push(item);
-				}
-				//var colors = ['#5793f3', '#d14a61', '#675bba'];
-				option = {
-					color: ['#fff'],
-					tooltip: {
-						trigger: 'axis',
-						axisPointer: { // 坐标轴指示器，坐标轴触发有效
-							type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-						}
-					},
-					grid: {
-						left: '3%',
-						right: '4%',
-						bottom: '3%',
-						containLabel: true
-					},
-					xAxis: {
-						type: 'category',
-						//data : ['A', 'B', 'C','D','E','F'],
-						data: rangeList,
-						axisTick: {
-							alignWithLabel: true
-						},
-						axisLine: {
-							lineStyle: {
-								color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
-								show: false
-							}
-						},
-						axisLabel: {
-							show: true,
-							textStyle: {
-								color: '#fff',
-								fontSize: '16'
-							},
-						},
-					},
-					yAxis: [{
-						show: false,
-						type: 'value',
-						splitLine: false, //是否显示网格线
-						axisLine: {
-							lineStyle: {
-								color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
-								show: false
-							}
-						},
-						axisLabel: {
-							show: true,
-							textStyle: {
-								color: '#fff',
-								fontSize: '16'
-							},
-						},
-					}],
-					series: [{
-						name: '记录统计',
-						type: 'bar',
-						barWidth: '50%',
-						//data:[7, 13, 5,14,2,0],
-						data: $scope.data,
-						label: {
-							normal: {
-									show: true,
-									position: 'top',
-									textStyle: {
-									color: '#fff',
-									fontSize: '16'
-								}
-							}
-						},
-						itemStyle: {  
-							normal:{  
-		　　　　　　　　　　　　      color: function (params){
-									var colorList = colors;
-									return colorList[params.dataIndex];
-								}
-							}
-						},
-					}]
-
-				};
-				var str;
-				$scope.selresultmap = JSON.parse(execute_answer("get_answer_info_sum"));
-				console.log(JSON.stringify($scope.selresultmap));
-				//查询正确答案人数
-				var _getanswerinfo=function(){
-					if($scope.selresultmap){										
-						if($scope.selresultmap[str]){
-							$scope.answerResult=$scope.selresultmap[str];
-						}else{
-							$scope.answerResult=[];
-						}
-						//正确率
-		              	$scope.answerRate=($scope.answerResult.length/$scope.studentCount)*100;
-						
-					}
-				}
-			/*柱状图点击事件*/
-				myChart.on('click', function(params) {
-				var objs=option.xAxis;		
-					for(var i=0;i<objs.data.length;i++){						
-					  var datavalue = objs.data[i];		
-		              if(datavalue == params.name){
-		              	if(option.series[0].data[params.dataIndex].itemStyle.normal.color=='#fff'){
-		              		option.series[0].data[params.dataIndex].itemStyle.normal.color = '#5ed6be';
-		              			letterlist.push(datavalue);
-		              			//按ABC排序
-						      	letterlist = letterlist.sort(function (item1, item2) {
-						          return item1.localeCompare(item2)
-						      })
-						      	//转换成字符串
-						     str=letterlist.toString().replace(/,/g,'');			     
-						     _getanswerinfo();
-						     $scope.$apply();//刷新正确率
-		              	}else{	
-		              		option.series[0].data[params.dataIndex].itemStyle.normal.color='#fff';		              				              		
-		              		for(var i=0;i<letterlist.length;i++){
-		              			if(datavalue==letterlist[i]){
-		              				letterlist.splice(i,1);			    	              					
-				              		
-		              			}
-		              			//按ABC排序
-			              		letterlist = letterlist.sort(function (item1, item2) {
-							          return item1.localeCompare(item2)
-							      })
-		              			//转换成字符串
-							     str=letterlist.toString().replace(/,/g,'');
-						     	_getanswerinfo();			              		
-			              		$scope.$apply();//刷新正确率
-		              		}
-		              		
-		              		
-		              	}	
-						continue;
-		              }
-		           }
-					myChart.setOption(option);
-					
-				});
-			if(option && typeof option === "object") {
-					myChart.setOption(option, true);
+					var coloritem = "#fff";
+					colors.push(coloritem);
 				}
 			} else {
-				toastr.error($scope.result.message);
+				//var item = 0;
+				var item = {
+					value: 0,
+					itemStyle: {
+						normal: {
+							color: '#fff'
+						}
+					}
+				}
+				$scope.data.push(item);
 			}
+			//var colors = ['#5793f3', '#d14a61', '#675bba'];
+			option = {
+				color: ['#fff'],
+				tooltip: {
+					trigger: 'axis',
+					axisPointer: { // 坐标轴指示器，坐标轴触发有效
+						type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+					}
+				},
+				grid: {
+					left: '3%',
+					right: '4%',
+					bottom: '3%',
+					containLabel: true
+				},
+				xAxis: {
+					type: 'category',
+					//data : ['A', 'B', 'C','D','E','F'],
+					data: rangeList,
+					axisTick: {
+						alignWithLabel: true
+					},
+					axisLine: {
+						lineStyle: {
+							color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
+							show: false
+						}
+					},
+					axisLabel: {
+						show: true,
+						textStyle: {
+							color: '#fff',
+							fontSize: '16'
+						},
+					},
+				},
+				yAxis: [{
+					show: false,
+					type: 'value',
+					splitLine: false, //是否显示网格线
+					axisLine: {
+						lineStyle: {
+							color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
+							show: false
+						}
+					},
+					axisLabel: {
+						show: true,
+						textStyle: {
+							color: '#fff',
+							fontSize: '16'
+						},
+					},
+				}],
+				series: [{
+					name: '记录统计',
+					type: 'bar',
+					barWidth: '50%',
+					//data:[7, 13, 5,14,2,0],
+					data: $scope.data,
+					label: {
+						normal: {
+							show: true,
+							position: 'top',
+							textStyle: {
+								color: '#fff',
+								fontSize: '16'
+							}
+						}
+					},
+					itemStyle: {
+						normal: {　　　　　　　　　　　　
+							color: function(params) {
+								var colorList = colors;
+								return colorList[params.dataIndex];
+							}
+						}
+					},
+				}]
 
+			};
+			var str;
+			$scope.selresultmap = JSON.parse(execute_answer("get_answer_info_sum"));
+			console.log(JSON.stringify($scope.selresultmap));
+			//查询正确答案人数
+			var _getanswerinfo = function(str) {
+					if($scope.selresultmap) {
+						if($scope.selresultmap[str]) {
+							$scope.answerResult = $scope.selresultmap[str];
+						} else {
+							$scope.answerResult = [];
+						}
+						//正确率
+						$scope.answerRate = ($scope.answerResult.length / $scope.studentCount) * 100;
+
+					}
+				}
+				/*柱状图点击事件*/
+			myChart.on('click', function(params) {
+				var objs = option.xAxis;
+				for(var i = 0; i < objs.data.length; i++) {
+					var datavalue = objs.data[i];
+					if(datavalue == params.name) {
+						if(option.series[0].data[params.dataIndex].itemStyle.normal.color == '#fff') {
+							option.series[0].data[params.dataIndex].itemStyle.normal.color = '#5ed6be';
+							var isflag = letterlist.some(function(item) {
+								item == params.name
+							});
+							if(!isflag) {
+								letterlist.push(datavalue);
+							}
+						} else {
+							option.series[0].data[params.dataIndex].itemStyle.normal.color = '#fff';
+							var index = letterlist.indexOf(params.name);
+							if(index > -1) {
+								letterlist.splice(index, 1);
+							}
+						}
+						//按ABC排序
+						letterlist = letterlist.sort(function(item1, item2) {
+							return item1.localeCompare(item2)
+						});
+						//转换成字符串
+						str = letterlist.join('');
+						_getanswerinfo(str);
+						$scope.$apply(); //刷新正确率
+						myChart.setOption(option);
+
+					}
+				}
+
+			});
+			if(option && typeof option === "object") {
+				myChart.setOption(option, true);
+			}
+		} else {
+			toastr.error($scope.result.message);
 		}
-		window.onresize = function(){
+
+	}
+	window.onresize = function() {
 		myChart.resize();
-		}
-		
-		
-		//查看详情
-		$scope.viewDetail=function(){
-			$scope.userdetailshow=true;		
-		}
-		//返回
-		$scope.returnPage=function(){
-			$scope.userdetailshow=false;		
-		}
+	}
 
-	})
-	//停止单选答题
-app.controller('stopSingeAnswerCtrl', function($scope,$location, toastr, $window) {
-		if($location.search()){
-			$scope.answerType=$location.search().answerType;	//单选类型(数字,字母,判断)
+	//查看详情
+	$scope.viewDetail = function() {
+		$scope.userdetailshow = true;
+	}
+		//返回
+	$scope.returnPage = function() {
+		$scope.userdetailshow = false;		
+	}
+
+});
+//停止单选答题
+app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $window) {
+		if($location.search()) {
+			$scope.answerType = $location.search().answerType; //单选类型(数字,字母,判断)
 		}
-		$scope.userdetailshow=false;//默认答题详情页面隐藏
+		$scope.userdetailshow = false; //默认答题详情页面隐藏
 		$scope.isStopAswer = false;
 		$scope.studentNum = 0;
 		var rangeList = []; //答题范围
 		$scope.data = []; //柱状图数据
 		//var resultmap = [];
-		var colors=[];//颜色数组
-		$scope.answerResult=[];//选择的正确人数数组
-		$scope.answerRate=0;
-		var rangeLists=[];
+		var colors = []; //颜色数组
+		$scope.answerResult = []; //选择的正确人数数组
+		$scope.answerRate = 0;
+		var rangeLists = [];
 		//获取答题人数
 		$scope.refresAnswerNum = function() {
 			$scope.result = JSON.parse(execute_answer("get_single_answer_num"));
 			$scope.studentNum = $scope.result.current;
-			$scope.totalStudent=$scope.result.totalStudent;
+			$scope.totalStudent = $scope.result.totalStudent;
 			console.log("获取答题" + JSON.stringify($scope.result))
 		}
-		currentWidth = document.body.clientWidth; 
+		currentWidth = document.body.clientWidth;
 		//停止答题
 		var dom = document.getElementById("recordbar");
 		var myChart = echarts.init(dom);
 		$scope.stopAnswer = function() {
-			$scope.result = JSON.parse(execute_answer("stop_single_answer"));
-			if($scope.result.ret == 'success') {
-				$scope.isStopAswer = true;
-				$scope.resultmap = JSON.parse(execute_answer("get_single_answer"));
-				console.log("data" + JSON.stringify($scope.resultmap));
-				if($scope.answerType=='char'){
-					rangeList = ["A", "B", "C", "D"];
-				}else if($scope.answerType=='number'){
-					rangeList = ["1", "2", "3", "4","5","6","7","8","9"];
-				}else if($scope.answerType=='judge'){
-					rangeList = ["对", "错"];
-					$scope.resultmap={
-						"对":$scope.resultmap["true"],
-						"错":$scope.resultmap["false"]
+				$scope.result = JSON.parse(execute_answer("stop_single_answer"));
+				if($scope.result.ret == 'success') {
+					$scope.isStopAswer = true;
+					$scope.resultmap = JSON.parse(execute_answer("get_single_answer"));
+					console.log("data" + JSON.stringify($scope.resultmap));
+					if($scope.answerType == 'char') {
+						rangeList = ["A", "B", "C", "D"];
+					} else if($scope.answerType == 'number') {
+						rangeList = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+					} else if($scope.answerType == 'judge') {
+						rangeList = ["对", "错"];
+						$scope.resultmap = {
+							"对": $scope.resultmap["true"],
+							"错": $scope.resultmap["false"]
+						}
 					}
-				}
-				//$scope.rangeList=["A","B","C","D","E"];
-				console.log("答题范围" + JSON.stringify(rangeList))								
-				//$scope.resultmap={"A":10,"B":3};				
-				$scope.data = [];				
-				if(rangeList.length > 0) {
-					for(var i = 0; i < rangeList.length; i++) {
-						if($scope.resultmap != null) {
-							//console.log("item" + JSON.stringify($scope.resultmap))
-							if($scope.resultmap[rangeList[i]]) {
-								var item={
-									value:$scope.resultmap[rangeList[i]],
-									itemStyle:{normal:{color:'#fff'}
+					//$scope.rangeList=["A","B","C","D","E"];
+					console.log("答题范围" + JSON.stringify(rangeList))
+					//$scope.resultmap={"A":10,"B":3};				
+					$scope.data = [];
+					if(rangeList.length > 0) {
+						for(var i = 0; i < rangeList.length; i++) {
+							if($scope.resultmap != null) {
+								//console.log("item" + JSON.stringify($scope.resultmap))
+								if($scope.resultmap[rangeList[i]]) {
+									var item = {
+										value: $scope.resultmap[rangeList[i]],
+										itemStyle: {
+											normal: {
+												color: '#fff'
+											}
+										}
+									}
+								} else {
+									var item = {
+										value: 0,
+										itemStyle: {
+											normal: {
+												color: '#fff'
+											}
+										}
 									}
 								}
-						} else {
-								var item={
-									value:0,
-									itemStyle:{normal:{color:'#fff'}
+							} else {
+								var item = {
+									value: 0,
+									itemStyle: {
+										normal: {
+											color: '#fff'
+										}
 									}
 								}
 							}
+							$scope.data.push(item);
+							var coloritem = "#fff";
+							colors.push(coloritem);
+						}
 					} else {
-							var item={
-								value:0,
-								itemStyle:{normal:{color:'#fff'}
+						var item = {
+							value: 0,
+							itemStyle: {
+								normal: {
+									color: '#fff'
 								}
 							}
 						}
 						$scope.data.push(item);
-						var coloritem="#fff";
-						colors.push(coloritem);
 					}
-				} else {
-					var item={
-						value:0,
-						itemStyle:{normal:{color:'#fff'}
-						}
-					}
-					$scope.data.push(item);
-				}
-				option = {
-					color: ['#fff'],
-					tooltip: {
-						trigger: 'axis',
-						axisPointer: { // 坐标轴指示器，坐标轴触发有效
-							type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-						}
-					},
-					grid: {
-						left: '3%',
-						right: '4%',
-						bottom: '3%',
-						containLabel: true
-					},
-					xAxis: {
-						type: 'category',
-						//data : ['A', 'B', 'C','D','E','F'],
-						data: rangeList,
-						axisTick: {
-							alignWithLabel: true
-						},
-						axisLine: {
-							lineStyle: {
-								color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
-								show: false
+					option = {
+						color: ['#fff'],
+						tooltip: {
+							trigger: 'axis',
+							axisPointer: { // 坐标轴指示器，坐标轴触发有效
+								type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
 							}
 						},
-						axisLabel: {
-							show: true,
-							textStyle: {
-								color: '#fff',
-								fontSize: '16'
-							}
-						}
-					},
-					yAxis: [{
-						show: false,
-						type: 'value',
-						splitLine: false, //是否显示网格线
-						axisLine: {
-							lineStyle: {
-								color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
-								show: false
-							}
+						grid: {
+							left: '3%',
+							right: '4%',
+							bottom: '3%',
+							containLabel: true
 						},
-						axisLabel: {
-							show: true,
-							textStyle: {
-								color: '#fff',
-								fontSize: '16'
-							}
-						},
-					}],
-					series: [{
-						name: '记录统计',
-						type: 'bar',
-						barWidth: '50%',
-						//data:[7, 13, 5,14,2,0],
-						data: $scope.data,
-						label: {
-							normal: {
-									show: true,
-									position: 'top',
-									textStyle: {
+						xAxis: {
+							type: 'category',
+							//data : ['A', 'B', 'C','D','E','F'],
+							data: rangeList,
+							axisTick: {
+								alignWithLabel: true
+							},
+							axisLine: {
+								lineStyle: {
+									color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
+									show: false
+								}
+							},
+							axisLabel: {
+								show: true,
+								textStyle: {
 									color: '#fff',
 									fontSize: '16'
 								}
 							}
 						},
-						itemStyle: {  
-							normal:{  
-		　　　　　　　　　　　　      color: function (params){
-									var colorList = colors;
-									return colorList[params.dataIndex];
+						yAxis: [{
+							show: false,
+							type: 'value',
+							splitLine: false, //是否显示网格线
+							axisLine: {
+								lineStyle: {
+									color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
+									show: false
 								}
-							}
-						},
-					}]
+							},
+							axisLabel: {
+								show: true,
+								textStyle: {
+									color: '#fff',
+									fontSize: '16'
+								}
+							},
+						}],
+						series: [{
+							name: '记录统计',
+							type: 'bar',
+							barWidth: '50%',
+							//data:[7, 13, 5,14,2,0],
+							data: $scope.data,
+							label: {
+								normal: {
+									show: true,
+									position: 'top',
+									textStyle: {
+										color: '#fff',
+										fontSize: '16'
+									}
+								}
+							},
+							itemStyle: {
+								normal: {　　　　　　　　　　　　
+									color: function(params) {
+										var colorList = colors;
+										return colorList[params.dataIndex];
+									}
+								}
+							},
+						}]
 
-				};
-				/*柱状图点击事件*/
-				myChart.on('click', function(params) {
-				var objs=option.xAxis;				 
-					for(var i=0;i<objs.data.length;i++){						
-					  var datavalue = objs.data[i];							 
-		              if(datavalue == params.name){
-		              	option.series[0].data[params.dataIndex].itemStyle.normal.color = '#5ed6be';
-		              	if($scope.answerType=='judge'){
-		              		if(datavalue=="对"){
-			              		datavalue="true";
-			              	}else{
-			              		datavalue="false";
-			              	}
-		              	}		              	
-		              	var dataparam={
-		              		answer:datavalue
-		              	}
-		              	//作答正确人员
-		              	$scope.answerResult=JSON.parse(execute_answer("get_single_answer_studentName",JSON.stringify(dataparam)));
-		              	//正确率
-		              	$scope.answerRate=($scope.answerResult.length/$scope.totalStudent)*100;
-		              	$scope.$apply();//刷新正确率
-						continue;
-		              }	        
-					  option.series[0].data[i].itemStyle.normal.color = '#fff';
-		           }
-					myChart.setOption(option);
-				});
-				if(option && typeof option === "object") {
-					myChart.setOption(option, true);
+					};
+					/*柱状图点击事件*/
+					myChart.on('click', function(params) {
+						var objs = option.xAxis;
+						for(var i = 0; i < objs.data.length; i++) {
+							var datavalue = objs.data[i];
+							if(datavalue == params.name) {
+								option.series[0].data[params.dataIndex].itemStyle.normal.color = '#5ed6be';
+								if($scope.answerType == 'judge') {
+									if(datavalue == "对") {
+										datavalue = "true";
+									} else {
+										datavalue = "false";
+									}
+								}
+								var dataparam = {
+										answer: datavalue
+									}
+									//作答正确人员
+								$scope.answerResult = JSON.parse(execute_answer("get_single_answer_studentName", JSON.stringify(dataparam)));
+								//正确率
+								$scope.answerRate = ($scope.answerResult.length / $scope.totalStudent) * 100;
+								$scope.$apply(); //刷新正确率
+								continue;
+							}
+							option.series[0].data[i].itemStyle.normal.color = '#fff';
+						}
+						myChart.setOption(option);
+					});
+					if(option && typeof option === "object") {
+						myChart.setOption(option, true);
+					}
+				} else {
+					toastr.error($scope.result.message);
 				}
-			} else {
-				toastr.error($scope.result.message);
 			}
-		}
-		// 获取到的是变更后的页面宽度
-		window.onresize = function(){
+			// 获取到的是变更后的页面宽度
+		window.onresize = function() {
 			myChart.resize();
 		}
-		
+
 		//查看详情
-		$scope.viewDetail=function(){
-			$scope.userdetailshow=true;		
-		}
-		//返回
-		$scope.returnPage=function(){
-			$scope.userdetailshow=false;		
+		$scope.viewDetail = function() {
+				$scope.userdetailshow = true;
+			}
+			//返回
+		$scope.returnPage = function() {
+			$scope.userdetailshow = false;
 		}
 	})
 	//随堂检测
@@ -530,36 +550,35 @@ app.controller('classCheckCtrl', function($scope, toastr, $window) {
 		console.log(JSON.stringify($scope.result));
 		if($scope.result.ret == 'success') {
 			$scope.paperInfoList = $scope.result.item;
-			if($scope.result.item.length>0){
-				$scope.paperInfoList[0].checked=true;
-				$scope.onePaperInfo=$scope.paperInfoList[0];
+			if($scope.result.item.length > 0) {
+				$scope.paperInfoList[0].checked = true;
+				$scope.onePaperInfo = $scope.paperInfoList[0];
 			}
 		} else {
 			toastr.error($scope.result.message);
 		}
 
 	};
-	
-	
+
 	//单选试卷
 	$scope.selectOne = function(paperInfo) {
-		if(paperInfo.checked==true){
-			$scope.onePaperInfo = paperInfo;
-			angular.forEach($scope.paperInfoList,function(i){
-				if($scope.onePaperInfo.testId!=i.testId){
-					i.checked=false;///单选 
-				}
-			})
-		}else{
-			$scope.onePaperInfo='';			
+			if(paperInfo.checked == true) {
+				$scope.onePaperInfo = paperInfo;
+				angular.forEach($scope.paperInfoList, function(i) {
+					if($scope.onePaperInfo.testId != i.testId) {
+						i.checked = false; ///单选 
+					}
+				})
+			} else {
+				$scope.onePaperInfo = '';
+			}
+
 		}
-		
-	}
-/*	for(var i=0;i<120;i++){
-		var item={"atype":"1","classHourId":"","describe":"哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或","id":8,"remark":"","subject":"语文","testId":"T11","testName":"景县助手器测试"};
-		$scope.paperInfoList.push(item);
-		console.log(JSON.stringify($scope.paperInfoList))
-	}*/
+		/*	for(var i=0;i<120;i++){
+				var item={"atype":"1","classHourId":"","describe":"哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或或","id":8,"remark":"","subject":"语文","testId":"T11","testName":"景县助手器测试"};
+				$scope.paperInfoList.push(item);
+				console.log(JSON.stringify($scope.paperInfoList))
+			}*/
 	var _init = function() {
 		_isStartClass();
 		_selectPaper();
@@ -567,232 +586,240 @@ app.controller('classCheckCtrl', function($scope, toastr, $window) {
 
 	//开始客观答题
 	$scope.startObjective = function() {
-		if($scope.onePaperInfo){
-		$scope.result = JSON.parse(execute_answer("start_class_test_objective", $scope.onePaperInfo.testId));
-		if($scope.result.ret == 'success') {
-			$scope.param = "testId=" + $scope.onePaperInfo.testId + "&answerType=" + "1" ;
-			$scope.objectUrl = '../../page/answermoudle/classCheck.html' + '?' + $scope.param;
-			$window.location.href =$scope.objectUrl;
-		} else {
-			toastr.error($scope.result.message);
+			if($scope.onePaperInfo) {
+				$scope.result = JSON.parse(execute_answer("start_class_test_objective", $scope.onePaperInfo.testId));
+				if($scope.result.ret == 'success') {
+					$scope.param = "testId=" + $scope.onePaperInfo.testId + "&answerType=" + "1";
+					$scope.objectUrl = '../../page/answermoudle/classCheck.html' + '?' + $scope.param;
+					$window.location.href = $scope.objectUrl;
+				} else {
+					toastr.error($scope.result.message);
+				}
+			} else {
+				toastr.warning("请选择试卷");
+			}
 		}
-		}else{
-			toastr.warning("请选择试卷");
-		}
-	}
-	//开始主观答题
+		//开始主观答题
 	$scope.AnswerSrcoe = function() {
-		if($scope.onePaperInfo){
+		if($scope.onePaperInfo) {
 			$scope.result = JSON.parse(execute_answer("start_class_test_subjective", $scope.onePaperInfo.testId));
 			if($scope.result.ret == 'success') {
-				$scope.param = "testId=" + $scope.onePaperInfo.testId + "&answerType=" + "0" ;
+				$scope.param = "testId=" + $scope.onePaperInfo.testId + "&answerType=" + "0";
 				$scope.objectUrl = '../../page/answermoudle/classCheck.html' + '?' + $scope.param;
-				$window.location.href =$scope.objectUrl;
+				$window.location.href = $scope.objectUrl;
 			} else {
 				toastr.error($scope.result.message);
 			}
-		}else{
+		} else {
 			toastr.warning("请选择试卷");
 		}
-		
+
 	}
-	
+
 	//上传服务
-	$scope.uploadServer=function(){
+	$scope.uploadServer = function() {
+			$('#myModal').modal('show');
+			$scope.result = JSON.parse(execute_answer("upload_server", $scope.onePaperInfo.testId));
+			//		setTimeout(function(){			
+			//			console.log(JSON.stringify($scope.result))
+			//			if($scope.result.ret=='success'){
+			//				$('#myModal').modal('hide');
+			//			}else{
+			//				toastr.error($scope.result.message);
+			//				$('#myModal').modal('hide');
+			//			}
+			//		},500)	
+
+		}
+		//移除loading
+	$scope.removeLoading = function() {
+			$('#myModal').modal('hide');
+		}
+		//显示loading
+	$scope.showLoading = function() {
 		$('#myModal').modal('show');
-		$scope.result=JSON.parse(execute_answer("upload_server", $scope.onePaperInfo.testId));		
-//		setTimeout(function(){			
-//			console.log(JSON.stringify($scope.result))
-//			if($scope.result.ret=='success'){
-//				$('#myModal').modal('hide');
-//			}else{
-//				toastr.error($scope.result.message);
-//				$('#myModal').modal('hide');
-//			}
-//		},500)	
-		
-		
 	}
-	//移除loading
-	$scope.removeLoading=function(){
-		$('#myModal').modal('hide');
-	}
-	//显示loading
-	$scope.showLoading=function(){
-		$('#myModal').modal('show');		
-	}
-	
+
 	//提示框
 	$scope.getTip = function() {
-		if (ret == 'true') {
+		if(ret == 'true') {
 			toastr.success(message);
-			$scope.isgatherPaper=false;
-		}
-		else {
-			$scope.isgatherPaper=true;
+			$scope.isgatherPaper = false;
+		} else {
+			$scope.isgatherPaper = true;
 			toastr.error(message);
 		}
 	}
 })
-app.config(['$locationProvider', function($locationProvider) {  
-	    //$locationProvider.html5Mode(true);  
- 	$locationProvider.html5Mode({
-	enabled: true,
-	requireBase: false
+app.config(['$locationProvider', function($locationProvider) {
+	//$locationProvider.html5Mode(true);  
+	$locationProvider.html5Mode({
+		enabled: true,
+		requireBase: false
 	});
 }]);
-app.controller('classuserCheckCtrl', function($scope, toastr,$location, $window,$modal) {
-	if($location.search()){
-		$scope.paperInfo=$location.search();	//试卷id	答题类型answerType("0":主观答题,"1":客观答题)
-		console.log(JSON.stringify($scope.paperInfo))
-	}
-	$scope.AllanswerInfo = []; //作答信息数组	
-	$scope.oneanswerList=[];//个人答题详情
-	$('#myModal').modal('hide');//默认隐藏loading
-	//隐藏loading
-	var _hideModal=function(){
-		$('#myModal').modal('hide');
-	}
-	//显示loading
-	var _showModal=function(){
-		$('#myModal').modal('show');
-	}
-	//查询每个人的个人信息
-	var _getAllanswerInfo = function() {
-		$scope.result = JSON.parse(execute_answer("get_everybody_answerInfo"));
-		//console.log(JSON.stringify($scope.result))
-		if($scope.result.ret == 'success') {
-			$scope.AllanswerInfo = $scope.result.item;
-			if($scope.result.item.length>0){
-				angular.forEach($scope.AllanswerInfo,function(i){
-					i.style={
-						width:i.percent*100 +'%',
-						background:'#7ee074'
-					}
-					console.log(JSON.stringify($scope.AllanswerInfo))
-				})
-				
+app.controller('classuserCheckCtrl', function($scope, toastr, $location, $window, $modal) {
+		if($location.search()) {
+			$scope.paperInfo = $location.search(); //试卷id	答题类型answerType("0":主观答题,"1":客观答题)
+			console.log(JSON.stringify($scope.paperInfo))
+		}
+		$scope.AllanswerInfo = []; //作答信息数组	
+		$scope.oneanswerList = []; //个人答题详情
+		$('#myModal').modal('hide'); //默认隐藏loading
+		//隐藏loading
+		var _hideModal = function() {
+				$('#myModal').modal('hide');
 			}
-		} else {
-			toastr.error($scope.result.message);
-		}
-	}
-	
-	/*for(var i=0;i<120;i++){
-		var item={"answerCount":0,"percent":0,"studentId":"10000001","studentName":"学001","style":{"width":"0%","background":"#7ee074"}}
-		$scope.AllanswerInfo.push(item)
-	}*/
+			//显示loading
+		var _showModal = function() {
+				$('#myModal').modal('show');
+			}
+			//查询每个人的个人信息
+		var _getAllanswerInfo = function() {
+			$scope.result = JSON.parse(execute_answer("get_everybody_answerInfo"));
+			//console.log(JSON.stringify($scope.result))
+			if($scope.result.ret == 'success') {
+				$scope.AllanswerInfo = $scope.result.item;
+				if($scope.result.item.length > 0) {
+					angular.forEach($scope.AllanswerInfo, function(i) {
+						i.style = {
+							width: i.percent * 100 + '%',
+							background: '#7ee074'
+						}
+						console.log(JSON.stringify($scope.AllanswerInfo))
+					})
 
-	//收取试卷
-	$scope.isgatherPaper=true;//是否是收取试卷按钮
-	
-	$scope.gatherPaper=function(){
-		_showModal();
-	if($scope.paperInfo.answerType=="1"){	
-		$scope.result = JSON.parse(execute_answer("stop_class_test_objective",$scope.paperInfo.testId));	
-	}else{
-		$scope.result = JSON.parse(execute_answer("stop_class_test_subjective",$scope.paperInfo.testId));
-	}
-	console.log(JSON.stringify($scope.result))
-	}
-	//查询主观答题和客观答题的单个人的信息
-	$scope.selectRecord=function(item){
-		var param={
-			testId:$scope.paperInfo.testId,
-			studentId:item.studentId
-		}
-		if($scope.paperInfo.answerType=="1"){			
-			$scope.result = JSON.parse(execute_record("select_objective_record",JSON.stringify(param)));
-		}else{
-			$scope.result = JSON.parse(execute_record("select_subjective_record",JSON.stringify(param)));
-		}
-		//console.log(JSON.stringify($scope.result))
-		if($scope.result.ret == 'success') {
-			$scope.oneanswerList=[];
-			$scope.oneanswerList = $scope.result.item;
-			var modalInstance = $modal.open({
-				templateUrl: 'oneAnswerDetailModal.html',
-				controller: 'oneAnswerDetailCtrl',
-				size: 'md',
-				backdrop:false,
-				resolve: {
-					infos: function() {
-						return $scope.oneanswerList;
-					},
-					type:function(){
-						return $scope.paperInfo.answerType;
-					}
 				}
-			});
-		
-			modalInstance.result.then(function(info) {
-			}, function() {
-		});
-			
-		} else {
-			toastr.error($scope.result.message);
+			} else {
+				toastr.error($scope.result.message);
+			}
 		}
-	}
-	
-	
-	var _init = function() {
-		_getAllanswerInfo();
-	}();
-	//刷新
-	$scope.refreClassTest = function() {
-		_getAllanswerInfo();
-	}
-	
-	//移除loading
-	$scope.removeLoading=function(){
-		_hideModal();
-	}
-	//显示loading
-	$scope.showLoading=function(){
-		$('#myModal').modal('show');		
-	}
-	
-	//提示框
-	$scope.getTip = function() {
-		if (ret == 'true') {
-			toastr.success(message);
-			$scope.isgatherPaper=false;
+
+		/*for(var i=0;i<120;i++){
+			var item={"answerCount":0,"percent":0,"studentId":"10000001","studentName":"学001","style":{"width":"0%","background":"#7ee074"}}
+			$scope.AllanswerInfo.push(item)
+		}*/
+
+		//收取试卷
+		$scope.isgatherPaper = true; //是否是收取试卷按钮
+
+		$scope.gatherPaper = function() {
+				_showModal();
+				if($scope.paperInfo.answerType == "1") {
+					$scope.result = JSON.parse(execute_answer("stop_class_test_objective", $scope.paperInfo.testId));
+				} else {
+					$scope.result = JSON.parse(execute_answer("stop_class_test_subjective", $scope.paperInfo.testId));
+				}
+				console.log(JSON.stringify($scope.result))
+			}
+			//查询主观答题和客观答题的单个人的信息
+		$scope.selectRecord = function(item) {
+			var param = {
+				testId: $scope.paperInfo.testId,
+				studentId: item.studentId
+			}
+			if($scope.paperInfo.answerType == "1") {
+				$scope.result = JSON.parse(execute_record("select_objective_record", JSON.stringify(param)));
+			} else {
+				$scope.result = JSON.parse(execute_record("select_subjective_record", JSON.stringify(param)));
+			}
+			//console.log(JSON.stringify($scope.result))
+			if($scope.result.ret == 'success') {
+				$scope.oneanswerList = [];
+				$scope.oneanswerList = $scope.result.item;
+				var modalInstance = $modal.open({
+					templateUrl: 'oneAnswerDetailModal.html',
+					controller: 'oneAnswerDetailCtrl',
+					size: 'md',
+					backdrop: false,
+					resolve: {
+						infos: function() {
+							return $scope.oneanswerList;
+						},
+						type: function() {
+							return $scope.paperInfo.answerType;
+						}
+					}
+				});
+
+				modalInstance.result.then(function(info) {}, function() {});
+
+			} else {
+				toastr.error($scope.result.message);
+			}
 		}
-		else {
-			$scope.isgatherPaper=true;
-			toastr.error(message);
+
+		var _init = function() {
+			_getAllanswerInfo();
+		}();
+		//刷新
+		$scope.refreClassTest = function() {
+			_getAllanswerInfo();
 		}
+
+		//移除loading
+		$scope.removeLoading = function() {
+				_hideModal();
+			}
+			//显示loading
+		$scope.showLoading = function() {
+			$('#myModal').modal('show');
+		}
+
+		//提示框
+		$scope.getTip = function() {
+			if(ret == 'true') {
+				toastr.success(message);
+				$scope.isgatherPaper = false;
+			} else {
+				$scope.isgatherPaper = true;
+				toastr.error(message);
+			}
+		}
+	})
+	//个人答题详情
+app.controller('oneAnswerDetailCtrl', function($scope, $modalInstance, toastr, infos, type) {
+	$scope.oneanswerLists = []; //个人答题详情
+	if(type) {
+		$scope.answerType = type; //作答类型（主客）
 	}
-})
-//个人答题详情
-app.controller('oneAnswerDetailCtrl', function($scope,$modalInstance,toastr,infos,type) {
-	$scope.oneanswerLists=[];//个人答题详情
-	if(type){
-		$scope.answerType=type;//作答类型（主客）
-	}
-	if(infos){
-		$scope.oneanswerLists=angular.copy(infos);
-		for(var i=0;i<120;i++){
-			var item={"answer":"2","classHourId":"24323e6175624858bcd3859c4fbb4ab5","classId":"BJ1001","id":12681,"question":"","questionId":"6","questionType":"4","result":"","score":"5.0","studentId":"10000003","studentName":"学003","subject":"语文","testId":"4Y0001","trueAnswer":""}
+	if(infos) {
+		$scope.oneanswerLists = angular.copy(infos);
+		for(var i = 0; i < 120; i++) {
+			var item = {
+				"answer": "2",
+				"classHourId": "24323e6175624858bcd3859c4fbb4ab5",
+				"classId": "BJ1001",
+				"id": 12681,
+				"question": "",
+				"questionId": "6",
+				"questionType": "4",
+				"result": "",
+				"score": "5.0",
+				"studentId": "10000003",
+				"studentName": "学003",
+				"subject": "语文",
+				"testId": "4Y0001",
+				"trueAnswer": ""
+			}
 			$scope.oneanswerLists.push(item);
 		}
-		
+
 	}
-	
-	$scope.cancel=function(){
+
+	$scope.cancel = function() {
 		$modalInstance.dismiss('cancel');
 	}
-	
+
 })
 
 //人员列表
-app.controller('userAnswerListCtrl', function($scope, toastr,$location, $window,$modal) {
-	$scope.userAnswerList=[];//人员作答数组
-	if($location.search()){
-		$scope.userAnswerList=$location.search().userAnswerList;
+app.controller('userAnswerListCtrl', function($scope, toastr, $location, $window, $modal) {
+	$scope.userAnswerList = []; //人员作答数组
+	if($location.search()) {
+		$scope.userAnswerList = $location.search().userAnswerList;
 	}
 })
-
 
 app.directive('select', function() {
 	return {
@@ -845,7 +872,23 @@ app.directive('select1', function() {
 						$(element).html(str);
 					}
 
-					$(element).multiselect({
+					/*$(element).multiselect({
+						multiple: false,
+						selectedHtmlValue: '请选择',
+						defalutvalue: scope.defalutvalue,
+						change: function() {
+							$(element).val($(this).val());
+							scope.$apply();
+							if(ngModelCtr) {
+								ngModelCtr.$setViewValue($(element).val());
+								if(!scope.$root.$$phase) {
+									scope.$apply();
+								}
+							}
+						}
+					});*/
+				}
+				$(element).multiselect({
 						multiple: false,
 						selectedHtmlValue: '请选择',
 						defalutvalue: scope.defalutvalue,
@@ -860,7 +903,6 @@ app.directive('select1', function() {
 							}
 						}
 					});
-				}
 			})
 
 		}
@@ -883,9 +925,9 @@ app.directive('select2', function() {
 							str += '<option value="' + scope.list[i].key + '">' + scope.list[i].value + '</option>';
 						}
 						$(element).html(str);
-					}
-
-					$(element).multiselect({
+					}					
+				}
+				$(element).multiselect({
 						multiple: false,
 						selectedHtmlValue: '请选择',
 						defalutvalue: scope.defalutvalue,
@@ -900,7 +942,6 @@ app.directive('select2', function() {
 							}
 						}
 					});
-				}
 			})
 
 		}
@@ -932,10 +973,10 @@ app.filter('questionType', function() {
 					break;
 				}
 			case '4':
-			{
-				statename = '主观题';
-				break;
-			}
+				{
+					statename = '主观题';
+					break;
+				}
 		}
 		return statename;
 	}
@@ -946,18 +987,19 @@ app.filter('AnswerType', function() {
 		switch(AnswerType) {
 			case 'T':
 				{
-					statename = '对';
+					statename = '√';
 					break;
 				}
 			case 'F':
 				{
-					statename = '错';
+					statename = '×';
 					break;
 				}
-			default:{
-				statename = AnswerType;
-				break;
-			}
+			default:
+				{
+					statename = AnswerType;
+					break;
+				}
 		}
 		return statename;
 	}

@@ -1,16 +1,16 @@
 //定义模块时引入依赖  
 var app = angular.module('app', ['ui.bootstrap', 'toastr']);
 app.controller('setPaperManageCtrl', function($rootScope, $scope, $modal, toastr, $window) {
-	$('#myModal').modal('hide');
-		//隐藏loading
-	var _hideModal=function(){
 		$('#myModal').modal('hide');
-	}
-	//显示loading
-	var _showModal=function(){
-		$('#myModal').modal('show');
-	}
-	$scope.testInfolist=[];//服务试卷数组
+		//隐藏loading
+		var _hideModal = function() {
+				$('#myModal').modal('hide');
+			}
+			//显示loading
+		var _showModal = function() {
+			$('#myModal').modal('show');
+		}
+		$scope.testInfolist = []; //服务试卷数组
 		//返回设置页面
 		$scope.returnPage = function() {
 				window.location.href = "../../page/setmodule/setmodule.html";
@@ -67,9 +67,9 @@ app.controller('setPaperManageCtrl', function($rootScope, $scope, $modal, toastr
 				});
 
 				modalInstance.result.then(function(selitem) {
-					
-					$rootScope.selitem=selitem;
-					console.log("班级和科目"+JSON.stringify(selitem))
+
+					$rootScope.selitem = selitem;
+					console.log("班级和科目" + JSON.stringify(selitem))
 					_selectPaper();
 				}, function() {});
 			}
@@ -82,7 +82,6 @@ app.controller('setPaperManageCtrl', function($rootScope, $scope, $modal, toastr
 
 			//window.location.href="../../page/setmodule/edittestPage.html";
 		}
-		
 
 		//删除题目 
 		$scope.delPaper = function(item) {
@@ -116,65 +115,63 @@ app.controller('setPaperManageCtrl', function($rootScope, $scope, $modal, toastr
 				//$log.info('Modal dismissed at: ' + new Date());
 			});
 		}
-		
-		$scope.refreTestPaper=function(){
-			console.log("ahhaha"+JSON.stringify(testinfo))
-			$scope.testInfolist=JSON.parse(testinfo).testInfo;
-			/*var selitem = {
-				classId: $scope.selclass,
-				subject: $scope.selsubject
-			}*/
-			var modalInstance = $modal.open({
-				templateUrl: 'selserverFile.html',
-				controller: 'serverFileModalCtrl',
-				size: 'md',
-				backdrop: false,
-				resolve: {
-					infos: function() {
-						return $scope.testInfolist;
-					},
-					subjectInfo: function() {
-						return $rootScope.selitem;
-					}
 
-				}
-			});
-
-			modalInstance.result.then(function(info) {
-				/*//查询所有试卷
-				var param = {};
-				var result = JSON.parse(execute_testPaper("select_paper", JSON.stringify(param)));
-				console.log(JSON.stringify(result));
-				if(result.ret == 'success') {
-					$rootScope.paperInfoList = [];
-					$rootScope.paperInfoList = result.item;
-				} else {
-					toastr.error(result.message);
+		$scope.refreTestPaper = function() {
+				console.log("ahhaha" + JSON.stringify(testinfo))
+				$scope.testInfolist = JSON.parse(testinfo).testInfo;
+				/*var selitem = {
+					classId: $scope.selclass,
+					subject: $scope.selsubject
 				}*/
-			}, function() {});
-			
-			
-		}
-		//查询所有列表
-		$scope.refreTestPaper2=function(){
+				var modalInstance = $modal.open({
+					templateUrl: 'selserverFile.html',
+					controller: 'serverFileModalCtrl',
+					size: 'md',
+					backdrop: false,
+					resolve: {
+						infos: function() {
+							return $scope.testInfolist;
+						},
+						subjectInfo: function() {
+							return $rootScope.selitem;
+						}
+
+					}
+				});
+
+				modalInstance.result.then(function(info) {
+					/*//查询所有试卷
+					var param = {};
+					var result = JSON.parse(execute_testPaper("select_paper", JSON.stringify(param)));
+					console.log(JSON.stringify(result));
+					if(result.ret == 'success') {
+						$rootScope.paperInfoList = [];
+						$rootScope.paperInfoList = result.item;
+					} else {
+						toastr.error(result.message);
+					}*/
+				}, function() {});
+
+			}
+			//查询所有列表
+		$scope.refreTestPaper2 = function() {
 			_selectPaper();
 		}
-		$scope.showLoading=function(){
-			_showModal();
+		$scope.showLoading = function() {
+				_showModal();
+			}
+			//提示框
+		$scope.getTip = function() {
+			if(ret == 'true') {
+				toastr.success(message);
+			} else {
+				toastr.error(message);
+			}
 		}
-	//提示框
-	$scope.getTip = function() {
-		if (ret == 'true') {			
-			toastr.success(message);						
+		$scope.removeLoading = function() {
+			_hideModal();
 		}
-		else {
-			toastr.error(message);
-		}
-	}
-	$scope.removeLoading=function(){
-		_hideModal();
-	}
-})
+	})
 	//选择科目控制器
 app.controller('selsubjectCtrl', function($rootScope, $scope, $modal, $modalInstance, toastr) {
 	$scope.sujectlists = []; //科目数组
@@ -234,6 +231,7 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
 				console.log(JSON.stringify(param))
 				$scope.result = JSON.parse(execute_testPaper("select_question", JSON.stringify(param)));
 				if($scope.result.ret == 'success') {
+					console.log("双手合十"+JSON.stringify($scope.result))
 					$scope.subjectList = $scope.result.item;
 
 				} else {
@@ -270,223 +268,220 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
 
 //编辑试卷控制器
 app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $location, $window, toastr) {
-		//console.log(JSON.stringify($location.search()))
-		if($location.search()) {
-			$scope.paperInfo = $location.search();
+	//console.log(JSON.stringify($location.search()))
+	if($location.search()) {
+		$scope.paperInfo = $location.search();
+	}
+	$scope.subjectList = []; //题目数组
+	$scope.checkedId = [];
+	$scope.onechecked = [];
+	//查询该试卷的题目
+	var _selectQuestion = function() {
+		var param = {
+			testId: $scope.paperInfo.testId
 		}
-		$scope.subjectList = []; //题目数组
-		$scope.checkedId = [];
+		console.log(JSON.stringify(param));
+		$scope.result = JSON.parse(execute_testPaper("select_question", JSON.stringify(param)));
+		console.log(JSON.stringify($scope.result));
+		if($scope.result.ret == 'success') {
+			$scope.subjectList = $scope.result.item;
+		} else {
+			toastr.error($scope.result.message);
+		}
+	}
+
+	//全选
+	$scope.selectAll = function(data) {
+		if($scope.selected) {
+			$scope.onechecked = [];
+			angular.forEach($scope.subjectList, function(i) {
+				i.checked = true;
+				var item = i;
+				$scope.checkedId.push(i.id.toString());
+				$scope.onechecked.push(item);
+
+			})
+		} else {
+			angular.forEach($scope.subjectList, function(i) {
+				i.checked = false;
+				$scope.onechecked = [];
+				$scope.checkedId = [];
+			})
+		}
+
+	};
+	//单选
+	$scope.selectOne = function(param) {
 		$scope.onechecked = [];
-		//查询该试卷的题目
-		var _selectQuestion = function() {
-			var param = {
-				testId: $scope.paperInfo.testId
+		$scope.checkedId = [];
+		angular.forEach($scope.subjectList, function(i) {
+			var index = $scope.checkedId.indexOf(i.id);
+			if(i.checked && index === -1) {
+				var item = i;
+				$scope.onechecked.push(item);
+				$scope.checkedId.push(i.id.toString());
+
+			} else if(!i.checked && index !== -1) {
+				$scope.selected = false;
+				$scope.onechecked.splice(index, 1);
+				$scope.checkedId.splice(index, 1);
+			};
+		})
+
+		if($scope.subjectList.length === $scope.onechecked.length) {
+			$scope.selected = true;
+		} else {
+			$scope.selected = false;
+		}
+	}
+	var _init = function() {
+		_selectQuestion();
+	}();
+	//添加题目
+	$scope.addSubject = function() {
+			var modalInstance = $modal.open({
+				templateUrl: 'addSubjectModal.html',
+				controller: 'addSubjectModalCtrl',
+				size: 'md',
+				backdrop: false,
+				resolve: {
+					infos: function() {
+						return $scope.paperInfo.testId;
+					}
+				}
+			});
+			modalInstance.result.then(function(info) {
+				_selectQuestion();
+
+			}, function() {
+				//$log.info('Modal dismissed at: ' + new Date());
+			});
+		}
+		//编辑题目
+	$scope.editSuject = function(item) {
+			console.log(JSON.stringify(item))
+			var modalInstance = $modal.open({
+				templateUrl: 'addSubjectModal.html',
+				controller: 'editSubjectModalCtrl',
+				size: 'md',
+				backdrop: false,
+				resolve: {
+					infos: function() {
+						return item;
+					}
+				}
+			});
+			modalInstance.result.then(function(info) {
+				_selectQuestion();
+			}, function() {
+				//$log.info('Modal dismissed at: ' + new Date());
+			});
+		}
+		//删除题目 
+	$scope.delSuject = function(item) {
+			if($scope.checkedId.length > 0) {
+				var content = "删除题目";
+				var modalInstance = $modal.open({
+					templateUrl: 'sureModal.html',
+					controller: 'sureModalCtrl',
+					size: 'sm',
+					backdrop: false,
+					resolve: {
+						content: function() {
+							return content;
+						}
+					}
+				});
+				modalInstance.result.then(function(info) {
+					var param = $scope.checkedId;
+					$scope.result = JSON.parse(execute_testPaper("delete_question", JSON.stringify(param)));
+					if($scope.result.ret == 'success') {
+						toastr.success($scope.result.message);
+						_selectQuestion();
+						$scope.onechecked = [];
+						$scope.checkedId = [];
+						$scope.selected = false;
+					} else {
+						toastr.error($scope.result.message);
+					}
+				}, function() {
+					//$log.info('Modal dismissed at: ' + new Date());
+				});
+			} else {
+				toastr.warning("请先勾选至少一个题目");
 			}
-			console.log(JSON.stringify(param));
-			$scope.result = JSON.parse(execute_testPaper("select_question", JSON.stringify(param)));
-			console.log(JSON.stringify($scope.result));
+		}
+		//修改试卷
+	$scope.savePaper = function() {
+		if($scope.subjectList.length > 0) {
+			var param = {
+					id: $scope.paperInfo.id,
+					testId: $scope.paperInfo.testId,
+					subject: $scope.paperInfo.subject,
+					testName: $scope.paperInfo.testName, //试卷名称
+					describe: $scope.paperInfo.describe, //试卷描述			
+				}
+				//console.log(JSON.stringify(param))
+			$scope.result = JSON.parse(execute_testPaper("update_paper", JSON.stringify(param)));
 			if($scope.result.ret == 'success') {
-				$scope.subjectList = $scope.result.item;
+				toastr.success($scope.result.message);
+				history.go(-1);
 			} else {
 				toastr.error($scope.result.message);
+				console.log(JSON.stringify($scope.result.detail))
 			}
+		} else {
+			toastr.warning('该试卷没有题目，请先添加题目');
 		}
-
-		//全选
-		$scope.selectAll = function(data) {
-			if($scope.selected) {
-				$scope.onechecked = [];
-				angular.forEach($scope.subjectList, function(i) {
-					i.checked = true;
-					var item = i;
-					$scope.checkedId.push(i.id.toString());
-					$scope.onechecked.push(item);
-
-				})
-			} else {
-				angular.forEach($scope.subjectList, function(i) {
-					i.checked = false;
-					$scope.onechecked = [];
-					$scope.checkedId = [];
-				})
-			}
-
-		};
-		//单选
-		$scope.selectOne = function(param) {
-			$scope.onechecked = [];
-			$scope.checkedId = [];
-			angular.forEach($scope.subjectList, function(i) {
-				var index = $scope.checkedId.indexOf(i.id);
-				if(i.checked && index === -1) {
-					var item = i;
-					$scope.onechecked.push(item);
-					$scope.checkedId.push(i.id.toString());
-
-				} else if(!i.checked && index !== -1) {
-					$scope.selected = false;
-					$scope.onechecked.splice(index, 1);
-					$scope.checkedId.splice(index, 1);
-				};
-			})
-
-			if($scope.subjectList.length === $scope.onechecked.length) {
-				$scope.selected = true;
-			} else {
-				$scope.selected = false;
-			}
-		}
-		var _init = function() {
-			_selectQuestion();
-		}();
-		//添加题目
-		$scope.addSubject = function() {
-				var modalInstance = $modal.open({
-					templateUrl: 'addSubjectModal.html',
-					controller: 'addSubjectModalCtrl',
-					size: 'md',
-					backdrop: false,
-					resolve: {
-						infos: function() {
-							return $scope.paperInfo.testId;
-						}
-					}
-				});
-				modalInstance.result.then(function(info) {
-					_selectQuestion();
-
-				}, function() {
-					//$log.info('Modal dismissed at: ' + new Date());
-				});
-			}
-			//编辑题目
-		$scope.editSuject = function(item) {
-				console.log(JSON.stringify(item))
-				var modalInstance = $modal.open({
-					templateUrl: 'addSubjectModal.html',
-					controller: 'editSubjectModalCtrl',
-					size: 'md',
-					backdrop: false,
-					resolve: {
-						infos: function() {
-							return item;
-						}
-					}
-				});
-				modalInstance.result.then(function(info) {
-					_selectQuestion();
-				}, function() {
-					//$log.info('Modal dismissed at: ' + new Date());
-				});
-			}
-			//删除题目 
-		$scope.delSuject = function(item) {
-				if($scope.checkedId.length > 0) {
-					var content = "删除题目";
-					var modalInstance = $modal.open({
-						templateUrl: 'sureModal.html',
-						controller: 'sureModalCtrl',
-						size: 'sm',
-						backdrop: false,
-						resolve: {
-							content: function() {
-								return content;
-							}
-						}
-					});
-					modalInstance.result.then(function(info) {
-						var param = $scope.checkedId;
-						$scope.result = JSON.parse(execute_testPaper("delete_question", JSON.stringify(param)));
-						if($scope.result.ret == 'success') {
-							toastr.success($scope.result.message);
-							_selectQuestion();
-							$scope.onechecked = [];
-							$scope.checkedId = [];
-							$scope.selected = false;
-						} else {
-							toastr.error($scope.result.message);
-						}
-					}, function() {
-						//$log.info('Modal dismissed at: ' + new Date());
-					});
-				} else {
-					toastr.warning("请先勾选至少一个题目");
-				}
-			}
-			//修改试卷
-		$scope.savePaper = function() {
-			if($scope.subjectList.length > 0) {
-				var param = {
-						id: $scope.paperInfo.id,
-						testId: $scope.paperInfo.testId,
-						subject: $scope.paperInfo.subject,
-						testName: $scope.paperInfo.testName, //试卷名称
-						describe: $scope.paperInfo.describe, //试卷描述			
-					}
-					//console.log(JSON.stringify(param))
-				$scope.result = JSON.parse(execute_testPaper("update_paper", JSON.stringify(param)));
-				if($scope.result.ret == 'success') {
-					toastr.success($scope.result.message);
-					history.go(-1);
-				} else {
-					toastr.error($scope.result.message);
-					console.log(JSON.stringify($scope.result.detail))
-				}
-			} else {
-				toastr.warning('该试卷没有题目，请先添加题目');
-			}
-		}
-	})
-	//新增题目控制器
+	}
+});
+//新增题目控制器
 app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scope, $modal, toastr, infos) {
-		$scope.title = "新增题目";		
-		$scope.letterList=[{key:"0",value:"单选"},{key:"1",value:"多选"}];		
-		$scope.rangeList=[{key:"A-D",value:"A-D"},{key:"A-F",value:"A-F"}];
+		$scope.title = "新增题目";
 		$scope.testInfo = {
-			questionType: '2', //(0单选，1多选，2判断，3数字)
-			selType: $scope.letterList[0].key,
+			questionType: '2', //(0单选，1多选，2判断，3数字,-1字母)
+			selLetter: '0',//(0：单选，1：多选)
 			/*range:'A-D',*/
 			trueAnswer: 'T'
 		}
-		
 		if(infos) {
 			$scope.testId = angular.copy(infos);
 		}
 		$scope.testInfo.questionType1 = angular.copy($scope.testInfo.questionType);
-		$scope.testInfo.selType1=angular.copy($scope.testInfo.selType);
-		$scope.testInfo.range=$scope.rangeList[0].key;
-		$scope.testInfo.range1=angular.copy($scope.testInfo.range);
+		$scope.testInfo.selLetter1=angular.copy($scope.testInfo.selLetter);
+		$scope.testInfo.range = 'A-D';
+		$scope.testInfo.range1 = angular.copy($scope.testInfo.range);
 		//切换答案类型
 		$scope.changequesType = function(quesType) {
 			$scope.testInfo.questionType = quesType;
-			if($scope.testInfo.questionType == '-1') {
+			if($scope.testInfo.questionType == '-1'){
 				$scope.testInfo.trueAnswer = '';
-				$scope.testInfo.selType = $scope.letterList[0].key;
-				$scope.testInfo.range = $scope.rangeList[0].key;
-				$scope.testInfo.selType1 = angular.copy($scope.testInfo.selType);
+				$scope.testInfo.selLetter='0';
+				$scope.testInfo.selLetter1=angular.copy($scope.testInfo.selLetter);
+				$scope.testInfo.range = 'A-D';
 				$scope.testInfo.range1 = angular.copy($scope.testInfo.range);
-			} else if($scope.testInfo.questionType == '2') {
+			}else if($scope.testInfo.questionType == '2') {
 				$scope.testInfo.trueAnswer = 'T';
 			} else if($scope.testInfo.questionType == '3') {
 				$scope.testInfo.trueAnswer = '';
 			}
 		}
-		
+
 		//查询该试卷的题目
 		var _selectQuestion = function() {
 			var param = {
 				testId: $scope.testId,
-				questionId:$scope.testInfo.questionId
+				questionId: $scope.testInfo.questionId
 			}
 			console.log(JSON.stringify(param));
 			$scope.result = JSON.parse(execute_testPaper("select_question", JSON.stringify(param)));
 			console.log(JSON.stringify($scope.result));
 			if($scope.result.ret == 'success') {
-				if($scope.result.item.length>0){
-					toastr.warning("该题号已存在，请重新输入");
-					setTimeout(function(){
-						$scope.testInfo.questionId='';
-					},800)
+				if($scope.result.item.length > 0) {
+					$scope.myForm.questionId.$error.required=true;
+					$scope.myForm.questionId.$invalid=true;
+					$scope.myForm.$invalid=true;
+					toastr.warning("该题号已存在，请重新输入",{preventOpenDuplicates:true});
 				}
 			} else {
 				toastr.error($scope.result.message);
@@ -494,87 +489,20 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 		}
 
 		//校验题号
-		$scope.blurtitle=function(){
-			if($scope.testInfo.questionId){
+		$scope.changetitle = function() {
+			if($scope.testInfo.questionId) {
 				_selectQuestion();
 			}
 		}
-		var _test=function(){
-			if($scope.testInfo.trueAnswer){
-				if($scope.testInfo.questionType == '-1') {				
-				if($scope.testInfo.range == 'A-D'){
-					var regu1 = /^[A-D]$/;
-					var re = new RegExp(regu1);
-					if(re.test($scope.testInfo.trueAnswer)) {
-					} else {
-						toastr.warning("请输入A-D单选字母");
-						setTimeout(function() {
-							$scope.testInfo.trueAnswer = ''
-						}, 800)
-						return false;
-					}
-				}else{
-					var regu3 = /^[A-F]$/;
-					var re = new RegExp(regu3);
-					if(re.test($scope.testInfo.trueAnswer)) {} else {
-						toastr.warning("请输入A-F单选字母");
-						setTimeout(function() {
-							$scope.testInfo.trueAnswer = ''
-						}, 800)
-						return false;
-					}
-				}
-			}else{
-				if($scope.testInfo.range == 'A-D'){
-					var regu2 = /^[A-D]+$/;
-					var re = new RegExp(regu2);
-					if(re.test($scope.testInfo.trueAnswer)) {} else {
-						toastr.warning("请输入A-D多选字母");
-						setTimeout(function() {
-							$scope.testInfo.trueAnswer = ''
-						}, 800)
-						return false;
-					}
-				}else{
-					var regu4 = /^[A-F]+$/;
-					var re = new RegExp(regu4);
-					if(re.test($scope.testInfo.trueAnswer)) {} else {
-						toastr.warning("请输入A-F多选字母");
-						setTimeout(function() {
-							$scope.testInfo.trueAnswer = ''
-						}, 800)
-						return false;
-					}
-				}
-			}
-			}
-		}
-		$scope.changeselType = function(selType) {
-			$scope.testInfo.selType = selType;
-			//alert(JSON.stringify(selType))
-			_test();
 
-		}
-		//检验对错
-		$scope.changeJudge = function(trueAnswer) {
-			$scope.testInfo.trueAnswer = trueAnswer;
-			_test();
-			
-		}
-		$scope.changeRange=function(range){
-			$scope.testInfo.range=range;
-			_test();
+		$scope.changeselType = function(selLetter) {
+			$scope.testInfo.selLetter = selLetter;
 		}
 		$scope.ok = function() {
 			if($scope.testInfo.questionType == '-1') {
-				if($scope.testInfo.selType=='0'){
+				if($scope.testInfo.selLetter == '0') {
 					$scope.testInfo.questionType = '0';
-				}else{
-					$scope.testInfo.questionType = '1';
-				}
-				if($scope.testInfo.selType=='单选'){
-					$scope.testInfo.questionType = '0';
-				}else if($scope.testInfo.selType=='多选'){
+				} else {
 					$scope.testInfo.questionType = '1';
 				}
 			}
@@ -602,114 +530,74 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 	})
 	//编辑题目控制器
 app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $scope, $modal, toastr, infos) {
-		$scope.title = "编辑题目";		
-		$scope.letterList=[{"key":"0",value:"单选"},{"key":"1",value:"多选"}];		
-		$scope.rangeList=[{"key":"A-D",value:"A-D"},{"key":"A-F",value:"A-F"}];
+		$scope.title = "编辑题目";
 		if(infos) {
 			$scope.testInfo = angular.copy(infos);
 			if(typeof $scope.testInfo.questionId == 'string') {
 				$scope.testInfo.questionId = parseInt($scope.testInfo.questionId);
 			}
 			if($scope.testInfo.questionType == '0' || $scope.testInfo.questionType == '1') {
-				$scope.testInfo.selType = $scope.testInfo.questionType;
-				$scope.testInfo.selType1 = angular.copy($scope.testInfo.selType);
+				$scope.testInfo.selLetter = $scope.testInfo.questionType;
+				$scope.testInfo.selLetter1 = angular.copy($scope.testInfo.selLetter);
 				$scope.testInfo.questionType = '-1';
 			}
 			$scope.testInfo.questionType1 = angular.copy($scope.testInfo.questionType);
 			$scope.testInfo.range1 = angular.copy($scope.testInfo.range);
 		}
-		
+
+				//切换答案类型
+		$scope.changequesType = function(quesType) {
+			$scope.testInfo.questionType = quesType;
+			if($scope.testInfo.questionType == '-1'){
+				$scope.testInfo.trueAnswer = '';
+				$scope.testInfo.selLetter='0';
+				$scope.testInfo.selLetter1=angular.copy($scope.testInfo.selLetter);
+				$scope.testInfo.range = 'A-D';
+				$scope.testInfo.range1 = angular.copy($scope.testInfo.range);
+			}else if($scope.testInfo.questionType == '2') {
+				$scope.testInfo.trueAnswer = 'T';
+			} else if($scope.testInfo.questionType == '3') {
+				$scope.testInfo.trueAnswer = '';
+			}
+		}
+
 		//查询该试卷的题目
 		var _selectQuestion = function() {
-			var param = {
-				testId: $scope.testInfo.testId,
-				questionId:$scope.testInfo.questionId
-			}
-			console.log(JSON.stringify(param));
-			$scope.result = JSON.parse(execute_testPaper("select_question", JSON.stringify(param)));
-			console.log(JSON.stringify($scope.result));
-			if($scope.result.ret == 'success') {
-				if($scope.result.item.length>0){
-					toastr.warning("该题号已存在，请重新输入");
-					setTimeout(function(){
-						$scope.testInfo.questionId='';
-					},800)
+			if($scope.myForm.questionId.$dirty==true){
+				var param = {
+					testId: $scope.testInfo.testId,
+					questionId: $scope.testInfo.questionId
 				}
-			} else {
-				toastr.error($scope.result.message);
+				/*console.log("参数:"+JSON.stringify(param));
+				console.log("原参数:"+JSON.stringify(infos.questionId));*/
+				$scope.result = JSON.parse(execute_testPaper("select_question", JSON.stringify(param)));
+				console.log(JSON.stringify($scope.result));
+				if($scope.result.ret == 'success') {
+					if($scope.result.item.length > 0) {
+						if($scope.result.item[0].questionId!=infos.questionId){
+							$scope.myForm.questionId.$error.required=true;
+							$scope.myForm.questionId.$invalid=true;
+							$scope.myForm.$invalid=true;
+							toastr.warning("该题号已存在，请重新输入",{preventOpenDuplicates:true});
+						}
+						
+					}
+				} else {
+					toastr.error($scope.result.message);
+				}
 			}
+			
 		}
 
 		//校验题号
-		$scope.blurtitle=function(){
-			if($scope.testInfo.questionId){
+		$scope.changetitle = function() {
+			if($scope.testInfo.questionId) {
 				_selectQuestion();
 			}
 		}
-		var _test=function(){
-			if($scope.testInfo.trueAnswer){
-				if($scope.testInfo.questionType == '-1') {				
-				if($scope.testInfo.range == 'A-D'){
-					var regu1 = /^[A-D]$/;
-					var re = new RegExp(regu1);
-					if(re.test($scope.testInfo.trueAnswer)) {
-					} else {
-						toastr.warning("请输入A-D单选字母");
-						setTimeout(function() {
-							$scope.testInfo.trueAnswer = ''
-						}, 800)
-						return false;
-					}
-				}else{
-					var regu3 = /^[A-F]$/;
-					var re = new RegExp(regu3);
-					if(re.test($scope.testInfo.trueAnswer)) {} else {
-						toastr.warning("请输入A-F单选字母");
-						setTimeout(function() {
-							$scope.testInfo.trueAnswer = ''
-						}, 800)
-						return false;
-					}
-				}
-			}else{
-				if($scope.testInfo.range == 'A-D'){
-					var regu2 = /^[A-D]+$/;
-					var re = new RegExp(regu2);
-					if(re.test($scope.testInfo.trueAnswer)) {} else {
-						toastr.warning("请输入A-D多选字母");
-						setTimeout(function() {
-							$scope.testInfo.trueAnswer = ''
-						}, 800)
-						return false;
-					}
-				}else{
-					var regu4 = /^[A-F]+$/;
-					var re = new RegExp(regu4);
-					if(re.test($scope.testInfo.trueAnswer)) {} else {
-						toastr.warning("请输入A-F多选字母");
-						setTimeout(function() {
-							$scope.testInfo.trueAnswer = ''
-						}, 800)
-						return false;
-					}
-				}
-			}
-			}
-		}
-		$scope.changeselType = function(selType) {
-			$scope.testInfo.selType = selType;
-			_test();
 
-		}
-		//检验对错
-		$scope.changeJudge = function(trueAnswer) {
-			$scope.testInfo.trueAnswer = trueAnswer;
-			_test();
-			
-		}
-		$scope.changeRange=function(range){
-			$scope.testInfo.range=range;
-			_test();
+		$scope.changeselType = function(selLetter) {
+			$scope.testInfo.selLetter = selLetter;
 		}
 		$scope.ok = function() {
 
@@ -717,9 +605,9 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 				$scope.testInfo.questionIds = parseInt($scope.testInfo.questionId);
 			}
 			if($scope.testInfo.questionType == '-1') {
-				if($scope.testInfo.selType=='0'){
+				if($scope.testInfo.selLetter == '0') {
 					$scope.testInfo.questionType = '0';
-				}else{
+				} else {
 					$scope.testInfo.questionType = '1';
 				}
 			}
@@ -732,7 +620,7 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 				trueAnswer: $scope.testInfo.trueAnswer,
 				range: $scope.testInfo.range
 			}
-			console.log("参数" + JSON.stringify(param))
+			//console.log("参数" + JSON.stringify(param))
 			$scope.result = JSON.parse(execute_testPaper("update_question", JSON.stringify(param)));
 			if($scope.result.ret == 'success') {
 				toastr.success($scope.result.message);
@@ -757,14 +645,13 @@ app.controller('sureModalCtrl', function($scope, $modalInstance, toastr, content
 	})
 	//导入试卷控制器
 app.controller('uploadfileModalCtrl', function($rootScope, $scope, $modalInstance, toastr, $modal) {
-	
 		$('#myModal').modal('hide');
 		//隐藏loading
-		var _hideModal=function(){
-			$('#myModal').modal('hide');
-		}
-		//显示loading
-		var _showModal=function(){
+		var _hideModal = function() {
+				$('#myModal').modal('hide');
+			}
+			//显示loading
+		var _showModal = function() {
 			$('#myModal').modal('show');
 		}
 		$scope.fileType = '0'; //0:本地导入;1:服务获取
@@ -852,14 +739,14 @@ app.controller('uploadfileModalCtrl', function($rootScope, $scope, $modalInstanc
 					toastr.warning("请选择文件");
 				}
 			} else {
-				$scope.result = JSON.parse(execute_testPaper("select_paper_server", $scope.selclass, $scope.selsubject));	
+				$scope.result = JSON.parse(execute_testPaper("select_paper_server", $scope.selclass, $scope.selsubject));
 				var selitem = {
 					classId: $scope.selclass,
 					subject: $scope.selsubject
 				}
 				$modalInstance.close(selitem);
 				_showModal();
-				
+
 				/*if($scope.result.ret == 'success') {
 					console.log(JSON.stringify($scope.result))
 					$modalInstance.close('success');
@@ -905,8 +792,7 @@ app.controller('uploadfileModalCtrl', function($rootScope, $scope, $modalInstanc
 		$scope.cancel = function() {
 			$modalInstance.dismiss('cancel');
 		}
-		
-		
+
 	})
 	//选择服务文件
 app.controller('serverFileModalCtrl', function($scope, $modalInstance, toastr, infos, subjectInfo) {
@@ -961,8 +847,7 @@ app.controller('serverFileModalCtrl', function($scope, $modalInstance, toastr, i
 	$scope.cancel = function() {
 		$modalInstance.dismiss('cancel');
 	}
-	
-	
+
 })
 
 app.directive('select', function() {
@@ -1054,23 +939,22 @@ app.directive('select1', function() {
 						}
 						$(element).html(str);
 					}
-
-					$(element).multiselect({
-						multiple: false,
-						selectedHtmlValue: '请选择',
-						defalutvalue: scope.defalutvalue,
-						change: function() {
-							$(element).val($(this).val());
-							scope.$apply();
-							if(ngModelCtr) {
-								ngModelCtr.$setViewValue($(element).val());
-								if(!scope.$root.$$phase) {
-									scope.$apply();
-								}
+				}				
+				$(element).multiselect({
+					multiple: false,
+					selectedHtmlValue: '请选择',
+					defalutvalue: scope.defalutvalue,
+					change: function() {
+						$(element).val($(this).val());
+						scope.$apply();
+						if(ngModelCtr) {
+							ngModelCtr.$setViewValue($(element).val());
+							if(!scope.$root.$$phase) {
+								scope.$apply();
 							}
 						}
-					});
-				}
+					}
+				});
 			})
 
 		}
@@ -1101,10 +985,10 @@ app.filter('questionType', function() {
 					break;
 				}
 			case '4':
-			{
-				statename = '主观题';
-				break;
-			}
+				{
+					statename = '主观题';
+					break;
+				}
 		}
 		return statename;
 	}
@@ -1115,12 +999,12 @@ app.filter('AnswerType', function() {
 		switch(AnswerType) {
 			case 'T':
 				{
-					statename = '对';
+					statename = '√';
 					break;
 				}
 			case 'F':
 				{
-					statename = '错';
+					statename = '×';
 					break;
 				}
 			default:
