@@ -111,6 +111,7 @@ public class QuestionServiceImpl implements QuestionService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("删除题目失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -148,6 +149,7 @@ public class QuestionServiceImpl implements QuestionService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("修改题目失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
