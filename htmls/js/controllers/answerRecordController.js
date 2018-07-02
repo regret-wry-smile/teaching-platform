@@ -26,6 +26,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 	var _showModal=function(){
 		$('#myModal').modal('show');
 	}
+	
 		/*查询班级列表*/
 	var _selectClass = function() {
 		$scope.result = JSON.parse(execute_student("select_class"));
@@ -37,9 +38,8 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 						key: i.classId,
 						value: i.className
 					}
-				
 					$scope.classList.push(item);
-					//console.log("班级"+JSON.stringify($scope.classList))
+					console.log("班级"+JSON.stringify($scope.classList))
 					$scope.setClass.classes = $scope.classList[0].key;
 					$scope.classesobject = $scope.classList[0];
 					$scope.setClass.classes1 = angular.copy($scope.setClass.classes);
@@ -54,15 +54,14 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 	var _selectClassHour = function() {
 		$scope.result = JSON.parse(execute_record("select_class_hour", $scope.setClass.classes, $scope.setClass.subject));
 		//console.log(JSON.stringify($scope.result))
-		if($scope.result.ret == 'success') {
-			$scope.classhourList=[];
+		$scope.classhourList=[];
+		if($scope.result.ret == 'success') {			
 			if($scope.result.item.length > 0) {
 				angular.forEach($scope.result.item, function(i) {
 					var item = {
 						key: i.class_hour_id,
 						value: i.class_hour_name
-					}
-					
+					}					
 					$scope.classhourList.push(item);
 					if($scope.classhourList.length > 0) {
 						$scope.setClass.sujectHour = $scope.classhourList[0].key;
@@ -72,6 +71,9 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 					}
 
 				})
+			}else{
+				$scope.classhourList=[];
+				$scope.paperList=[];
 			}
 		} else {
 			toastr.error($scope.result.message);
