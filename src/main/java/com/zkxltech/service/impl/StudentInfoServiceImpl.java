@@ -413,6 +413,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
+
+		Global.isAnswerStart = false;
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;

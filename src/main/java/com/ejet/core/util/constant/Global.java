@@ -24,7 +24,13 @@ public class Global {
 	public static ClassHour classHour;
 	/**
 	 * 当前设备绑定的所有答题器编号<进入设置页面后同步设备和数据库绑定状态时保存到该处,以便后期修改学生的答题器编号时进行查询更新>
-	 */    
+	 */ 
+	
+	/**
+	 * 是否开始作答中
+	 */
+	public  static boolean isAnswerStart = false;
+	
 	private static List<String> iclickerIds;
 	
 	public static List<String> getIclickerIds() {
