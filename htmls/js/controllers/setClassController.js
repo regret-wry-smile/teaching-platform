@@ -233,7 +233,8 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 		console.log("人员列表"+JSON.stringify($scope.result));
 		if($scope.result.ret=='success'){
 			$rootScope.isSign=true;
-			toastr.success($scope.result.message);
+//			toastr.success($scope.result.message);
+			$rootScope.studentAttendList=JSON.parse(execute_attendance("get_sign_in"));
 			/*$scope.param = "classId=" + $scope.setClass.classesobject.key + "&className=" + $scope.setClass.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
 			$scope.objectUrl = '../../page/answermoudle/userAttend.html' + '?' + $scope.param;
 			$window.location.href =$scope.objectUrl;*/
@@ -341,14 +342,14 @@ app.config(['$locationProvider', function($locationProvider) {
 	}
 })*/
 app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
-	$scope.studentAttendList=[];//签到学生数组
+	$rootScope.studentAttendList=[];//签到学生数组
 	var _getsignStudent=function(){
-		$scope.studentAttendList=JSON.parse(execute_attendance("get_sign_in"));
+		$rootScope.studentAttendList=JSON.parse(execute_attendance("get_sign_in"));
 		//console.log("哈哈哈"+JSON.stringify($scope.studentAttendList))
 	}
-	var _init=function(){
-		_getsignStudent();
-	}();
+//	var _init=function(){
+//		_getsignStudent();
+//	}();
 	
 	 $scope.returnPage=function(){
 	 	$scope.result=JSON.parse(execute_attendance("sign_in_stop"));  
