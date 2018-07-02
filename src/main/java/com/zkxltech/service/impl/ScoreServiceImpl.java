@@ -90,6 +90,7 @@ public class ScoreServiceImpl implements ScoreService{
     @Override
     public Result stopScore() {
         Result r = new Result();
+        Global.setModeMsg(Constant.BUSINESS_NORMAL);
         if (thread != null && thread instanceof ScoreThread) {
             ScoreThread c =  (ScoreThread)thread;
             c.setFLAG(false);
@@ -101,7 +102,6 @@ public class ScoreServiceImpl implements ScoreService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
-    	Global.setModeMsg(Constant.BUSINESS_NORMAL);
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;

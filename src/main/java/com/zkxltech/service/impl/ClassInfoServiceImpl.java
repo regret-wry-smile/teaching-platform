@@ -230,6 +230,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
     @Override
     public Result bindStop() {
         Result r = new Result();
+        Global.setModeMsg(Constant.BUSINESS_NORMAL);
         if (thread != null && thread instanceof CardInfoThread) {
             CardInfoThread c =  (CardInfoThread)thread;
             c.setFLAG(false);
@@ -249,7 +250,6 @@ public class ClassInfoServiceImpl implements ClassInfoService{
            
         }
         log.info("\"停止绑定\"成功");
-    	Global.setModeMsg(Constant.BUSINESS_NORMAL);
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;

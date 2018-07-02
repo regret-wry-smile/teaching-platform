@@ -314,6 +314,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
     @Override
     public Result stopSingleAnswer() {
         Result r = new Result();
+        Global.setModeMsg(Constant.BUSINESS_NORMAL);
         if (thread != null && thread instanceof SingleAnswerThread ) {
             SingleAnswerThread a = (SingleAnswerThread)thread;
             a.setFLAG(false);
@@ -328,7 +329,6 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
 
-		Global.setModeMsg(Constant.BUSINESS_NORMAL);
         return r;
     }
     
@@ -351,6 +351,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
     @Override
     public Result stopMultipleAnswer() {
         Result r = new Result();
+        Global.setModeMsg(Constant.BUSINESS_NORMAL);
         if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
         	 TestMachineThread.stopThread();
 		}else {
@@ -369,7 +370,6 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
        
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
-    	Global.setModeMsg(Constant.BUSINESS_NORMAL);
         return r;
     }
 

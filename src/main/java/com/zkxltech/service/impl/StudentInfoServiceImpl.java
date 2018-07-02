@@ -363,6 +363,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     @Override
     public Result signInStop() {
         Result r = new Result();
+        Global.setModeMsg(Constant.BUSINESS_NORMAL);
         if (thread != null && thread instanceof AttendanceThread ) {
             AttendanceThread a = (AttendanceThread)thread;
             a.setFLAG(false);
@@ -374,7 +375,6 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
-    	Global.setModeMsg(Constant.BUSINESS_NORMAL);
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
@@ -412,6 +412,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     @Override
     public Result stopQuickAnswer() {
         Result r = new Result();
+        Global.setModeMsg(Constant.BUSINESS_NORMAL);
         if (thread != null && thread instanceof QuickThread) {
             QuickThread m = (QuickThread)thread;
             m.setFLAG(false);
@@ -424,7 +425,6 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             return r;
         }
 
-		Global.setModeMsg(Constant.BUSINESS_NORMAL);
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
