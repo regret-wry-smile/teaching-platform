@@ -666,17 +666,17 @@ table.answer{
 	border-radius: 0.05rem;
 }
 label.circle{
-	width: 3.13rem;
-	height: 3.13rem;
-	line-height: 3.13rem;
-	vertical-align: middle;
+	display: block;
+	width: 3.0rem;
+	height: 3.0rem;
+	line-height: 3.0rem;
 	border: 0.05rem solid #fff;
 	border-radius: 100%;
 	text-align: center;
 }
  label.circle span{
 	font-size: 1.33rem;
-	color: #fff;
+	color: #fff;	
 }
 .modboxs .box{
 	float: left;
