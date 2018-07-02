@@ -1,5 +1,6 @@
 package com.zkxltech.service.impl;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.junit.Test;
@@ -267,6 +269,7 @@ public class RecordServiceImpl implements RecordService{
                     wb.write(out);// 将数据写出去  
                     out.flush();// 将数据写出去
                     BrowserManager.showMessage(true,"导出成功");
+                    openFile();
                 }catch (Exception e) {
                     log.error("", e);
                     r.setMessage("导出失败");
@@ -364,17 +367,25 @@ public class RecordServiceImpl implements RecordService{
                 //按正确和错误进行分类
                 Map<Object, List<Record>> resultMap = ListUtils.getClassificationMap(list, "result");
                 float b = 0;
-                if (resultMap != null && resultMap.size() < 1) {
+                if (resultMap != null && resultMap.size() > 0) {
                     List<Record> corrects = resultMap.get(Constant.RESULT_TRUE);//得到所有正确的答案总数
                     b = (float)corrects.size() / questInfos.size();
                 }
                 Record resultRocord = new Record();
                 resultRocord.setStudentId((String)key);
                 resultRocord.setStudentName(list.get(0).getStudentName());
-                resultRocord.setResult(StringUtils.formattedDecimalToPercentage(b));
+                resultRocord.setPercentage(b);
                 resultRocord.setTestName(testPaper.getTestName());
                 resultRocord.setTime(classHour.getStartTime());
                 result.add(resultRocord);
+            }
+            if (!ListUtils.isEmpty(result)) {
+                result = result.stream().sorted(Comparator.comparing(Record::getPercentage).reversed())
+                        .collect(Collectors.toList());
+            }
+            for (Record record2 : result) {
+                //格式化成百分比
+                record2.setResult(StringUtils.formattedDecimalToPercentage(record2.getPercentage()));
             }
             r.setItem(result);
             r.setRet(Constant.SUCCESS);
@@ -467,6 +478,10 @@ public class RecordServiceImpl implements RecordService{
         r.setRet(Constant.SUCCESS);
         r.setMessage("删除成功");
         return r;
+    }
+    public void openFile() throws IOException{
+        String flieUrl = System.getProperty("user.dir").replaceAll("\\\\", "/") + "/"+"excels/";
+        Desktop.getDesktop().open(new File(flieUrl));
     }
     
 }

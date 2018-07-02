@@ -69,6 +69,10 @@ public class Record {
 	 */
 	private String result;
 	/**
+	 * 每个学生正确答案所占到试卷总百分比(未格式化)
+	 */
+	private Float percentage;
+	/**
 	 * 主观题是否已上传
 	 * 0：未上传,1：
 	 */
@@ -185,10 +189,14 @@ public class Record {
     public void setStudentIds(List<String> studentIds) {
         this.studentIds = studentIds;
     }
-    
-
 	
-	public String getIsSubjectiveUpload() {
+	public Float getPercentage() {
+        return percentage;
+    }
+    public void setPercentage(Float percentage) {
+        this.percentage = percentage;
+    }
+    public String getIsSubjectiveUpload() {
 		return isSubjectiveUpload;
 	}
 	public void setIsSubjectiveUpload(String isSubjectiveUpload) {
