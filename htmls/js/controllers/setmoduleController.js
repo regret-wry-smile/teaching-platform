@@ -228,7 +228,6 @@ app.directive('select1', function() {
 					defalutvalue: scope.defalutvalue,
 					change: function() {
 						$(element).val($(this).val());
-						alert(333)
 						scope.$apply();
 						if(ngModelCtr) {
 							ngModelCtr.$setViewValue($(element).val());
