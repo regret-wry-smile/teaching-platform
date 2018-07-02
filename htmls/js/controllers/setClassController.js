@@ -393,7 +393,7 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
 				toastr.success($scope.result.message);
 			}else{
 				$scope.isStopAswer=true;
-				toastr.error()
+				toastr.error($scope.result.message);
 			}
 	};
 	
