@@ -10,7 +10,7 @@ app.controller('setmoduleCtrl', function($scope, toastr) {
 	//同步数据库
 	var _equipmentsynchron=function(){
 		$scope.result=JSON.parse(execute_set("equipment_database_synchronization"));
-		if($scope.result=='success'){
+		if($scope.result.ret=='success'){
 			
 		}else{
 			toastr.error($scope.result.message);
