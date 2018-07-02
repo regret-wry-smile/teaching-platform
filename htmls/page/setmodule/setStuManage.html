@@ -88,11 +88,11 @@
 				</div>
 				<div class="modal-body">
 					<div class="form-group" ng-show="isfileType==true">
-						<label for="firstname" class="col-sm-3 control-label">选择类型</label>
+						<label for="firstname" class="col-sm-3 control-label">数据来源</label>
 						<div class="col-sm-8">
 							<select class="single" select ng-model="fileType" name="fileType" defalutvalue='fileType1' ng-change="changefileType(fileType)" required>
-								<option value="0">本地导入</option>
-								<option value="1">服务导入</option>
+								<option value="0">从本地导入</option>
+								<option value="1">服务器导入</option>
 							</select>
 						</div>
 						<span ng-show="myForm.fileType.$invalid" class="warning">*</span>
