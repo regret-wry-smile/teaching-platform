@@ -60,22 +60,22 @@ public class RecordServiceImpl implements RecordService{
 			return result;
 		}
 	}
-	@Test
-	public void aa(){
-	    try {
-	        JSONObject jo = new JSONObject();
-	        jo.put("classId", "BJ1001");
-	        jo.put("subject", "语文");
-	        jo.put("classHourId", "7b44b6206d934057ac437f978c1e9c2b");
-	        jo.put("testId", "4Y0001");
-	        System.out.println(jo.toString());
-            testExport(jo);
-            
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-	}
+//	@Test
+//	public void aa(){
+//	    try {
+//	        JSONObject jo = new JSONObject();
+//	        jo.put("classId", "BJ1001");
+//	        jo.put("subject", "语文");
+//	        jo.put("classHourId", "7b44b6206d934057ac437f978c1e9c2b");
+//	        jo.put("testId", "4Y0001");
+//	        System.out.println(jo.toString());
+//            testExport(jo);
+//            
+//        } catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//	}
 	@Override
 	public Result testExport(Object object) {
 	    Result r = new Result();
@@ -384,6 +384,7 @@ public class RecordServiceImpl implements RecordService{
         } catch (Exception e) {
             r.setMessage("查询数据库失败");
             r.setDetail(IOUtils.getError(e));
+            log.error(IOUtils.getError(e));
         }
         return r;
     }
@@ -407,6 +408,7 @@ public class RecordServiceImpl implements RecordService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("查询记录失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
     }
@@ -438,6 +440,7 @@ public class RecordServiceImpl implements RecordService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("查询记录失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
     }
@@ -460,6 +463,7 @@ public class RecordServiceImpl implements RecordService{
         } catch (Exception e) {
             r.setMessage("删除失败");
             r.setDetail(IOUtils.getError(e));
+            log.error(IOUtils.getError(e));
         }
         r.setRet(Constant.SUCCESS);
         r.setMessage("删除成功");
