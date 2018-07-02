@@ -4,9 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
 
-import com.zkxltech.domain.AnswerInfo;
 import com.zkxltech.domain.Record;
 import com.zkxltech.domain.Result;
 import com.zkxltech.jdbc.DBHelper;
