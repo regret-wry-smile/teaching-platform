@@ -8,8 +8,12 @@ li{
 }
 .newSelect{
 	display: inline-block;
-	line-height: 36px;
-	
+	/*line-height: 36px;	*/
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+    line-height:0.36rem;
+	height: 0.36rem;
 	vertical-align: middle;
 }
 
@@ -145,3 +149,11 @@ li{
 	color: #FAFAFA;
 }
 
+.newSelect .newSelectTitle span{
+    text-overflow: ellipsis;
+}
+.newOptions li{
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}

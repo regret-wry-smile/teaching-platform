@@ -37,10 +37,16 @@
 	<style>
 		.newSelect{
 			width: 1.5rem !important;
+			overflow: hidden;
+			text-overflow:ellipsis;
+			white-space: nowrap;
+		    line-height:0.36rem;
+   			height: 0.36rem;
 		}
 		.newOptions{
 			width: 1.5rem !important;
 		}
+
 	</style>
 	<body class="bg" ng-controller="answerRecordCtrl">
 		<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -75,7 +81,7 @@
 				</div>
 			</div>
 			<div class="content content1 bgf5 clearfix" style="top: 1.2rem;">		
-				<div class="searchbar">
+				<div class="searchbar clearfix">
 				    <label >班级</label>			    	
 			    	<select class="single" select2 ng-model="setClass.classes" defalutvalue='setClass.classes1' ng-change="changeClass(setClass.classes)" list='classList'>
 						<!--<option ng-repeat="item in classList track by $index" value="{{item}}">{{item.value}}</option>-->
@@ -97,13 +103,13 @@
 					<a href="javascript:;" class="del ml20 mr10" ng-click="deleteRcord()">删除</a>
 					<a href="javascript:;" class="edit" ng-click="exportRecord()">导出</a>
 				</div>
-				<div class="col-main" style="position: absolute;top: 0.55rem;left: 0;right: 0;bottom: .25rem;overflow-x: hidden;overflow-y: auto; width:100%;padding:0 0.25rem;">	
+				<div class="col-main" style="position: absolute;top: 0.6rem;left: 0;right: 0;bottom: .25rem;overflow-x: hidden;overflow-y: auto; width:100%;padding:0 0.25rem;">	
 					<table class="table table-stripe subject">
 						<thead>
 							<tr >
 								<th style="width: 10%;">序号</th>
 								<th style="width: 10%;">姓名</th>
-								<th style="width: 10%;">试卷名称</th>
+								<th style="width: 15%;">试卷名称</th>
 								<th style="width: 10%;">正确率</th>
 								<th style="width: 10%;">时间</th>
 								<th style="width: 10%;" class="pr1">全选
@@ -128,7 +134,7 @@
 							<tr ng-repeat="item in recordList track by $index" ng-click="$event.stopPropagation();">
 								<td style="width: 10%;">{{$index+1}}</td>
 								<td style="width: 10%;">{{item.studentName}}</td>
-								<td style="width: 10%;">{{item.testName}}</td>
+								<td style="width: 15%;">{{item.testName}}</td>
 								<td style="width: 10%;">{{item.result}}</td>
 								<td style="width: 10%;">{{item.time}}</td>	
 								<td style="width: 10%;" class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
