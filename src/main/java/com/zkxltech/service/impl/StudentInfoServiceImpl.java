@@ -82,7 +82,6 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 		result = new Result();
 		try {
 			String fileName = String.valueOf(object);
-			studentInfoSql.deleteStudent(new StudentInfo());
 			List<List<Object>> list = ImportExcelUtils.getBankListByExcel(new FileInputStream(new File(fileName)), fileName);
 			result = studentInfoSql.importStudent(list);
 			if (Constant.SUCCESS.equals(result.getRet())) {
