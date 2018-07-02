@@ -77,8 +77,11 @@
 					  <!--	<div class="col-sm-2">
 					  		<input type="text" autocomplete="off" name="object"  id="" value=""  class="form-control " ng-model="object" maxlength="5" ng-blur="blurname()"/>						    	
 					  	</div>-->
-					  	<div class="col-sm-2" ng-repeat="object in voteInfo.programs track by $index">
+					  <!--	<div class="col-sm-2" ng-repeat="object in voteInfo.programs track by $index">
 					  		<input type="text" autocomplete="off" name="object"  id="" value=""  class="form-control " ng-model="object" maxlength="5" />						    	
+					  	</div>-->
+					  	<div class="col-sm-2" ng-repeat="item in obejctList track by $index">
+					  		<input type="text" autocomplete="off" name="object"  id="" value=""  class="form-control " ng-model="item.txt" maxlength="5" />						    	
 					  	</div>
 						</div>
 						<p class="text-center mb10">

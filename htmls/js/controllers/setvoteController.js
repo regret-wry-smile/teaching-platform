@@ -7,33 +7,60 @@ app.controller('voteCtrl', function($rootScope,$scope,$modal,toastr) {
 		programs:[''],
 	}
 	$scope.object="";
+	//$scope.obejctList=[""];
+	$scope.obejctList=[{txt:''}]
+
 	//添加小对象
-	$scope.additem=function(){				
-		if($scope.voteInfo.programs.length<5){
-			//var item=angular.copy($scope.object)
-		var item='';
-			$scope.voteInfo.programs.push(item);
+	$scope.additem=function(){
+		if($scope.obejctList.length<5){
+		var item={
+			txt:''
+		}
+		$scope.obejctList.push(item);
 		}
 	}
-	$scope.delObject=function($index){
-		$scope.voteInfo.programs.splice($index,1);
-
+	$scope.delObject=function(){
+		if($scope.obejctList.length>1){
+			$scope.obejctList.splice($scope.obejctList.length-1,1);
+		}
 	}
 	//开始投票到投票统计页面
 	$scope.startVote=function(){
-		if($scope.voteInfo.programs.length>0){
+	var arr=[];
+	var nary=[];
+	arr=angular.copy($scope.obejctList);
+	nary=arr.sort();
+	$scope.voteInfo.programs=[];
+	var flag = false;
+	for(var i=0;i<nary.length;i++){	
+		if(flag){
+			$scope.voteInfo.programs = [];
+			break;
+		}
+		for(var j=0;j<nary.length;j++){
+			if(i != j){
+				if (nary[i].txt==nary[j].txt){	
+					flag = true;
+					toastr.warning(JSON.stringify(nary[j].txt)+"对象重复了")
+					break;
+				}
+			}
+		}
+		if(!flag){
+			$scope.voteInfo.programs.push(nary[i].txt);
+			var param=$scope.voteInfo;
+		}
+	}
+		console.log("参数"+JSON.stringify(param));
+//		$scope.voteInfo.programs.push(arr[i].txt);
 		var param=$scope.voteInfo;
-		console.log("参数"+JSON.stringify(param))
+//			console.log("参数"+JSON.stringify(param))
 		$scope.result=JSON.parse(execute_vote("start_vote",JSON.stringify(param)));
 		if($scope.result.ret=='success'){		
 			window.location.href="../../page/answermoudle/voteCount.html";
 		}else{
 			toastr.error($scope.result.message);
-		}	
-		}else{
-			toastr.warning("评分对象不能为空");
 		}
-		
 	}
 	//返回设置页面
 	$scope.returnPage=function(){
@@ -59,6 +86,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.titleList=[];//标题数组
 	$scope.colors = ['#ffffff','#c4d4ef','#14c629','#f4c96d','#86daf6'];
 	$scope.data=[];
+	var flag=true;//判断是返回还是停止
 	
 	var _getvote=function(){
 		/*$scope.voteInfoslist=[];
@@ -66,6 +94,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		$scope.titleList=[];*/
 		$scope.result=JSON.parse(execute_vote("get_vote"));
 		console.log("哈哈哈哈哈哈哈"+JSON.stringify($scope.result))
+		$scope.voteInfoslist=[];
 		if($scope.result.ret=='success'){		
 			$scope.voteInfoslist=$scope.result.item;
 			//$scope.voteInfoslist=[{"agree":0,"disagree":0,"num":"1","program":"111","waiver":0},{"agree":0,"disagree":0,"num":"2","program":"222","waiver":0},{"agree":0,"disagree":0,"num":"3","program":"333","waiver":0},{"agree":0,"disagree":0,"num":"4","program":"444","waiver":0},{"agree":0,"disagree":0,"num":"5","program":"555","waiver":0}];
@@ -184,7 +213,6 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 			}
 			//myChart.clear();
 			if(option && typeof option === "object") {
-				alert(77777)
 				myChart.setOption(option, true);
 			}
 		}else{
@@ -203,23 +231,47 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	
 	//$scope.voteInfoslist=[{"agree":4,"disagree":0,"num":"1","program":"张三","waiver":0},{"agree":2,"disagree":1,"num":"2","program":"李四","waiver":1},{"agree":0,"disagree":0,"num":"3","program":"王五","waiver":0}]
 	
-	//返回设置页面
-	$scope.returnPage=function(){
-		 window.location.href="../../page/answermoudle/answerCenter.html"; 
-	}
+	
 	//刷新投票统计
 	$scope.refresVote=function(){
 		_getvote();
 	}
+	
+	var _stopVoteCount=function(){
+		$scope.result=JSON.parse(execute_vote("stop_vote"));
+		//console.log(JSON.stringify($scope.result))
+		if($scope.result.ret=='success'){	
+			if(flag==true){
+				toastr.success($scope.result.message);
+				$scope.isStop=true;
+			}else{
+				//toastr.success($scope.result.message);
+				$scope.objectUrl="../../page/answermoudle/answerCenter.html";
+				window.location.href=$scope.objectUrl; 
+			}
+			
+			
+		}else{
+			toastr.error($scope.result.message);
+		}
+	}
+	
 	//停止投票
 	$scope.stopVoteCount=function(){
-		$scope.result=JSON.parse(execute_vote("stop_vote"));
+		/*$scope.result=JSON.parse(execute_vote("stop_vote"));
 		//console.log(JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){	
 			toastr.success($scope.result.message);
 			$scope.isStop=true;
 		}else{
 			toastr.error($scope.result.message);
-		}
+		}*/
+		_stopVoteCount();
+	}
+	//返回设置页面
+	$scope.returnPage=function(){
+		flag=false;
+		_stopVoteCount();
+		 //window.location.href="../../page/answermoudle/answerCenter.html"; 
 	}
 })

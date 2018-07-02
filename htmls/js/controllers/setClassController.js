@@ -130,7 +130,7 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
        }
        console.log(JSON.stringify(param))
       	$scope.result=JSON.parse(execute_record("start_class",JSON.stringify(param))); 
-      	//console.log(JSON.stringify($scope.result))
+        	console.log(JSON.stringify($scope.result))
 	    if($scope.result.ret=='success'){
 	      	$scope.objectUrl = '../../page/answermoudle/answerCenter.html';
 	      	$window.location.href = $scope.objectUrl;	
@@ -247,15 +247,30 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 			classId:$scope.classesobject.key
 		}
 		$scope.result=JSON.parse(execute_preemptive("quick_answer",JSON.stringify(param)));
-		console.log(JSON.stringify($scope.result))
+		console.log("抢答"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){
 			toastr.success($scope.result.message);
 			$scope.objectUrl = '../../page/answermoudle/stopAnswer.html';
 			$window.location.href =$scope.objectUrl;
 		}else{			
-			toastr.error($scope.result.message);	
+			toastr.error($scope.result.message);			
 		}
 	}
+/*	//评分
+	$scope.skipMark=function(){
+		var param={
+			classId:$scope.classesobject.key
+		}
+		$scope.result=JSON.parse(execute_preemptive("quick_answer",JSON.stringify(param)));
+		console.log("抢答"+JSON.stringify($scope.result))
+		if($scope.result.ret=='success'){
+			toastr.success($scope.result.message);
+			$scope.objectUrl = '../../page/answermoudle/stopAnswer.html';
+			$window.location.href =$scope.objectUrl;
+		}else{			
+			toastr.error($scope.result.message);			
+		}
+	}*/
 	//下课
 	$scope.stopClass=function(){
 		$scope.result=JSON.parse(execute_record("end_class"));

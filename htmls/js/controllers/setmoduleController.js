@@ -1,6 +1,25 @@
 //定义模块时引入依赖  
 var app = angular.module('app', ['ui.bootstrap', 'toastr']);
-app.controller('setmoduleCtrl', function($scope, toastr) {
+app.controller('LoginCtrl', function($scope, toastr) {
+	$scope.login={
+		name:"",
+		password:""
+	}	
+	$scope.Login=function(){
+		var param={
+			loginId:$scope.login.name,
+			password:$scope.login.password
+		}
+		$scope.result=JSON.parse(execute_set("login",JSON.stringify(param)));
+		console.log(JSON.stringify($scope.result))
+		if($scope.result.ret=='success'){
+			window.location.href="../../page/setmodule/setmodule.html"
+		}else{
+			toastr.error($scope.result.message);
+		}
+	}
+})
+app.controller('setmoduleCtrl', function($scope, toastr) {		
 	$scope.infoAllNameList = ["第一组","第二组","第三组","第四组","第五组","第六组","第七组","第八组","第九组","第十组"]; //信道设置数组
 	$scope.attendstatus = '1';
 	$scope.sendpower = '3';

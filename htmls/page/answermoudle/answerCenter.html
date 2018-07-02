@@ -65,14 +65,15 @@
 		  			</a>
 		  		</li>
 		  		<li>
-		  			<a href="../../page/answermoudle/stopAnswer.html" ng-click="quickAnswer()">
-	  				<!-- <a href="javascript:;" ng-href={{objectUrl}] ng-click="quickAnswer()"> -->
+		  			<!--<a href="../../page/answermoudle/stopAnswer.html" ng-click="quickAnswer()">-->
+	  				 <a href="javascript:;" ng-href={{objectUrl}} ng-click="quickAnswer()"> 
 		  				<img src="../../image/quickanswer.png" />
 		  				<span>抢答</span>
 		  			</a>
 		  		</li>
 		  		<li>
 		  			<a href="../../page/answermoudle/setMarkmoudle.html">
+	  				<!--<a href="javascript:;" ng-href={{MarkobjectUrl}} ng-click="skipMark()">-->
 		  				<img src="../../image/mark.png" />
 		  				<span>评分</span>
 		  			</a>
@@ -99,7 +100,7 @@
 					</a>
 				</div>
 			</div>
-			<div class="content clearfix" style="margin: 0;padding: 0;position: relative;">
+			<div class="content content1 clearfix" style="margin: 0;padding: 0;">
 				<div class="modboxs clearfix " style="margin: 0.0rem 0.05rem;padding: 0;position: absolute;left: 0.18rem;">
 					<div class="box" ng-repeat="item in studentAttendList track by $index" ng-class="{'YES':'green','NO':'' }[item.status]">
 						{{item.studentName}}

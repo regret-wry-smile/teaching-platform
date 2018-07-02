@@ -6,36 +6,61 @@ app.controller('quickMarkCtrl', function($rootScope,$scope,$modal,toastr) {
 		describe:"",//主题描述
 		programs:[],
 	}
-	
-	
 	$scope.object="";
+	$scope.obejctList=[{txt:''}]
 	//添加小对象
-	$scope.additem=function(){				
-		if($scope.markInfo.programs.length<4){
-			var item=angular.copy($scope.object)
-			$scope.markInfo.programs.push(item);
+	$scope.additem=function(){
+		if($scope.obejctList.length<5){
+		var item={
+			txt:''
+		}
+		$scope.obejctList.push(item);
 		}
 	}
-	$scope.delObject=function($index){
-		$scope.markInfo.programs.splice($index,1);
-
+	$scope.delObject=function(){
+		if($scope.obejctList.length>1){
+			$scope.obejctList.splice($scope.obejctList.length-1,1);
+		}
 	}
 	//开始评分到评分统计页面
 	$scope.startMark=function(){
-		if($scope.markInfo.programs.length>0){
+	var arr=[];
+	var nary=[];
+	arr=angular.copy($scope.obejctList);
+	nary=arr.sort();
+	$scope.markInfo.programs=[];
+	var flag = false;
+	for(var i=0;i<nary.length;i++){	
+		if(flag){
+			$scope.markInfo.programs = [];
+			break;
+		}
+		for(var j=0;j<nary.length;j++){
+			if(i != j){
+				if (nary[i].txt==nary[j].txt){	
+					flag = true;
+					toastr.warning(JSON.stringify(nary[j].txt)+"对象重复了")
+					break;
+				}
+			}
+		}
+		if(!flag){
+			$scope.markInfo.programs.push(nary[i].txt);
+			var param=$scope.markInfo;
+		}
+	}
+		//console.log("参数"+JSON.stringify(param));
+//		$scope.voteInfo.programs.push(arr[i].txt);
 		var param=$scope.markInfo;
-		console.log("参数"+JSON.stringify(param))
+//			console.log("参数"+JSON.stringify(param))
 		$scope.result=JSON.parse(execute_score("start_score",JSON.stringify(param)));
 		if($scope.result.ret=='success'){		
 			window.location.href="../../page/answermoudle/markCount.html";
 		}else{
 			toastr.error($scope.result.message);
-		}	
-		}else{
-			toastr.warning("投票对象不能为空");
 		}
-		
 	}
+
 	//返回设置页面
 	$scope.returnPage=function(){
 		 window.location.href="../../page/answermoudle/answerCenter.html"; //跳转到评分统计页面
@@ -53,6 +78,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.datalist=[];
 	$scope.isStop=false;
 	var average=0;
+	var flag=true;//判断是返回还是停止
 	var dom = document.getElementById("coutbar");
 	var myChart = echarts.init(dom);
 	var _getScoreTitleInfo=function(){
@@ -212,19 +238,35 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.refresScore=function(){
 		_getscore();
 	}
-	//停止评分
-	$scope.stopMarkCount=function(){
+	
+
+	var _stopMarkCout=function(){
 		$scope.result=JSON.parse(execute_score("stop_score"));
 		//console.log(JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){	
-			toastr.success($scope.result.message);
-			$scope.isStop=true;
+			if(flag==true){
+				toastr.success($scope.result.message);
+				$scope.isStop=true;
+			}else{
+				//toastr.success($scope.result.message);
+				$scope.objectUrl="../../page/answermoudle/answerCenter.html";
+				window.location.href=$scope.objectUrl; 
+			}
+			
+			
 		}else{
 			toastr.error($scope.result.message);
 		}
 	}
+	
+	//停止评分
+	$scope.stopMarkCount=function(){
+		_stopMarkCout();
+	}
 	//返回设置页面
 	$scope.returnPage=function(){
-		 window.location.href="../../page/answermoudle/answerCenter.html"; 
+		flag=false;
+		_stopMarkCout();
+		
 	}
 })

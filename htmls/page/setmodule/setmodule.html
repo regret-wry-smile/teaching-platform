@@ -41,14 +41,27 @@
 			position: absolute;
 			bottom: 0.25rem;
 		}*/
+		body{
+			position: relative;
+		}
+		.operatebtn1{
+			position: absolute;
+			bottom: 0.35rem;
+			left: 0;
+			right: 0;
+		}
 		.content1 .form-group label.control-label{
 			text-align: left !important;
 		}
-		@media screen and (min-width: 921px) {
-			
-		}
+		
 	</style>
 	<body class="bg clearfix" ng-controller="setmoduleCtrl">
+		<!--<div  ng-if="islogin">
+			
+	  </div>
+		-->
+		
+		<!--<div ng-if="!islogin">-->
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/set.png" class="ml25" />
@@ -116,6 +129,8 @@
 			  	</div>
 				  
 			</div>
+		<!--</div>-->
+		
 	</body>
 
 </html>

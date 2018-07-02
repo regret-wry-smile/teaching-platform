@@ -26,7 +26,7 @@ app.controller('answerCtrl', function($scope, toastr, $window) {
 			if($scope.result.ret == 'success') {
 				$scope.param = "answerType=" + $scope.selType;
 				console.log(JSON.stringify($scope.param))
-				$scope.objectUrl = '../../page/answermoudle/stopsingeAnswer.html' + '?' + $scope.param;
+				$scope.objectUrl = '../../page/answermoudle/stopsingeAnswer.html' + '?' + $scope.param;				
 				$window.location.href = $scope.objectUrl;
 			} else {
 				toastr.error($scope.result.message);
