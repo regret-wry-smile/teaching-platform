@@ -1007,12 +1007,12 @@ app.filter('AnswerType', function() {
 		switch(AnswerType) {
 			case 'T':
 				{
-					statename = '对';
+					statename = '√';
 					break;
 				}
 			case 'F':
 				{
-					statename = '错';
+					statename = '×';
 					break;
 				}
 			default:

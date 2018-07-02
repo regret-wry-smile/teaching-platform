@@ -98,10 +98,6 @@
 								<option value="A-D">A-D</option>
 								<option value="A-F">A-F</option>
 							</select>
-							<!--<select class="single" select2 ng-model="testInfo.selType"  defalutvalue='testInfo.selType1' ng-if="testInfo.questionType=='-1'" ng-change="changeselType(testInfo.selType)" list="letterList">
-				    		</select>
-				    	<select class="single" select2 ng-model="testInfo.range"  defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'" list="rangeList" ng-change="changeRange(testInfo.range)">
-				    	</select>-->
 						</div>
 					</div>
 					<!--<div class="form-group">
@@ -196,8 +192,7 @@
 									<td style="width: 10%;">{{item.questionId}}</td>
 									<td style="width: 15%;">{{item.question}}</td>
 									<td style="width: 10%;">{{item.questionType|questionType}}</td>
-									<td style="width: 10%;" ng-if="item.questionType=='2'">{{item.trueAnswer=='T'?'√':'×'}}</td>
-									<td style="width: 10%;" ng-if="item.questionType!='2'">{{item.trueAnswer}}</td>
+									<td style="width: 10%;">{{quesitem.trueAnswer|AnswerType}}</td>		
 								</tr>
 							</tbody>
 						</table>
