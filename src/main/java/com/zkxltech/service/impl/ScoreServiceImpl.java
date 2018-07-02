@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapScore;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Score;
@@ -39,7 +40,7 @@ public class ScoreServiceImpl implements ScoreService{
                return result;
             }
 				
-			
+		    Global.isAnswerStart = true;
 			//将评分主题相关信息保存到缓存
 			result.setMessage("开始评分！");
 			result.setRet(Constant.SUCCESS);
@@ -101,6 +102,7 @@ public class ScoreServiceImpl implements ScoreService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
+        Global.isAnswerStart = false;
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapVote;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Vote;
@@ -40,6 +41,7 @@ public class VoteServiceImpl implements VoteService{
 				
 			
 			//将评分主题相关信息保存到缓存
+		    Global.isAnswerStart = true;
 			result.setMessage("开始投票！");
 			result.setRet(Constant.SUCCESS);
 			return result;
@@ -83,6 +85,7 @@ public class VoteServiceImpl implements VoteService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
+        Global.isAnswerStart = false;
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
