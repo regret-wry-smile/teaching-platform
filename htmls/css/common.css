@@ -870,6 +870,14 @@ img.rebtn:active{
 		width: 0.8rem;
 		padding: 0.04rem 0.08rem;
 	}
+	.progresscon p span{
+		font-size: 0.14rem;
+		width: 0.6rem;
+		overflow: hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
+		color: #90a4cc;
+	}
 	.modbox.checkclass{
 		max-height: 3.5rem;
 		overflow-y: auto;
