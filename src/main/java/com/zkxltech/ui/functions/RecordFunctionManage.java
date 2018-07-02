@@ -90,6 +90,10 @@ public class RecordFunctionManage extends BrowserFunction{
 			    /*查询每个学生的试卷答题记录情况所占比*/
 			    result = recordService.selectRecord(params[1]);
 			    break;
+			case "select_student_record_detail":
+			    /*查询每个学生的试卷答题详情*/
+			    result = recordService.selectStudentRecordDetail(params[1]);
+			    break;
 			case "delete_record":
 			    /*批量删除学生的试卷作答记录*/
 			    result = recordService.deleteRecord(params[1]);

@@ -46,4 +46,10 @@ public interface RecordService {
      * @return
      */
     Result testExport(Object object);
+    /**
+     * 查询学生对应的试卷答题详情
+     * @param object
+     * @return
+     */
+    Result selectStudentRecordDetail(Object object);
 }
