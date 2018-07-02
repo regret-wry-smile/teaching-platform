@@ -271,4 +271,21 @@ public class BrowserManager {
 			});
 		}
 	}
+	
+	/**
+     * 刷新查询作答记录
+     * @param echoRequest
+     */
+    public static void refreSelectRecord(String result) {
+        Browser b  = browerManager.get();
+        if (b!=null) {
+            shell.getDisplay().syncExec(new Runnable() {
+                @Override
+                public void run() {
+                    boolean  doRet = b.execute("var isOnline = \""+result+"\";document.getElementById('refreSelectRecord').click();");
+                    log.info("刷新设备状态："+doRet);
+                }
+            });
+        }
+    }
 }
