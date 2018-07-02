@@ -30,7 +30,7 @@ public class Global {
 	 */
 	public static boolean isEquipmentStatus = false;
 	
-	public static String modeMsg = "";
+	public static String modeMsg = Constant.BUSINESS_NORMAL;
 	
 	private static List<String> iclickerIds;
 	

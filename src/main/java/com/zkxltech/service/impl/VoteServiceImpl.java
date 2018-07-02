@@ -74,6 +74,7 @@ public class VoteServiceImpl implements VoteService{
 	@Override
 	public Result stopVote() {
         Result r = new Result();
+        Global.setModeMsg(Constant.BUSINESS_NORMAL);
         if (thread != null && thread instanceof VoteThread) {
             VoteThread c =  (VoteThread)thread;
             c.setFLAG(false);
@@ -85,7 +86,6 @@ public class VoteServiceImpl implements VoteService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
-    	Global.setModeMsg(Constant.BUSINESS_NORMAL);
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
