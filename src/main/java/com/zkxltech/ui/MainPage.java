@@ -179,6 +179,8 @@ public class MainPage extends Dialog {
 				String message = "";
 				switch (Global.getModeMsg()) {
 				case Constant.BUSINESS_NORMAL:
+					shell.dispose();
+					mainStart.floatingWindow();
 					return;
 				case Constant.BUSINESS_ANSWER:
 					message = "请先停止答题";
@@ -196,7 +198,7 @@ public class MainPage extends Dialog {
 					message = "请先停止抢答";
 					break;
 				case Constant.BUSINESS_CLASSTEST:
-					message = "请先停止答题";
+					message = "请先收取试卷";
 					break;
 				case Constant.BUSINESS_BIND:
 					message = "请先停止绑定";
