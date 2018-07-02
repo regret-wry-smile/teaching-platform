@@ -386,7 +386,9 @@ public class ServerServiceImpl implements ServerService{
 						Daxl2.append(answer + "|");
 						answerType = "A";
 						if ("1".equals(record.getResult())) {
-							Kgf = Kgf.add(new BigDecimal(record.getScore()));
+						    if (!StringUtils.isEmpty(record.getScore())) {
+						        Kgf = Kgf.add(new BigDecimal(record.getScore()));
+                            }
 						}
 						// 答案转换
 						if (Constant.DUOXUANTI_NUM.equals(record.getQuestionType())) { // 多选
