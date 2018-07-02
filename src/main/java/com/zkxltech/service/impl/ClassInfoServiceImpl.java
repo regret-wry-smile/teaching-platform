@@ -56,6 +56,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("新增班级失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -76,6 +77,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("查询班级失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -105,6 +107,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("删除班级失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -125,6 +128,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("修改班级失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -158,6 +162,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
             }
         } catch (Exception e) {
             r.setDetail(IOUtils.getError(e));
+            log.error(IOUtils.getError(e));
         }
         r.setMessage("清除失败");
         return r;
@@ -216,6 +221,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
         } catch (Exception e) {
             r.setMessage("操作失败");
             r.setDetail(e.getMessage());
+            log.error(IOUtils.getError(e));
         } 
         return r;
     }

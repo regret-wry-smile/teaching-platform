@@ -70,6 +70,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("导入学生失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}finally {
 			icallback.onResult(StringUtils.StringToInt(result.getRet()), result.getMessage(),  result.getRemak());
@@ -94,6 +95,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("导入学生失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -116,6 +118,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 					}
 				} catch (Exception e) {
 					BrowserManager.showMessage(false,"从服务器中获取学生信息失败！");
+					log.error(IOUtils.getError(e));
 				}finally {
 					BrowserManager.removeLoading();
 				}
@@ -139,6 +142,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("查询学生信息失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -190,6 +194,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("新增学生信息失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -213,6 +218,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("删除学生信息失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -251,6 +257,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("修改学生信息失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -306,6 +313,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("解绑失败！");
 			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
 			return result;
 		}
 	}
