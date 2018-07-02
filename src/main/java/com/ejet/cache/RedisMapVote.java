@@ -132,7 +132,7 @@ public class RedisMapVote {
         			keyVoteDetailInfoMap[1] = num;
         			keyVoteDetailInfoMap[2] = carId;
         			Answer answer = (Answer) JSONObject.toBean((JSONObject) RedisMapUtil.getRedisMap(voteDetailInfoMap, keyVoteDetailInfoMap, 0), Answer.class);
-        			if (answer != null && StringUtils.isEmpty(answer.getAnswer())) {
+        			if (answer != null && !StringUtils.isEmpty(answer.getAnswer())) {
         				continue;
 					}
         			RedisMapUtil.setRedisMap(voteDetailInfoMap, keyVoteDetailInfoMap, 0, answeJSONObject);

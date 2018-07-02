@@ -230,6 +230,7 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 			classId:$scope.classesobject.key
 		}
 		$scope.result=JSON.parse(execute_attendance("sign_in_start",JSON.stringify(param)));
+		console.log("人员列表"+JSON.stringify($scope.result));
 		if($scope.result.ret=='success'){
 			$rootScope.isSign=true;
 			toastr.success($scope.result.message);

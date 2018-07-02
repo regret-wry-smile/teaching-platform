@@ -89,12 +89,11 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	var flag=true;//判断是返回还是停止
 	
 	var _getvote=function(){
-		/*$scope.voteInfoslist=[];
-		$scope.data=[];
-		$scope.titleList=[];*/
-		$scope.result=JSON.parse(execute_vote("get_vote"));
-		console.log("哈哈哈哈哈哈哈"+JSON.stringify($scope.result))
 		$scope.voteInfoslist=[];
+		$scope.data=[];
+		$scope.titleList=[];
+		$scope.result=JSON.parse(execute_vote("get_vote"));
+		//console.log("哈哈哈哈哈哈哈"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){		
 			$scope.voteInfoslist=$scope.result.item;
 			//$scope.voteInfoslist=[{"agree":0,"disagree":0,"num":"1","program":"111","waiver":0},{"agree":0,"disagree":0,"num":"2","program":"222","waiver":0},{"agree":0,"disagree":0,"num":"3","program":"333","waiver":0},{"agree":0,"disagree":0,"num":"4","program":"444","waiver":0},{"agree":0,"disagree":0,"num":"5","program":"555","waiver":0}];

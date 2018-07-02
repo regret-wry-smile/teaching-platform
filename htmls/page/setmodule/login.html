@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html ng-app="app">
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>		
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="viewport" content="user-scalable=no,width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<link rel="stylesheet" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>	
+		<script src="../../js/jquery-1.11.1.min.js"></script>
+		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
+		<script src="../../js/angular-toastr/angular-toastr.min.js"></script>
+		<script src="../../js/angular-toastr/angular-toastr.tpls.min.js"></script>	
+		<script type="text/javascript" src="../../js/angular-cookies/angular-cookies.js" ></script>
+		<link rel="stylesheet" href="../../js/select/style.css" />
+		<link href="../../js/select/font-awesome.min.css" />
+		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
+		<script src="../../js/common.js"></script>
+		<script src="../../js/vconsole.min.js"></script>
+		<script src="../../js/jquery.nicescroll.min.js"></script>
+		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
+		<!--<script type="text/javascript" src="../../js/app.js" ></script>-->
+		<!--<script src="../../js/controllers/loginControler.js"></script>-->
+		<script src="../../js/controllers/setmoduleController.js"></script>
+	</head>
+	<style type="text/css">
+		body{
+			position: relative;
+		}
+		.operatebtn{
+			position: absolute;
+			bottom: 0.50rem;
+			left: 0;
+			right: 0;
+		}
+		.newSelect{
+			width:3.9rem !important;
+		}
+		.newOptions{
+			width:3.9rem !important;
+		}
+	</style>
+	<body class="bg clearfix">
+		<div ng-controller="LoginCtrl">
+		<div class="header clearfix">
+				<div class="pull-left">
+					<img src="../../image/set.png" class="ml25" />
+					<span>登录</span>
+				</div>
+				<!--<div class="pull-right">
+					<img src="../../image/return.png" />
+				</div>-->
+			</div>
+			<div class="content content1 clearfix" style="margin: 0;">
+				<div class="modboxs bgfff" style="position:absolute;left:0;top: 50%;margin: -1.1rem 0.40rem -1.1rem;right: 0;">
+					<form class="form-horizontal clearfix" name="myForm" novalidate>
+		  			<div class="form-group">
+				  	<label for="firstname" class="col-sm-2 control-label">登录名</label>
+				  	<div class="col-sm-9">
+			    	<input type="text" autocomplete="off" name="name" id="" value=""  class="form-control" ng-model="login.name" required maxlength="20"/>										
+				    </div>
+				    <span ng-show="myForm.name.$invalid" class="warning">*</span>
+					</div>
+					<div class="form-group mt30">
+				  	<label for="firstname" class="col-sm-2 control-label">密码</label>
+				    <div class="col-sm-9">
+				    	<input type="text" autocomplete="off" name="password" id="" value=""  class="form-control" ng-model="login.password" required maxlength="20"/>										
+					</div>
+					<span ng-show="myForm.password.$invalid" class="warning">*</span>
+					</div>
+				</div>  			
+				<div class="operatebtn operatebtn1 mt20 text-center clearfix">
+			  		<button class="btn savebtn mr5" ng-click="Login()" ng-disabled="!myForm.$valid">登录</button>
+			  	</div>
+		  </form>
+		  </div>
+		  </div>
+	</body>
+
+</html>
