@@ -1,5 +1,6 @@
 package com.ejet.cache;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -157,11 +158,13 @@ public class RedisMapScore {
 				keyBarMap[0] = questionId; //题号
 				int total = 0;//总分
 				int peopleSum = 0; //人数
+				String average  = "0.0"; //平均分
 				ScoreVO scoreVO = new ScoreVO();
 				scoreVO.setNum(questionId);
 				scoreVO.setProgram(programs.get(i));
 				scoreVO.setTotal(total);
 				scoreVO.setPeopleSum(peopleSum);
+				scoreVO.setAverage(average);
 //				RedisMapUtil.setRedisMap(barMap, keyBarMap, 0, scoreVO);
 				scoreVos.add(scoreVO);
 			}
@@ -175,6 +178,7 @@ public class RedisMapScore {
 						keyBarMap[0] = questionId; //题号
 						int total = 0;//总分
 						int peopleSum = 0; //人数
+						String average  = "0.0"; //平均分
 						for (String iclickerId : map2.keySet()) {
 							Answer answer = (Answer) JSONObject.toBean((JSONObject) map2.get(iclickerId), Answer.class);
 							if(!"".equals(answer.getAnswer())){
@@ -187,18 +191,25 @@ public class RedisMapScore {
 						scoreVO.setProgram(programs.get(i));
 						scoreVO.setTotal(total);
 						scoreVO.setPeopleSum(peopleSum);
+						if (peopleSum != 0) {
+							average =String.valueOf(new BigDecimal(total).divide(new BigDecimal(peopleSum),1,BigDecimal.ROUND_HALF_UP).doubleValue());
+						}
+						
+						scoreVO.setAverage(average);
 //						RedisMapUtil.setRedisMap(barMap, keyBarMap, 0, scoreVO);
 						scoreVos.add(scoreVO);
 					}else {
 						keyBarMap[0] = questionId; //题号
 						int total = 0;//总分
 						int peopleSum = 0; //人数
+						String average  = "0.0"; //平均分
 						ScoreVO scoreVO = new ScoreVO();
 						scoreVO.setNum(questionId);
 						scoreVO.setProgram(programs.get(i));
 						scoreVO.setTotal(total);
 						scoreVO.setPeopleSum(peopleSum);
 //						RedisMapUtil.setRedisMap(barMap, keyBarMap, 0, scoreVO);
+						scoreVO.setAverage(average);
 						scoreVos.add(scoreVO);
 					}
 				}
