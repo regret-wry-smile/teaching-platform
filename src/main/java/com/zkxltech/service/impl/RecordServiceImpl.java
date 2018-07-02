@@ -40,6 +40,7 @@ import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.sql.TestPaperSql;
 import com.zkxltech.ui.util.ExportExcel;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class RecordServiceImpl implements RecordService{
@@ -381,7 +382,9 @@ public class RecordServiceImpl implements RecordService{
                         float b = 0;
                         if (resultMap != null && resultMap.size() > 0) {
                             List<Record> corrects = resultMap.get(Constant.RESULT_TRUE);//得到所有正确的答案总数
-                            b = (float)corrects.size() / questInfos.size();
+                            if (!com.zkxltech.ui.util.StringUtils.isEmptyList(corrects)) {
+                            	  b = (float)corrects.size() / questInfos.size();
+							}
                         }
                         Record resultRocord = new Record();
                         resultRocord.setStudentId((String)key);
@@ -398,14 +401,16 @@ public class RecordServiceImpl implements RecordService{
                     for (Record record2 : result) {//格式化成百分比
                         record2.setResult(StringUtils.formattedDecimalToPercentage(record2.getPercentage()));
                     }
+                    r.setItem(result);
                     r.setRet(Constant.SUCCESS);
                     BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
                 } catch (Exception e) {
                     r.setMessage("查询数据库失败");
                     r.setDetail(IOUtils.getError(e));
-                    BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
                     log.error(IOUtils.getError(e));
-                }
+                }finally {
+					BrowserManager.removeLoading();
+				}
             }
         }).start();
         return result2;

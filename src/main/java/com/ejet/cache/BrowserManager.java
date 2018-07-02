@@ -282,8 +282,8 @@ public class BrowserManager {
             shell.getDisplay().syncExec(new Runnable() {
                 @Override
                 public void run() {
-                    boolean  doRet = b.execute("var isOnline = \""+result+"\";document.getElementById('refreSelectRecord').click();");
-                    log.info("刷新设备状态："+doRet);
+                    boolean  doRet = b.execute("var result = '"+result+"';document.getElementById('refreSelectRecord').click();");
+                    log.info("刷新查询作答记录："+doRet);
                 }
             });
         }
