@@ -132,19 +132,21 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 		if($scope.setClass.sujectHour && $scope.setClass.paper) {
 			var param = {
 				classId: $scope.setClass.classes,
-				subjectName: $scope.setClass.subject,
+				subject: $scope.setClass.subject,
 				testId: $scope.setClass.paper,
 				classHourId: $scope.setClass.sujectHour
 			}
+
+			_showModal();
 			//console.log("记录" + JSON.stringify(param))
 			$scope.result = JSON.parse(execute_record("select_record", JSON.stringify(param)));
 			//console.log("记录" + JSON.stringify($scope.result))
-			if($scope.result.ret == 'success') {
+			/*if($scope.result.ret == 'success') {
 				$scope.recordList=[];
 				$scope.recordList = $scope.result.item;
 			} else {
 				toastr.error($scope.result.message);
-			}
+			}*/
 		}
 	}
 	//_selectRecord();
@@ -348,6 +350,15 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 		}
 		else {
 			toastr.error(message);
+		}
+	}
+	$scope.refreSelectRecord = function(){
+		var retDate = JSON.parse(result);
+		if(result.ret == 'error'){
+			toastr.error("查询失败！");
+		}else{
+			$scope.recordList=[];
+			$scope.recordList = retDate.item;
 		}
 	}
 })
