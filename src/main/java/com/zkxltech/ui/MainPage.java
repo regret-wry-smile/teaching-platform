@@ -22,12 +22,15 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.BrowserManager;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.service.impl.ClassHourServiceImpl;
+import com.zkxltech.service.impl.StudentInfoServiceImpl;
 import com.zkxltech.ui.functions.AnswerFunctionManage;
 import com.zkxltech.ui.functions.AttendanceFunctionManage;
 import com.zkxltech.ui.functions.PreemptiveFunctionManage;
@@ -41,7 +44,7 @@ import com.zkxltech.ui.util.PageConstant;
 import com.zkxltech.ui.util.SwtTools;
 
 public class MainPage extends Dialog {
-
+	private static final Logger log = LoggerFactory.getLogger(MainPage.class);
 	protected Object result;
 	protected Display display;
 	protected Shell shell;
@@ -175,6 +178,7 @@ public class MainPage extends Dialog {
 		closeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
+				log.info("当前模式"+Global.getModeMsg());
 				MessageBox messageBox = new MessageBox(shell,SWT.NONE);
 				String message = "";
 				switch (Global.getModeMsg()) {
