@@ -72,4 +72,43 @@ public class Constant {
     public static final String IS_LOAD_YES = "1";
     /*未上传*/
     public static final String IS_LOAD_NO = "0";
+    /**
+     * 业务——正常模式
+     */
+    public static final String BUSINESS_NORMAL = "0";
+    /**
+     * 业务——答题模式
+     */
+    public static final String BUSINESS_ANSWER = "1";
+    
+    /**
+     * 业务——评分模式
+     */
+    public static final String BUSINESS_SCORE = "2";
+    
+    /**
+     * 业务——投票模式
+     */
+    public static final String BUSINESS_VOTE = "3";
+    
+    /**
+     * 业务——考勤模式
+     */
+    public static final String BUSINESS_ATTENDEN = "4";
+    
+    /**
+     * 业务——抢答模式
+     */
+    public static final String BUSINESS_PREEMPTIVE = "5";
+    
+    /**
+     * 业务——随堂检测模式
+     */
+    public static final String BUSINESS_CLASSTEST = "6";
+    
+    
+    /**
+     * 业务——绑定模式
+     */
+    public static final String BUSINESS_BIND = "7";
 }

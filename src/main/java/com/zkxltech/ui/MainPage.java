@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.ejet.cache.BrowserManager;
+import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.service.impl.ClassHourServiceImpl;
@@ -155,7 +156,7 @@ public class MainPage extends Dialog {
 		titleText.setLayoutData(fd_titleText);
 		titleText.setFont(SWTResourceManager.getFont("微软雅黑", 12, SWT.NORMAL));
 		titleText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		titleText.setText("电子答题器");
+		titleText.setText("互动课堂");
 
 		CLabel closeLabel = new CLabel(composite_set, SWT.NONE);
 //		FormData fd_closeLabel = new FormData();
@@ -174,14 +175,37 @@ public class MainPage extends Dialog {
 		closeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				if (!Global.isAnswerStart) {
-					shell.dispose();
-					mainStart.floatingWindow();
-				}else {
-					MessageBox messageBox = new MessageBox(shell,SWT.NONE);
-					messageBox.setMessage("正在作答或绑定中,请先停止作答或绑定！");
-					messageBox.open();
+				MessageBox messageBox = new MessageBox(shell,SWT.NONE);
+				String message = "";
+				switch (Global.getModeMsg()) {
+				case Constant.BUSINESS_NORMAL:
+					return;
+				case Constant.BUSINESS_ANSWER:
+					message = "请先停止答题";
+					break;
+				case Constant.BUSINESS_SCORE:
+					message = "请先停止评分";
+					break;
+				case Constant.BUSINESS_VOTE:
+					message = "请先停止投票";
+					break;
+				case Constant.BUSINESS_ATTENDEN:
+					message = "请先停止考勤";
+					break;
+				case Constant.BUSINESS_PREEMPTIVE:
+					message = "请先停止抢答";
+					break;
+				case Constant.BUSINESS_CLASSTEST:
+					message = "请先停止答题";
+					break;
+				case Constant.BUSINESS_BIND:
+					message = "请先停止绑定";
+					break;
+				default:
+					return;
 				}
+				messageBox.setMessage(message);
+				messageBox.open();
 				
 			}
 		});

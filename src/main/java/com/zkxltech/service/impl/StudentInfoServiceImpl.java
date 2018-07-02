@@ -355,7 +355,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }
         thread = new AttendanceThread();
         thread.start();
-        Global.isAnswerStart = true;
+    	Global.setModeMsg(Constant.BUSINESS_ATTENDEN);
         r.setRet(Constant.SUCCESS);
         r.setMessage("操作成功");
         return r;
@@ -374,7 +374,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
-        Global.isAnswerStart = false;
+    	Global.setModeMsg(Constant.BUSINESS_NORMAL);
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
@@ -404,7 +404,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }
         thread = new QuickThread();
         thread.start();
-        Global.isAnswerStart = true;
+    	Global.setModeMsg(Constant.BUSINESS_ANSWER);
         r.setRet(Constant.SUCCESS);
         r.setMessage("发送成功");
         return r;
@@ -424,7 +424,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             return r;
         }
 
-		Global.isAnswerStart = false;
+		Global.setModeMsg(Constant.BUSINESS_NORMAL);
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;

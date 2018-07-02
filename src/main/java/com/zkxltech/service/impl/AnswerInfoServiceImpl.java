@@ -67,7 +67,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 				return result;
 			}
 			result.setRet(Constant.SUCCESS);
-			Global.isAnswerStart = true;
+			Global.setModeMsg(Constant.BUSINESS_ANSWER);
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
@@ -140,7 +140,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 			
 		
 			result.setRet(Constant.SUCCESS);
-			Global.isAnswerStart = true; 
+			Global.setModeMsg(Constant.BUSINESS_CLASSTEST);
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
@@ -180,8 +180,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 					if (Constant.ERROR.equals(result.getRet())) {
 						BrowserManager.showMessage(false, "保存作答记录失败！");
 					}else {
-
-						Global.isAnswerStart = false;
+						Global.setModeMsg(Constant.BUSINESS_NORMAL);
 						BrowserManager.showMessage(true, "保存作答记录成功！");
 					}
 //					result = EquipmentServiceImpl.getInstance().answerStart2(requestVos); //发送硬件指令
@@ -226,7 +225,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 						BrowserManager.showMessage(false, "保存作答记录失败！");
 						return ;
 					}else {
-						Global.isAnswerStart = false;
+						Global.setModeMsg(Constant.BUSINESS_NORMAL);
 						BrowserManager.showMessage(false, "保存作答记录成功！");
 						return ;
 					}
@@ -308,7 +307,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         thread = new SingleAnswerThread();
         thread.start();
         r.setRet(Constant.SUCCESS);
-        Global.isAnswerStart = true; 
+        Global.setModeMsg(Constant.BUSINESS_ANSWER);
         return r;
     }
 
@@ -329,7 +328,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
 
-		Global.isAnswerStart = false;
+		Global.setModeMsg(Constant.BUSINESS_NORMAL);
         return r;
     }
     
@@ -370,8 +369,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
        
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
-
-		Global.isAnswerStart = false;
+    	Global.setModeMsg(Constant.BUSINESS_NORMAL);
         return r;
     }
 
@@ -428,8 +426,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 			
 			
 			result.setRet(Constant.SUCCESS);
-
-			Global.isAnswerStart = true;
+			Global.setModeMsg(Constant.BUSINESS_ANSWER);
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
