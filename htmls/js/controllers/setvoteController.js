@@ -48,18 +48,16 @@ app.controller('voteCtrl', function($rootScope,$scope,$modal,toastr) {
 		}
 		if(!flag){
 			$scope.voteInfo.programs.push(nary[i].txt);
-			var param=$scope.voteInfo;
 		}
 	}
-		console.log("参数"+JSON.stringify(param));
-//		$scope.voteInfo.programs.push(arr[i].txt);
-		var param=$scope.voteInfo;
-//			console.log("参数"+JSON.stringify(param))
-		$scope.result=JSON.parse(execute_vote("start_vote",JSON.stringify(param)));
-		if($scope.result.ret=='success'){		
+	if(!flag){
+			var param=$scope.voteInfo;
+			$scope.result=JSON.parse(execute_vote("start_vote",JSON.stringify(param)));
+			if($scope.result.ret=='success'){		
 			window.location.href="../../page/answermoudle/voteCount.html";
-		}else{
-			toastr.error($scope.result.message);
+			}else{
+				toastr.error($scope.result.message);
+			}
 		}
 	}
 	//返回设置页面

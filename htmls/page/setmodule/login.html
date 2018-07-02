@@ -23,7 +23,7 @@
 		<link href="../../js/select/font-awesome.min.css" />
 		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
 		<script src="../../js/common.js"></script>
-		<script src="../../js/vconsole.min.js"></script>
+		<<!--script src="../../js/vconsole.min.js"></script>-->
 		<script src="../../js/jquery.nicescroll.min.js"></script>
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<!--<script type="text/javascript" src="../../js/app.js" ></script>-->
@@ -64,14 +64,14 @@
 		  			<div class="form-group">
 				  	<label for="firstname" class="col-sm-2 control-label">登录名</label>
 				  	<div class="col-sm-9">
-			    	<input type="text" autocomplete="off" name="name" id="" value=""  class="form-control" ng-model="login.name" required maxlength="20"/>										
+			    	<input type="text" autocomplete="off" name="name" id="" value=""  class="form-control" ng-model="login.name" required maxlength="20" disabled="true"/>										
 				    </div>
 				    <span ng-show="myForm.name.$invalid" class="warning">*</span>
 					</div>
 					<div class="form-group mt30">
 				  	<label for="firstname" class="col-sm-2 control-label">密码</label>
 				    <div class="col-sm-9">
-				    	<input type="text" autocomplete="off" name="password" id="" value=""  class="form-control" ng-model="login.password" required maxlength="20"/>										
+				    	<input type="password" autocomplete="off" name="password" id="password" value=""  class="form-control" ng-model="login.password" required maxlength="20"/>										
 					</div>
 					<span ng-show="myForm.password.$invalid" class="warning">*</span>
 					</div>
@@ -85,3 +85,10 @@
 	</body>
 
 </html>
+<script type="text/javascript">
+	$(function(){
+		$(document).ready(function(){  
+			$("#password").focus();
+		});
+	})
+</script>

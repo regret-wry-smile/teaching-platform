@@ -25,7 +25,7 @@
 		<script src="../../js/common.js"></script><br />
 		<script src="../../js/jquery.nicescroll.min.js"></script>
 		<!--<script src="../../js/ui-validate.js"></script>-->
-		<script src="../../js/vconsole.min.js"></script>
+		<!--<script src="../../js/vconsole.min.js"></script>-->
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<script type="text/javascript" src="../../js/app.js" ></script>
 		<script src="../../js/controllers/answerRecordController.js"></script>
@@ -170,7 +170,7 @@
 							</tr>
 						</thead>-->
 						<tbody>
-							<tr ng-repeat="item in recordList track by $index" ng-click="$event.stopPropagation();viewOneInfo(item)">
+							<tr ng-repeat="item in recordList track by $index" ng-click="$event.stopPropagation();">
 								<td style="width: 10%;">{{$index+1}}</td>
 								<td style="width: 10%;">{{item.studentName}}</td>
 								<td style="width: 15%;">{{item.testName}}</td>

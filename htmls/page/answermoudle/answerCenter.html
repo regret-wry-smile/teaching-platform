@@ -28,7 +28,7 @@
 		<link href="../../js/select/font-awesome.min.css" />
 		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
 		<script src="../../js/common.js"></script>
-		<script src="../../js/vconsole.min.js"></script>
+		<!--<script src="../../js/vconsole.min.js"></script>-->
 		<script src="../../js/jquery.nicescroll.min.js"></script>
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<script type="text/javascript" src="../../js/app.js" ></script>
@@ -100,9 +100,9 @@
 					</a>
 				</div>
 			</div>
-			<div class="content content1 clearfix" style="margin: 0;padding: 0;">
-				<div class="modboxs clearfix " style="margin: 0.0rem 0.05rem;padding: 0;position: absolute;left: 0.18rem;">
-					<div class="box" ng-repeat="item in studentAttendList track by $index" ng-class="{'YES':'green','NO':'' }[item.status]">
+			<div class="content content1 clearfix" style="margin: 0;padding: 0;overflow: hidden;">
+				<div class="modboxs modboxs1 clearfix "style="margin: 0; padding: 0;">
+					<div class="box" ng-repeat="item in studentAttendList track by $index" ng-class="{'YES':'green','NO':'' }[item.status]" title="{{item.studentName}}">
 						{{item.studentName}}
 					</div>
 			  	</div>

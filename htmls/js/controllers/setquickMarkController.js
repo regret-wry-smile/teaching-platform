@@ -46,18 +46,16 @@ app.controller('quickMarkCtrl', function($rootScope,$scope,$modal,toastr) {
 		}
 		if(!flag){
 			$scope.markInfo.programs.push(nary[i].txt);
-			var param=$scope.markInfo;
 		}
 	}
-		//console.log("参数"+JSON.stringify(param));
-//		$scope.voteInfo.programs.push(arr[i].txt);
-		var param=$scope.markInfo;
-//			console.log("参数"+JSON.stringify(param))
-		$scope.result=JSON.parse(execute_score("start_score",JSON.stringify(param)));
-		if($scope.result.ret=='success'){		
-			window.location.href="../../page/answermoudle/markCount.html";
-		}else{
-			toastr.error($scope.result.message);
+		if(!flag){
+			var param=$scope.markInfo;
+			$scope.result = JSON.parse(execute_score("start_score", JSON.stringify(param)));
+			if($scope.result.ret == 'success') {
+				window.location.href = "../../page/answermoudle/markCount.html";
+			} else {
+				toastr.error($scope.result.message);
+			}
 		}
 	}
 

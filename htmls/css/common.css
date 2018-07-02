@@ -684,6 +684,10 @@ label.circle{
 	font-size: 1.33rem;
 	color: #fff;	
 }
+.modboxs1{
+	margin: 0;
+	padding: 0;
+}
 .modboxs .box{
 	float: left;
 	width: 7%;
@@ -693,6 +697,9 @@ label.circle{
 	color: #90a4cc;
 	padding: 0.02rem;	
 	margin: 0.05rem;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
 }
 .modboxs .box.green{
 	color: #fff;
@@ -900,6 +907,9 @@ img.rebtn:active{
 		width: 3.0rem;
 		/*width: 3.6rem;*/
 		/*padding: 0.4rem 0*/
+	}
+	.modboxs1 .box{
+		width: 8%;
 	}
 	.content button.circlefff{
 		margin: 4%;
