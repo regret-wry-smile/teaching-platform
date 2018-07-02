@@ -463,9 +463,9 @@ app.directive('select1', function() {
 						str+='<option value="'+scope.list[i]+'">'+scope.list[i]+'</option>';
 					}
 					$(element).html(str);
-				}
-				
-				$(element).multiselect({
+				}				
+			}
+			$(element).multiselect({
 				multiple: false,
 				selectedHtmlValue: '请选择',
 				defalutvalue:scope.defalutvalue,
@@ -480,11 +480,7 @@ app.directive('select1', function() {
 					}
 				}
 			});
-			}
-		})
-			
-			
-			
+		})	
 		}
 	}
 })
@@ -506,8 +502,8 @@ app.directive('select2', function() {
 					}
 					$(element).html(str);
 				}
-				
-				$(element).multiselect({
+			}
+			$(element).multiselect({
 				multiple: false,
 				selectedHtmlValue: '请选择',
 				defalutvalue:scope.defalutvalue,
@@ -522,11 +518,7 @@ app.directive('select2', function() {
 					}
 				}
 			});
-			}
 		})
-			
-			
-			
 		}
 	}
 })

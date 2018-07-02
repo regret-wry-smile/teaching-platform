@@ -30,6 +30,10 @@ public class Global {
 	 * 是否开始作答中
 	 */
 	public  static boolean isAnswerStart = false;
+	/**
+	 * 设备连接状态(当设备连接状态改变的时候该变量会相应改变)
+	 */
+	public static boolean isEquipmentStatus = false;
 	
 	private static List<String> iclickerIds;
 	

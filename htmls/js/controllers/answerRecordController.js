@@ -462,7 +462,9 @@ app.directive('select2', function() {
 						}
 						$(element).html(str);
 					}
-					$(element).multiselect({
+					
+				}
+				$(element).multiselect({
 						multiple: false,
 						selectedHtmlValue: '请选择',
 						defalutvalue: scope.defalutvalue,
@@ -477,8 +479,8 @@ app.directive('select2', function() {
 							}
 						}
 					});
-				}
-			})
+			});
+			
 
 		}
 	}
