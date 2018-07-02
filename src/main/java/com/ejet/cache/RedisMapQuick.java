@@ -44,7 +44,7 @@ public class RedisMapQuick {
                     logger.error("抢答线程停止失败");
                 }
                 EquipmentServiceImpl.getInstance().answer_stop();
-                Global.isAnswerStart = false;
+                Global.setModeMsg(Constant.BUSINESS_PREEMPTIVE);
                 flag = false ;
             }
         }

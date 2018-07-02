@@ -386,7 +386,9 @@ public class ServerServiceImpl implements ServerService{
 						Daxl2.append(answer + "|");
 						answerType = "A";
 						if ("1".equals(record.getResult())) {
-							Kgf = Kgf.add(new BigDecimal(record.getScore()));
+						    if (!StringUtils.isEmpty(record.getScore())) {
+						        Kgf = Kgf.add(new BigDecimal(record.getScore()));
+                            }
 						}
 						// 答案转换
 						if (Constant.DUOXUANTI_NUM.equals(record.getQuestionType())) { // 多选
@@ -485,7 +487,9 @@ public class ServerServiceImpl implements ServerService{
 					String answer = record.getAnswer();
 					if (!Constant.ZHUGUANTI_NUM.equals(record.getQuestionType())) { // 客观题的得分就是每题的分值(答对才得分)
 						if (Constant.RESULT_TRUE.equals(record.getResult())) {
-							Kgf = Kgf.add(new BigDecimal(record.getScore()));
+							if (!StringUtils.isEmpty(record.getScore())) {
+								Kgf = Kgf.add(new BigDecimal(record.getScore()));
+                            }
 						}
 					} else if (Constant.ZHUGUANTI_NUM.equals(record.getQuestionType())) { // 主观题的得分就是答题器的答案
 						if (answer != null && !"".equals(answer) && !"null".equals(answer)) {
