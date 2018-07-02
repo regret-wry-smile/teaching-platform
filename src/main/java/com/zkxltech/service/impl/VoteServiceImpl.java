@@ -47,6 +47,7 @@ public class VoteServiceImpl implements VoteService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("开始投票失败！");
 			result.setDetail(IOUtils.getError(e));
+			logger.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -63,6 +64,7 @@ public class VoteServiceImpl implements VoteService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("获取投票数据失败！");
 			result.setDetail(IOUtils.getError(e));
+			logger.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -140,6 +142,7 @@ public class VoteServiceImpl implements VoteService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("获取投票主题失败！");
 			result.setDetail(IOUtils.getError(e));
+			logger.error(IOUtils.getError(e));
 			return result;
 		}
 	}

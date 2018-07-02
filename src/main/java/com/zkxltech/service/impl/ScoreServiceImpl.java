@@ -48,6 +48,7 @@ public class ScoreServiceImpl implements ScoreService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("开始评分失败！");
 			result.setDetail(IOUtils.getError(e));
+			logger.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -64,6 +65,7 @@ public class ScoreServiceImpl implements ScoreService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("获取评分数据失败！");
 			result.setDetail(IOUtils.getError(e));
+			logger.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -80,6 +82,7 @@ public class ScoreServiceImpl implements ScoreService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("获取评分主题失败！");
 			result.setDetail(IOUtils.getError(e));
+			logger.error(IOUtils.getError(e));
 			return result;
 		}
 	}
