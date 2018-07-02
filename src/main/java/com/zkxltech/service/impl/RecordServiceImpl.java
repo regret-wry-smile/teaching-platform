@@ -267,14 +267,13 @@ public class RecordServiceImpl implements RecordService{
                     wb.write(out);// 将数据写出去  
                     out.flush();// 将数据写出去
                     BrowserManager.showMessage(true,"导出成功");
-                    BrowserManager.removeLoading();
                 }catch (Exception e) {
                     log.error("", e);
                     r.setMessage("导出失败");
                     r.setDetail(IOUtils.getError(e));
                     BrowserManager.showMessage(false,"导出失败");
-                    BrowserManager.removeLoading();
                 }finally {
+                    BrowserManager.removeLoading();
                     if (out != null) {
                         try {
                             out.close();
