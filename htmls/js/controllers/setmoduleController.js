@@ -7,17 +7,16 @@ app.controller('setmoduleCtrl', function($scope, toastr) {
 	$scope.sendpower1=angular.copy($scope.sendpower);
 	$scope.chain = $scope.infoAllNameList[0];
 	$scope.chain1=angular.copy($scope.chain);
-	//同步数据库
-	var _equipmentsynchron=function(){
-		$scope.result=JSON.parse(execute_set("equipment_database_synchronization"));
-		if($scope.result.ret=='success'){
-			
-		}else{
-			toastr.error($scope.result.message);
-//			toastr.error("同步数据失败");
-		}
-	}
-	_equipmentsynchron();
+	//同步数据库    该功能移动学生管理页面去了 setStuManageController.js
+	//	var _equipmentsynchron=function(){
+	//		$scope.result=JSON.parse(execute_set("equipment_database_synchronization"));
+	//		if($scope.result.ret=='success'){
+	//			
+	//		}else{
+	//			toastr.error($scope.result.message);
+	//		}
+	//	}
+	//	_equipmentsynchron();
 	/*获取所有组名*/
 	var _getAllName = function() {
 		/**
