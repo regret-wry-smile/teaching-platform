@@ -605,7 +605,7 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 				$scope.testInfo.questionIds = parseInt($scope.testInfo.questionId);
 			}
 			if($scope.testInfo.questionType == '-1') {
-				if($scope.testInfo.selType == '0') {
+				if($scope.testInfo.selLetter == '0') {
 					$scope.testInfo.questionType = '0';
 				} else {
 					$scope.testInfo.questionType = '1';
@@ -860,13 +860,6 @@ app.directive('select', function() {
 		link: function(scope, element, attrs, ngModelCtr) {
 			scope.$watch('defalutvalue', function() {
 				if(scope.defalutvalue) {
-					/*if(scope.list) {
-						var str = '';
-						for(var i = 0; i < scope.list.length; i++) {
-							str += '<option value="' + scope.list[i].key + '">' + scope.list[i].value + '</option>';
-						}
-						$(element).html(str);
-					}*/
 					$(element).multiselect({
 						multiple: false,
 						selectedHtmlValue: '请选择',
@@ -946,23 +939,22 @@ app.directive('select1', function() {
 						}
 						$(element).html(str);
 					}
-
-					$(element).multiselect({
-						multiple: false,
-						selectedHtmlValue: '请选择',
-						defalutvalue: scope.defalutvalue,
-						change: function() {
-							$(element).val($(this).val());
-							scope.$apply();
-							if(ngModelCtr) {
-								ngModelCtr.$setViewValue($(element).val());
-								if(!scope.$root.$$phase) {
-									scope.$apply();
-								}
+				}				
+				$(element).multiselect({
+					multiple: false,
+					selectedHtmlValue: '请选择',
+					defalutvalue: scope.defalutvalue,
+					change: function() {
+						$(element).val($(this).val());
+						scope.$apply();
+						if(ngModelCtr) {
+							ngModelCtr.$setViewValue($(element).val());
+							if(!scope.$root.$$phase) {
+								scope.$apply();
 							}
 						}
-					});
-				}
+					}
+				});
 			})
 
 		}

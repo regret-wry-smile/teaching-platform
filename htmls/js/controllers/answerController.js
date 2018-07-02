@@ -872,7 +872,23 @@ app.directive('select1', function() {
 						$(element).html(str);
 					}
 
-					$(element).multiselect({
+					/*$(element).multiselect({
+						multiple: false,
+						selectedHtmlValue: '请选择',
+						defalutvalue: scope.defalutvalue,
+						change: function() {
+							$(element).val($(this).val());
+							scope.$apply();
+							if(ngModelCtr) {
+								ngModelCtr.$setViewValue($(element).val());
+								if(!scope.$root.$$phase) {
+									scope.$apply();
+								}
+							}
+						}
+					});*/
+				}
+				$(element).multiselect({
 						multiple: false,
 						selectedHtmlValue: '请选择',
 						defalutvalue: scope.defalutvalue,
@@ -887,7 +903,6 @@ app.directive('select1', function() {
 							}
 						}
 					});
-				}
 			})
 
 		}
@@ -910,9 +925,9 @@ app.directive('select2', function() {
 							str += '<option value="' + scope.list[i].key + '">' + scope.list[i].value + '</option>';
 						}
 						$(element).html(str);
-					}
-
-					$(element).multiselect({
+					}					
+				}
+				$(element).multiselect({
 						multiple: false,
 						selectedHtmlValue: '请选择',
 						defalutvalue: scope.defalutvalue,
@@ -927,7 +942,6 @@ app.directive('select2', function() {
 							}
 						}
 					});
-				}
 			})
 
 		}
@@ -973,12 +987,12 @@ app.filter('AnswerType', function() {
 		switch(AnswerType) {
 			case 'T':
 				{
-					statename = '对';
+					statename = '√';
 					break;
 				}
 			case 'F':
 				{
-					statename = '错';
+					statename = '×';
 					break;
 				}
 			default:
