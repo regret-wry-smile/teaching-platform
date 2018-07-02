@@ -248,8 +248,25 @@ public class BrowserManager {
 			shell.getDisplay().syncExec(new Runnable() {
 				@Override
 				public void run() {
-					boolean  doRet = b.execute(";document.getElementById('refreTestPaper2').click();");
+					boolean  doRet = b.execute("document.getElementById('refreTestPaper2').click();");
 					log.info("刷新试卷列表："+doRet);
+				}
+			});
+		}
+	}
+	
+	/**
+	 * 刷新设备状态
+	 * @param echoRequest
+	 */
+	public static void refreEquipmentState(boolean flag) {
+		Browser b  = browerManager.get();
+		if (b!=null) {
+			shell.getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					boolean  doRet = b.execute("var isOnline = "+flag+";document.getElementById('refreEquipmentState').click();");
+					log.info("刷新设备状态："+doRet);
 				}
 			});
 		}

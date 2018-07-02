@@ -104,152 +104,176 @@ public class RedisMapClassTestAnswer {
 	 * 添加到缓存(客观题)
 	 */
 	public static void addRedisMapClassTestAnswer1(String jsonData){
-		List<ResponseAnswer> responseAnswers = (List<ResponseAnswer>) JSONArray.toCollection(JSONArray.fromObject(jsonData), ResponseAnswer.class);
-		for (int i = 0; i < responseAnswers.size(); i++) {
-			ResponseAnswer responseAnswer = responseAnswers.get(i);
+		try {
+			List<ResponseAnswer> responseAnswers = (List<ResponseAnswer>) JSONArray.toCollection(JSONArray.fromObject(jsonData), ResponseAnswer.class);
+			for (int i = 0; i < responseAnswers.size(); i++) {
+				ResponseAnswer responseAnswer = responseAnswers.get(i);
 
-			keyEveryAnswerMap[0] = responseAnswer.getCard_id();
-			/*判断是否属于该班*/
-			StudentInfo studentInfo = verifyCardId(responseAnswer.getCard_id());
-			if (studentInfo == null) {
-				continue;
-			}
-
-			List<Answer> answers = (List<Answer>) JSONArray.toCollection(JSONArray.fromObject(responseAnswer.getAnswers()), Answer.class);;
-			for (int j = 0; j < answers.size(); j++) {
-				Answer answer = answers.get(j);
-				String questionId = answer.getId(); //题号
-				
-				QuestionInfo questionInfo = questionInfoMap.get(questionId);
-				keyEveryAnswerMap[1] = questionId;
-				
-				Record record = new Record();
-				record.setClassId(Global.getClassHour().getClassId());
-				record.setSubject(Global.getClassHour().getSubjectName());
-				record.setClassHourId(Global.getClassHour().getClassHourId());
-				record.setTestId(questionInfo.getTestId());
-				record.setAnswer(answer.getAnswer());
-				record.setScore(questionInfo.getScore());
-				record.setQuestion(questionInfo.getQuestion());
-				record.setQuestionId(questionId);
-				record.setQuestionType(questionInfo.getQuestionType());
-				if (questionInfo.getTrueAnswer().equals(answer.getAnswer())) {
-					record.setResult("1");
-				}else {
-					record.setResult("2");
+				keyEveryAnswerMap[0] = responseAnswer.getCard_id();
+				/*判断是否属于该班*/
+				StudentInfo studentInfo = verifyCardId(responseAnswer.getCard_id());
+				if (studentInfo == null) {
+					continue;
 				}
-				record.setStudentId(studentInfo.getStudentId());
-				record.setStudentName(studentInfo.getStudentName());
-				record.setTrueAnswer(questionInfo.getTrueAnswer());
-				
-				RedisMapUtil.setRedisMap(everyAnswerMap, keyEveryAnswerMap, 0, record);
-				
+
+				List<Answer> answers = (List<Answer>) JSONArray.toCollection(JSONArray.fromObject(responseAnswer.getAnswers()), Answer.class);;
+				for (int j = 0; j < answers.size(); j++) {
+					Answer answer = answers.get(j);
+					String questionId = answer.getId(); //题号
+					
+					QuestionInfo questionInfo = questionInfoMap.get(questionId);
+					keyEveryAnswerMap[1] = questionId;
+					
+					Record record = new Record();
+					record.setClassId(Global.getClassHour().getClassId());
+					record.setSubject(Global.getClassHour().getSubjectName());
+					record.setClassHourId(Global.getClassHour().getClassHourId());
+					record.setTestId(questionInfo.getTestId());
+					record.setAnswer(answer.getAnswer());
+					record.setScore(questionInfo.getScore());
+					record.setQuestion(questionInfo.getQuestion());
+					record.setQuestionId(questionId);
+					record.setQuestionType(questionInfo.getQuestionType());
+					if (questionInfo.getTrueAnswer().equals(answer.getAnswer())) {
+						record.setResult("1");
+					}else {
+						record.setResult("2");
+					}
+					record.setStudentId(studentInfo.getStudentId());
+					record.setStudentName(studentInfo.getStudentName());
+					record.setTrueAnswer(questionInfo.getTrueAnswer());
+					
+					RedisMapUtil.setRedisMap(everyAnswerMap, keyEveryAnswerMap, 0, record);
+					
+				}
 			}
+			BrowserManager.refreClassTest();
+		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
+			BrowserManager.showMessage(false, "解析作答数据失败！");
 		}
 		
-		BrowserManager.refreClassTest();
 	}
 	
 	/**
 	 * 每个人的作答信息
 	 */
 	public static String getEverybodyAnswerInfo(){
-		List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
-		for (int i = 0; i < Global.studentInfos.size(); i++) {
-			StudentInfo studentInfo= Global.studentInfos.get(i);
-			ClassTestVo classTestVo = new ClassTestVo();
-			classTestVo.setStudentId(studentInfo.getStudentId());
-			classTestVo.setStudentName(studentInfo.getStudentName());
-			int answercount = 0;
-			if (everyAnswerMap.containsKey(studentInfo.getIclickerId())) {
-				Map<String, Object> map =  (Map<String, Object>)everyAnswerMap.get(studentInfo.getIclickerId());
-				for (String questionId : map.keySet()) {
-					Record record = (Record) map.get(questionId);
-					if (!StringUtils.isEmpty(record.getAnswer())) {
-						answercount++;
+		try {
+			List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
+			for (int i = 0; i < Global.studentInfos.size(); i++) {
+				StudentInfo studentInfo= Global.studentInfos.get(i);
+				ClassTestVo classTestVo = new ClassTestVo();
+				classTestVo.setStudentId(studentInfo.getStudentId());
+				classTestVo.setStudentName(studentInfo.getStudentName());
+				int answercount = 0;
+				if (everyAnswerMap.containsKey(studentInfo.getIclickerId())) {
+					Map<String, Object> map =  (Map<String, Object>)everyAnswerMap.get(studentInfo.getIclickerId());
+					for (String questionId : map.keySet()) {
+						Record record = (Record) map.get(questionId);
+						if (!StringUtils.isEmpty(record.getAnswer())) {
+							answercount++;
+						}
 					}
+					classTestVo.setAnswerCount(answercount);
+					BigDecimal decimal = new BigDecimal(answercount).divide(new BigDecimal(questionInfoMap.size()), 2 ,BigDecimal.ROUND_HALF_UP);
+					classTestVo.setPercent(decimal.doubleValue());
+				}else {
+					classTestVo.setAnswerCount(0);
+					classTestVo.setPercent(0.0);
 				}
-				classTestVo.setAnswerCount(answercount);
-				BigDecimal decimal = new BigDecimal(answercount).divide(new BigDecimal(questionInfoMap.size()), 2 ,BigDecimal.ROUND_HALF_UP);
-				classTestVo.setPercent(decimal.doubleValue());
-			}else {
-				classTestVo.setAnswerCount(0);
-				classTestVo.setPercent(0.0);
+				classTestVos.add(classTestVo);
 			}
-			classTestVos.add(classTestVo);
+			logger.info("每个人的作答情况："+JSONArray.fromObject(classTestVos).toString());
+			return JSONArray.fromObject(classTestVos).toString();
+		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
+			BrowserManager.showMessage(false, "获取作答据失败！");
+			return null;
 		}
-		logger.info("每个人的作答情况："+JSONArray.fromObject(classTestVos).toString());
-		return JSONArray.fromObject(classTestVos).toString();
+		
 	}
 	/**
 	 * 将缓存中的数据转换为record对象list(客观题)
 	 * @return
 	 */
 	public static List<Record> getObjectiveRecordList(){
-		List<Record> records = new ArrayList<Record>();
-		List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
-		for (int i = 0; i < Global.studentInfos.size(); i++) { //遍历学生
-			StudentInfo studentInfo= Global.studentInfos.get(i);
-			keyEveryAnswerMap[0] = studentInfo.getIclickerId();
-			for (int j = 0; j < questionInfosList.size(); j++) {
-				QuestionInfo questionInfo = questionInfosList.get(j); 
-				keyEveryAnswerMap[1] = questionInfo.getQuestionId();
-				Record record = (Record) RedisMapUtil.getRedisMap(everyAnswerMap, keyEveryAnswerMap, 0);
-				if (record == null) {
-					record = new Record();
-					record.setClassId(studentInfo.getClassId());
-					record.setClassHourId(Global.getClassHour().getClassHourId());
-					record.setTestId(questionInfo.getTestId());
-					record.setSubject(Global.getClassHour().getSubjectName());
-					record.setQuestion(questionInfo.getQuestion());
-					record.setQuestionId(questionInfo.getQuestionId());
-					record.setQuestionType(questionInfo.getQuestionType());
-					record.setStudentId(studentInfo.getStudentId());
-					record.setStudentName(studentInfo.getStudentName());
-					record.setScore(questionInfo.getScore());
-					record.setResult("2");
-					record.setTrueAnswer(questionInfo.getTrueAnswer());
+		try {
+			List<Record> records = new ArrayList<Record>();
+			List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
+			for (int i = 0; i < Global.studentInfos.size(); i++) { //遍历学生
+				StudentInfo studentInfo= Global.studentInfos.get(i);
+				keyEveryAnswerMap[0] = studentInfo.getIclickerId();
+				for (int j = 0; j < questionInfosList.size(); j++) {
+					QuestionInfo questionInfo = questionInfosList.get(j); 
+					keyEveryAnswerMap[1] = questionInfo.getQuestionId();
+					Record record = (Record) RedisMapUtil.getRedisMap(everyAnswerMap, keyEveryAnswerMap, 0);
+					if (record == null) {
+						record = new Record();
+						record.setClassId(studentInfo.getClassId());
+						record.setClassHourId(Global.getClassHour().getClassHourId());
+						record.setTestId(questionInfo.getTestId());
+						record.setSubject(Global.getClassHour().getSubjectName());
+						record.setQuestion(questionInfo.getQuestion());
+						record.setQuestionId(questionInfo.getQuestionId());
+						record.setQuestionType(questionInfo.getQuestionType());
+						record.setStudentId(studentInfo.getStudentId());
+						record.setStudentName(studentInfo.getStudentName());
+						record.setScore(questionInfo.getScore());
+						record.setResult("2");
+						record.setTrueAnswer(questionInfo.getTrueAnswer());
+					}
+					records.add(record);
 				}
-				records.add(record);
+				
 			}
-			
+			logger.info("要保存的客观题作答记录："+JSONArray.fromObject(records));
+			return records;
+		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
+			BrowserManager.showMessage(false, "获取作答据失败！");
+			return null;
 		}
-		logger.info("要保存的客观题作答记录："+JSONArray.fromObject(records));
-		return records;
 	}
 	/**
 	 * 将缓存中的数据转换为record对象list(主观题)
 	 * @return
 	 */
 	public static List<Record> getSubjectiveRecordList(){
-		List<Record> records = new ArrayList<Record>();
-		List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
-		for (int i = 0; i < Global.studentInfos.size(); i++) { //遍历学生
-			StudentInfo studentInfo= Global.studentInfos.get(i);
-			keyEveryAnswerMap[0] = studentInfo.getIclickerId();
-			for (int j = 0; j < questionInfosList.size(); j++) {
-				QuestionInfo questionInfo = questionInfosList.get(j); 
-				keyEveryAnswerMap[1] = questionInfo.getQuestionId();
-				Record record = (Record) RedisMapUtil.getRedisMap(everyAnswerMap, keyEveryAnswerMap, 0);
-				if (record == null) {
-					record = new Record();
-					record.setClassId(studentInfo.getClassId());
-					record.setClassHourId(Global.getClassHour().getClassHourId());
-					record.setTestId(questionInfo.getTestId());
-					record.setSubject(Global.getClassHour().getSubjectName());
-					record.setQuestion(questionInfo.getQuestion());
-					record.setQuestionId(questionInfo.getQuestionId());
-					record.setQuestionType(questionInfo.getQuestionType());
-					record.setStudentId(studentInfo.getStudentId());
-					record.setStudentName(studentInfo.getStudentName());
-					record.setScore(questionInfo.getScore());
+		try {
+			List<Record> records = new ArrayList<Record>();
+			List<ClassTestVo> classTestVos = new ArrayList<ClassTestVo>();
+			for (int i = 0; i < Global.studentInfos.size(); i++) { //遍历学生
+				StudentInfo studentInfo= Global.studentInfos.get(i);
+				keyEveryAnswerMap[0] = studentInfo.getIclickerId();
+				for (int j = 0; j < questionInfosList.size(); j++) {
+					QuestionInfo questionInfo = questionInfosList.get(j); 
+					keyEveryAnswerMap[1] = questionInfo.getQuestionId();
+					Record record = (Record) RedisMapUtil.getRedisMap(everyAnswerMap, keyEveryAnswerMap, 0);
+					if (record == null) {
+						record = new Record();
+						record.setClassId(studentInfo.getClassId());
+						record.setClassHourId(Global.getClassHour().getClassHourId());
+						record.setTestId(questionInfo.getTestId());
+						record.setSubject(Global.getClassHour().getSubjectName());
+						record.setQuestion(questionInfo.getQuestion());
+						record.setQuestionId(questionInfo.getQuestionId());
+						record.setQuestionType(questionInfo.getQuestionType());
+						record.setStudentId(studentInfo.getStudentId());
+						record.setStudentName(studentInfo.getStudentName());
+						record.setScore(questionInfo.getScore());
+					}
+					records.add(record);
 				}
-				records.add(record);
+				
 			}
-			
+			logger.info("要保存的主观题作答记录："+JSONArray.fromObject(records));
+			return records;
+		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
+			BrowserManager.showMessage(false, "获取作答据失败！");
+			return null;
 		}
-		logger.info("要保存的主观题作答记录："+JSONArray.fromObject(records));
-		return records;
 	}
 	
 //	/**
@@ -287,43 +311,48 @@ public class RedisMapClassTestAnswer {
 	 * 添加到缓存(主观题)
 	 */
 	public static void addRedisMapClassTestAnswer2(String jsonData){
-		List<ResponseAnswer> responseAnswers = (List<ResponseAnswer>) JSONArray.toCollection(JSONArray.fromObject(jsonData), ResponseAnswer.class);
-		for (int i = 0; i < responseAnswers.size(); i++) {
-			ResponseAnswer responseAnswer = responseAnswers.get(i);
+		try {
+			List<ResponseAnswer> responseAnswers = (List<ResponseAnswer>) JSONArray.toCollection(JSONArray.fromObject(jsonData), ResponseAnswer.class);
+			for (int i = 0; i < responseAnswers.size(); i++) {
+				ResponseAnswer responseAnswer = responseAnswers.get(i);
 
-			keyEveryAnswerMap[0] = responseAnswer.getCard_id();
-			/*判断是否属于该班*/
-			StudentInfo studentInfo = verifyCardId(responseAnswer.getCard_id());
-			if (studentInfo == null) {
-				continue;
-			}
+				keyEveryAnswerMap[0] = responseAnswer.getCard_id();
+				/*判断是否属于该班*/
+				StudentInfo studentInfo = verifyCardId(responseAnswer.getCard_id());
+				if (studentInfo == null) {
+					continue;
+				}
 
-			List<Answer> answers = (List<Answer>) JSONArray.toCollection(JSONArray.fromObject(responseAnswer.getAnswers()), Answer.class);;
-			for (int j = 0; j < answers.size(); j++) {
-				Answer answer = answers.get(j);
-				String questionId = answer.getId(); //题号
-				
-				QuestionInfo questionInfo = questionInfoMap.get(questionId);
-				keyEveryAnswerMap[1] = questionId;
-				
-				Record record = new Record();
-				record.setClassId(studentInfo.getClassId());
-				record.setSubject(Global.getClassHour().getSubjectName());
-				record.setClassHourId(Global.getClassHour().getClassHourId());
-				record.setAnswer(answer.getAnswer());
-				record.setQuestion(questionInfo.getQuestion());
-				record.setQuestionId(questionId);
-				record.setQuestionType(questionInfo.getQuestionType());
-				record.setScore(questionInfo.getScore());
-				record.setStudentId(studentInfo.getStudentId());
-				record.setStudentName(studentInfo.getStudentName());
-				record.setTestId(questionInfo.getTestId());
-				
-				RedisMapUtil.setRedisMap(everyAnswerMap, keyEveryAnswerMap, 0, record);
+				List<Answer> answers = (List<Answer>) JSONArray.toCollection(JSONArray.fromObject(responseAnswer.getAnswers()), Answer.class);;
+				for (int j = 0; j < answers.size(); j++) {
+					Answer answer = answers.get(j);
+					String questionId = answer.getId(); //题号
+					
+					QuestionInfo questionInfo = questionInfoMap.get(questionId);
+					keyEveryAnswerMap[1] = questionId;
+					
+					Record record = new Record();
+					record.setClassId(studentInfo.getClassId());
+					record.setSubject(Global.getClassHour().getSubjectName());
+					record.setClassHourId(Global.getClassHour().getClassHourId());
+					record.setAnswer(answer.getAnswer());
+					record.setQuestion(questionInfo.getQuestion());
+					record.setQuestionId(questionId);
+					record.setQuestionType(questionInfo.getQuestionType());
+					record.setScore(questionInfo.getScore());
+					record.setStudentId(studentInfo.getStudentId());
+					record.setStudentName(studentInfo.getStudentName());
+					record.setTestId(questionInfo.getTestId());
+					
+					RedisMapUtil.setRedisMap(everyAnswerMap, keyEveryAnswerMap, 0, record);
+				}
 			}
+			
+			BrowserManager.refreClassTest();
+		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
+			BrowserManager.showMessage(false, "解析作答数据失败！");
 		}
-		
-		BrowserManager.refreClassTest();
 	}
 	
 	/**

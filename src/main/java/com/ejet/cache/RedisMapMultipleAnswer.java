@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.ejet.core.util.RedisMapUtil;
 import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.constant.Global;
+import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.StudentInfo;
 
@@ -89,61 +90,67 @@ public class RedisMapMultipleAnswer {
 	 * @param score
 	 */
 	public static void addEveryAnswerInfo(String jsonData){
-		keyEveryBodyMap[0] = answerId; //主题编号
-		keyEveryAnswerMap[0] = answerId;
-		keyAnswerMap[0] = answerId;
-		JSONArray jsonArray = JSONArray.fromObject(jsonData); 
-        for (int  i= 0; i < jsonArray.size(); i++) {
-        	JSONObject jsonObject = jsonArray.getJSONObject(i); //，每个学生的作答信息
-        	String carId = jsonObject.getString("card_id"); //答题器编号
-        	StudentInfo studentInfo = verifyCardId(carId);
-        	if (studentInfo != null) {
-        		JSONArray answers =  JSONArray.fromObject(jsonObject.get("answers"));
-        		for (int j = 0; j < answers.size(); j++) {
-        			JSONObject answeJSONObject = answers.getJSONObject(j);
-        			String num = answeJSONObject.getString("id");//节目编号(题目编号)
-        			
-        			keyEveryBodyMap[1] = num;
-        			keyEveryAnswerMap[1] = num;
-        			keyAnswerMap[1] = num;
-        			keyEveryBodyMap[2] = carId;
-        			Answer answer = (Answer) JSONObject.toBean((JSONObject) RedisMapUtil.getRedisMap(everyBodyMap, keyEveryBodyMap, 0), Answer.class);
-        			if (answer!= null && !StringUtils.isEmpty(answer.getAnswer())) {
-        				//已经上传了答案就跳过
-        				continue;
-					}
-        			RedisMapUtil.setRedisMap(everyBodyMap, keyEveryBodyMap, 0, answeJSONObject);
-        			
-        			String answerString = answeJSONObject.getString("answer");
-        			
-        			if (StringUtils.isEmpty(answerString)) {
-        				//过滤答案为空的数据
-        				continue;
-					}
-        			keyAnswerMap[2] = answerString;
-        			List<StudentInfo> studentInfos2 = (List<StudentInfo>) RedisMapUtil.getRedisMap(answerMap, keyAnswerMap, 0);
-    				if (com.zkxltech.ui.util.StringUtils.isEmptyList(studentInfos2)) {
-    					studentInfos2 = new ArrayList<StudentInfo>();
-					}
-    				studentInfos2.add(studentInfo);
-    				
-    				RedisMapUtil.setRedisMap(answerMap, keyAnswerMap, 0, studentInfos2);
-        			
-        			
-        			char[] everyAnswer = answerString.toCharArray();
-        			for (int k = 0; k < everyAnswer.length; k++) {
-        				keyEveryAnswerMap[2] = String.valueOf(everyAnswer[k]);
-        				List<StudentInfo> studentInfos = (List<StudentInfo>) RedisMapUtil.getRedisMap(everyAnswerMap, keyEveryAnswerMap, 0);
-        				if (com.zkxltech.ui.util.StringUtils.isEmptyList(studentInfos)) {
-        					studentInfos = new ArrayList<StudentInfo>();
+		try {
+			keyEveryBodyMap[0] = answerId; //主题编号
+			keyEveryAnswerMap[0] = answerId;
+			keyAnswerMap[0] = answerId;
+			JSONArray jsonArray = JSONArray.fromObject(jsonData); 
+	        for (int  i= 0; i < jsonArray.size(); i++) {
+	        	JSONObject jsonObject = jsonArray.getJSONObject(i); //，每个学生的作答信息
+	        	String carId = jsonObject.getString("card_id"); //答题器编号
+	        	StudentInfo studentInfo = verifyCardId(carId);
+	        	if (studentInfo != null) {
+	        		JSONArray answers =  JSONArray.fromObject(jsonObject.get("answers"));
+	        		for (int j = 0; j < answers.size(); j++) {
+	        			JSONObject answeJSONObject = answers.getJSONObject(j);
+	        			String num = answeJSONObject.getString("id");//节目编号(题目编号)
+	        			
+	        			keyEveryBodyMap[1] = num;
+	        			keyEveryAnswerMap[1] = num;
+	        			keyAnswerMap[1] = num;
+	        			keyEveryBodyMap[2] = carId;
+	        			Answer answer = (Answer) JSONObject.toBean((JSONObject) RedisMapUtil.getRedisMap(everyBodyMap, keyEveryBodyMap, 0), Answer.class);
+	        			if (answer!= null && !StringUtils.isEmpty(answer.getAnswer())) {
+	        				//已经上传了答案就跳过
+	        				continue;
 						}
-        				studentInfos.add(studentInfo);
-        				RedisMapUtil.setRedisMap(everyAnswerMap, keyEveryAnswerMap, 0, studentInfos);
+	        			RedisMapUtil.setRedisMap(everyBodyMap, keyEveryBodyMap, 0, answeJSONObject);
+	        			
+	        			String answerString = answeJSONObject.getString("answer");
+	        			
+	        			if (StringUtils.isEmpty(answerString)) {
+	        				//过滤答案为空的数据
+	        				continue;
+						}
+	        			keyAnswerMap[2] = answerString;
+	        			List<StudentInfo> studentInfos2 = (List<StudentInfo>) RedisMapUtil.getRedisMap(answerMap, keyAnswerMap, 0);
+	    				if (com.zkxltech.ui.util.StringUtils.isEmptyList(studentInfos2)) {
+	    					studentInfos2 = new ArrayList<StudentInfo>();
+						}
+	    				studentInfos2.add(studentInfo);
+	    				
+	    				RedisMapUtil.setRedisMap(answerMap, keyAnswerMap, 0, studentInfos2);
+	        			
+	        			
+	        			char[] everyAnswer = answerString.toCharArray();
+	        			for (int k = 0; k < everyAnswer.length; k++) {
+	        				keyEveryAnswerMap[2] = String.valueOf(everyAnswer[k]);
+	        				List<StudentInfo> studentInfos = (List<StudentInfo>) RedisMapUtil.getRedisMap(everyAnswerMap, keyEveryAnswerMap, 0);
+	        				if (com.zkxltech.ui.util.StringUtils.isEmptyList(studentInfos)) {
+	        					studentInfos = new ArrayList<StudentInfo>();
+							}
+	        				studentInfos.add(studentInfo);
+	        				RedisMapUtil.setRedisMap(everyAnswerMap, keyEveryAnswerMap, 0, studentInfos);
+						}
 					}
 				}
-			}
-        }
-        BrowserManager.refresAnswerNum();
+	        }
+	        BrowserManager.refresAnswerNum();
+		} catch (Exception e) {
+			BrowserManager.showMessage(false, "解析作答数据失败！");
+			logger.error(IOUtils.getError(e));
+		}
+		
     }
 	
 	/**
@@ -151,12 +158,18 @@ public class RedisMapMultipleAnswer {
 	 * @param score
 	 */
 	public static String getEveryAnswerInfoBar(){
-		String[] keString = new String[2];
-		keString[0] = answerId;
-		keString[1] = "1";
-		RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0);
-		logger.info("每个答案的选择信息："+JSONArray.fromObject(RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0)).toString());
-		return JSONObject.fromObject(RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0)).toString();
+		try {
+			String[] keString = new String[2];
+			keString[0] = answerId;
+			keString[1] = "1";
+			RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0);
+			logger.info("每个答案的选择信息："+JSONArray.fromObject(RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0)).toString());
+			return JSONObject.fromObject(RedisMapUtil.getRedisMap(everyAnswerMap, keString, 0)).toString();
+		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
+			BrowserManager.showMessage(false, "获取作答信息失败！");
+			return null;
+		}
     }
 	
 	/**
@@ -164,12 +177,19 @@ public class RedisMapMultipleAnswer {
 	 * @param score
 	 */
 	public static String getAnswerInfoSum(){
-		String[] keString = new String[2];
-		keString[0] = answerId;
-		keString[1] = "1";
-		RedisMapUtil.getRedisMap(answerMap, keString, 0);
-		logger.info("每个答案的选择信息："+JSONArray.fromObject(RedisMapUtil.getRedisMap(answerMap, keString, 0)).toString());
-		return JSONObject.fromObject(RedisMapUtil.getRedisMap(answerMap, keString, 0)).toString();
+		try {
+			String[] keString = new String[2];
+			keString[0] = answerId;
+			keString[1] = "1";
+			RedisMapUtil.getRedisMap(answerMap, keString, 0);
+			logger.info("每个答案的选择信息："+JSONArray.fromObject(RedisMapUtil.getRedisMap(answerMap, keString, 0)).toString());
+			return JSONObject.fromObject(RedisMapUtil.getRedisMap(answerMap, keString, 0)).toString();
+		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
+			BrowserManager.showMessage(false, "获取作答信息失败！");
+			return null;
+		}
+		
     }
 	
 	/**
@@ -177,18 +197,25 @@ public class RedisMapMultipleAnswer {
 	 * @param score
 	 */
 	public static String getAnswerNum(){
-		String[] keString = new String[2];
-		keString[0] = answerId;
-		keString[1] = "1";
-		Map<String, Object> map = (Map<String, Object>) RedisMapUtil.getRedisMap(everyBodyMap, keString, 0);
-		int answerN = 0;
-		if (map != null) {
-			answerN = map.size();
+		try {
+			String[] keString = new String[2];
+			keString[0] = answerId;
+			keString[1] = "1";
+			Map<String, Object> map = (Map<String, Object>) RedisMapUtil.getRedisMap(everyBodyMap, keString, 0);
+			int answerN = 0;
+			if (map != null) {
+				answerN = map.size();
+			}
+			logger.info("作答人数："+ answerN+"总人数:"+Global.getStudentInfos().size());
+			answerNum.put("answerNum", answerN);
+			answerNum.put("total", Global.getStudentInfos().size());
+			return JSONObject.fromObject(answerNum).toString();
+		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
+			BrowserManager.showMessage(false, "获取作答信息失败！");
+			return null;
 		}
-		logger.info("作答人数："+ answerN+"总人数:"+Global.getStudentInfos().size());
-		answerNum.put("answerNum", answerN);
-		answerNum.put("total", Global.getStudentInfos().size());
-		return JSONObject.fromObject(answerNum).toString();
+		
     }
 	
 //	public static void main(String[] args) {	

@@ -19,10 +19,12 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.ejet.cache.BrowserManager;
+import com.ejet.core.util.constant.Global;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.service.impl.ClassHourServiceImpl;
 import com.zkxltech.ui.functions.AnswerFunctionManage;
@@ -172,8 +174,15 @@ public class MainPage extends Dialog {
 		closeLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				shell.dispose();
-				mainStart.floatingWindow();
+				if (!Global.isAnswerStart) {
+					shell.dispose();
+					mainStart.floatingWindow();
+				}else {
+					MessageBox messageBox = new MessageBox(shell,SWT.NONE);
+					messageBox.setMessage("正在作答或绑定中,请先停止作答或绑定！");
+					messageBox.open();
+				}
+				
 			}
 		});
 		

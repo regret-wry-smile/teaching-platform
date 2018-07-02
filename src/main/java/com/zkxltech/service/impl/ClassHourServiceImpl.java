@@ -41,6 +41,7 @@ public class ClassHourServiceImpl implements ClassHourService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("查询课程列表失败！");
 			result.setDetail(IOUtils.getError(e));
+			logger.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -63,6 +64,7 @@ public class ClassHourServiceImpl implements ClassHourService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("新增课程失败！");
 			result.setDetail(IOUtils.getError(e));
+			logger.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -83,6 +85,7 @@ public class ClassHourServiceImpl implements ClassHourService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("删除课程失败！");
 			result.setDetail(IOUtils.getError(e));
+			logger.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -104,6 +107,7 @@ public class ClassHourServiceImpl implements ClassHourService{
 			result.setRet(Constant.ERROR);
 			result.setMessage("删除课程失败！");
 			result.setDetail(IOUtils.getError(e));
+			logger.error(IOUtils.getError(e));
 			return result;
 		}
 	}
@@ -129,6 +133,7 @@ public class ClassHourServiceImpl implements ClassHourService{
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
 			result.setMessage("上课失败！");
+			logger.error(IOUtils.getError(e));
 		}
 		return result;
 	}
@@ -199,6 +204,7 @@ public class ClassHourServiceImpl implements ClassHourService{
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
 			result.setMessage("下课失败！");
+			logger.error(IOUtils.getError(e));
 		}
 		return result;
 	}
@@ -214,6 +220,7 @@ public class ClassHourServiceImpl implements ClassHourService{
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
 			result.setMessage("获取当前班级信息失败！");
+			logger.error(IOUtils.getError(e));
 		}
 		return result;
 	}

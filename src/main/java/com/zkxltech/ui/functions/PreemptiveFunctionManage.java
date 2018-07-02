@@ -28,9 +28,6 @@ public class PreemptiveFunctionManage extends BrowserFunction{
 			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数
 			StudentInfoService service = new StudentInfoServiceImpl();
 			switch (method) {
-			case "import_paper":
-				result = service.selectStudentInfo(param);
-				break;
 			case "quick_answer":
 			    result = service.quickAnswer(param);
                 break;

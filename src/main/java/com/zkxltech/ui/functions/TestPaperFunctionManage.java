@@ -28,7 +28,6 @@ import net.sf.json.JSONObject;
  *	import_paper 导入试卷
  */
 public class TestPaperFunctionManage extends BrowserFunction{
-	private static final Logger logger = LoggerFactory.getLogger(TestPaperFunctionManage.class);
 	private TestPaperService testPaperService = new TestPaperServiceImpl();
 	private QuestionService questionService = new QuestionServiceImpl();
 	private ServerService serverService = new ServerServiceImpl();
@@ -156,7 +155,6 @@ public class TestPaperFunctionManage extends BrowserFunction{
 			result.setRet(Constant.ERROR);
 			result.setMessage("参数不能为空！");
 		}
-		logger.info("返回给页面的数据："+JSONObject.fromObject(result).toString());
 		return JSONObject.fromObject(result).toString();
 	}
 }

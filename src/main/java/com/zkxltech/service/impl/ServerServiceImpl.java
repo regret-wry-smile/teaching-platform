@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ejet.cache.BrowserManager;
@@ -29,10 +32,11 @@ import com.zkxltech.sql.QuestionInfoSql;
 import com.zkxltech.sql.RecordSql;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.sql.TestPaperSql;
+import com.zkxltech.ui.functions.TestPaperFunctionManage;
 import com.zkxltech.ui.util.StringUtils;
 
 public class ServerServiceImpl implements ServerService{
-	
+	private static final Logger logger = LoggerFactory.getLogger(ServerServiceImpl.class);
 	private String urlString  = ConfigConstant.serverDbConfig.getServer_url();
 	private QuestionInfoSql questionInfoSql = new QuestionInfoSql();
 	private TestPaperSql testPaperSql = new TestPaperSql();
@@ -83,6 +87,7 @@ public class ServerServiceImpl implements ServerService{
 					return;
 				} catch (Exception e) {
 					BrowserManager.showMessage(false, "从服务器中获取试卷失败！");
+					logger.error(IOUtils.getError(e));
 					return;
 //					result.setRet(Constant.ERROR);
 //					result.setMessage("从服务器中获取试卷失败！");
@@ -161,6 +166,7 @@ public class ServerServiceImpl implements ServerService{
 					return;
 				} catch (Exception e) {
 					BrowserManager.showMessage(false, "保存服务器中的题目信息失败！");
+					logger.error(IOUtils.getError(e));
 					return;
 				}finally {
 					BrowserManager.removeLoading();
@@ -186,30 +192,30 @@ public class ServerServiceImpl implements ServerService{
 //		
 //	}
 	
-	public static void main(String[] args) {
-		/*模拟当前班级的学生信息*/
-		StudentInfo studentInfo = new StudentInfo();
-		studentInfo.setClassId("9999");
-		ClassHour classHour = new ClassHour();
-		classHour.setClassHourId("3d123895edc04d748cdc9875bebbba6d");
-		classHour.setSubjectName("语文");
-		classHour.setClassId("9999");
-		Global.setClassId("9999");
-		Global.setClassHour(classHour);
-		
-		try {
-			Global.setStudentInfos((List<StudentInfo>)new StudentInfoSql().selectStudentInfo(studentInfo).getItem());
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		Result result = new ServerServiceImpl().uploadServer( "T11");
-		System.out.println(net.sf.json.JSONObject.fromObject(result));
-	}
+//	public static void main(String[] args) {
+//		/*模拟当前班级的学生信息*/
+//		StudentInfo studentInfo = new StudentInfo();
+//		studentInfo.setClassId("9999");
+//		ClassHour classHour = new ClassHour();
+//		classHour.setClassHourId("3d123895edc04d748cdc9875bebbba6d");
+//		classHour.setSubjectName("语文");
+//		classHour.setClassId("9999");
+//		Global.setClassId("9999");
+//		Global.setClassHour(classHour);
+//		
+//		try {
+//			Global.setStudentInfos((List<StudentInfo>)new StudentInfoSql().selectStudentInfo(studentInfo).getItem());
+//		} catch (IllegalArgumentException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		Result result = new ServerServiceImpl().uploadServer( "T11");
+//		System.out.println(net.sf.json.JSONObject.fromObject(result));
+//	}
 	
 	@Override
 	public Result uploadServer(Object testId) {
@@ -297,6 +303,7 @@ public class ServerServiceImpl implements ServerService{
 					return;
 				} catch (Exception e) {
 					BrowserManager.showMessage(false, "上传失败！");
+					logger.error(IOUtils.getError(e));
 					return;
 				}finally {
 					BrowserManager.removeLoading();
