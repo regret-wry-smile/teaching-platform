@@ -395,6 +395,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
+        Global.isAnswerStart = true;
 //            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
 //            Result result = impl.selectStudentInfo(param);
 //            List<Object> item = (List<Object>) result.getItem();
@@ -404,7 +405,6 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }
         thread = new QuickThread();
         thread.start();
-        Global.isAnswerStart = true;
         r.setRet(Constant.SUCCESS);
         r.setMessage("发送成功");
         return r;
