@@ -29,6 +29,7 @@ import com.zkxltech.ui.TestMachineThread;
 import com.zkxltech.ui.util.StringUtils;
 import com.zkxlteck.scdll.ScDll;
 import com.zkxlteck.thread.AttendanceThread;
+import com.zkxlteck.thread.EquipmentStatusThread;
 import com.zkxlteck.thread.MultipleAnswerThread;
 import com.zkxlteck.thread.SingleAnswerThread;
 
@@ -37,6 +38,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	private Result result;
 	private RecordSql recordSql = new RecordSql();
 	private static Thread thread;
+	private static Thread equipmentStatusThread;
     
     public static Thread getThread() {
         return thread;
@@ -437,5 +439,28 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 		}
 	}
 
+    @Override
+    public Result checkEquipmentStatusStart() {
+        Result r = new Result();
+        r.setRet(Constant.SUCCESS);
+        equipmentStatusThread = new EquipmentStatusThread();
+        thread.start();
+        r.setMessage("启动检查成功");
+        return r;
+    }
+    @Override
+    public Result checkEquipmentStatusStop(){
+        Result r = new Result();
+        r.setRet(Constant.SUCCESS);
+        if (equipmentStatusThread != null) {
+            EquipmentStatusThread t = (EquipmentStatusThread)equipmentStatusThread;
+            t.setFLAG(false);
+            r.setMessage("停止成功");
+            return r;
+        }
+        r.setRet(Constant.ERROR);
+        r.setMessage("停止失败");
+        return r;
+    }
 	
 }

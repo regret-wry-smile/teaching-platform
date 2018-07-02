@@ -45,4 +45,8 @@ public interface AnswerInfoService {
     Result getEverybodyAnswerInfo();
     
     Result stopMultipleAnswer();
+
+    Result checkEquipmentStatusStart();
+
+    Result checkEquipmentStatusStop();
 }

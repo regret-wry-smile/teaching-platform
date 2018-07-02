@@ -88,7 +88,15 @@ public class AnswerFunctionManage extends BrowserFunction{
 			case "stop_class_test_subjective":
 				//停止主答题答题
 				result = answerInfoService.stopSubjectiveAnswer(params[1]);
-				break;	
+				break;
+			case "check_equipment_status_start":
+                //每隔两秒检查一次设备状态
+                result = answerInfoService.checkEquipmentStatusStart();
+                break;
+			case "check_equipment_status_stop":
+			    //停止检查设备状态
+			    result = answerInfoService.checkEquipmentStatusStop();
+			    break;
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");
