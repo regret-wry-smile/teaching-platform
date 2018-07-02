@@ -11,8 +11,8 @@ import com.ejet.cache.BrowserManager;
 import com.ejet.cache.RedisMapBind;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
-import com.mysql.jdbc.log.Log;
 import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
@@ -215,6 +215,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
             RedisMapBind.setStudentInfoMap(studentInfoMap);
             thread = new CardInfoThread();
             thread.start();
+            Global.isAnswerStart = true;
             r.setItem(bind_start);
             r.setRet(Constant.SUCCESS);
             r.setMessage("操作成功");
@@ -248,6 +249,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
            
         }
         log.info("\"停止绑定\"成功");
+        Global.isAnswerStart = false;
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
