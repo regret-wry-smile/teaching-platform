@@ -7,6 +7,7 @@ import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.io.IOUtils;
 import com.zkxlteck.scdll.ScDll;
 
 public class MultipleAnswerThread extends Thread {
@@ -32,7 +33,7 @@ public class MultipleAnswerThread extends Thread {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                logger.error(" Thread sleep failure ");
+                logger.error(IOUtils.getError(e));
             }
             String jsonData = ScDll.intance.get_answer_list();
             if (!StringUtils.isBlank(jsonData)) {
