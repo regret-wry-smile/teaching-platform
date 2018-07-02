@@ -1,5 +1,6 @@
 package com.zkxltech.service.impl;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,9 +12,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,45 +44,45 @@ import net.sf.json.JSONObject;
 
 public class RecordServiceImpl implements RecordService{
     private static final Logger log = LoggerFactory.getLogger(RecordServiceImpl.class);
-	private Result result ;
-	
-	private RecordSql recordSql = new RecordSql();
-	//FIXME 导入答题记录
-	@Override
-	public Result exportRecord(Object object) {
-		result = new Result();
-		try {
-			result.setMessage("导出成功!");
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("导入学生失败！");
-			result.setDetail(IOUtils.getError(e));
-			return result;
-		}
-	}
-//	@Test
-//	public void aa(){
-//	    try {
-//	        JSONObject jo = new JSONObject();
-//	        jo.put("classId", "BJ1001");
-//	        jo.put("subject", "语文");
-//	        jo.put("classHourId", "7b44b6206d934057ac437f978c1e9c2b");
-//	        jo.put("testId", "4Y0001");
-//	        System.out.println(jo.toString());
+    private Result result ;
+    
+    private RecordSql recordSql = new RecordSql();
+    //FIXME 导入答题记录
+    @Override
+    public Result exportRecord(Object object) {
+        result = new Result();
+        try {
+            result.setMessage("导出成功!");
+            return result;
+        } catch (Exception e) {
+            result.setRet(Constant.ERROR);
+            result.setMessage("导入学生失败！");
+            result.setDetail(IOUtils.getError(e));
+            return result;
+        }
+    }
+//  @Test
+//  public void aa(){
+//      try {
+//          JSONObject jo = new JSONObject();
+//          jo.put("classId", "BJ1001");
+//          jo.put("subject", "语文");
+//          jo.put("classHourId", "7b44b6206d934057ac437f978c1e9c2b");
+//          jo.put("testId", "4Y0001");
+//          System.out.println(jo.toString());
 //            testExport(jo);
 //            
 //        } catch (Exception e) {
 //            // TODO Auto-generated catch block
 //            e.printStackTrace();
 //        }
-//	}
-	@Override
-	public Result testExport(Object object) {
-	    Result r = new Result();
-	    r.setMessage("正在导出,请稍后......");
-	    r.setRet(Constant.SUCCESS);
-	    new Thread(new Runnable() {
+//  }
+    @Override
+    public Result testExport(Object object) {
+        Result r = new Result();
+        r.setMessage("正在导出,请稍后......");
+        r.setRet(Constant.SUCCESS);
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 //查询
@@ -267,6 +268,7 @@ public class RecordServiceImpl implements RecordService{
                     wb.write(out);// 将数据写出去  
                     out.flush();// 将数据写出去
                     BrowserManager.showMessage(true,"导出成功");
+                    openFile();
                 }catch (Exception e) {
                     log.error("", e);
                     r.setMessage("导出失败");
@@ -285,13 +287,13 @@ public class RecordServiceImpl implements RecordService{
             }
         }).start();
         return r;
-	}
-	/**
-	 * 查询答题记录
-	 * @param object
-	 * @return
-	 */
-	@Override
+    }
+    /**
+     * 查询答题记录
+     * @param object
+     * @return
+     */
+    @Override
     public Result selectRecord(Object object) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
@@ -364,17 +366,25 @@ public class RecordServiceImpl implements RecordService{
                 //按正确和错误进行分类
                 Map<Object, List<Record>> resultMap = ListUtils.getClassificationMap(list, "result");
                 float b = 0;
-                if (resultMap != null && resultMap.size() < 1) {
+                if (resultMap != null && resultMap.size() > 0) {
                     List<Record> corrects = resultMap.get(Constant.RESULT_TRUE);//得到所有正确的答案总数
                     b = (float)corrects.size() / questInfos.size();
                 }
                 Record resultRocord = new Record();
                 resultRocord.setStudentId((String)key);
                 resultRocord.setStudentName(list.get(0).getStudentName());
-                resultRocord.setResult(StringUtils.formattedDecimalToPercentage(b));
+                resultRocord.setPercentage(b);
                 resultRocord.setTestName(testPaper.getTestName());
                 resultRocord.setTime(classHour.getStartTime());
                 result.add(resultRocord);
+            }
+            if (!ListUtils.isEmpty(result)) {
+                result = result.stream().sorted(Comparator.comparing(Record::getPercentage).reversed())
+                        .collect(Collectors.toList());
+            }
+            for (Record record2 : result) {
+                //格式化成百分比
+                record2.setResult(StringUtils.formattedDecimalToPercentage(record2.getPercentage()));
             }
             r.setItem(result);
             r.setRet(Constant.SUCCESS);
@@ -387,61 +397,61 @@ public class RecordServiceImpl implements RecordService{
         }
         return r;
     }
-	@Override
+    @Override
     public Result selectSubjectiveRecord(Object object) {
-    	result = new Result();
-		try {
-			Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
-	    	record.setClassId(Global.getClassId());
-	    	record.setSubject(Global.getClassHour().getSubjectName());
-	    	record.setQuestionType("4");
-	    	record.setClassHourId(Global.getClassHour().getClassHourId());
-			result = recordSql.selectRecord(record);
-			if (Constant.ERROR.equals(result.getRet())) {
-				result.setMessage("查询记录失败!");
-				return result;
-			}
-			result.setMessage("查询记录成功!");
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("查询记录失败！");
-			result.setDetail(IOUtils.getError(e));
-			log.error(IOUtils.getError(e));
-			return result;
-		}
+        result = new Result();
+        try {
+            Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+            record.setClassId(Global.getClassId());
+            record.setSubject(Global.getClassHour().getSubjectName());
+            record.setQuestionType("4");
+            record.setClassHourId(Global.getClassHour().getClassHourId());
+            result = recordSql.selectRecord(record);
+            if (Constant.ERROR.equals(result.getRet())) {
+                result.setMessage("查询记录失败!");
+                return result;
+            }
+            result.setMessage("查询记录成功!");
+            return result;
+        } catch (Exception e) {
+            result.setRet(Constant.ERROR);
+            result.setMessage("查询记录失败！");
+            result.setDetail(IOUtils.getError(e));
+            log.error(IOUtils.getError(e));
+            return result;
+        }
     }
-	
-	@Override
+    
+    @Override
     public Result selectObjectiveRecord(Object object) {
-    	result = new Result();
-		try {
-			Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
-	    	record.setClassId(Global.getClassId());
-	    	record.setSubject(Global.getClassHour().getSubjectName());
-	    	record.setClassHourId(Global.getClassHour().getClassHourId());
-			result = recordSql.selectRecord(record);
-			if (Constant.ERROR.equals(result.getRet())) {
-				result.setMessage("查询记录失败!");
-				return result;
-			}
-			List<Record> records = (List<Record>) result.getItem();
-			List<Record> retList = new ArrayList<Record>();
-	    	for (int i = 0; i < records.size(); i++) {
-	    		if (!Constant.ZHUGUANTI_NUM.equals(records.get(i).getQuestionType())) {
-	    			retList.add(records.get(i));
-				}
-			}
-	    	result.setItem(retList);
-			result.setMessage("查询记录成功!");
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("查询记录失败！");
-			result.setDetail(IOUtils.getError(e));
-			log.error(IOUtils.getError(e));
-			return result;
-		}
+        result = new Result();
+        try {
+            Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+            record.setClassId(Global.getClassId());
+            record.setSubject(Global.getClassHour().getSubjectName());
+            record.setClassHourId(Global.getClassHour().getClassHourId());
+            result = recordSql.selectRecord(record);
+            if (Constant.ERROR.equals(result.getRet())) {
+                result.setMessage("查询记录失败!");
+                return result;
+            }
+            List<Record> records = (List<Record>) result.getItem();
+            List<Record> retList = new ArrayList<Record>();
+            for (int i = 0; i < records.size(); i++) {
+                if (!Constant.ZHUGUANTI_NUM.equals(records.get(i).getQuestionType())) {
+                    retList.add(records.get(i));
+                }
+            }
+            result.setItem(retList);
+            result.setMessage("查询记录成功!");
+            return result;
+        } catch (Exception e) {
+            result.setRet(Constant.ERROR);
+            result.setMessage("查询记录失败！");
+            result.setDetail(IOUtils.getError(e));
+            log.error(IOUtils.getError(e));
+            return result;
+        }
     }
 
     @Override
@@ -468,5 +478,28 @@ public class RecordServiceImpl implements RecordService{
         r.setMessage("删除成功");
         return r;
     }
+    public void openFile() throws IOException{
+        String flieUrl = System.getProperty("user.dir").replaceAll("\\\\", "/") + "/"+"excels/";
+        Desktop.getDesktop().open(new File(flieUrl));
+    }
     
+    @Override
+    public Result selectStudentRecordDetail(Object object) {
+        Result r = new Result();
+        r.setRet(Constant.ERROR);
+        Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+        if (StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getClassId())||StringUtils.isBlank(record.getStudentId())
+                ||StringUtils.isBlank(record.getTestId())||StringUtils.isEmpty(record.getSubject())) {
+            r.setMessage("缺少参数,班级id,课程,课时id,试卷id,学生id均不能为空");
+            return r;
+        }
+        RecordSql recordSql = new RecordSql();
+        try {
+            r = recordSql.selectRecord(record);
+        } catch (Exception e) {
+            log.error(IOUtils.getError(e));
+            r.setMessage("查询失败");
+        }
+        return r;
+    }
 }

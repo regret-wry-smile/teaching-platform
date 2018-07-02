@@ -17,7 +17,17 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	var _showModal=function(){
 		$('#myModal').modal('show');
 	}
-	
+	//同步数据库
+	var _equipmentsynchron=function(){
+		$scope.result=JSON.parse(execute_set("equipment_database_synchronization"));
+		if($scope.result.ret=='success'){
+			
+		}else{
+			toastr.error($scope.result.message);
+//			toastr.error("同步数据失败");
+		}
+	}
+	_equipmentsynchron();
 	/*查询学生列表*/
 	var _selectStudent = function() {
 		var param = {

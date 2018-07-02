@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapBind;
 import com.ejet.core.util.comm.StringUtils;
+import com.ejet.core.util.io.IOUtils;
 import com.zkxlteck.scdll.ScDll;
 
 public class CardInfoThread extends Thread {
@@ -22,7 +23,7 @@ public class CardInfoThread extends Thread {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                logger.error(" Thread sleep failure ");
+                logger.error(IOUtils.getError(e));
             }
             String jsonData = ScDll.intance.get_wireless_bind_info() ;
             if (!StringUtils.isBlank(jsonData)) {

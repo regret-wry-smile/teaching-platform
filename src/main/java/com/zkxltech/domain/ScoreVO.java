@@ -18,6 +18,11 @@ public class ScoreVO {
 	 */
 	private Integer peopleSum;
 	
+	/**
+	 * 平均分
+	 */
+	private String average;
+	
 	public String getNum() {
 		return num;
 	}
@@ -41,6 +46,12 @@ public class ScoreVO {
 	}
 	public void setPeopleSum(Integer peopleSum) {
 		this.peopleSum = peopleSum;
+	}
+	public String getAverage() {
+		return average;
+	}
+	public void setAverage(String average) {
+		this.average = average;
 	}
 	
 }
