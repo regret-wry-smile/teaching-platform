@@ -215,7 +215,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
             RedisMapBind.setStudentInfoMap(studentInfoMap);
             thread = new CardInfoThread();
             thread.start();
-            Global.isAnswerStart = true;
+        	Global.setModeMsg(Constant.BUSINESS_BIND);
             r.setItem(bind_start);
             r.setRet(Constant.SUCCESS);
             r.setMessage("操作成功");
@@ -249,7 +249,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
            
         }
         log.info("\"停止绑定\"成功");
-        Global.isAnswerStart = false;
+    	Global.setModeMsg(Constant.BUSINESS_NORMAL);
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;

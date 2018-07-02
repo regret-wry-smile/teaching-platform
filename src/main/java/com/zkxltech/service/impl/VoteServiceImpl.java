@@ -41,7 +41,7 @@ public class VoteServiceImpl implements VoteService{
 				
 			
 			//将评分主题相关信息保存到缓存
-		    Global.isAnswerStart = true;
+			Global.setModeMsg(Constant.BUSINESS_VOTE);
 			result.setMessage("开始投票！");
 			result.setRet(Constant.SUCCESS);
 			return result;
@@ -85,7 +85,7 @@ public class VoteServiceImpl implements VoteService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
-        Global.isAnswerStart = false;
+    	Global.setModeMsg(Constant.BUSINESS_NORMAL);
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;

@@ -39,8 +39,7 @@ public class ScoreServiceImpl implements ScoreService{
                result.setMessage(reStart.getMessage());
                return result;
             }
-				
-		    Global.isAnswerStart = true;
+			Global.setModeMsg(Constant.BUSINESS_SCORE);
 			//将评分主题相关信息保存到缓存
 			result.setMessage("开始评分！");
 			result.setRet(Constant.SUCCESS);
@@ -102,7 +101,7 @@ public class ScoreServiceImpl implements ScoreService{
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
-        Global.isAnswerStart = false;
+    	Global.setModeMsg(Constant.BUSINESS_NORMAL);
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
         return r;
