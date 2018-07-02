@@ -123,15 +123,15 @@
 						</div>
 						<span ng-show="myForm.trueAnswer.$invalid" class="warning">(0-9)*</span>
 					</div>
-					<div class="form-group" ng-if="testInfo.questionType=='-1'">
+					<div class="form-group" ng-show="testInfo.questionType=='-1'">
 						<label for="firstname" class="col-sm-3 control-label">答案</label>
 						<div class="col-sm-8" ng-if="testInfo.selLetter=='1'">
-						<input type="text" autocomplete="off" name="mutilLetter" ng-show="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]+$/" required />
-						<input type="text" autocomplete="off" name="mutilLetter" ng-show="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]+$/" required />
+						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]+$/" required />
+						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]+$/" required />
 						</div>
 						<div class="col-sm-8" ng-if="testInfo.selLetter=='0'">
-				    	<input type="text" autocomplete="off" name="singleLetter" ng-show="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required />
-						<input type="text" autocomplete="off" name="singleLetter" ng-show="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required />						
+				    	<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required />
+						<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required />						
 						</div>
 						<span ng-show="myForm.singleLetter.$invalid" ng-if="testInfo.selLetter=='0'" class="warning">单选*</span>
 						<span ng-show="myForm.mutilLetter.$invalid" ng-if="testInfo.selLetter=='1'" class="warning">多选*</span>
@@ -199,7 +199,7 @@
 					</div>
 				</div>
 				<div class="opbtn clearfix pt10">
-					<a href="javascript:;" ng-click="addSubject()">新增</a>
+					<a href="javascript:;" ng-click="addSubject()">新增题目</a>
 				</div>
 				<div class="operatebtn pt10 clearfix">
 					<button class="btn btn-primary btn-lg" ng-click="savePaper()" ng-disabled="!myForm.$valid">保存</button>

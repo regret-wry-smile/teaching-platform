@@ -52,6 +52,48 @@
 		<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div id="loading" class="loading">加载中</div>
 		</div>
+		<!--个人作答记录-->
+		<script type="text/ng-template" id="oneAnswerDetailModal.html">
+					<div class="modal-header">
+						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+						<h4 class="modal-title">{{个人}}作答详情</h4>
+					</div>
+					<div class="modal-body" id="oneanswer" style="max-height: 3.0rem;overflow: auto;" >
+						<table class="table">
+							<thead>
+								<tr>
+									<!--客观题-->
+									<th>题号</th>
+									<th>题目</th>
+									<th>题目类型</th>
+									<th ng-show="answerType=='1'">正确答案</th>
+									<th ng-show="answerType=='1'">作答答案</th>									
+									<th ng-show="answerType=='1'">作答结果</th>
+									<!--主观题-->
+									<th ng-show="answerType=='0'">最高分</th>
+									<th ng-show="answerType=='0'">得分</th>									
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in oneanswerLists track by $index">
+									<td>{{item.questionId}}</td>
+									<td>{{item.question}}</td>
+									<td>{{item.questionType|questionType}}</td>
+									<td ng-show="answerType=='1'">{{item.trueAnswer|AnswerType}}</td>
+									<td ng-show="answerType=='1'">{{item.answer}}</td>
+									<td ng-show="answerType=='1'">{{item.result}}</td>
+									<td ng-show="answerType=='0'">{{item.score}}</td>									
+									<td ng-show="answerType=='0'">{{item.answer}}</td>
+								</tr>
+							</tbody>
+							
+						</table>
+						
+					</div>
+					<div class="modal-footer text-center">
+						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>			
+					</div>
+			</script>
 		<!--确认弹框-->
 			<script type="text/ng-template" id="sureModal.html">
 				<form name="myForm" novalidate="novalidate">
@@ -131,7 +173,7 @@
 							</tr>
 						</thead>-->
 						<tbody>
-							<tr ng-repeat="item in recordList track by $index" ng-click="$event.stopPropagation();">
+							<tr ng-repeat="item in recordList track by $index" ng-click="$event.stopPropagation();viewOneInfo(item)">
 								<td style="width: 10%;">{{$index+1}}</td>
 								<td style="width: 10%;">{{item.studentName}}</td>
 								<td style="width: 15%;">{{item.testName}}</td>

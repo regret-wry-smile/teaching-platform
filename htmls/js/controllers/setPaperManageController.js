@@ -498,6 +498,11 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 		$scope.changeselType = function(selLetter) {
 			$scope.testInfo.selLetter = selLetter;
 		}
+		//切换字母范围
+		$scope.changeRange=function(range){
+			alert(range)
+			$scope.testInfo.range = range;
+		}
 		$scope.ok = function() {
 			if($scope.testInfo.questionType == '-1') {
 				if($scope.testInfo.selLetter == '0') {
@@ -598,6 +603,11 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 
 		$scope.changeselType = function(selLetter) {
 			$scope.testInfo.selLetter = selLetter;
+		}
+		//切换字母范围
+		$scope.changeRange=function(range){
+			alert(range)
+			$scope.testInfo.range = range;
 		}
 		$scope.ok = function() {
 

@@ -154,11 +154,11 @@ p {
 	right:  0.15rem;
 	margin: 0;
 } 
-/*td.hidename{
+span.hidename{
 	white-space: nowrap;/*控制单行显示*/
-	/*overflow: hidden;/*超出隐藏*/
-	/*text-overflow: ellipsis;/*隐藏的字符用省略号表示*/
-/*}*/
+	overflow: hidden;/*超出隐藏*/
+	text-overflow: ellipsis;/*隐藏的字符用省略号表示*/
+}
 ul.modbox li{
 	float: left;
 	width: 33.33%;
@@ -575,6 +575,12 @@ table.classlist tbody tr:hover,
 table.userlist tbody tr:hover{
 	background: #eaeaea;
 }
+table.userlistchild tbody tr{
+	height: 0.40rem;
+    line-height: 0.40rem;
+    vertical-align: middle;
+}
+
 table.userlistchild tbody tr:first-child,
 table.classlist tbody tr:first-child{
 	border-top: none;
@@ -610,8 +616,7 @@ span.sub{
 	line-height: 0.05rem;
 	margin-top: -0.03rem;
 	vertical-align: middle;
-	margin-right: 0.02rem;
-	
+	margin-right: 0.02rem;	
 	border-radius: 100%;
 }
 .green{
@@ -631,6 +636,7 @@ table.classlist tbody tr td{
 	line-height: 0.26rem;
 	padding: 0.06rem ;
 }
+
 table.classlist tbody tr span.name.active{
 	color: #3d95ff;
 }

@@ -58,24 +58,25 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.titleList=[];//标题数组
 	$scope.colors = ['#ffffff','#c4d4ef','#14c629','#f4c96d','#86daf6'];
 	$scope.data=[];
+	
 	var _getvote=function(){
-		$scope.voteInfoslist=[];
+		/*$scope.voteInfoslist=[];
 		$scope.data=[];
-		$scope.titleList=[];
+		$scope.titleList=[];*/
 		$scope.result=JSON.parse(execute_vote("get_vote"));
-		console.log(JSON.stringify($scope.result))
+		console.log("哈哈哈哈哈哈哈"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){		
 			$scope.voteInfoslist=$scope.result.item;
+			//$scope.voteInfoslist=[{"agree":0,"disagree":0,"num":"1","program":"111","waiver":0},{"agree":0,"disagree":0,"num":"2","program":"222","waiver":0},{"agree":0,"disagree":0,"num":"3","program":"333","waiver":0},{"agree":0,"disagree":0,"num":"4","program":"444","waiver":0},{"agree":0,"disagree":0,"num":"5","program":"555","waiver":0}];
 			if($scope.voteInfoslist.length>3){
 				$scope.width="14%";
 			}else{
 				$scope.width="20%";
 			}
 			for(var i=0;i<$scope.voteInfoslist.length;i++){
-			$scope.colors.push(i);
-			
-			$scope.titleList.push($scope.voteInfoslist[i].program);	
-			//console.log("头部"+JSON.stringify($scope.titleList))		
+			$scope.colors.push($scope.colors[i]);		
+			$scope.titleList.push($scope.voteInfoslist[i].program);						
+			//console.log("头部"+JSON.stringify($scope.voteInfoslist))		
 				var item={
 					name:$scope.voteInfoslist[i].program,
 		            type:'bar',
@@ -91,12 +92,11 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 					            },
 				            }
 			       		}
-		    		},
-		    		
+		    		},		    		
 		            data:[$scope.voteInfoslist[i].agree,$scope.voteInfoslist[i].disagree,$scope.voteInfoslist[i].waiver],
 				}
 				$scope.data.push(item);
-				//console.log(JSON.stringify($scope.data))
+				console.log("数据"+JSON.stringify($scope.data))
 				
 			}
 			option = {
@@ -109,6 +109,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		    },
 		    legend: {
 		        data: $scope.titleList,
+		        //data:["1","2","3","4"],
 		        textStyle:{
 		        	fontSize:'16',
 		        	color:'#fff'
@@ -159,7 +160,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		          	/*axisTick:{
 				        show:false
 				    },*/
-				axisLine: {
+					axisLine: {
 						lineStyle: {
 							color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
 							show: false
@@ -175,9 +176,14 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		        }
 		    ],
 		    series : $scope.data
+/*		    series:[{"name":"1","type":"bar","barWidth":"14%","itemStyle":{"normal":{"label":{"show":true,"position":"top","textStyle":{"color":"#fff","fontSize":"16"}}}},"data":[0,0,0]},{"name":"2","type":"bar","barWidth":"14%","itemStyle":{"normal":{"label":{"show":true,"position":"top","textStyle":{"color":"#fff","fontSize":"16"}}}},"data":[0,0,0]},
+		    {"name":"2","type":"bar","barWidth":"14%","itemStyle":{"normal":{"label":{"show":true,"position":"top","textStyle":{"color":"#fff","fontSize":"16"}}}},"data":[0,0,0]},
+		    {"name":"3","type":"bar","barWidth":"14%","itemStyle":{"normal":{"label":{"show":true,"position":"top","textStyle":{"color":"#fff","fontSize":"16"}}}},"data":[0,0,0]},
+		    {"name":"4","type":"bar","barWidth":"14%","itemStyle":{"normal":{"label":{"show":true,"position":"top","textStyle":{"color":"#fff","fontSize":"16"}}}},"data":[0,0,0]}]*/
 			}
 			//myChart.clear();
 			if(option && typeof option === "object") {
+				alert(77777)
 				myChart.setOption(option, true);
 			}
 		}else{
@@ -185,14 +191,15 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 			toastr.error($scope.result.message);
 		}
 	}
-	// 获取到的是变更后的页面宽度
-		window.onresize = function(){
-			myChart.resize();
-		}
 	var _init=function(){
 		_getvoteTitleInfo();
 		_getvote();		
 	}();	
+	// 获取到的是变更后的页面宽度
+		window.onresize = function(){
+			myChart.resize();
+		}
+	
 	//$scope.voteInfoslist=[{"agree":4,"disagree":0,"num":"1","program":"张三","waiver":0},{"agree":2,"disagree":1,"num":"2","program":"李四","waiver":1},{"agree":0,"disagree":0,"num":"3","program":"王五","waiver":0}]
 	
 	//返回设置页面

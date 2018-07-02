@@ -288,6 +288,35 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 
 	}
 	
+	
+	//查看单个学生的记录
+	$scope.viewOneInfo=function(item){
+		var modalInstance = $modal.open({
+				templateUrl: 'oneAnswerDetailModal.html',
+				controller: 'oneAnswerDetailModalCtrl',
+				size: 'sm',
+				resolve: {
+					infos: function() {
+						return item;
+					}
+				}
+		});
+		modalInstance.result.then(function(info) {
+			
+
+		}, function() {
+
+			//$log.info('Modal dismissed at: ' + new Date());
+		});
+		var param={
+			classId: $scope.setClass.classes,
+			subjectName: $scope.setClass.subject,
+			testId: $scope.setClass.paper,
+			classHourId: $scope.setClass.sujectHour,
+			studentId:item.studentId			
+		}
+		
+	}
 	//导出
 	$scope.exportRecord=function(){		
 		if($scope.setClass.classes&&$scope.setClass.paper&&$scope.setClass.sujectHour&&$scope.setClass.classes){
@@ -337,6 +366,21 @@ app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
 	$scope.cancel = function() {
 		$modalInstance.dismiss('cancel');
 	}
+})
+
+//个人详情控制器
+app.controller("oneAnswerDetailModalCtrl",function($scope,$modalInstance,toastr,content){
+	$scope.result=JSON.parse(execute_record("select_student_record_detail",JSON.stringify(param)));
+	if($scope.result.ret=='success'){
+		console.log(JSON.stringify($scope.result))
+	}else{
+		toastr.success($scope.result.message);
+	}
+	
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	}
+	
 })
 /*app.directive('select', function() {
 	return {

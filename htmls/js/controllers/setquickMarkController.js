@@ -49,6 +49,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.data=[];
 	$scope.datalist=[];
 	$scope.isStop=false;
+	var average=0;
 	var dom = document.getElementById("coutbar");
 	var myChart = echarts.init(dom);
 	var _getScoreTitleInfo=function(){
@@ -77,13 +78,13 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 			for(var i=0;i<$scope.markInfoslist.length;i++){
 			$scope.colors.push(i);
 			$scope.titleList.push($scope.markInfoslist[i].program);	
-			console.log("头部"+JSON.stringify($scope.titleList))
+			/*console.log("头部"+JSON.stringify($scope.titleList))
 				if($scope.markInfoslist[i].total!=0&&$scope.markInfoslist[i].peopleSum!=0){
-					var average=($scope.markInfoslist[i].total/$scope.markInfoslist[i].peopleSum).toFixed(1);
+					$scope.markInfoslist[i].average=($scope.markInfoslist[i].total/$scope.markInfoslist[i].peopleSum).toFixed(1);
 				}else{
-					var average=$scope.markInfoslist[i].total/$scope.markInfoslist[i].peopleSum;
-				}			
-			$scope.datalist=[$scope.markInfoslist[i].total,$scope.markInfoslist[i].peopleSum,average];
+					$scope.markInfoslist[i].average=$scope.markInfoslist[i].total/$scope.markInfoslist[i].peopleSum;
+				}*/			
+			$scope.datalist=[$scope.markInfoslist[i].total,$scope.markInfoslist[i].peopleSum,$scope.markInfoslist[i].average];
 			console.log("头部"+JSON.stringify($scope.datalist))
 				var item={
 					name:$scope.markInfoslist[i].program,

@@ -23,11 +23,14 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		var param = {
 			classId:$scope.classId
 		}
-		console.log(JSON.stringify(param))
+		//console.log(JSON.stringify(param))
 		$scope.result = JSON.parse(execute_student("select_student",JSON.stringify(param)));
-		console.log("學生"+JSON.stringify($scope.result))
-		if($scope.result.ret=='success'){
-			$scope.studentList=[];
+		//console.log("學生"+JSON.stringify($scope.result))
+		$scope.studentList=[];
+		$scope.onechecked = [];
+		$scope.checkedId = [];
+		$scope.selected = false;
+		if($scope.result.ret=='success'){			
 			$scope.studentList=$scope.result.item;
 			
 		}else{
@@ -54,7 +57,16 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			toastr.error($scope.result.message);
 		}
 	};
-
+	
+	/*for(var i=0;i<10;i++){
+		var item={"atype":"0","classId":"99999444","className":"哈哈哈哈哈哈哈哈哈哈","id":37}
+		$scope.classList.push(item)
+	}
+	for(var i=0;i<10;i++){
+		var item={"classId":"BJ1001","className":"自动测试","iclickerId":"6666660001","id":1001622,"status":"0","studentId":"10000001","studentName":"学001"}
+		$scope.studentList.push(item)
+	}*/
+	
 	var _init=function(){
 		_selectClass();
 		_selectStudent();
@@ -97,7 +109,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		$scope.classobject=item;
 		console.log("时告诉刚刚说"+JSON.stringify($scope.classobject))
 		_selectStudent();
-	}
+	};
 	
 	//本地导入学生
 	$scope.patchImport = function() {
@@ -127,7 +139,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 				}
 			}, function() {
 		});
-		}
+		};
 	//打开编辑班级弹框
 	$scope.editClass = function(item,$index) {
 		var modalInstance = $modal.open({
@@ -185,7 +197,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		}, function() {
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
-	}
+	};
 	//打开新增学生弹框
 	$scope.addStudent = function() {
 		var modalInstance = $modal.open({
@@ -227,7 +239,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
-	}
+	};
 	
 	//一键配对
 	$scope.quickBind=function(){		
@@ -264,7 +276,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		}
 		
 		
-	}
+	};
 	//全选
 	$scope.selectAll = function(data) {
 		if($scope.selected) {
@@ -308,7 +320,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		} else {
 			$scope.selected = false;
 		}
-	}
+	};
 	
 	//删除学生
 	$scope.deleteStudent=function(){
@@ -499,12 +511,12 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 					toastr.warning("只能导入.XLSX、.XLS类型文件");
 					return ;
 				}else{	
-					_showModal();
+					//_showModal();
 					$scope.result=JSON.parse(execute_student("import_student",$scope.filepath));
 					//console.log("哈哈哈哈"+JSON.stringify($scope.result))
 					if($scope.result.ret=='success'){
 						toastr.success($scope.result.message);
-						_hideModal();
+						//_hideModal();
 						$modalInstance.close($scope.result.remak);
 					}else{
 						toastr.error($scope.result.message);
@@ -583,54 +595,44 @@ app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos
 		classId:$scope.classId,
 		className:$scope.className
 	}
-	
-	/*查询学生列表*/
-	var _selectStudent = function() {
+	//校验学号
+	$scope.blurStunum=function(){
 		if($scope.student.studentId){
 			var param = {
 				classId:$scope.classId,
 				studentId:$scope.student.studentId
 			}
+			$scope.result = JSON.parse(execute_student("select_student",JSON.stringify(param)));
+			if($scope.result.ret=='success'){
+				if($scope.result.item.length>0){
+					toastr.warning('该学号已存在，请重新输入');
+					$scope.myForm.studentId.$invalid=true;
+					$scope.myForm.$invalid=true;	
+				}
+			}else{
+				toastr.error($scope.result.message);
+			}
 		}
+		
+	}
+	//答题器编号
+	$scope.blurDevicenum=function(){
 		if($scope.student.iclickerId){
 			var param = {
 				classId:$scope.classId,
 				iclickerId:$scope.student.iclickerId
 			}
-		}
-		
-		console.log(JSON.stringify(param))
-		param =JSON.stringify(param);
-		$scope.result = JSON.parse(execute_student("select_student",param));
-		console.log("學生"+JSON.stringify($scope.result))
-		if($scope.result.ret=='success'){
-			if($scope.result.item.length>0){
-				if($scope.student.studentId){
-					toastr.warning('该学号已存在，请重新输入');
-					 $timeout(function () {
-					  $scope.student.studentId='';
-				   	}, 2000);
+			$scope.result = JSON.parse(execute_student("select_student",JSON.stringify(param)));
+			if($scope.result.ret=='success'){
+				if($scope.result.item.length>0){
+				toastr.warning('该答题器编号已存在，请重新输入');
+				   	$scope.myForm.iclickerId.$invalid=true;
+					$scope.myForm.$invalid=true;	
 				}
-				if($scope.student.iclickerId){
-					toastr.warning('该答题器编号已存在，请重新输入');
-					 $timeout(function () {
-					  $scope.student.iclickerId='';
-				   	}, 2000);
-				}
+			}else{			
+				toastr.error($scope.result.message);
 			}
-			
-		}else{
-			
-			toastr.error($scope.result.message);
 		}
-		
-	};
-	//校验学号
-	$scope.blurStunum=function(){
-		_selectStudent();
-	}
-	$scope.blurDevicenum=function(){
-		_selectStudent();
 	}
 	$scope.ok = function() {
 		if(typeof $scope.student.studentId=='number'){
@@ -674,59 +676,54 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 			$scope.student.iclickerId=parseInt(infos.iclickerId)
 		}
 	}		
-		/*查询学生列表*/
-	var _selectStudent = function() {
-		if($scope.student.studentId){
+		
+	//校验学号
+	$scope.blurStunum=function(){
+		if($scope.myForm.studentId.$dirty==true){
 			var param = {
-				classId:$scope.student.classId,
+				classId:$scope.classId,
 				studentId:$scope.student.studentId
 			}
-		}
-		if($scope.student.iclickerId){
+			$scope.result = JSON.parse(execute_student("select_student",JSON.stringify(param)));
+			console.log(JSON.stringify($scope.result));
+			if($scope.result.ret == 'success') {
+				if($scope.result.item.length > 0) {
+					if($scope.result.item[0].studentId!=infos.studentId){
+						$scope.myForm.studentId.$error.required=true;
+						$scope.myForm.studentId.$invalid=true;
+						$scope.myForm.$invalid=true;
+						toastr.warning("该学号已存在，请重新输入",{preventOpenDuplicates:true});
+					}					
+				}
+			} else {
+				toastr.error($scope.result.message);
+			}
+		}		
+	}
+	//校验答题器编号
+	$scope.blurDevicenum=function(){		
+		if($scope.myForm.iclickerId.$dirty==true){
 			var param = {
 				classId:$scope.classId,
 				iclickerId:$scope.student.iclickerId
 			}
-		}
-		
-		console.log(JSON.stringify(param))
-		param =JSON.stringify(param);
-		$scope.result = JSON.parse(execute_student("select_student",param));
-		console.log("學生"+JSON.stringify($scope.result))
-		if($scope.result.ret=='success'){
-			if($scope.result.item.length>0){
-				if($scope.student.studentId){
-					toastr.warning('该学号已存在，请重新输入');
-					 $timeout(function () {
-					  $scope.student.studentId='';
-				   	}, 2000);
+			$scope.result = JSON.parse(execute_student("select_student",JSON.stringify(param)));
+			console.log(JSON.stringify($scope.result));
+			if($scope.result.ret == 'success') {
+				if($scope.result.item.length > 0) {
+					if($scope.result.item[0].studentId!=infos.studentId){
+						$scope.myForm.iclickerId.$error.required=true;
+						$scope.myForm.iclickerId.$invalid=true;
+						$scope.myForm.$invalid=true;
+						toastr.warning('该答题器编号已存在，请重新输入',{preventOpenDuplicates:true});
+					}
+					
 				}
-				if($scope.student.iclickerId){
-					toastr.warning('该答题器编号已存在，请重新输入');
-					 $timeout(function () {
-					  $scope.student.iclickerId='';
-				   	}, 2000);
-				}
+			} else {
+				toastr.error($scope.result.message);
 			}
-			
-		}else{
-			
-			toastr.error($scope.result.message);
 		}
-		
-	};
-	//校验学号
-	$scope.blurStunum=function(dirty){
-		if(dirty&&dirty==true){
-			_selectStudent();
-		}
-	}
-	$scope.blurDevicenum=function(dirty){
-		if(dirty&&dirty==true){
-			_selectStudent();
-		}
-		
-	}
+	}		
 	$scope.ok = function() {
 		if(typeof $scope.student.studentId=='number'){
 			$scope.student.studentIdint=JSON.stringify($scope.student.studentId)
@@ -777,9 +774,8 @@ app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toa
 			if($scope.result.ret=='success'){
 				if($scope.result.item.length>0){
 					toastr.warning('该班级已存在，请重新输入');
-					 $timeout(function () {
-					  $scope.classInfo.classId='';
-				   	}, 2000);
+					$scope.myForm.classId.$invalid=true;
+					$scope.myForm.$invalid=true;
 				} 
 			}else{
 				toastr.error($scope.result.message);
@@ -798,9 +794,8 @@ app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toa
 			if($scope.result.ret=='success'){
 				if($scope.result.item.length>0){
 					toastr.warning('该班级名称已存在，请重新输入');
-					 $timeout(function () {
-					  $scope.classInfo.className='';
-				   	}, 2000);
+					$scope.myForm.name.$invalid=true;
+					$scope.myForm.$invalid=true;
 				} 
 			}else{
 				toastr.error($scope.result.message);
@@ -832,6 +827,70 @@ app.controller('editClassModalCtrl',function($scope,$modalInstance,$rootScope,to
 	$scope.classInfo.atype1=angular.copy($scope.classInfo.atype);
 	$scope.title="编辑班级";
 	$scope.noedit=true;
+	
+	$scope.selectClass=function(){
+		/*if($scope.classInfo.classId){
+			var param={
+				classId:$scope.classInfo.classId
+			}		
+			$scope.result= JSON.parse(execute_student("select_class",JSON.stringify(param)));
+			console.log(JSON.stringify($scope.result))
+			if($scope.result.ret=='success'){
+				if($scope.result.item.length>0){
+					toastr.warning('该班级已存在，请重新输入');
+					 $scope.myForm.classId.$invalid=true;
+					$scope.myForm.$invalid=true;
+				} 
+			}else{
+				toastr.error($scope.result.message);
+			}
+		}*/
+		
+		if($scope.myForm.classId.$dirty==true){
+			var param={
+				classId:$scope.classInfo.classId
+			}		
+			$scope.result= JSON.parse(execute_student("select_class",JSON.stringify(param)));
+			console.log(JSON.stringify($scope.result));
+			if($scope.result.ret == 'success') {
+				if($scope.result.item.length > 0) {
+					if($scope.result.item[0].classId!=infos.classId){
+						$scope.myForm.classId.$error.required=true;
+						$scope.myForm.classId.$invalid=true;
+						$scope.myForm.$invalid=true;
+						toastr.warning("该班级已存在，请重新输入",{preventOpenDuplicates:true});
+					}					
+				}
+			} else {
+				toastr.error($scope.result.message);
+			}
+		}
+				
+	}
+	//班级名称查重
+	$scope.selectClassName=function(){		
+		if($scope.myForm.name.$dirty==true){
+			var param={
+				className:$scope.classInfo.className
+			}		
+			$scope.result= JSON.parse(execute_student("select_class",JSON.stringify(param)));
+			console.log(JSON.stringify($scope.result));
+			if($scope.result.ret == 'success') {
+				if($scope.result.item.length > 0) {
+					if($scope.result.item[0].className!=infos.className){
+						$scope.myForm.name.$error.required=true;
+						$scope.myForm.name.$invalid=true;
+						$scope.myForm.$invalid=true;
+						toastr.warning("该班级名称已存在，请重新输入",{preventOpenDuplicates:true});
+					}					
+				}
+			} else {
+				toastr.error($scope.result.message);
+			}
+		}
+				
+	}
+	
 	$scope.ok = function() {
 		var param = $scope.classInfo;
 		$scope.result= JSON.parse(execute_student("update_class",JSON.stringify(param)));
