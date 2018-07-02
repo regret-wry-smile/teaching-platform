@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
+import com.ejet.core.util.constant.Constant;
 import com.sun.javafx.collections.MappingChange.Map;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
@@ -174,8 +175,8 @@ public class ExportExcel {
                     		 HashMap<String, Object> map =((HashMap<String, Object>)dataList.get(i).get(j));
                     		 cellValue = (String) map.get("answer");
                     		 datacell.setCellStyle(zidonghuanhang2);  
-                    		 if ("1".equals(map.get("type"))) {//客观题分对错
-                    			 if ("正确".equals(map.get("result"))) {
+                    		 if (!Constant.ZHUGUANTI_NUM.equals(map.get("type"))) {//客观题分对错
+                    			 if (Constant.RESULT_TRUE.equals(map.get("result"))) {
                        			  	datacell.setCellStyle(trueStyle);  
                     			 }else {
                     				datacell.setCellStyle(falseStyle);  
