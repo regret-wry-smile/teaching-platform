@@ -83,6 +83,7 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window
 	var letterlist = []; //选择的字母数组
 	$scope.answerResult = []; //选择的作答结果
 	$scope.answerRate = 0; //正确率
+	$scope.studentCount=0;//总人数
 	//获取答题人数
 	$scope.refresAnswerNum = function() {
 			$scope.result = JSON.parse(execute_answer("get_multiple_answer_num"));
@@ -323,6 +324,7 @@ app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $windo
 		$scope.answerResult = []; //选择的正确人数数组
 		$scope.answerRate = 0;
 		var rangeLists = [];
+		$scope.totalStudent=0;//总人数
 		//获取答题人数
 		$scope.refresAnswerNum = function() {
 				$scope.result = JSON.parse(execute_answer("get_single_answer_num"));

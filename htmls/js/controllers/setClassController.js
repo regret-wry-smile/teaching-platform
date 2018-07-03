@@ -1,7 +1,5 @@
 //定义模块时引入依赖  
-//var app = angular.module('app', ['ngCookies','ui.bootstrap', 'toastr']);
 var app = angular.module('app', ['ui.bootstrap', 'toastr']);
-//app.controller('setClassCtrl', function($scope, toastr,$cookies, $cookieStore,$modal,$window) {
 app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window) {
 	$scope.setClass={
 		classes:'',
