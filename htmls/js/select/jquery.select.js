@@ -5,7 +5,6 @@
 ; (function ($, window, document, undefined) {
     $.fn.extend({
         select: function (options) {
-alert(2345);
             //默认参数
             var defaults = {
                 width: "180px",            //生成的select框宽度

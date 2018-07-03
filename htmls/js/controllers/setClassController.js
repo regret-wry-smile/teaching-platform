@@ -111,16 +111,6 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 	
 	//跳转到答题中心页面
 	$scope.startClass=function(){
-		/*var classInfo={
-			classitem:$scope.setClass.classesobject,
-			houritem:$scope.setClass.sujectNameobject,
-			sujectitem:$scope.setClass.subject
-		}*/
-		// $cookieStore.put('classInfo',classInfo);
-        // Get cookie
-        //var favoriteCookie = $cookieStore.get('myFavorite');
-        // Removing a cookie
-       // $cookieStore.remove('myFavorite');
        var param={
        	classId:$scope.setClass.classes,
        	className:$scope.classesobject.value,
@@ -137,12 +127,6 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 	    }else{
 	    	toastr.error($scope.result.message);
 	    }
-		//$scope.param = "classId=" + $scope.classesobject.key + "&className=" + $scope.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
-		//console.log(JSON.stringify($scope.param))
-		//$scope.objectUrl = '../../page/answermoudle/answerCenter.html' + '?' + $scope.param;
-		
-		
-		//window.location.href = "../../page/answermoudle/answerCenter.html?backurl=" + window.location.href;
 		
 	}
 	//打开添加课时弹框
@@ -319,29 +303,6 @@ app.config(['$locationProvider', function($locationProvider) {
 	});
 }]);
 //设置签到控制器
-/*app.controller('setSignCtrl', function($rootScope,$scope,$modal,toastr,$location,$window) {
-	if($location.search()){
-		$scope.classInfo=$location.search();
-		console.log(JSON.stringify($location.search()))
-	}
-	//签到
-	$scope.signIn=function(){
-		var param={
-			classId:$scope.classInfo.classId
-		}
-		$scope.result=JSON.parse(execute_attendance("sign_in_start",JSON.stringify(param)));
-		if($scope.result.ret=='success'){
-			toastr.success($scope.result.message);
-			console.log(JSON.stringify($scope.result))
-			$scope.param = "classId=" + $scope.setClass.classesobject.key + "&className=" + $scope.setClass.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
-		console.log(JSON.stringify($scope.param))
-		$scope.objectUrl = '../../page/answermoudle/userAttend.html' + '?' + $scope.param;
-			$window.location.href = "../../page/answermoudle/userAttend.html";
-		}else{
-			toastr.error($scope.result.message);	
-		}
-	}
-})*/
 app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
 	$rootScope.studentAttendList=[];//签到学生数组
 	var _getsignStudent=function(){

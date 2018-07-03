@@ -23,7 +23,7 @@
 		<script src="../../js/common.js"></script>
 		<script src="../../js/jquery.nicescroll.min.js"></script>
 		<script src="../../js/ui-validate.js"></script>
-		<!--<script src="../../js/vconsole.min.js"></script>-->
+		<script src="../../js/vconsole.min.js"></script>
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<script src="../../js/controllers/setClassController.js"></script>
 		  <!--[if IE 8]>
@@ -43,22 +43,14 @@
 					</a>
 				</div>
 			</div>
-			<div class="content clearfix" style="margin: 0;padding: 0;position: relative;">
-				<div class="modboxs clearfix " style="margin: 0.0rem 0.05rem;padding: 0;position: absolute;left: 0.18rem;">
+			<div class="content clearfix" style="margin: 0;padding: 0;position: relative; background: #f00;">
+				<div class="modboxs clearfix " style="margin: 0.0rem 0.05rem;padding: 0.10rem;position: absolute;left: 0.18rem;overflow: auto;border: 1px solid #f00; background: #f00;">
 					<div class="box" ng-repeat="item in studentAttendList track by $index" ng-class="{'YES':'green','NO':'' }[item.status]">
 						{{item.studentName}}
 					</div>
 			  	</div>
 			</div>
 			<div id="refresAttendance" ng-click="refresAttendance()" style="display:none"></div>
-			
-			<div ng-spinner-loader class="loading">
-				<div class="spinner">
-					<div class="bounce1"></div>
-					<div class="bounce2"></div>
-					<div class="bounce3"></div>
-				</div>
-			</div>
 	</body>
 
 </html>

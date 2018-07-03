@@ -54,7 +54,7 @@
 
 	<body class="bg" ng-controller="addPaperManageCtrl">
 		<!--添加题目start-->
-		<script type="text/ng-template" id="addSubjectModal.html">
+			<script type="text/ng-template" id="addSubjectModal.html">
 			<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
 				<div class="modal-header">
 					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
@@ -68,13 +68,6 @@
 						</div>
 						<span ng-show="myForm.questionId.$invalid && myForm.questionId.$error.required" class="warning">*</span>
 					</div>
-					<!--<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">题目</label>
-					    <div class="col-sm-8">
-				    	<input type="text" autocomplete="off" name="stuname" id="" value=""  class="form-control" ng-model="testInfo.question" required maxlength="10" placeholder="请输入长度不能超过10位字符" ng-blur="blurStuname()"/>
-						</div>
-						<span ng-show="myForm.stuname.$invalid" class="warning">*</span>
-						</div>-->
 					<div class="form-group">
 						<label for="firstname" class="col-sm-3 control-label">题目内容</label>
 						<div class="col-sm-8">
@@ -100,19 +93,11 @@
 							</select>
 						</div>
 					</div>
-					<!--<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">答案</label>
-					    <div class="col-sm-8">
-				    	<input type="text" autocomplete="off" name="trueAnswer" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" required  ng-blur="blurtrueAnswer(testInfo.trueAnswer)"/>
-						</div>
-						<span ng-show="myForm.trueAnswer.$invalid" class="warning">*</span>
-						</div>-->
 					<div class="form-group" ng-if="testInfo.questionType=='2'">
 						<label for="firstname" class="col-sm-3 control-label">答案</label>
 						<div class="col-sm-8">
 							<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="T" ng-checked="true" required/>√</label>
 							<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="F" required/>×</label>
-							<!--<input type="text" autocomplete="off" name="trueAnswer" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[TF]$/" required />-->
 						</div>
 						<span ng-show="myForm.trueAnswer.$invalid" class="warning">(T/F)*</span>
 					</div>
@@ -123,7 +108,7 @@
 						</div>
 						<span ng-show="myForm.trueAnswer.$invalid" class="warning">(0-9)*</span>
 					</div>
-					<div class="form-group" ng-show="testInfo.questionType=='-1'">
+					<div class="form-group" ng-if="testInfo.questionType=='-1'">
 						<label for="firstname" class="col-sm-3 control-label">答案</label>
 						<div class="col-sm-8" ng-if="testInfo.selLetter=='1'">
 						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]+$/" required />
@@ -139,7 +124,7 @@
 
 				</div>
 				<div class="modal-footer text-center">
-					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid">确定</button>
+					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid||!isTrue">确定</button>
 					<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
 				</div>
 			</form>

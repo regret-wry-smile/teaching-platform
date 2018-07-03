@@ -322,13 +322,13 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 				classHourId:$scope.setClass.sujectHour,
 				testId:$scope.setClass.paper
 			}	
-			
+			console.log("导出参数"+JSON.stringify(param))
 			$scope.result=JSON.parse(execute_record('test_export',JSON.stringify(param)));
 			if($scope.result.ret=='success'){				
 				//toastr.success($scope.result.message);
 			}else{
-				toastr.error($scope.result.message);
-				console.log(JSON.stringify($scope.result.message))
+				/*toastr.error($scope.result.message);
+				console.log(JSON.stringify($scope.result.message))*/
 			}
 		}else{
 			toastr.warning("缺少必要条件，不能导出");

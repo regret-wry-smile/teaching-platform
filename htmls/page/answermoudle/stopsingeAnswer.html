@@ -38,30 +38,69 @@
 		
 	</head>
 	<style type="text/css">
-		body{
+		body {
 			position: relative;
 		}
-		.operatebtn{
+		
+		.operatebtn {
 			position: absolute;
 			bottom: 0.50rem;
 			left: 0;
 			right: 0;
 		}
-		.circle{
+		
+		.circle {
 			position: absolute;
-		    left: 50%;
-		    top: 35%;
-		    transform: translate(-50%,-35%);
+			left: 50%;
+			top: 35%;
+			transform: translate(-50%, -35%);
 		}
-		.tab-content .tab-pane{
+		
+		.tab-content .tab-pane {
 			/*display:none;
 			visibility: visible; */
 			display: block;
 			visibility: visible;
 		}
+		
+		.op {
+			opacity: 1 !important;
+		}
+		img.rebtn1:hover,img.rebtn1:active{
+			opacity: 0.8;
+			cursor: pointer;
+		}
+		.modboxs1{
+			margin: 0;
+			padding: 0;
+		}
+		.modboxs .box{
+			float: left;
+			width: 7%;
+			background: #fff;
+			font-size: 0.18rem;
+			text-align: center;
+			color: #90a4cc;
+			padding: 0.02rem;	
+			margin: 0.05rem;
+			overflow: hidden;
+			text-overflow:ellipsis;
+			white-space: nowrap;
+		}
+		.modboxs .box.green{
+			color: #fff;
+		}
 	</style>
 	<body class="bg clearfix" ng-controller="stopSingeAnswerCtrl">
+		<!--柱状图start-->
+		<div class="content content1 clearfix" style="margin: 0; padding: 0;  opacity: 0; " ng-class="{'op':isStopAswer&&!userdetailshow}">
+			<div class="modbox text-center clearfix" style="width:100%;height:100%;position: absolute;top:0rem;left:0;right: 0;bottom:0rem;margin: 0;">
+				<div id="recordbar" class="clearfix" style="position: absolute;left:0;height:100%; right:0; top:0;bottom:300px;padding:0 0.25rem 0.45rem ; "></div>
+			</div>
+		</div>
+		<!--柱状图end-->
 		<div class="tab-content" ng-show="!userdetailshow">
+			<!--停止答题start-->
 			<div class="tab-pane" ng-show="!isStopAswer">
 				<label class="circle">
 					<span>{{studentNum}}</span>
@@ -71,6 +110,8 @@
 			  	</div>
 			  	<div id="refresAnswerNum" ng-click="refresAnswerNum()" style="display:none"></div>
 			 </div>
+			 <!--停止答题end-->
+			<!--正确率start-->
 			 <div class="tab-pane" ng-show="isStopAswer">
 			  	<div class="header clearfix">
 					<div class="pull-left">
@@ -79,43 +120,33 @@
 						<span class="mr10">正确率{{answerRate|number:1}}%</span>
 						<span class="view" ng-click="viewDetail()">查看详情</span>
 					</div>
-					<!--<div class="pull-right">
-						<button class="btn savebtn" class="mr5">确定</button>
-					</div>-->
 					<div class="pull-right">
 						<a href="javascript:history.go(-1);">
-						<img src="../../image/return.png" ng-click="returnPage()" class="rebtn"/>
+						<img src="../../image/return.png" ng-click="returnPage()" class="rebtn" />
 						</a>
 					</div>
 				</div>
-				<!--<div class="content clearfix">
-					<div class="modbox text-center clearfix ml20 mr20" style="height: 2.8rem;">
-					<div id="recordbar" class="clearfix" style="height: 100%;"></div>
-				  </div>
-				</div>-->
-				<div class="content content1 clearfix" style="margin: 0;">
-					<div class="modbox text-center clearfix" style="width:100%;height:100%;position: absolute;top:0rem;left:0;right: 0;bottom:0rem;margin: 0;">
-					<div id="recordbar" class="clearfix" style="position: absolute;left:0;height:100%; right:0; top:0;bottom:0;padding:0 0.25rem 0.45rem ;"></div>
-				  </div>
-				</div>
 			</div>
 		</div>
-		
-		<div class="header clearfix" ng-show="userdetailshow">
-			<div class="pull-left">
-				<img src="../../image/menu.png" class="ml25 pt20" />
-				<span class="mr10">人员列表</span>
-			</div>
-			<div class="pull-right">
-				<img src="../../image/return.png" ng-click="returnPage()" class="rebtn"/>
-			</div>
-		</div>
-		<div class="content clearfix" style="margin: 0;padding: 0;position: relative;" ng-show="userdetailshow">
-			<div class="modboxs clearfix " style="margin: 0.0rem 0.05rem;padding: 0;position: absolute;left: 0.18rem;">
-				<div class="box green" ng-repeat="useritem in answerResult track by $index" style="width: auto;">
-					{{useritem}}
+		<!--答题人员列表start-->
+		<div ng-show="userdetailshow">
+			<div class="header clearfix">
+				<div class="pull-left">
+					<img src="../../image/menu.png" class="ml25 pt20" />
+					<span class="mr10">人员列表</span>
 				</div>
-		  	</div>
+				<div class="pull-right">
+					<img src="../../image/return.png" ng-click="returnBar()" class="rebtn rebtn1" />
+				</div>
+			</div>
+			<div class="content content1 clearfix" style="margin: 0;padding: 0;overflow: auto; "  id="userAnswerlist">
+				<div class="modboxs modboxs1 clearfix " style="margin: 0; padding: 0;">
+					<div class="box green" ng-repeat="useritem in answerResult track by $index" title="{{useritem}}">
+						{{useritem}}
+					</div>
+				</div>
+
+			</div>
 		</div>
 	</body>
 
@@ -123,103 +154,12 @@
 <!--<script src="../../js/echarts.simple.min.js"></script>-->
 <script type="text/javascript" src="../../js/echarts.js" ></script>
 <script type="text/javascript">
-//	var dom = document.getElementById("recordbar");
-//	var myChart = echarts.init(dom);
-//	var colors = ['#5793f3', '#d14a61', '#675bba'];
-//	option = {
-//  color: ['#fff'],
-//  tooltip : {
-//      trigger: 'axis',
-//      axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-//          type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-//      }
-//  },
-//	toolbox: {
-//      show : true,
-//      feature : {
-//          mark : {show: true},
-//          dataView : {show: true, readOnly: false},
-//          magicType : {show: true, type: ['line', 'bar']},
-//          restore : {show: true},
-//          saveAsImage : {show: true}
-//      }
-//  },
-//  grid: {
-//      left: '3%',
-//      right: '4%',
-//      bottom: '3%',
-//      containLabel: true
-//  },
-//  xAxis : [
-//      {
-//          type : 'category',
-//          data : ['A', 'B', 'C','D','E','F'],
-//          axisTick: {
-//              alignWithLabel: true
-//          },
-//          axisLine: {
-//				lineStyle: {
-//					color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
-//					show: false
-//				}
-//			},
-//			axisLabel: {        
-//              show: true,
-//              textStyle: {
-//                  color: '#fff',
-//                  fontSize:'16'
-//              }
-//          },
-//      }
-//  ],
-//  yAxis : [
-//      {
-//      	show : false,
-//          type : 'value',
-//        	splitLine: false, //是否显示网格线
-//        	/*axisTick:{
-//		        show:false
-//		    },*/
-//			axisLine: {
-//				lineStyle: {
-//					color: '#dcdcdc', //这里是为了突出显示加上的，可以去掉
-//					show: false
-//				}
-//			},
-//			axisLabel: {        
-//              show: true,
-//              textStyle: {
-//                  color: '#fff',
-//                  fontSize:'16'
-//              }
-//          },
-//      }
-//  ],
-//  series : [
-//      {
-//          name:'记录统计',
-//          type:'bar',
-//          barWidth: '50%',
-//          data:[7, 13, 5,14,2,0],
-//          itemStyle: {
-//	    		normal: {
-//			        label: {
-//			            show: true,
-//			            position: 'top',
-//			            textStyle: {
-//			                color: '#fff',
-//		                    fontSize:'16'
-//			            },
-//		            }
-//	       		}
-//  		}
-//      }
-//  ]
-//  
-//};
-//if(option && typeof option === "object") {
-//	myChart.setOption(option, true);
-//}
+	$(document).ready(function() {		
+	var nice = $("html").niceScroll(); // The document page (body)
+	$("#userAnswerlist").niceScroll({
+		cursorborder: "",
+		cursorcolor: "#d9d9d9",
+		boxzoom: true
+	});
+	})
 </script>
-
-

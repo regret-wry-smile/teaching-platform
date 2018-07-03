@@ -813,7 +813,7 @@ a.letters:hover{
 }
 .letter .newSelect{
 	width:0.8rem !important;
-	height: 0.4rem;
+	height: 0.45rem;
 }
 .letter .newOptions{
 	width:0.8rem !important;
@@ -821,6 +821,7 @@ a.letters:hover{
 .letter .newSelect .newSelectTitle{
 	height: 0.45rem;
 	line-height: 0.45rem;
+	vertical-align: middle;
 	
 }
 .letter .newSelect .arrow{
@@ -841,6 +842,7 @@ ul.col-4 li{
 	float: left;
 	width: 25%;
 	text-align: center;	
+	cursor: pointer;
 }
 ul.col-4 li:hover a{
 	opacity: 0.8;
@@ -863,8 +865,9 @@ ul.col-4 li a span{
 	font-size: 0.32rem;
 	vertical-align: middle;
 }
-img.rebtn:active{
+img.rebtn:active,img.rebtn:hover{
 	opacity: 0.8;
+	cursor: pointer;
 }
 @media screen and (max-width: 920px) {
     .head ul li a{
@@ -907,6 +910,7 @@ img.rebtn:active{
 		width: 3.0rem;
 		/*width: 3.6rem;*/
 		/*padding: 0.4rem 0*/
+		cursor: pointer;
 	}
 	.modboxs1 .box{
 		width: 8%;
@@ -920,6 +924,28 @@ img.rebtn:active{
 		color: #90a4cc;
 		font-size: 0.30rem;
 	}
+}
+/*div垂直水平正居中*/
+.maindiv{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+.v-center{
+	position:absolute ;
+	left:50%;top: 50%;
+	-webkit-transform: translate(-50%,-50%);
+	-ms-transform: translate(-50%,-50%);
+	transform: translate(-50%,-50%)
+}
+.v-center40{
+	position:absolute ;
+	left:50%;top: 40%;
+	-webkit-transform: translate(-50%,-40%);
+	-ms-transform: translate(-50%,-40%);
+	transform: translate(-50%,-40%)
 }
 /*table.classlist tbody tr:hover,
 table.userlist tbody tr:hover{

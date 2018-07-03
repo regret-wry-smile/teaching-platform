@@ -231,7 +231,7 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
 				console.log(JSON.stringify(param))
 				$scope.result = JSON.parse(execute_testPaper("select_question", JSON.stringify(param)));
 				if($scope.result.ret == 'success') {
-					console.log("双手合十"+JSON.stringify($scope.result))
+					//console.log("双手合十"+JSON.stringify($scope.result))
 					$scope.subjectList = $scope.result.item;
 
 				} else {
@@ -361,7 +361,8 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
 	$scope.editSuject = function(item) {
 			console.log(JSON.stringify(item))
 			var modalInstance = $modal.open({
-				templateUrl: 'addSubjectModal.html',
+				/*templateUrl: 'addSubjectModal.html',*/
+				templateUrl:'editSubjectModal.html',
 				controller: 'editSubjectModalCtrl',
 				size: 'md',
 				backdrop: false,
@@ -443,7 +444,9 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 			selLetter: '0',//(0：单选，1：多选)
 			/*range:'A-D',*/
 			trueAnswer: 'T'
-		}
+		};
+		/*是否校验题目成功*/
+		$scope.isTrue=false;
 		if(infos) {
 			$scope.testId = angular.copy(infos);
 		}
@@ -481,7 +484,10 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 					$scope.myForm.questionId.$error.required=true;
 					$scope.myForm.questionId.$invalid=true;
 					$scope.myForm.$invalid=true;
+					$scope.isTrue=false;
 					toastr.warning("该题号已存在，请重新输入",{preventOpenDuplicates:true});
+				}else{
+					$scope.isTrue=true;
 				}
 			} else {
 				toastr.error($scope.result.message);
@@ -500,7 +506,6 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 		}
 		//切换字母范围
 		$scope.changeRange=function(range){
-			alert(range)
 			$scope.testInfo.range = range;
 		}
 		$scope.ok = function() {
@@ -586,6 +591,7 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 							toastr.warning("该题号已存在，请重新输入",{preventOpenDuplicates:true});
 						}
 						
+					}else{
 					}
 				} else {
 					toastr.error($scope.result.message);
@@ -606,7 +612,6 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 		}
 		//切换字母范围
 		$scope.changeRange=function(range){
-			alert(range)
 			$scope.testInfo.range = range;
 		}
 		$scope.ok = function() {
