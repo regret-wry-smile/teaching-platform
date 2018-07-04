@@ -23,7 +23,7 @@ import net.sf.json.JSONObject;
 public class RedisMapAttendance {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMapAttendance.class);
 	private static Map<String, Map<String,String>> attendanceMap = Collections.synchronizedMap(new HashMap<>());
-	/**绑定时用来去除重复的提交*/
+	/**绑定时用来去除重复的提交,代表当前提交的人*/
     private static Set<String> cardIdSet = new HashSet<>();
 	public static void addAttendance(String jsonData){
         JSONArray jsonArray = JSONArray.fromObject(jsonData);
@@ -50,6 +50,10 @@ public class RedisMapAttendance {
             list.add(attendanceMap.get(key));
         }
 	    return JSONArray.fromObject(list).toString();
+	}
+	/*获取当前提交的人数*/
+	public static Integer getSubmitNum(){
+	    return cardIdSet.size();
 	}
     public static Map<String, Map<String, String>> getAttendanceMap() {
         return attendanceMap;

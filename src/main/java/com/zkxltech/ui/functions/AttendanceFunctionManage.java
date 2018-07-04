@@ -40,6 +40,9 @@ public class AttendanceFunctionManage extends BrowserFunction{
 			case "get_sign_in":
                 /**获取考勤信息*/
                 return RedisMapAttendance.getAttendance();
+			case "get_submit_num":
+			    /**获取考勤信息*/
+			    return RedisMapAttendance.getSubmitNum();
 			default:
 				result.setRet(Constant.ERROR);
 				result.setMessage("【"+method+"】未找到该指令！");
