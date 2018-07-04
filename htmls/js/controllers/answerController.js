@@ -325,6 +325,7 @@ app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $windo
 		$scope.answerRate = 0;
 		var rangeLists = [];
 		$scope.totalStudent=0;//总人数
+		$scope.studentNum=0;
 		//获取答题人数
 		$scope.refresAnswerNum = function() {
 				$scope.result = JSON.parse(execute_answer("get_single_answer_num"));

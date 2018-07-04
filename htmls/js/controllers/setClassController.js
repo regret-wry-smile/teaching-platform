@@ -354,10 +354,8 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
 			_stopAnswer();
 		}else{
 			console.log($scope.time)		
-			if($scope.time<1){
-				$scope.studentName="抢答中...";							
-			}
-			if($scope.time==1){
+			if($scope.time==0){
+				$scope.studentName="抢答中...";		
 				$scope.result=JSON.parse(execute_preemptive("set_flag_start_quick"));	
 				if($scope.result.ret=='success'){					
 				}else{
