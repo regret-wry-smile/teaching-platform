@@ -69,7 +69,7 @@
 									<td>{{item.questionType|questionType}}</td>
 									<td ng-show="answerType=='1'">{{item.trueAnswer|AnswerType}}</td>
 									<td ng-show="answerType=='1'">{{item.answer|AnswerType}}</td>
-									<td ng-show="answerType=='1'" ng-class="{'1':'clgreen','2':'warning' }[item.result]">{{item.result==1?"正确":"错误"}}</td>
+									<td ng-show="answerType=='1'" ng-class="{'1':'clgreen','2':'clwarning' }[item.result]">{{item.result==1?"正确":"错误"}}</td>
 									<td ng-show="answerType=='0'" >{{item.score}}</td>									
 									<td ng-show="answerType=='0'">{{item.answer}}</td>
 								</tr>
