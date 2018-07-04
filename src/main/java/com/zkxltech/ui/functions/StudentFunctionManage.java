@@ -37,9 +37,10 @@ public class StudentFunctionManage extends BrowserFunction{
 		Result result = new Result();
 		if (params.length>0) {
 			String method = (String) params[0]; //页面要调用的方法
+			Object param = params.length == 2 ? params[1] : new Object(); //页面要调用该方法的参数
 			switch (method) {
 			case "insert_student":
-				result = studentInfoservice.insertStudentInfo(params[1]);
+				result = studentInfoservice.insertStudentInfo(param);
 				break;
 			case "import_student2":
 				new Thread(new Runnable() {
@@ -65,42 +66,42 @@ public class StudentFunctionManage extends BrowserFunction{
 				result =  studentInfoservice.importStudentInfo(params[1],params[2]);
 				break;
 			case "import_server":
-				result = studentInfoservice.importStudentInfoByServer(params[1]);
+				result = studentInfoservice.importStudentInfoByServer(param);
 				break;
 			case "delete_student":
-				result = studentInfoservice.deleteStudentById(params[1]);
+				result = studentInfoservice.deleteStudentById(param);
 				break;
 			case "update_student":
-				result = studentInfoservice.updateStudentById(params[1]);
+				result = studentInfoservice.updateStudentById(param);
 				break;
 			case "clear_student":
 				/*解绑*/
-				result = studentInfoservice.clearStudentByIds(params[1]);
+				result = studentInfoservice.clearStudentByIds(param);
 				break;
 			case "select_student":
-				result = studentInfoservice.selectStudentInfo(params[1]);
+				result = studentInfoservice.selectStudentInfo(param);
 				break;
 			case "select_class":
-				result = classInfoService.selectClassInfo(params[1]);
+				result = classInfoService.selectClassInfo(param);
 				break;
 			case "insert_class":
-				result = classInfoService.insertClassInfo(params[1]);
+				result = classInfoService.insertClassInfo(param);
 				break;
 			case "delete_class":
-				result = classInfoService.deleteClassInfo(params[1]);
+				result = classInfoService.deleteClassInfo(param);
 				break;
 			case "update_class":
-				result = classInfoService.updateClassInfo(params[1]);
+				result = classInfoService.updateClassInfo(param);
 				break;
 			case "get_bind_info":
 				return RedisMapBind.getBindMapValue();
 				/**清除白名单位(解绑)*/
 			case "clear_bind":
-			    result = classInfoService.clearWl(params[1]);
+			    result = classInfoService.clearWl(param);
 			    break;
 			    /**开始绑定(一键配对)*/
 			case "bind_start":
-			    result = classInfoService.bindStart(params[1]);
+			    result = classInfoService.bindStart(param);
                 break;
 			case "bind_stop":
 			    result = classInfoService.bindStop();

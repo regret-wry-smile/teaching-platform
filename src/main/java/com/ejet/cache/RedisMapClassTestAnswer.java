@@ -119,6 +119,9 @@ public class RedisMapClassTestAnswer {
 				List<Answer> answers = (List<Answer>) JSONArray.toCollection(JSONArray.fromObject(responseAnswer.getAnswers()), Answer.class);;
 				for (int j = 0; j < answers.size(); j++) {
 					Answer answer = answers.get(j);
+					if (StringUtils.isEmpty(answer.getAnswer())) {
+						continue;
+					}
 					String questionId = answer.getId(); //题号
 					
 					QuestionInfo questionInfo = questionInfoMap.get(questionId);
