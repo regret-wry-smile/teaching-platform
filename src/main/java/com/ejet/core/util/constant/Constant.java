@@ -31,6 +31,10 @@ public class Constant {
 	public static String BING_YES = "1";
 	/*未绑定状态*/
 	public static String BING_NO = "0";
+	/*本地班级*/
+	public static String CLASS_LOCAL = "1";
+	/*服务器班级*/
+	public static String CLASS_SERVER = "0";
 	/*已考勤*/
 	public static final String ATTENDANCE_YES = "YES";
 	/*未考勤*/
