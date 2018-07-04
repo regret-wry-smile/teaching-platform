@@ -1,4 +1,4 @@
-package com.zkxlteck.thread;
+package com.zkxltech.thread;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.ejet.cache.RedisMapSingleAnswer;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.io.IOUtils;
-import com.zkxlteck.scdll.ScDll;
+import com.zkxltech.scdll.ScDll;
 
 public class SingleAnswerThread extends Thread {
     private static final Logger logger = LoggerFactory.getLogger(SingleAnswerThread.class);

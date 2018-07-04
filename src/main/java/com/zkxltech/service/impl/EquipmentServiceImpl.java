@@ -13,10 +13,10 @@ import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
+import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.EquipmentService;
 import com.zkxltech.sql.StudentInfoSql;
-import com.zkxlteck.scdll.ScDll;
-import com.zkxlteck.thread.MultipleAnswerThread;
+import com.zkxltech.thread.MultipleAnswerThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

@@ -9,10 +9,10 @@ import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Score;
+import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.ScoreService;
+import com.zkxltech.thread.ScoreThread;
 import com.zkxltech.ui.util.StringUtils;
-import com.zkxlteck.scdll.ScDll;
-import com.zkxlteck.thread.ScoreThread;
 
 public class ScoreServiceImpl implements ScoreService{
     private static final Logger logger = LoggerFactory.getLogger(ScoreServiceImpl.class);
