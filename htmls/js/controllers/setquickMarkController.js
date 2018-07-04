@@ -124,7 +124,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 					            position: 'top',
 					            textStyle: {
 					                color: "#fff",
-				                    fontSize:'16'
+				                    fontSize: '20'
 					            },
 				            }
 			       		}
@@ -148,7 +148,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		    legend: {
 		        data: $scope.titleList,
 		        textStyle:{
-		        	fontSize:'16',
+		        	fontSize:'26',
 		        	color:'#fff'
 		        }
 		    },
@@ -185,7 +185,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		                show: true,
 		                textStyle: {
 		                    color: '#fff',
-		                    fontSize:'16'
+		                    fontSize: '20'
 		                }
 		            },
 		        }
@@ -207,7 +207,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		                show: true,
 		                textStyle: {
 		                    color: '#fff',
-		                    fontSize:'16'
+		                    fontSize:'20',
 		                }
 		            },
 		        }

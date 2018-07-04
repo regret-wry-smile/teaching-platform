@@ -104,12 +104,12 @@
 					<div class="form-group" ng-if="testInfo.questionType=='-1'">
 						<label for="firstname" class="col-sm-3 control-label">答案</label>
 						<div class="col-sm-8" ng-if="testInfo.selLetter=='1'">
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required />
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required />
+						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required  maxlength="4"/>
+						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required  maxlength="6"/>
 						</div>
 						<div class="col-sm-8" ng-if="testInfo.selLetter=='0'">
-				    	<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required />
-						<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required />						
+				    	<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required maxlength="1"/>
+						<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required maxlength="1"/>						
 						</div>
 						<span ng-show="myForm.singleLetter.$invalid" ng-if="testInfo.selLetter=='0'" class="warning">单选*</span>
 						<span ng-show="myForm.mutilLetter.$invalid" ng-if="testInfo.selLetter=='1'" class="warning">多选*</span>
@@ -181,12 +181,12 @@
 					<div class="form-group" ng-if="testInfo.questionType=='-1'">
 						<label for="firstname" class="col-sm-3 control-label">答案</label>
 						<div class="col-sm-8" ng-if="testInfo.selLetter=='1'">
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required />
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required />
+						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required maxlength="4"/>
+						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required maxlength="6"/>
 						</div>
 						<div class="col-sm-8" ng-if="testInfo.selLetter=='0'">
-				    	<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required />
-						<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required />						
+				    	<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required maxlength="1"/>
+						<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required maxlength="1"/>						
 						</div>
 						<span ng-show="myForm.singleLetter.$invalid" ng-if="testInfo.selLetter=='0'" class="warning">单选*</span>
 						<span ng-show="myForm.mutilLetter.$invalid" ng-if="testInfo.selLetter=='1'" class="warning">多选*</span>

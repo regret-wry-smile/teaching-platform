@@ -107,12 +107,16 @@ p {
     vertical-align: middle;
     padding:0.0rem  0.15rem;
 } 
+.head{
+	border-bottom: 1px solid #d3d7db;
+	margin:0 0.25rem;
+}
  .header img{
     display: inline-block;
     width:auto ;
     margin-right: 0.25rem;
 }
- .header span{
+.header span{
     font-size: 0.27rem;
     color: #fff;
     display: inline-block;
@@ -122,14 +126,16 @@ p {
 	float: left;
 	width: 33.33%;
 	text-align: center;
-	font-size: 0.14rem;
+	font-size: 0.16rem;	
 	
 }
 .head ul li a{
 	display: inline-block;
 	text-align: center;	
 	color: #fff;
+	font-weight: bold;
 	padding: 0.23rem 0.12rem;	
+	font-family: "微软雅黑";
 }
 
 .head ul li a.active{
@@ -196,9 +202,13 @@ ul.modbox li span.title{
 	/*margin-left: 0.12rem;*/
 }
 ul.modbox li.active a{	
-	background: rgb(146,182,255);
-	opacity: 0.5;
+	/*background: rgb(146,182,255);*/
+	background: #99ccff;
+	/*opacity: 0.5;*/
 	
+}
+ul.modbox li.active span.title{
+	color: #206bb0;	
 }
 .form-group label{
 	font-size: 0.16rem;
@@ -258,13 +268,13 @@ span.warning{
 }
 button.btn-lg{
 	width: 1.68rem;
-	font-size: 0.16rem;
+	font-size: 0.18rem;
 	padding:0.08rem ;
 	background: #3c96ff;
 	border-radius: 10px;
 }
 button{
-	font-size: 0.16rem;
+	font-size: 0.18rem;
 	padding:0.08rem ;
 	background: #3c96ff;
 	border-radius: 10px;
@@ -278,7 +288,7 @@ button.savebtn{
 	border-radius: 0.02rem;
 	width: 2.50rem;
 	padding: 0.15rem;
-	font-size: 0.18rem;
+	font-size: 0.24rem;
 }
 button.savebtn:hover{
 	background: #47de92;
@@ -899,6 +909,8 @@ img.rebtn:active,img.rebtn:hover{
 		text-align: center;	
 		color: #fff;
 		padding: 0.23rem 0.12rem;	
+		font-size: 0.26rem;
+		font-weight: normal;
 	}
 	.testcheck{
 		top: 1.0rem !important;

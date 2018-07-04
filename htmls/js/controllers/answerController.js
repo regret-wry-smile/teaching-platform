@@ -188,7 +188,7 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window
 						show: true,
 						textStyle: {
 							color: '#fff',
-							fontSize: '16'
+							fontSize: '32'
 						},
 					},
 				},
@@ -207,7 +207,7 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window
 						textStyle: {
 							color: '#fff',
 							fontSize: '16'
-						},
+						}
 					},
 				}],
 				series: [{
@@ -222,7 +222,7 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window
 							position: 'top',
 							textStyle: {
 								color: '#fff',
-								fontSize: '16'
+								fontSize: '32'
 							}
 						}
 					},
@@ -436,7 +436,7 @@ app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $windo
 								show: true,
 								textStyle: {
 									color: '#fff',
-									fontSize: '16'
+									fontSize: '32'
 								}
 							}
 						},
@@ -470,7 +470,7 @@ app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $windo
 									position: 'top',
 									textStyle: {
 										color: '#fff',
-										fontSize: '16'
+										fontSize: '32'
 									}
 								}
 							},

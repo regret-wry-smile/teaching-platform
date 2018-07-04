@@ -11,6 +11,7 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 	$scope.subjectlists=[];//科目数组
 	$scope.classhourList=[]//课程数组
 	$rootScope.isSign=false;//是否是签到
+	$rootScope.studentAttendList=[];//签到人员数组
 	/*查询班级列表*/
 	var _selectClass = function() {
 		$scope.result = JSON.parse(execute_student("select_class"));
@@ -89,7 +90,7 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 	//查询当前上课班级
 	var _isStartClass=function(){
 		$scope.result=JSON.parse(execute_record("get_classInfo"));
-		console.log("巴巴爸爸"+JSON.stringify($scope.result))
+		//console.log("巴巴爸爸"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'&&$scope.result.item){
 			$scope.curclassName=$scope.result.item.className;
 		}else{
@@ -302,7 +303,8 @@ app.config(['$locationProvider', function($locationProvider) {
 }]);
 //设置签到控制器
 app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
-	$rootScope.studentAttendList=[];//签到学生数组
+	//$rootScope.studentAttendList=[];//签到学生数组
+	$rootScope.signList=0;
 	var _getsignStudent=function(){
 		$rootScope.studentAttendList=JSON.parse(execute_attendance("get_sign_in"));
 		//console.log("哈哈哈"+JSON.stringify($scope.studentAttendList))
@@ -311,6 +313,10 @@ app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
 		_getsignStudent();
 	}();
 	*/
+	var _getSubmitNum=function(){
+		$rootScope.signList=JSON.parse(execute_attendance("get_submit_num"));
+		console.log("已签到"+JSON.stringify($scope.signList));
+	}
 	 $scope.returnPage=function(){
 	 	$scope.result=JSON.parse(execute_attendance("sign_in_stop"));  
 	 	console.log("停止答题"+JSON.stringify($scope.result));
@@ -324,6 +330,7 @@ app.controller('userAttendCtrl', function($rootScope,$scope,$modal,toastr) {
 	 }
 	$scope.refresAttendance=function(){
 		_getsignStudent();
+		_getSubmitNum();
 	}
 })
 app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$interval) {

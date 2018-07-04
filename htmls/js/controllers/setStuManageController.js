@@ -506,14 +506,18 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 	var _showModal=function(){
 		$('#myModal').modal('show');
 	}
+	$scope.title="导入学生";
+	$scope.className="某班级";
 	//console.log("吃哈哈哈"+JSON.stringify(infos));
 	if(infos){
 		$scope.fileType=angular.copy(infos.atype);
+		$scope.className=infos.className;
 		$scope.fileType1=angular.copy($scope.fileType);
 		if($scope.fileType=='0'){			
-			$scope.isfileType=false;
+			$scope.isfileType=false;		
 		}else{
 			$scope.isfileType=true;
+			$scope.title="【服务器】导入学生";
 		}
 		
 	}else{

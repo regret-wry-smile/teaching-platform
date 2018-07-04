@@ -85,7 +85,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	$scope.colors = ['#ffffff','#c4d4ef','#14c629','#f4c96d','#86daf6'];
 	$scope.data=[];
 	var flag=true;//判断是返回还是停止
-	
+	//var mainwd=document.body.clientWidth>920?true:false;
 	var _getvote=function(){
 		$scope.voteInfoslist=[];
 		$scope.data=[];
@@ -115,7 +115,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 					            position: 'top',
 					            textStyle: {
 					                color: "#fff",
-				                    fontSize:'16'
+				                    fontSize: '26'
 					            },
 				            }
 			       		}
@@ -138,7 +138,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		        data: $scope.titleList,
 		        //data:["1","2","3","4"],
 		        textStyle:{
-		        	fontSize:'16',
+		        	fontSize: '20',
 		        	color:'#fff'
 		        }
 		    },
@@ -175,7 +175,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		                show: true,
 		                textStyle: {
 		                    color: '#fff',
-		                    fontSize:'16'
+		                    fontSize:'20',
 		                }
 		            },
 		        }
@@ -197,7 +197,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		                show: true,
 		                textStyle: {
 		                    color: '#fff',
-		                    fontSize:'16'
+		                    fontSize:'26'
 		                }
 		            },
 		        }
@@ -224,6 +224,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 	// 获取到的是变更后的页面宽度
 		window.onresize = function(){
 			myChart.resize();
+			mainwd=!mainwd;
 		}
 	
 	//$scope.voteInfoslist=[{"agree":4,"disagree":0,"num":"1","program":"张三","waiver":0},{"agree":2,"disagree":1,"num":"2","program":"李四","waiver":1},{"agree":0,"disagree":0,"num":"3","program":"王五","waiver":0}]

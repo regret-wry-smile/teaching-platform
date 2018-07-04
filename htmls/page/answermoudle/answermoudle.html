@@ -49,7 +49,7 @@
 		
 	</style>
 	<body class="bg clearfix" ng-controller="mainAnswerCtrl">		
-			<div class="head clearfix bggreen">
+			<div class="head clearfix ">
 				<ul>
 					<li>
 						<a href="javascript:;" class="active" ng-click="selAnswerType('s')">单题单选</a>
@@ -66,7 +66,7 @@
 			<div class="tab-content">
 				<div class="tab-pane" ng-show="tabpane=='s'" ng-controller="answerCtrl">
 				<div class="content clearfix">
-				<ul class="modbox">
+				<ul class="modbox" style="margin-top: 8%; margin-bottom: 8%;">
 					<li class="active">
 						<a href="javascript:;" ng-click="selAnswerType('char')">
 							<img src="../../image/letter.png"/>
