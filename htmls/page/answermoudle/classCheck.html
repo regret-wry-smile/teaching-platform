@@ -68,8 +68,8 @@
 									<td>{{item.question}}</td>
 									<td>{{item.questionType|questionType}}</td>
 									<td ng-show="answerType=='1'">{{item.trueAnswer|AnswerType}}</td>
-									<td ng-show="answerType=='1'">{{item.answer}}</td>
-									<td ng-show="answerType=='1'">{{item.result}}</td>
+									<td ng-show="answerType=='1'">{{item.answer|AnswerType}}</td>
+									<td ng-show="answerType=='1'" >{{item.result==1?"正确":"错误"}}</td>
 									<td ng-show="answerType=='0'">{{item.score}}</td>									
 									<td ng-show="answerType=='0'">{{item.answer}}</td>
 								</tr>
