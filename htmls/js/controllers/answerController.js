@@ -963,12 +963,12 @@ app.filter('AnswerType', function() {
 	return function(AnswerType) {
 		var statename = '';
 		switch(AnswerType) {
-			case 'T':
+			case 'true':
 				{
 					statename = '√';
 					break;
 				}
-			case 'F':
+			case 'false':
 				{
 					statename = '×';
 					break;

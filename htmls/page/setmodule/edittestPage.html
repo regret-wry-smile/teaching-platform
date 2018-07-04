@@ -89,8 +89,8 @@
 					<div class="form-group" ng-if="testInfo.questionType=='2'">
 						<label for="firstname" class="col-sm-3 control-label">答案</label>
 						<div class="col-sm-8">
-							<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="T" ng-checked="true" required/>√</label>
-							<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="F" required/>×</label>
+							<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="true" ng-checked="true" required/>√</label>
+							<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="false" required/>×</label>
 						</div>
 						<span ng-show="myForm.trueAnswer.$invalid" class="warning">(T/F)*</span>
 					</div>
@@ -166,8 +166,8 @@
 					<div class="form-group" ng-if="testInfo.questionType=='2'">
 						<label for="firstname" class="col-sm-3 control-label">答案</label>
 						<div class="col-sm-8">
-							<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="T" ng-checked="true" required/>√</label>
-							<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="F" required/>×</label>
+							<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="true" ng-checked="true" required/>√</label>
+							<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="false" required/>×</label>
 						</div>
 						<span ng-show="myForm.trueAnswer.$invalid" class="warning">(T/F)*</span>
 					</div>
@@ -265,8 +265,7 @@
 								<td style="width: 10%;">{{quesitem.questionId}}</td>
 								<td style="width: 15%;">{{quesitem.question}}</td>
 								<td style="width: 10%;">{{quesitem.questionType|questionType}}</td>
-								<td style="width: 10%;" ng-show="quesitem.questionType=='2'">{{quesitem.trueAnswer=='T'?'√':'x'}}</td>	
-								<td style="width: 10%;" ng-show="quesitem.questionType!='2'">{{quesitem.trueAnswer}}</td>							
+								<td style="width: 10%;">{{quesitem.trueAnswer|AnswerType}}</td>							
 								<td style="width: 10%;">
 									<a href="javascript:;" class="edit mr5" ng-click="editSuject(quesitem)" ng-show="quesitem.questionType!='4'">编辑</a>									
 									<!--<a href="javascript:;" class="del" ng-click="delSuject(quesitem)">删除</a>-->

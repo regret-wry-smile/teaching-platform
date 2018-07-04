@@ -443,7 +443,7 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 			questionType: '2', //(0单选，1多选，2判断，3数字,-1字母)
 			selLetter: '0',//(0：单选，1：多选)
 			/*range:'A-D',*/
-			trueAnswer: 'T'
+			trueAnswer: 'true'
 		};
 		/*是否校验题目成功*/
 		$scope.isTrue=false;
@@ -464,7 +464,7 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 				$scope.testInfo.range = 'A-D';
 				$scope.testInfo.range1 = angular.copy($scope.testInfo.range);
 			}else if($scope.testInfo.questionType == '2') {
-				$scope.testInfo.trueAnswer = 'T';
+				$scope.testInfo.trueAnswer = 'true';
 			} else if($scope.testInfo.questionType == '3') {
 				$scope.testInfo.trueAnswer = '';
 			}
@@ -565,7 +565,7 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 				$scope.testInfo.range = 'A-D';
 				$scope.testInfo.range1 = angular.copy($scope.testInfo.range);
 			}else if($scope.testInfo.questionType == '2') {
-				$scope.testInfo.trueAnswer = 'T';
+				$scope.testInfo.trueAnswer = 'true';
 			} else if($scope.testInfo.questionType == '3') {
 				$scope.testInfo.trueAnswer = '';
 			}
@@ -1000,6 +1000,29 @@ app.filter('questionType', function() {
 			case '4':
 				{
 					statename = '主观题';
+					break;
+				}
+		}
+		return statename;
+	}
+});
+app.filter('AnswerType', function() {
+	return function(AnswerType) {
+		var statename = '';
+		switch(AnswerType) {
+			case 'true':
+				{
+					statename = '√';
+					break;
+				}
+			case 'false':
+				{
+					statename = '×';
+					break;
+				}
+			default:
+				{
+					statename = AnswerType;
 					break;
 				}
 		}

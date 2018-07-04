@@ -712,7 +712,7 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 	$scope.blurStunum=function(){
 		if($scope.myForm.studentId.$dirty==true&&$scope.student.studentId){
 			var param = {
-				classId:$scope.classId,
+				classId:$scope.student.classId,
 				studentId:$scope.student.studentId
 			}
 			$scope.result = JSON.parse(execute_student("select_student",JSON.stringify(param)));
@@ -735,7 +735,7 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 	$scope.blurDevicenum=function(){
 		if($scope.myForm.iclickerId.$dirty==true&&$scope.student.iclickerId){
 			var param = {
-				classId:$scope.classId,
+				classId:$scope.student.classId,
 				iclickerId:$scope.student.iclickerId
 			}
 			$scope.result = JSON.parse(execute_student("select_student",JSON.stringify(param)));

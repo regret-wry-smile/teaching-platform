@@ -94,8 +94,8 @@
 					<div class="form-group" ng-if="testInfo.questionType=='2'">
 						<label for="firstname" class="col-sm-3 control-label">答案</label>
 						<div class="col-sm-8">
-							<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="T" ng-checked="true" required/>√</label>
-							<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="F" required/>×</label>
+							<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="true" ng-checked="true" required/>√</label>
+							<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="false" required/>×</label>
 						</div>
 						<span ng-show="myForm.trueAnswer.$invalid" class="warning">(T/F)*</span>
 					</div>
@@ -174,8 +174,7 @@
 									<td style="width: 10%;">{{item.questionId}}</td>
 									<td style="width: 15%;">{{item.question}}</td>
 									<td style="width: 10%;">{{item.questionType|questionType}}</td>
-									<td style="width: 10%;" ng-show="{{item.questionType=='2'}}">{{item.trueAnswer=='T'?'√':'x'}}</td>	
-									<td style="width: 10%;" ng-show="{{item.questionType!='2'}}">{{item.trueAnswer}}</td>	
+									<td style="width: 10%;">{{item.trueAnswer|AnswerType}}</td>	
 								</tr>
 							</tbody>
 						</table>
