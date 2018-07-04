@@ -248,7 +248,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         RedisMapSingleAnswer.clearSingleAnswerNumMap();
         RedisMapSingleAnswer.clearStudentInfoMap();
         RedisMapSingleAnswer.clearSingleAnswerStudentNameMap();
-        RedisMapSingleAnswer.cleariclickerIdsSet();
+        RedisMapSingleAnswer.clearIclickerAnswerMap();
         Answer answer = com.zkxltech.ui.util.StringUtils.parseJSON(param, Answer.class);
         if (answer == null || StringUtils.isEmpty(answer.getType())) {
             r.setMessage("缺少参数,题目类型不能为空");

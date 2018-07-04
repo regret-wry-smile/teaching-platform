@@ -34,7 +34,8 @@ public class RedisMapSingleAnswer {
     /**本班卡号对应学生信息*/
     private static Map<String,StudentInfo> studentInfoMap = new HashMap<>();
     /**记录提交的卡id*/
-    private static Set<String> iclickerIdsSet = new HashSet<>();
+    //private static Set<String> iclickerIdsSet = new HashSet<>();
+    private static Map<String,String> iclickerAnswerMap = new HashMap<>();
     
     private static Answer answer;
     public static final String  CHAR_A = "A",CHAR_B = "B",CHAR_C = "C",CHAR_D = "D",
@@ -47,9 +48,6 @@ public class RedisMapSingleAnswer {
         for (Object object : jsonArray) {
             JSONObject jsonObject = JSONObject.fromObject(object);
             String card_id = jsonObject.getString("card_id");
-            if (iclickerIdsSet.contains(card_id)) { //如果已经提交过忽略
-                continue ;
-            }
             StudentInfo studentInfo = studentInfoMap.get(card_id);
             if (studentInfo == null) { //如果根据卡号未找到学生,表示不是本班的
                 continue;
@@ -61,7 +59,14 @@ public class RedisMapSingleAnswer {
                 if (StringUtils.isEmpty(result)) {
                     continue;
                 }
-                iclickerIdsSet.add(card_id);
+                if (iclickerAnswerMap.containsKey(card_id)) { //已经提交过,将以前提交的答题总数减一,并将以前该答题对象的学生名称去掉,将新值重新添加
+                    String lastAnswer = iclickerAnswerMap.get(card_id);
+                    Integer countNum = singleAnswerNumMap.get(lastAnswer);
+                    --countNum;
+                    List<String> list = singleAnswerStudentNameMap.get(lastAnswer);
+                    list.remove(studentInfo.getStudentName());
+                }
+                iclickerAnswerMap.put(card_id, result);
                 switch (answer.getType()) {
                     case Constant.ANSWER_CHAR_TYPE:
                         setCharCount(result);
@@ -149,7 +154,7 @@ public class RedisMapSingleAnswer {
     public static Object getSingleAnswerNum() {
         JSONObject jo = new JSONObject();
         jo.put("totalStudent", studentInfoMap.size());
-        jo.put("current", iclickerIdsSet.size());
+        jo.put("current", iclickerAnswerMap.size());
         return jo.toString();
     }
     //获取答案对应的学生名称
@@ -192,7 +197,7 @@ public class RedisMapSingleAnswer {
     public static void clearSingleAnswerStudentNameMap(){
         singleAnswerStudentNameMap.clear();
     }
-    public static void cleariclickerIdsSet(){
-        iclickerIdsSet.clear();
+    public static void clearIclickerAnswerMap(){
+        iclickerAnswerMap.clear();
     }
 }
