@@ -196,7 +196,7 @@ public class MainPage extends Dialog {
 					message = "请先停止投票";
 					break;
 				case Constant.BUSINESS_ATTENDEN:
-					message = "请先停止考勤";
+					message = "请先停止签到";
 					break;
 				case Constant.BUSINESS_PREEMPTIVE:
 					message = "请先停止抢答";
