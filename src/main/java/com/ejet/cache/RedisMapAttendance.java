@@ -43,6 +43,7 @@ public class RedisMapAttendance {
             BrowserManager.refresAttendance();
         }
     }
+	/*获取当前班级中所有人的考勤状态*/
 	public static String getAttendance(){
 	    List<Map<String,String>> list = new ArrayList<>();
 	    Set<String> keySet = attendanceMap.keySet();
@@ -51,7 +52,7 @@ public class RedisMapAttendance {
         }
 	    return JSONArray.fromObject(list).toString();
 	}
-	/*获取当前提交的人数*/
+	/*获取当前班级提交的人数*/
 	public static Integer getSubmitNum(){
 	    return cardIdSet.size();
 	}
