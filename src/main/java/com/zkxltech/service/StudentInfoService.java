@@ -10,13 +10,14 @@ public interface StudentInfoService {
 	 * @param object excel文件路径
 	 * @return
 	 */
-	Result importStudentInfo2(Object object,ICallBack icallback);
+	Result importStudentInfo2(Object fileNameObj,Object classInfoObj,ICallBack icallback);
 	/**
 	 * 学生名单导入(同步)
-	 * @param object excel文件路径
-	 * @return
+	 * @param fileNameObj excel文件路径
+	 * @param classInfoObj 班级信息
+	 * @return 
 	 */
-	Result importStudentInfo(Object object);
+	Result importStudentInfo(Object fileNameObj,Object classInfoObj);
 	
 	/**
 	 * 服务器导入

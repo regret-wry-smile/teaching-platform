@@ -45,6 +45,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 		result = new Result();
 		try {
 			ClassInfo classInfo =  (ClassInfo) StringUtils.parseJSON(object, ClassInfo.class);
+			classInfo.setClassId(com.ejet.core.util.StringUtils.getUUID());//自动生成班级id
 			result = classInfoSql.insertClassInfo(classInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("新增班级成功!");

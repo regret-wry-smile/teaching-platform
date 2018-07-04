@@ -22,6 +22,7 @@ import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
 import com.zkxltech.domain.Answer;
+import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.StudentInfoService;
@@ -49,13 +50,14 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     }
 
     @Override
-	public Result importStudentInfo2(Object object,ICallBack icallback) {
+	public Result importStudentInfo2(Object fileNameObj,Object classInfoObj,ICallBack icallback) {
 		result = new Result();
 		try {
-			String fileName = String.valueOf(object);
+			String fileName = String.valueOf(fileNameObj);
+			ClassInfo classInfo =  (ClassInfo) StringUtils.parseToBean(JSONObject.fromObject(classInfoObj), ClassInfo.class);
 			studentInfoSql.deleteStudent(new StudentInfo());
 			List<List<Object>> list = ImportExcelUtils.getBankListByExcel(new FileInputStream(new File(fileName)), fileName);
-			result = studentInfoSql.importStudent(list);
+			result = studentInfoSql.importStudent(list,classInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("导入成功!");
 //				BrowserManager.refreshClass();
@@ -78,12 +80,13 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	}
 	
 	@Override
-	public Result importStudentInfo(Object object) {
+	public Result importStudentInfo(Object fileNameObj,Object classInfoObj) {
 		result = new Result();
 		try {
-			String fileName = String.valueOf(object);
+			String fileName = String.valueOf(fileNameObj);
+			ClassInfo classInfo =  (ClassInfo) StringUtils.parseToBean(JSONObject.fromObject(classInfoObj), ClassInfo.class);
 			List<List<Object>> list = ImportExcelUtils.getBankListByExcel(new FileInputStream(new File(fileName)), fileName);
-			result = studentInfoSql.importStudent(list);
+			result = studentInfoSql.importStudent(list,classInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("导入成功!");
 			}else {

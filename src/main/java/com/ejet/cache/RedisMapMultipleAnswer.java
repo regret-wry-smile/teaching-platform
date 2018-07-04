@@ -104,16 +104,18 @@ public class RedisMapMultipleAnswer {
 	        		for (int j = 0; j < answers.size(); j++) {
 	        			JSONObject answeJSONObject = answers.getJSONObject(j);
 	        			String num = answeJSONObject.getString("id");//节目编号(题目编号)
-	        			
+	        			if (StringUtils.isEmpty( answeJSONObject.getString("answer"))) {
+							continue;
+						}
 	        			keyEveryBodyMap[1] = num;
 	        			keyEveryAnswerMap[1] = num;
 	        			keyAnswerMap[1] = num;
 	        			keyEveryBodyMap[2] = carId;
 	        			Answer answer = (Answer) JSONObject.toBean((JSONObject) RedisMapUtil.getRedisMap(everyBodyMap, keyEveryBodyMap, 0), Answer.class);
-	        			if (answer!= null && !StringUtils.isEmpty(answer.getAnswer())) {
-	        				//已经上传了答案就跳过
-	        				continue;
-						}
+//	        			if (answer!= null && !StringUtils.isEmpty(answer.getAnswer())) {
+//	        				//已经上传了答案就跳过
+//	        				continue;
+//						}
 	        			RedisMapUtil.setRedisMap(everyBodyMap, keyEveryBodyMap, 0, answeJSONObject);
 	        			
 	        			String answerString = answeJSONObject.getString("answer");

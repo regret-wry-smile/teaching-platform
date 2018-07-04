@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
+import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.jdbc.DBHelper;
@@ -21,18 +22,15 @@ public class StudentInfoSql {
 	
 	/*批量插入学生*/
 	@SuppressWarnings("static-access")
-	public Result importStudent(List<List<Object>> rowList){
+	public Result importStudent(List<List<Object>> rowList,ClassInfo classInfo){
 		List<String> sqls = new ArrayList<String>();
 		String sql = "";
-		String classId = "";
+		String classId = classInfo.getClassId();
+		sqls.add("delete from class_info where class_id = '" + classId+"'"); //删除原来班级信息
+		sqls.add("insert into class_info (class_id,class_name,atype) values('"+classId+"','"+
+				classInfo.getClassName()+"','0')"); //添加班级信息
+		sqls.add("delete from student_info where class_id = '" + classId+"'"); //删除原来的班级学生
 		for (int i = 0; i < rowList.size(); i++) {
-			if(i == 0){
-				classId = (String) rowList.get(i).get(0);
-				sqls.add("delete from class_info where class_id = '" + classId+"'"); //删除原来班级信息
-				sqls.add("insert into class_info (class_id,class_name,atype) values('"+classId+"','"+
-						rowList.get(i).get(1)+"','0')"); //添加班级信息
-				sqls.add("delete from student_info where class_id = '" + classId+"'"); //删除原来的班级学生
-			}
 			sql = "insert into student_info (class_id,class_name,student_id,student_name,iclicker_id,status) values('"+classId+"','"+
 					rowList.get(i).get(1)+"','"+rowList.get(i).get(2)+"','"+rowList.get(i).get(3)+"','"+rowList.get(i).get(4)+"','0')";
 			sqls.add(sql);
