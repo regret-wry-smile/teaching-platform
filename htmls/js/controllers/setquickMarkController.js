@@ -163,6 +163,7 @@ app.controller('quickMarkCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		        }
 		    },*/
 		    grid: {
+		    	top:'25%',
 		        left: '3%',
 		        right: '4%',
 		        bottom: '3%',

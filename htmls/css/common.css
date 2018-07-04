@@ -7,7 +7,7 @@ html{
 	font-size: 100px;
 }
 body {
-	font-family: "Helvetica Neue", "Helvetica", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Arial", "sans-serif";
+	font-family: "Helvetica Neue", "Helvetica", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "寰蒋闆呴粦", "Arial", "sans-serif";
 }
 ul,
 li {
@@ -67,7 +67,7 @@ p {
 .text-left{
 	text-align: left !important;
 }
-/*左右浮动*/
+/*宸﹀彸娴姩*/
 .pull-left{
 	float: left;
 }
@@ -75,7 +75,7 @@ p {
 	float: right;
 }
 
-/*清楚浮动*/
+/*娓呮娴姩*/
 .clearfix:before,
 .clearfix:after {
 	content: "";
@@ -138,7 +138,7 @@ p {
 	color: #fff;
 	font-weight: bold;
 	padding: 0.23rem 0.12rem;	
-	font-family: "微软雅黑";
+	font-family: "寰蒋闆呴粦";
 }
 
 .head ul li a.active{
@@ -164,9 +164,9 @@ p {
 	margin: 0;
 } 
 span.hidename{
-	white-space: nowrap;/*控制单行显示*/
-	overflow: hidden;/*超出隐藏*/
-	text-overflow: ellipsis;/*隐藏的字符用省略号表示*/
+	white-space: nowrap;/*鎺у埗鍗曡鏄剧ず*/
+	overflow: hidden;/*瓒呭嚭闅愯棌*/
+	text-overflow: ellipsis;/*闅愯棌鐨勫瓧绗︾敤鐪佺暐鍙疯〃绀�*/
 }
 ul.modbox li{
 	float: left;
@@ -250,7 +250,7 @@ ul.modbox li.active span.title{
 	background: #4cbf40;
 }
 
-/*操作按钮*/
+/*鎿嶄綔鎸夐挳*/
 .opbtn a{
 	display: inline-block;
 	width: 0.80rem;
@@ -261,7 +261,7 @@ ul.modbox li.active span.title{
 .opbtn a.warning{
 	color: #ca4d4d;
 }
-.warning{
+.warning,.clwarning{
 	color: #ca4d4d;
 }
 span.warning{
@@ -577,7 +577,7 @@ a:active{
 	font-size: 0.28rem;
 	cursor: pointer;
 }
-/*学生管理*/
+/*瀛︾敓绠＄悊*/
 /*.pannel table.table thead tr th{
 	height:0.24rem;
 	line-height: 0.24rem ;
@@ -678,7 +678,7 @@ table.answer{
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
-/*课程设置*/
+/*璇剧▼璁剧疆*/
 .modboxs{
 	margin: 0.1rem 1.6rem;
 	padding: 0.30rem;
@@ -718,7 +718,7 @@ label.circle{
 	color: #fff;
 }
 
-/*表格不允许换行*/
+/*琛ㄦ牸涓嶅厑璁告崲琛�*/
 table{
 	table-layout: fixed;  
 }
@@ -728,7 +728,7 @@ table tr td{
     overflow: hidden;  
     white-space: nowrap;  
 }
-/*进度条*/
+/*杩涘害鏉�*/
 .progresscon{
 	width: 1.00rem;
 	height: 0.40rem;
@@ -803,7 +803,7 @@ table tr td{
 	cursor: pointer;
 }
 
-/*答题中心样式*/
+/*绛旈涓績鏍峰紡*/
 
 
 .letter a.letters{
@@ -940,7 +940,7 @@ img.rebtn:active,img.rebtn:hover{
 		font-size: 0.30rem;
 	}
 }
-/*div垂直水平正居中*/
+/*div鍨傜洿姘村钩姝ｅ眳涓�*/
 .maindiv{
 	position: absolute;
 	top: 0;
