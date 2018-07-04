@@ -57,9 +57,9 @@
 					<div class="form-group">
 						<label for="firstname" class="col-sm-3 control-label">题号</label>
 						<div class="col-sm-8">
-							<input type="number" autocomplete="off" name="questionId" id="" value="" class="form-control" ng-model="testInfo.questionId" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-change="changetitle()" />
+							<input type="text" autocomplete="off" name="questionId" id="" value="" class="form-control" ng-model="testInfo.questionId" required ng-pattern="/^[0-9]\d*$/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-change="changetitle()" />
 						</div>
-						<span ng-show="myForm.questionId.$invalid && myForm.questionId.$error.required" class="warning">*</span>
+						<span ng-show="myForm.questionId.$invalid" class="warning">*</span>
 					</div>
 					<div class="form-group">
 						<label for="firstname" class="col-sm-3 control-label">题目内容</label>
@@ -104,8 +104,8 @@
 					<div class="form-group" ng-if="testInfo.questionType=='-1'">
 						<label for="firstname" class="col-sm-3 control-label">答案</label>
 						<div class="col-sm-8" ng-if="testInfo.selLetter=='1'">
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]+$/" required />
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]+$/" required />
+						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required />
+						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required />
 						</div>
 						<div class="col-sm-8" ng-if="testInfo.selLetter=='0'">
 				    	<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required />
@@ -134,9 +134,9 @@
 					<div class="form-group">
 						<label for="firstname" class="col-sm-3 control-label">题号</label>
 						<div class="col-sm-8">
-							<input type="number" autocomplete="off" name="questionId" id="" value="" class="form-control" ng-model="testInfo.questionId" required ng-pattern="/^[0-9]*/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-change="changetitle()" />
+							<input type="text" autocomplete="off" name="questionId" id="" value="" class="form-control" ng-model="testInfo.questionId" required ng-pattern="/^[0-9]\d*$/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-change="changetitle()" />
 						</div>
-						<span ng-show="myForm.questionId.$invalid && myForm.questionId.$error.required" class="warning">*</span>
+						<span ng-show="myForm.questionId.$invalid" class="warning">*</span>
 					</div>
 					<div class="form-group">
 						<label for="firstname" class="col-sm-3 control-label">题目内容</label>
@@ -181,8 +181,8 @@
 					<div class="form-group" ng-if="testInfo.questionType=='-1'">
 						<label for="firstname" class="col-sm-3 control-label">答案</label>
 						<div class="col-sm-8" ng-if="testInfo.selLetter=='1'">
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]+$/" required />
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]+$/" required />
+						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required />
+						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required />
 						</div>
 						<div class="col-sm-8" ng-if="testInfo.selLetter=='0'">
 				    	<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required />
@@ -265,7 +265,8 @@
 								<td style="width: 10%;">{{quesitem.questionId}}</td>
 								<td style="width: 15%;">{{quesitem.question}}</td>
 								<td style="width: 10%;">{{quesitem.questionType|questionType}}</td>
-								<td style="width: 10%;">{{quesitem.trueAnswer|AnswerType}}</td>							
+								<td style="width: 10%;" ng-show="quesitem.questionType=='2'">{{quesitem.trueAnswer=='T'?'√':'x'}}</td>	
+								<td style="width: 10%;" ng-show="quesitem.questionType!='2'">{{quesitem.trueAnswer}}</td>							
 								<td style="width: 10%;">
 									<a href="javascript:;" class="edit mr5" ng-click="editSuject(quesitem)" ng-show="quesitem.questionType!='4'">编辑</a>									
 									<!--<a href="javascript:;" class="del" ng-click="delSuject(quesitem)">删除</a>-->

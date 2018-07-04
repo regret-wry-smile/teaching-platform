@@ -543,9 +543,9 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 		$scope.title = "编辑题目";
 		if(infos) {
 			$scope.testInfo = angular.copy(infos);
-			if(typeof $scope.testInfo.questionId == 'string') {
+			/*if(typeof $scope.testInfo.questionId == 'string') {
 				$scope.testInfo.questionId = parseInt($scope.testInfo.questionId);
-			}
+			}*/
 			if($scope.testInfo.questionType == '0' || $scope.testInfo.questionType == '1') {
 				$scope.testInfo.selLetter = $scope.testInfo.questionType;
 				$scope.testInfo.selLetter1 = angular.copy($scope.testInfo.selLetter);
@@ -573,7 +573,7 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 
 		//查询该试卷的题目
 		var _selectQuestion = function() {
-			if($scope.myForm.questionId.$dirty==true){
+			if($scope.myForm.questionId.$dirty==true&&$scope.testInfo.questionId){
 				var param = {
 					testId: $scope.testInfo.testId,
 					questionId: $scope.testInfo.questionId
@@ -602,9 +602,7 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 
 		//校验题号
 		$scope.changetitle = function() {
-			if($scope.testInfo.questionId) {
-				_selectQuestion();
-			}
+			_selectQuestion();
 		}
 
 		$scope.changeselType = function(selLetter) {
@@ -616,9 +614,9 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 		}
 		$scope.ok = function() {
 
-			if(typeof $scope.testInfo.questionId == 'number') {
+			/*if(typeof $scope.testInfo.questionId == 'number') {
 				$scope.testInfo.questionIds = parseInt($scope.testInfo.questionId);
-			}
+			}*/
 			if($scope.testInfo.questionType == '-1') {
 				if($scope.testInfo.selLetter == '0') {
 					$scope.testInfo.questionType = '0';
@@ -629,7 +627,7 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 			var param = {
 				id: $scope.testInfo.id,
 				testId: $scope.testInfo.testId,
-				questionId: $scope.testInfo.questionIds,
+				questionId: $scope.testInfo.questionId,
 				question: $scope.testInfo.question,
 				questionType: $scope.testInfo.questionType,
 				trueAnswer: $scope.testInfo.trueAnswer,
@@ -1002,29 +1000,6 @@ app.filter('questionType', function() {
 			case '4':
 				{
 					statename = '主观题';
-					break;
-				}
-		}
-		return statename;
-	}
-});
-app.filter('AnswerType', function() {
-	return function(AnswerType) {
-		var statename = '';
-		switch(AnswerType) {
-			case 'T':
-				{
-					statename = '√';
-					break;
-				}
-			case 'F':
-				{
-					statename = '×';
-					break;
-				}
-			default:
-				{
-					statename = AnswerType;
 					break;
 				}
 		}
