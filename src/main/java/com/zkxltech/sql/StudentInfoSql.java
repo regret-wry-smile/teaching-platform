@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
@@ -23,6 +25,10 @@ public class StudentInfoSql {
 	/*批量插入学生*/
 	@SuppressWarnings("static-access")
 	public Result importStudent(List<List<Object>> rowList,ClassInfo classInfo){
+		Result result = verifyStudent(rowList);
+		if (Constant.ERROR.equals(result.getRet())) {
+			return result;
+		}
 		List<String> sqls = new ArrayList<String>();
 		String sql = "";
 		String classId = classInfo.getClassId();
@@ -36,10 +42,55 @@ public class StudentInfoSql {
 					className+"','"+rowList.get(i).get(0)+"','"+rowList.get(i).get(1)+"','"+rowList.get(i).get(2)+"','0')";
 			sqls.add(sql);
 		}
-		Result result = dbHelper.onUpdateByGroup(sqls);
+		result = dbHelper.onUpdateByGroup(sqls);
 		result.setRemak(classId);
 		return result;
 	}
+	
+	
+	public Result verifyStudent(List<List<Object>> rowList){
+		Result result = new Result();
+		result.setRet(Constant.ERROR);
+		int rows = rowList.size();
+		for (int i = 0; i < rowList.size(); i++) {
+//			if (rowList.get(i).size() != 3) {
+//				result.setMessage("第"+(i+1)+"行格式错误！");
+//				return result;
+//			}
+			String studentId = (String) rowList.get(i).get(0);
+			String studentName = (String) rowList.get(i).get(1);
+			String iclickerId = (String) rowList.get(i).get(2);
+            if (studentId.length() > 10) {
+            	  result.setMessage("第"+(i+2)+"行学生编号错误！");
+                  return result;
+			}    
+            if (studentName.length() > 10) {
+          	  result.setMessage("第"+(i+2)+"行学生姓名错误！");
+                return result;
+			} 
+            if (!verifyIclickerId(iclickerId)) {
+            	  result.setMessage("第"+(i+2)+"行答题器编号错误！");
+                  return result;
+  			} 
+		}	
+		result.setRet(Constant.SUCCESS);
+		return result;
+	}
+
+	/**
+	 * 校验答题器编号
+	 * @param answer
+	 * @return
+	 */
+	private boolean verifyIclickerId(String iclickerId){
+		if (StringUtils.isEmpty(iclickerId)) {
+			return true;
+		}
+		Pattern p = Pattern.compile("^[0-9]{10}+$");
+		Matcher m = p.matcher(iclickerId);
+		return m.matches();
+	}
+	
 	
 	/*查询学生*/
 	public Result selectStudentInfo(StudentInfo studentInfo) throws IllegalArgumentException, IllegalAccessException{

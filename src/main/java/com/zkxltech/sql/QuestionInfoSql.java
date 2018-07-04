@@ -63,9 +63,6 @@ public class QuestionInfoSql {
 				case "数字":
 					type = "3";
 					break;
-				case "主观题":
-					type = "4";
-					break;
 				default:
 					result.setRet(Constant.ERROR);
 					result.setMessage((i+1)+"行题目类型有误!");

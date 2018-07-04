@@ -90,7 +90,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("导入成功!");
 			}else {
-				result.setMessage("导入学生失败！");
+				result.setMessage(result.getMessage());
 			}
 			return result;
 		} catch (Exception e) {
@@ -99,6 +99,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
+		}finally {
+			System.out.println(JSONObject.fromObject(result));
 		}
 	}
 	@Override
