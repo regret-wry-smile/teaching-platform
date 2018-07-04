@@ -23,15 +23,15 @@ import com.zkxltech.domain.Record;
 import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
+import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.AnswerInfoService;
 import com.zkxltech.sql.RecordSql;
+import com.zkxltech.thread.AttendanceThread;
+import com.zkxltech.thread.EquipmentStatusThread;
+import com.zkxltech.thread.MultipleAnswerThread;
+import com.zkxltech.thread.SingleAnswerThread;
 import com.zkxltech.ui.TestMachineThread;
 import com.zkxltech.ui.util.StringUtils;
-import com.zkxlteck.scdll.ScDll;
-import com.zkxlteck.thread.AttendanceThread;
-import com.zkxlteck.thread.EquipmentStatusThread;
-import com.zkxlteck.thread.MultipleAnswerThread;
-import com.zkxlteck.thread.SingleAnswerThread;
 
 public class AnswerInfoServiceImpl implements AnswerInfoService{
     private static final Logger log = LoggerFactory.getLogger(AnswerInfoServiceImpl.class);

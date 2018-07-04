@@ -25,12 +25,12 @@ import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
+import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.sql.StudentInfoSql;
-import com.zkxlteck.scdll.ScDll;
-import com.zkxlteck.thread.AttendanceThread;
-import com.zkxlteck.thread.MultipleAnswerThread;
-import com.zkxlteck.thread.QuickThread;
+import com.zkxltech.thread.AttendanceThread;
+import com.zkxltech.thread.MultipleAnswerThread;
+import com.zkxltech.thread.QuickThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

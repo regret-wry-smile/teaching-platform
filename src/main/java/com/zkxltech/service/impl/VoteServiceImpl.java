@@ -9,10 +9,10 @@ import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Vote;
+import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.VoteService;
+import com.zkxltech.thread.VoteThread;
 import com.zkxltech.ui.util.StringUtils;
-import com.zkxlteck.scdll.ScDll;
-import com.zkxlteck.thread.VoteThread;
 
 public class VoteServiceImpl implements VoteService{
     private static final Logger logger = LoggerFactory.getLogger(VoteServiceImpl.class);
