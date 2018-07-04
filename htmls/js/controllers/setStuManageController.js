@@ -41,8 +41,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		$scope.checkedId = [];
 		$scope.selected = false;
 		if($scope.result.ret=='success'){			
-			$scope.studentList=$scope.result.item;
-			
+			$scope.studentList=$scope.result.item;			
 		}else{
 			toastr.error($scope.result.message);
 		}
@@ -53,13 +52,13 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		$scope.result = JSON.parse(execute_student("select_class"));
 		if($scope.result.ret=='success'){
 			$scope.classList=$scope.result.item;
-			console.log("班级"+JSON.stringify($scope.classList))
+			//console.log("班级"+JSON.stringify($scope.classList))
 			if($scope.classList.length>0){
 				$scope.classId=$scope.classList[0].classId;
 				$scope.classobject=$scope.classList[0];
 				$scope.isActive = 0; 
 				$scope.studentList=[];
-				
+				_selectStudent();				
 			}else{
 				$scope.studentList=[];
 			}
@@ -79,7 +78,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	
 	var _init=function(){
 		_selectClass();
-		_selectStudent();
+		
 	}();		
 	//打开添加班级弹框
 	$scope.addClass = function() {
@@ -95,8 +94,9 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			}*/
 		});
 		modalInstance.result.then(function(info) {
+			var classListlength=0;
 			console.log("班级id"+JSON.stringify(info))
-			if(info){
+			/*if(info){
 				_selectClass();
 				for(var i=0;i<$scope.classList.length;i++){
 					if(info==$scope.classList[i].classId){
@@ -107,7 +107,17 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 						
 					}
 				}
-			}		
+			}	*/	
+			_selectClass();			
+			classListlength=$scope.classList.length;
+			if($scope.classList.length>0){
+				$scope.classId=$scope.classList[classListlength-1].classId;
+				$scope.classobject=$scope.classList[classListlength-1];
+				$scope.isActive =classListlength-1;
+				_selectStudent();
+			}
+			
+			
 		}, function() {
 			//$log.info('Modal dismissed at: ' + new Date());
 		});
@@ -123,10 +133,17 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	
 	//本地导入学生
 	$scope.patchImport = function() {
-			var modalInstance = $modal.open({
+		
+		if($scope.classId){
+				if($scope.classobject.atype=='1'){
+					$scope.size="sm";
+				}else{
+					$scope.size="md";
+				}				
+				var modalInstance = $modal.open({
 				templateUrl: 'importFile.html',
 				controller: 'uploadfileModalCtrl',
-				size: 'md',
+				size: $scope.size,
 				backdrop:false,
 				resolve: {
 					infos: function() {
@@ -148,7 +165,12 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 					}
 				}
 			}, function() {
-		});
+			});
+			
+		}else{
+			toastr.warning("请先选择一个班级");
+		}
+			
 		};
 	//打开编辑班级弹框
 	$scope.editClass = function(item,$index) {
@@ -522,8 +544,9 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 					return ;
 				}else{	
 					//_showModal();
-					$scope.result=JSON.parse(execute_student("import_student",$scope.filepath));
-					//console.log("哈哈哈哈"+JSON.stringify($scope.result))
+					console.log("班级"+JSON.stringify(infos)+"地址"+$scope.filepath)
+					$scope.result=JSON.parse(execute_student("import_student",$scope.filepath,JSON.stringify(infos)));
+					console.log("本地导入学生"+JSON.stringify($scope.result))
 					if($scope.result.ret=='success'){
 						toastr.success($scope.result.message);
 						//_hideModal();
@@ -599,9 +622,9 @@ app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos
 	}
 	
 	$scope.student={		
-//		studentId:'',
+		studentId:'',
 		studentName:'',
-//		iclickerId:'',
+		iclickerId:'',
 		classId:$scope.classId,
 		className:$scope.className
 	}
@@ -645,18 +668,18 @@ app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos
 		}
 	}
 	$scope.ok = function() {
-		if(typeof $scope.student.studentId=='number'){
+		/*if(typeof $scope.student.studentId=='number'){
 			$scope.student.studentIdint=JSON.stringify($scope.student.studentId)
 		}
 		if(typeof $scope.student.iclickerId=='number'){
 			$scope.student.iclickerIdint=JSON.stringify($scope.student.iclickerId)
-		}
+		}*/
 		var param = {
 			studentName:$scope.student.studentName,
 			classId:$scope.student.classId,
 			className:$scope.student.className,
-			studentId:$scope.student.studentIdint,
-			iclickerId:$scope.student.iclickerIdint,
+			studentId:$scope.student.studentId,
+			iclickerId:$scope.student.iclickerId,
 			status:'0'//班級类型
 		}
 		console.log(JSON.stringify(param))
@@ -679,17 +702,11 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 	if(infos){
 		$scope.student=angular.copy(infos);
 		console.log(JSON.stringify(infos))
-		if(typeof infos.studentId=='string'){
-			$scope.student.studentId=parseInt(infos.studentId)
-		}
-		if(typeof infos.iclickerId=='string'){
-			$scope.student.iclickerId=parseInt(infos.iclickerId)
-		}
 	}		
 		
 	//校验学号
 	$scope.blurStunum=function(){
-		if($scope.myForm.studentId.$dirty==true){
+		if($scope.myForm.studentId.$dirty==true&&$scope.student.studentId){
 			var param = {
 				classId:$scope.classId,
 				studentId:$scope.student.studentId
@@ -711,8 +728,8 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 		}		
 	}
 	//校验答题器编号
-	$scope.blurDevicenum=function(){		
-		if($scope.myForm.iclickerId.$dirty==true){
+	$scope.blurDevicenum=function(){
+		if($scope.myForm.iclickerId.$dirty==true&&$scope.student.iclickerId){
 			var param = {
 				classId:$scope.classId,
 				iclickerId:$scope.student.iclickerId
@@ -735,22 +752,16 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 		}
 	}		
 	$scope.ok = function() {
-		if(typeof $scope.student.studentId=='number'){
-			$scope.student.studentIdint=JSON.stringify($scope.student.studentId)
-		}
-		if(typeof $scope.student.iclickerId=='number'){
-			$scope.student.iclickerIdint=JSON.stringify($scope.student.iclickerId)
-		}
 		var param = {
 			id:$scope.student.id,
 			studentName:$scope.student.studentName,
 			classId:$scope.student.classId,
 			className:$scope.student.className,
-			studentId:$scope.student.studentIdint,
-			iclickerId:$scope.student.iclickerIdint,
+			studentId:$scope.student.studentId,
+			iclickerId:$scope.student.iclickerId,
 			status:$scope.student.status//班級类型
 		}
-		console.log(JSON.stringify(param))
+		console.log("班级学生参数"+JSON.stringify(param))
 		$scope.result=JSON.parse(execute_student("update_student",JSON.stringify(param)));
 		if($scope.result.ret=='success'){
 			toastr.success($scope.result.message);
@@ -783,7 +794,7 @@ app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toa
 			console.log(JSON.stringify($scope.result))
 			if($scope.result.ret=='success'){
 				if($scope.result.item.length>0){
-					toastr.warning('该班级已存在，请重新输入');
+					toastr.warning('该班级id已存在，请重新输入');
 					$scope.myForm.classId.$invalid=true;
 					$scope.myForm.$invalid=true;
 				} 
@@ -814,8 +825,12 @@ app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toa
 				
 	}
 	$scope.ok = function() {
-		var param = $scope.classInfo;
-		//console.log("参数"+JSON.stringify(param))
+		var param={
+			atype:$scope.classInfo.atype,
+			className:$scope.classInfo.className,
+			classId:$scope.classInfo.classId
+		}
+		console.log("参数"+JSON.stringify(param))
 		$scope.result= JSON.parse(execute_student("insert_class",JSON.stringify(param)));
 		//console.log("滴滴滴滴"+JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){
@@ -839,23 +854,6 @@ app.controller('editClassModalCtrl',function($scope,$modalInstance,$rootScope,to
 	$scope.noedit=true;
 	
 	$scope.selectClass=function(){
-		/*if($scope.classInfo.classId){
-			var param={
-				classId:$scope.classInfo.classId
-			}		
-			$scope.result= JSON.parse(execute_student("select_class",JSON.stringify(param)));
-			console.log(JSON.stringify($scope.result))
-			if($scope.result.ret=='success'){
-				if($scope.result.item.length>0){
-					toastr.warning('该班级已存在，请重新输入');
-					 $scope.myForm.classId.$invalid=true;
-					$scope.myForm.$invalid=true;
-				} 
-			}else{
-				toastr.error($scope.result.message);
-			}
-		}*/
-		
 		if($scope.myForm.classId.$dirty==true){
 			var param={
 				classId:$scope.classInfo.classId
@@ -868,7 +866,7 @@ app.controller('editClassModalCtrl',function($scope,$modalInstance,$rootScope,to
 						$scope.myForm.classId.$error.required=true;
 						$scope.myForm.classId.$invalid=true;
 						$scope.myForm.$invalid=true;
-						toastr.warning("该班级已存在，请重新输入",{preventOpenDuplicates:true});
+						toastr.warning("该班级id已存在，请重新输入",{preventOpenDuplicates:true});
 					}					
 				}
 			} else {
@@ -903,6 +901,7 @@ app.controller('editClassModalCtrl',function($scope,$modalInstance,$rootScope,to
 	
 	$scope.ok = function() {
 		var param = $scope.classInfo;
+		console.log("编辑班级参数:"+JSON.stringify(param))
 		$scope.result= JSON.parse(execute_student("update_class",JSON.stringify(param)));
 		console.log(JSON.stringify($scope.result))
 		if($scope.result.ret=='success'){
