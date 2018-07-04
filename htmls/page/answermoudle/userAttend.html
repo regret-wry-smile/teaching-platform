@@ -43,7 +43,7 @@
 					</a>
 				</div>
 			</div>
-			<div class="content clearfix" style="margin: 0;padding: 0;position: relative; background: #f00;">
+			<div ng-cloak class="content clearfix" style="margin: 0;padding: 0;position: relative; background: #f00;">
 				<div class="modboxs clearfix " style="margin: 0.0rem 0.05rem;padding: 0.10rem;position: absolute;left: 0.18rem;overflow: auto;border: 1px solid #f00; background: #f00;">
 					<div class="box" ng-repeat="item in studentAttendList track by $index" ng-class="{'YES':'green','NO':'' }[item.status]">
 						{{item.studentName}}

@@ -44,7 +44,7 @@
 			width:3.9rem !important;
 		}
 	</style>
-	<body class="bg clearfix" ng-controller="setClassCtrl" >
+	<body ng-cloak class="bg clearfix" ng-controller="setClassCtrl" >
 		<!--添加课程start-->
 			<script type="text/ng-template" id="addClassHourModal.html">
 				<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
@@ -93,7 +93,7 @@
 					<img src="../../image/return.png" />
 				</div>-->
 			</div>
-			<div class="content  clearfix">
+			<div ng-cloak class="content  clearfix">
 				<form name="myForm" novalidate>
 				<div class="modboxs bgfff">
 					<p class="text clearfix">
@@ -130,14 +130,7 @@
 			<div class="operatebtn mt20 text-center clearfix">
 		  		<button class="btn savebtn mr5" ng-click="startClass()" ng-disabled="!myForm.$valid">开始上课</button>
 		  	</div>
-		  	</form>
-			<div ng-spinner-loader class="loading">
-				<div class="spinner">
-					<div class="bounce1"></div>
-					<div class="bounce2"></div>
-					<div class="bounce3"></div>
-				</div>
-			</div>
+		  </form>
 	</body>
 
 </html>

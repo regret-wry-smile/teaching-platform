@@ -33,8 +33,8 @@
 			position: relative;
 		}
 	</style>
-	<body class="bg clearfix" ng-controller="setClassCtrl">
-		<div ng-show="!isSign" >
+	<body class="bg clearfix" ng-controller="setClassCtrl" >
+		<div ng-show="!isSign" ng-cloak>
 			<div class="header clearfix">
 				<div class="pull-left">
 					<a class="btn btnfff" class="mr25">{{curclassName}}</a>
@@ -80,7 +80,7 @@
 		  	</ul>
 		  	</div>
 		  	</div>
-		<div ng-show="isSign" ng-controller="userAttendCtrl">
+		<div ng-show="isSign" ng-cloak ng-controller="userAttendCtrl">
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/menu.png" class="ml25 pt20" />

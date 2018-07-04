@@ -201,7 +201,7 @@
 				<img src="../../image/return.png" class="rebtn" ng-click="returnPage()" />
 			</div>
 		</div>
-		<div class="content content1 bgf5 clearfix">
+		<div ng-cloak class="content content1 bgf5 clearfix">
 			<div class="opbtn clearfix mb20 bgf5">
 				<a href="javascript:;" ng-click="addClass()">添加班级</a>
 				<a href="javascript:;" ng-click="quickBind()">一键配对</a>
@@ -212,8 +212,7 @@
 				<a href="javascript:;" class="warning" ng-click="unbindStu()">解绑</a>
 				<a href="javascript:;" class="warning" ng-click="clearStu()">清除白名单</a>
 			</div>
-			<div class="pannel clearfix" style="position: absolute; top:.5rem ; left: 0.20rem; right: 0; bottom: .25rem;overflow-x: hidden">			
-			
+			<div class="pannel clearfix" style="position: absolute; top:.5rem ; left: 0.20rem; right: 0; bottom: .25rem;overflow-x: hidden">						
 			<div class="col-sub pull-left" id="classlist" style="overflow-x: hidden;position: absolute;top: 0rem; overflow-y: auto;  width:20%; height: 100%;">
 				<table class="table table-stripe classlist" style="margin-bottom: 0;">
 					<thead>
@@ -240,7 +239,7 @@
 					</tbody>
 				</table>
 			</div>
-				<div class="col-main pull-left" style=" overflow-x: hidden;overflow-y: auto;height: 100%; width:80%; position: absolute; left: 20%; top: 0; bottom: 0; right: 0; ">
+			<div class="col-main pull-left" style=" overflow-x: hidden;overflow-y: auto;height: 100%; width:80%; position: absolute; left: 20%; top: 0; bottom: 0; right: 0; ">
 					<table class="table table-stripe userlist">
 						<thead>
 							<tr>
@@ -274,8 +273,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
 		</div>
 		<div id="removeLoading" ng-click="removeLoading()" style="display:none;"></div>
 		<div id="showLoading" ng-click="showLoading()" style="display:none;"></div>

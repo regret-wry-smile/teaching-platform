@@ -101,6 +101,9 @@ p {
 .bggreen{
 	background-color:#5ed6be;
 }	
+.clgreen{
+	color:#5ed6be;
+}
 .header {
    /* height: 1.10rem;*/
     line-height: 1.10rem;

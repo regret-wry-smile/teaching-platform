@@ -50,7 +50,7 @@
 					<img src="../../image/return.png" ng-click="returnPage()" class="rebtn"/>
 				</div>
 			</div>
-			<div class="content content1 bgf5 clearfix">		 
+			<div ng-cloak class="content content1 bgf5 clearfix">		 
 				<form class="form-horizontal clearfix" name="myForm" novalidate>
 			  			<div class="form-group">
 					  	<label for="firstname" class="col-sm-2 control-label text-right">投票主题</label>
@@ -75,8 +75,7 @@
 					  	<a href="javascript:;" class="mr10" ng-click="additem()">+新增对象</a><a href="javascript:;" ng-click="delObject()" class="del">-删除对象</a>
 						 </p>
 						<p class="text-center warning">说明：A:表示赞成；B:表示同意；C:表示弃权；标题限制字数：20,；描述限制字数：100；投票对象限制字数：5</p>
-						</div>
-			  </div>
+				</div>
 			  <div class="operatebtn pt10 clearfix text-center">
 		  		<button class="btn savebtn" ng-click="startVote()" ng-disabled="myForm.$invalid">开始投票</button>
 		  	</div>
