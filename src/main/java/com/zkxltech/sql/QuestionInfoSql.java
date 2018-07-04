@@ -55,9 +55,9 @@ public class QuestionInfoSql {
 				case "判断":
 					type = "2";
 					if ("对".equals(trueAnswer)) {
-						trueAnswer = "T";
+						trueAnswer = "true";
 					}else if("错".equals(trueAnswer)){
-						trueAnswer = "F";
+						trueAnswer = "false";
 					}
 					break;
 				case "数字":
