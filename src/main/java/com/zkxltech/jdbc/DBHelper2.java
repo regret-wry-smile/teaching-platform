@@ -14,6 +14,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.domain.Result;
@@ -87,11 +88,11 @@ public class DBHelper2{
 		    rs.close();
 		    pStmt.close();
 		    conn.close();
-		    result.setRet("SUCCESS");
+		    result.setRet(Constant.SUCCESS);
 		    result.setItem(list);
 		  } catch ( Exception e ) {
 			  log.error(IOUtils.getError(e));
-			  result.setRet("ERROR");
+			  result.setRet(Constant.ERROR);
 			  result.setMessage("sql执行失败！");
 			  result.setDetail(e.getMessage());
 		  }finally {

@@ -116,7 +116,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 						BrowserManager.refreshStudent(classId);
 						BrowserManager.showMessage(true,"从服务器中获取学生信息成功！");
 					}else{
-						BrowserManager.showMessage(false,"从服务器中获取学生信息失败！");
+						BrowserManager.showMessage(false,result.getMessage());
 					}
 				} catch (Exception e) {
 					BrowserManager.showMessage(false,"从服务器中获取学生信息失败！");
@@ -271,7 +271,12 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 		Result result = new Result();
 		try {
 			result = studentInfoSql.getServerStudent(classId);//获取服务器学生
-			if ("ERROR".equals(result.getRet())) {
+			if (Constant.ERROR.equals(result.getRet())) {
+				return result;
+			}
+			if (com.zkxltech.ui.util.StringUtils.isEmptyList(result.getItem())) {
+				result.setMessage("该班级没有学生！");
+				result.setRet(Constant.ERROR);
 				return result;
 			}
 			List<Map<String, Object>> listMaps = (List<Map<String, Object>>) result.getItem();

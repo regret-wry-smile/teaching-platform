@@ -153,8 +153,8 @@ public class MainPage extends Dialog {
 
 		CLabel titleText = new CLabel(composite_top, SWT.NONE);
 		FormData fd_titleText = new FormData();
-		fd_titleText.bottom = new FormAttachment(0, 41);
-		fd_titleText.top = new FormAttachment(0, 15);
+		fd_titleText.bottom = new FormAttachment(0, 57);
+		fd_titleText.top = new FormAttachment(0);
 		fd_titleText.left = new FormAttachment(0, 47);
 		titleText.setLayoutData(fd_titleText);
 		titleText.setFont(SWTResourceManager.getFont("微软雅黑", 12, SWT.NORMAL));
