@@ -62,7 +62,7 @@ public class RedisMapSingleAnswer {
                 if (iclickerAnswerMap.containsKey(card_id)) { //已经提交过,将以前提交的答题总数减一,并将以前该答题对象的学生名称去掉,将新值重新添加
                     String lastAnswer = iclickerAnswerMap.get(card_id);
                     Integer countNum = singleAnswerNumMap.get(lastAnswer);
-                    --countNum;
+                    singleAnswerNumMap.put(lastAnswer, --countNum);
                     List<String> list = singleAnswerStudentNameMap.get(lastAnswer);
                     list.remove(studentInfo.getStudentName());
                 }
