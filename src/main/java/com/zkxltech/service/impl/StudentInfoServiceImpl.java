@@ -156,6 +156,19 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 		try {
 			
 			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseToBean(JSONObject.fromObject(param), StudentInfo.class);
+			StudentInfo studentInfoParam = new StudentInfo();
+			studentInfoParam.setClassId(studentInfo.getClassId());
+			result = studentInfoSql.selectStudentInfo(studentInfoParam);
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("校验查询该班学生信息失败!");
+				return result;
+			}else {
+				if (((List<StudentInfo>)result.getItem()).size()>=120) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("每个班学生不能超过120人!");
+					return result;
+				}
+			}
 //			/*判断该班中学生学号是否存在*/
 //			StudentInfo paramStudentInfo1 = new StudentInfo();
 //			paramStudentInfo1.setClassId(studentInfo.getClassId());
