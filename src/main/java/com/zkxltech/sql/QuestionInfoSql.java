@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.QuestionInfo;
@@ -86,6 +87,8 @@ public class QuestionInfoSql {
 			result.setMessage("题目信息为空！");
 			return result;
 		}
+		List<String> questionIds = new ArrayList<String>();
+		
 		for (int i = 0; i < rowList.size(); i++) {
 			if(i == 0){
 				if (rowList.get(i).size() != 4) {
@@ -96,11 +99,16 @@ public class QuestionInfoSql {
 				String range = "";
 				//0单选；1多选；2判断；3数字；4主观题
 				List<Object> list = rowList.get(i);
-                    
 				if (list.size() < 4) {
                     result.setMessage("第"+(i+1)+"行题目错误,请检查题目类型,正确答案,作答范围是否有误！");
                     return result;
                 }
+				String questionId = (String) list.get(0);
+				if (!verifyCheckQuetionId(questionId)) {
+                     result.setMessage("第"+(i+1)+"行题号不正确！");
+                     return result;
+                }
+				questionIds.add(questionId);
 				String type = (String) list.get(2);
 				String trueAnswer = (String) list.get(3);
 				switch (type) {
@@ -168,6 +176,12 @@ public class QuestionInfoSql {
 				}
 			}
 		}	
+		
+		if (questionIds.stream().distinct().collect(Collectors.toList()).size() != questionIds.size()) {
+			result.setMessage("题号有重复！");
+			return result;
+		};
+		
 		result.setRet(Constant.SUCCESS);
 		return result;
 	}
@@ -237,6 +251,21 @@ public class QuestionInfoSql {
 //		Matcher m = p.matcher(range);
 //		return m.matches();
 //	}
+	/**
+	 * 校验题号
+	 * @param answer
+	 * @return
+	 */
+	private boolean verifyCheckQuetionId(String questionId){
+		if (StringUtils.isEmpty(questionId)) {
+			return false;
+		}
+		Pattern p = Pattern.compile("^[1-9][0-9]?+$");
+		Matcher m = p.matcher(questionId);
+		return m.matches();
+	}
+	
+	
 	/**
 	 * 校验判断答案
 	 * @param answer
