@@ -154,7 +154,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		
 			modalInstance.result.then(function(info) {
 				if(info){
-					_selectClass();
+					//_selectClass();
 					for(var i=0;i<$scope.classList.length;i++){
 						if(info==$scope.classList[i].classId){
 						$scope.classId=info;
