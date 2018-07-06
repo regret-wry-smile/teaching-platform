@@ -159,7 +159,8 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 						if(info==$scope.classList[i].classId){
 						$scope.classId=info;
 						$scope.classobject=$scope.classList[i];
-						$scope.isActive =$scope.classList.length-1;
+						$scope.isActive=i;//导入成功后让选中当前选中班级
+						//$scope.isActive =$scope.classList.length-1;
 						$scope.changeClass($scope.classobject,$scope.isActive)
 					}
 					}
