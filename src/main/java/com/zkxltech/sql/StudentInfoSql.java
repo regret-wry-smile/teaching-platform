@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
@@ -33,11 +34,11 @@ public class StudentInfoSql {
 		String sql = "";
 		String classId = classInfo.getClassId();
 		String className = classInfo.getClassName();
-		sqls.add("delete from class_info where class_id = '" + classId+"'"); //删除原来班级信息
-		sqls.add("insert into class_info (class_id,class_name,atype) values('"+classId+"','"+
-				className+"','0')"); //添加班级信息
+//		sqls.add("delete from class_info where class_id = '" + classId+"'"); //删除原来班级信息
+//		sqls.add("insert into class_info (class_id,class_name,atype) values('"+classId+"','"+
+//				className+"','0')"); //添加班级信息
 		sqls.add("delete from student_info where class_id = '" + classId+"'"); //删除原来的班级学生
-		for (int i = 0; i < rowList.size(); i++) {
+		for (int i = 0; i < (rowList.size()>120?120:rowList.size()); i++) {
 			sql = "insert into student_info (class_id,class_name,student_id,student_name,iclicker_id,status) values('"+classId+"','"+
 					className+"','"+rowList.get(i).get(0)+"','"+rowList.get(i).get(1)+"','"+rowList.get(i).get(2)+"','0')";
 			sqls.add(sql);
@@ -52,6 +53,10 @@ public class StudentInfoSql {
 		Result result = new Result();
 		result.setRet(Constant.ERROR);
 		int rows = rowList.size();
+		
+		
+		List<String> studentIds = new ArrayList<String>();
+		List<String> iclickerIds = new ArrayList<String>();
 		for (int i = 0; i < rowList.size(); i++) {
 //			if (rowList.get(i).size() != 3) {
 //				result.setMessage("第"+(i+1)+"行格式错误！");
@@ -72,7 +77,19 @@ public class StudentInfoSql {
             	  result.setMessage("第"+(i+2)+"行答题器编号错误！");
                   return result;
   			} 
-		}	
+            
+            studentIds.add(studentId);
+            iclickerIds.add(iclickerId);
+		}
+
+		if (studentIds.stream().distinct().collect(Collectors.toList()).size() != studentIds.size()) {
+			  result.setMessage("学号有重复！");
+              return result;
+		};
+		if (iclickerIds.stream().distinct().collect(Collectors.toList()).size() != iclickerIds.size()) {
+			  result.setMessage("答题器编号有重复！");
+           	  return result;
+		};
 		result.setRet(Constant.SUCCESS);
 		return result;
 	}
@@ -110,7 +127,7 @@ public class StudentInfoSql {
 				index++;
 			}
 		}
-		sqlBuilder.append(" order by status desc");
+		sqlBuilder.append(" order by id asc");
 		return dbHelper.onQuery(sqlBuilder.toString(), studentInfo);
 	}
 	

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.BrowserManager;
+import com.ejet.cache.RedisMapAttendance;
 import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.cache.RedisMapSingleAnswer;
@@ -298,14 +299,20 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
                 r.setMessage("参数错误");
                 return r;
         }
-        if (r.getRet() == Constant.ERROR) {
-            r.setMessage("指令发送失败");
-            log.error("单题单选指令发送失败");
-            return r;
-        }
-        
-        thread = new SingleAnswerThread();
-        thread.start();
+        if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
+//			TestMachineThread.startThread(1,"字母题");
+			TestMachineThread.startThread(1,"数字题");
+//			TestMachineThread.startThread(1,"判断题");
+		}else {
+	        if (r.getRet() == Constant.ERROR) {
+	            r.setMessage("指令发送失败");
+	            log.error("单题单选指令发送失败");
+	            return r;
+	        }
+	        
+	        thread = new SingleAnswerThread();
+	        thread.start();
+		}
         r.setRet(Constant.SUCCESS);
         Global.setModeMsg(Constant.BUSINESS_ANSWER);
         return r;

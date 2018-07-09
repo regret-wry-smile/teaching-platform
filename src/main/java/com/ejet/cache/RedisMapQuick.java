@@ -30,6 +30,7 @@ public class RedisMapQuick {
 	private static boolean flag = false;
     public static void addQuickAnswer(String jsonData){
         if (flag) {
+        	logger.info("【抢答接收到的数据】"+jsonData);
             JSONArray jsonArray = JSONArray.fromObject(jsonData);
             for (Object object : jsonArray) {
                 JSONObject jo = JSONObject.fromObject(object);

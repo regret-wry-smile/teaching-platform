@@ -91,6 +91,7 @@ public class RedisMapMultipleAnswer {
 	 */
 	public static void addEveryAnswerInfo(String jsonData){
 		try {
+			logger.info("【单题多选接收到的数据】"+jsonData);
 			keyEveryBodyMap[0] = answerId; //主题编号
 //			keyEveryAnswerMap[0] = answerId;
 //			keyAnswerMap[0] = answerId;
@@ -118,7 +119,7 @@ public class RedisMapMultipleAnswer {
 //	        				continue;
 //						}
 	        			RedisMapUtil.setRedisMap(everyBodyMap, keyEveryBodyMap, 0, answer);//[4b3bdf41e88a46528ae5cd7f15641e80, 1, 3429469477]
-	        			System.out.println(JSONObject.fromObject(everyBodyMap));
+//	        			System.out.println(JSONObject.fromObject(everyBodyMap));
 	        			/*String answerString = answeJSONObject.getString("answer");
 	        			
 	        			if (StringUtils.isEmpty(answerString)) {
@@ -172,6 +173,9 @@ public class RedisMapMultipleAnswer {
 			//  作答编号                                                                                                  : 题号 : 答题器编号		:作答信息
 			//{"dd27a16b6d2c4fbc8866bb9bbefb56a5":{"1":{"3429469477":{"type":"m","id":"1","answer":"AB"}}}}
 			Map<String, Object> map = (Map<String, Object>) RedisMapUtil.getRedisMap(everyBodyMap, keString, 0);
+			if(map == null){
+				return null;
+			}
 			for (String iclicker : map.keySet()) {
 				Answer answer = (Answer)map.get(iclicker);
 				StudentInfo studentInfo = verifyCardId(iclicker);
@@ -209,6 +213,9 @@ public class RedisMapMultipleAnswer {
 			//  作答编号                                                                                                  : 题号 : 答题器编号		:作答信息
 			//{"dd27a16b6d2c4fbc8866bb9bbefb56a5":{"1":{"3429469477":{"type":"m","id":"1","answer":"AB"}}}}
 			Map<String, Object> map = (Map<String, Object>) RedisMapUtil.getRedisMap(everyBodyMap, keString, 0);
+			if(map == null){
+				return null;
+			}
 			for (String iclicker : map.keySet()) {
 				Answer answer = (Answer)map.get(iclicker);
 				StudentInfo studentInfo = verifyCardId(iclicker);

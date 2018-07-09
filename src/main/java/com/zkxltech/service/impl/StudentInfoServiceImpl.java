@@ -21,6 +21,7 @@ import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
+import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
@@ -31,6 +32,7 @@ import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.thread.AttendanceThread;
 import com.zkxltech.thread.MultipleAnswerThread;
 import com.zkxltech.thread.QuickThread;
+import com.zkxltech.ui.TestMachineThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -156,6 +158,19 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 		try {
 			
 			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseToBean(JSONObject.fromObject(param), StudentInfo.class);
+			StudentInfo studentInfoParam = new StudentInfo();
+			studentInfoParam.setClassId(studentInfo.getClassId());
+			result = studentInfoSql.selectStudentInfo(studentInfoParam);
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("校验查询该班学生信息失败!");
+				return result;
+			}else {
+				if (((List<StudentInfo>)result.getItem()).size()>=120) {
+					result.setRet(Constant.ERROR);
+					result.setMessage("每个班学生不能超过120人!");
+					return result;
+				}
+			}
 //			/*判断该班中学生学号是否存在*/
 //			StudentInfo paramStudentInfo1 = new StudentInfo();
 //			paramStudentInfo1.setClassId(studentInfo.getClassId());
@@ -346,26 +361,43 @@ public class StudentInfoServiceImpl implements StudentInfoService{
                 return r;
             }
         }
-        //开始签到接口有问题,暂用按任意键
-        r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
-        if (r.getRet().equals(Constant.ERROR)) {
-            return r;
-        }
-        List<StudentInfo> studentInfos = Global.getStudentInfos();
-        if (ListUtils.isEmpty(studentInfos)) {
-            r.setMessage("未获取到学生信息");
-            return r;
-        }
-        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
-        for (StudentInfo studentInfo : studentInfos) {
-            Map<String, String> studentInfoMap = new HashMap<>();
-            studentInfoMap.put("studentName", studentInfo.getStudentName());
-            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
-            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
-        }
-        thread = new AttendanceThread();
-        thread.start();
-    	Global.setModeMsg(Constant.BUSINESS_ATTENDEN);
+        if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
+			TestMachineThread.startThread(1,"字母题");
+			 List<StudentInfo> studentInfos = Global.getStudentInfos();
+		        if (ListUtils.isEmpty(studentInfos)) {
+		            r.setMessage("未获取到学生信息");
+		            return r;
+		        }
+		        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+		        for (StudentInfo studentInfo : studentInfos) {
+		            Map<String, String> studentInfoMap = new HashMap<>();
+		            studentInfoMap.put("studentName", studentInfo.getStudentName());
+		            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
+		            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
+		        }
+		}else {
+			 //开始签到接口有问题,暂用按任意键
+	        r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
+	        if (r.getRet().equals(Constant.ERROR)) {
+	            return r;
+	        }
+	        List<StudentInfo> studentInfos = Global.getStudentInfos();
+	        if (ListUtils.isEmpty(studentInfos)) {
+	            r.setMessage("未获取到学生信息");
+	            return r;
+	        }
+	        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+	        for (StudentInfo studentInfo : studentInfos) {
+	            Map<String, String> studentInfoMap = new HashMap<>();
+	            studentInfoMap.put("studentName", studentInfo.getStudentName());
+	            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
+	            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
+	        }
+	        thread = new AttendanceThread();
+	        thread.start();
+	    	Global.setModeMsg(Constant.BUSINESS_ATTENDEN);
+		}
+       
         r.setRet(Constant.SUCCESS);
         r.setMessage("操作成功");
         return r;
