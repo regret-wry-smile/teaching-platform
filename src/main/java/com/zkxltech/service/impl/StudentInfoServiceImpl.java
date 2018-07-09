@@ -363,6 +363,18 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }
         if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
 			TestMachineThread.startThread(1,"字母题");
+			 List<StudentInfo> studentInfos = Global.getStudentInfos();
+		        if (ListUtils.isEmpty(studentInfos)) {
+		            r.setMessage("未获取到学生信息");
+		            return r;
+		        }
+		        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+		        for (StudentInfo studentInfo : studentInfos) {
+		            Map<String, String> studentInfoMap = new HashMap<>();
+		            studentInfoMap.put("studentName", studentInfo.getStudentName());
+		            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
+		            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
+		        }
 		}else {
 			 //开始签到接口有问题,暂用按任意键
 	        r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);

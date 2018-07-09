@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ejet.cache.RedisMapAttendance;
 import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
+import com.ejet.cache.RedisMapSingleAnswer;
 import com.ejet.core.util.constant.Constant;
 
 import net.sf.json.JSONArray;
@@ -159,7 +161,9 @@ class MyThread extends Thread {
 					RedisMapMultipleAnswer.addEveryAnswerInfo(jsonData);
 					break;
 				case "字母题":
-					RedisMapClassTestAnswer.addRedisMapClassTestAnswer1(jsonData);
+//					RedisMapClassTestAnswer.addRedisMapClassTestAnswer1(jsonData); //随堂检测
+					RedisMapAttendance.addAttendance(jsonData); //签到
+//					RedisMapSingleAnswer.addAnswer(jsonData);
 					break;
 				case "数字题":
 					RedisMapClassTestAnswer.addRedisMapClassTestAnswer2(jsonData);
