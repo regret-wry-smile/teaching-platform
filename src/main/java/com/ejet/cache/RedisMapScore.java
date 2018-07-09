@@ -120,6 +120,7 @@ public class RedisMapScore {
 	 * @param score
 	 */
 	public static void addscoreDetailInfo(String jsonData){
+		logger.info("【评分接收到的数据】"+jsonData);
 		keyScoreDetailInfoMap[0] = scoreInfoId; //主题编号
 		JSONArray jsonArray = JSONArray.fromObject(jsonData); 
         for (int  i= 0; i < jsonArray.size(); i++) {

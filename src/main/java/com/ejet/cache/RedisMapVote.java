@@ -118,6 +118,7 @@ public class RedisMapVote {
 	 * 添加投票详情
 	 */
 	public static void addVoteDetailInfo(String jsonData){
+		logger.info("【投票接收到的数据】"+jsonData);
 		keyVoteDetailInfoMap[0] = voteInfoId; //主题编号
 		JSONArray jsonArray = JSONArray.fromObject(jsonData); 
         for (int  i= 0; i < jsonArray.size(); i++) {

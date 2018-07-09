@@ -105,6 +105,7 @@ public class RedisMapClassTestAnswer {
 	 */
 	public static void addRedisMapClassTestAnswer1(String jsonData){
 		try {
+			logger.info("【随堂检测客观题接收到的数据】"+jsonData);
 			List<ResponseAnswer> responseAnswers = (List<ResponseAnswer>) JSONArray.toCollection(JSONArray.fromObject(jsonData), ResponseAnswer.class);
 			for (int i = 0; i < responseAnswers.size(); i++) {
 				ResponseAnswer responseAnswer = responseAnswers.get(i);
@@ -315,6 +316,7 @@ public class RedisMapClassTestAnswer {
 	 */
 	public static void addRedisMapClassTestAnswer2(String jsonData){
 		try {
+			logger.info("【随堂检测主观题接收到的数据】"+jsonData);
 			List<ResponseAnswer> responseAnswers = (List<ResponseAnswer>) JSONArray.toCollection(JSONArray.fromObject(jsonData), ResponseAnswer.class);
 			for (int i = 0; i < responseAnswers.size(); i++) {
 				ResponseAnswer responseAnswer = responseAnswers.get(i);

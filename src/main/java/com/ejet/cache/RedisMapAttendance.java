@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.io.IOUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -26,22 +27,28 @@ public class RedisMapAttendance {
 	/**绑定时用来去除重复的提交,代表当前提交的人*/
     private static Set<String> cardIdSet = new HashSet<>();
 	public static void addAttendance(String jsonData){
-        JSONArray jsonArray = JSONArray.fromObject(jsonData);
-        for (int j = 0; j < jsonArray.size(); j++) {
-            JSONObject jo = (JSONObject) jsonArray.get(j);
-            String card_id = jo.getString("card_id");
-            if (cardIdSet.contains(card_id)) {
-                continue;
-            }
-            cardIdSet.add(card_id);
-            Map<String, String> map = attendanceMap.get(card_id);
-            for (String key : map.keySet()) {
-                if (key.equals("status")) {
-                    map.put(key, Constant.ATTENDANCE_YES);
-                }
-            }
-            BrowserManager.refresAttendance();
-        }
+		try {
+			logger.info("【签到接收到的数据】"+jsonData);
+			JSONArray jsonArray = JSONArray.fromObject(jsonData);
+	        for (int j = 0; j < jsonArray.size(); j++) {
+	            JSONObject jo = (JSONObject) jsonArray.get(j);
+	            String card_id = jo.getString("card_id");
+	            if (cardIdSet.contains(card_id)) {
+	                continue;
+	            }
+	            cardIdSet.add(card_id);
+	            Map<String, String> map = attendanceMap.get(card_id);
+	            for (String key : map.keySet()) {
+	                if (key.equals("status")) {
+	                    map.put(key, Constant.ATTENDANCE_YES);
+	                }
+	            }
+	            BrowserManager.refresAttendance();
+	        }
+		} catch (Exception e) {
+			logger.info("【签到】"+IOUtils.getError(e));
+		}
+        
     }
 	/*获取当前班级中所有人的考勤状态*/
 	public static String getAttendance(){

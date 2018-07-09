@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
@@ -31,30 +32,36 @@ public class RedisMapBind {
     /**数据库中所有卡对应的状态*/
     private static Map<String,String> cardIdMap = new HashMap<>();
     public static void addBindMap(String jsonData){
-        JSONArray jsonArray = JSONArray.fromObject(jsonData);
-        for (Object object : jsonArray) {
-            JSONObject jo = JSONObject.fromObject(object);
-            String cardId = jo.getString("card_id");
-            //如果不包含,表示该卡不是本班的学生,跳过
-            if (!studentInfoMap.containsKey(cardId)) {
-                continue;
+    	try {
+    		logger.info("【绑定接收到的数据】"+jsonData);
+            JSONArray jsonArray = JSONArray.fromObject(jsonData);
+            for (Object object : jsonArray) {
+                JSONObject jo = JSONObject.fromObject(object);
+                String cardId = jo.getString("card_id");
+                //如果不包含,表示该卡不是本班的学生,跳过
+                if (!studentInfoMap.containsKey(cardId)) {
+                    continue;
+                }
+                //判断该学生是否已经绑定了,如果绑定了就不用再绑了
+                StudentInfo studentInfo = studentInfoMap.get(cardId);
+                if (Constant.BING_YES.equals(studentInfo.getStatus())) {
+                    continue;
+                }
+                studentInfo.setStatus(STATE_BIND);
+                Integer accomplish = (Integer)bindMap.get("accomplish");
+                ++accomplish;
+                Integer notAccomplish = (Integer)bindMap.get("notAccomplish");
+                --notAccomplish;
+                bindMap.put("studentName", studentInfo.getStudentName()); //
+                bindMap.put("accomplish", accomplish);
+                bindMap.put("notAccomplish",notAccomplish);
+                SIS.updateStudentById(studentInfo);
             }
-            //判断该学生是否已经绑定了,如果绑定了就不用再绑了
-            StudentInfo studentInfo = studentInfoMap.get(cardId);
-            if (Constant.BING_YES.equals(studentInfo.getStatus())) {
-                continue;
-            }
-            studentInfo.setStatus(STATE_BIND);
-            Integer accomplish = (Integer)bindMap.get("accomplish");
-            ++accomplish;
-            Integer notAccomplish = (Integer)bindMap.get("notAccomplish");
-            --notAccomplish;
-            bindMap.put("studentName", studentInfo.getStudentName()); //
-            bindMap.put("accomplish", accomplish);
-            bindMap.put("notAccomplish",notAccomplish);
-            SIS.updateStudentById(studentInfo);
-        }
-        BrowserManager.refreshBindCard();
+            BrowserManager.refreshBindCard();
+		} catch (Exception e) {
+			logger.error("【绑定】"+IOUtils.getError(e));
+		}
+    	
     }
     
 	public static String getBindMapValue(){

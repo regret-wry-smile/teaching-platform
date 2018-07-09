@@ -44,6 +44,7 @@ public class RedisMapSingleAnswer {
                                 JUDGE_TRUE = "true",JUDGE_FALSE = "false";
     
     public static void addAnswer(String jsonData){
+    	logger.info("【单选接收到的数据】"+jsonData);
         JSONArray jsonArray= JSONArray.fromObject(jsonData);
         for (Object object : jsonArray) {
             JSONObject jsonObject = JSONObject.fromObject(object);
