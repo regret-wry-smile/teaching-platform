@@ -15,7 +15,7 @@ import com.zkxltech.service.impl.EquipmentServiceImpl;
  * @date:2018年7月2日 下午12:32:18
  */
 public class EquipmentStatusThread extends Thread {
-    private static final Logger logger = LoggerFactory.getLogger(CardInfoThread.class);
+    private static final Logger logger = LoggerFactory.getLogger(EquipmentStatusThread.class);
     private boolean FLAG = true;
     public boolean isFLAG() {
         return FLAG;
