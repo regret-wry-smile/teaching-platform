@@ -29,30 +29,32 @@ public class MultipleAnswerThread extends Thread {
 	}
 	@Override
     public void run() {
-        while(FLAG){
-            try {
+	    try {
+            while(FLAG){
                 Thread.sleep(50);
-            } catch (InterruptedException e) {
-                logger.error(IOUtils.getError(e));
+                String jsonData = ScDll.intance.get_answer_list();
+                if (!StringUtils.isBlank(jsonData)) {
+                    logger.info("获取到答题数据:===>>"+jsonData);
+                    switch (answerType) {
+    				case Constant.ANSWER_MULTIPLE_TYPE:
+    					RedisMapMultipleAnswer.addEveryAnswerInfo(jsonData);
+    					break;
+    				case Constant.ANSWER_CLASS_TEST_OBJECTIVE:
+    					RedisMapClassTestAnswer.addRedisMapClassTestAnswer1(jsonData);
+    					break;
+    				case Constant.ANSWER_CLASS_TEST_SUBJECTIVE :
+    					RedisMapClassTestAnswer.addRedisMapClassTestAnswer2(jsonData);
+    					break;
+    				default:
+    					break;
+    				}
+                	
+                }
             }
-            String jsonData = ScDll.intance.get_answer_list();
-            if (!StringUtils.isBlank(jsonData)) {
-                logger.info("获取到答题数据:===>>"+jsonData);
-                switch (answerType) {
-				case Constant.ANSWER_MULTIPLE_TYPE:
-					RedisMapMultipleAnswer.addEveryAnswerInfo(jsonData);
-					break;
-				case Constant.ANSWER_CLASS_TEST_OBJECTIVE:
-					RedisMapClassTestAnswer.addRedisMapClassTestAnswer1(jsonData);
-					break;
-				case Constant.ANSWER_CLASS_TEST_SUBJECTIVE :
-					RedisMapClassTestAnswer.addRedisMapClassTestAnswer2(jsonData);
-					break;
-				default:
-					break;
-				}
-            	
-            }
-        }
+	    } catch (InterruptedException e) {
+	        logger.error(IOUtils.getError(e));
+	    } catch (Throwable e){
+	        logger.error("线程获取硬件数据异常",IOUtils.getError(e));
+	    }
     }
 }

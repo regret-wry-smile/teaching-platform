@@ -19,17 +19,19 @@ public class VoteThread extends Thread {
     }
     @Override
     public void run() {
-        while(FLAG){
-            try {
+        try {
+            while(FLAG){
                 Thread.sleep(50);
-            } catch (InterruptedException e) {
-                logger.error(IOUtils.getError(e));
+                String jsonData = ScDll.intance.get_answer_list();
+                if (!StringUtils.isBlank(jsonData)) {
+                    logger.info("获取到答题数据:===>>"+jsonData);
+                    RedisMapVote.addVoteDetailInfo(jsonData);
+                }
             }
-            String jsonData = ScDll.intance.get_answer_list();
-            if (!StringUtils.isBlank(jsonData)) {
-                logger.info("获取到答题数据:===>>"+jsonData);
-                RedisMapVote.addVoteDetailInfo(jsonData);
-            }
+        } catch (InterruptedException e) {
+            logger.error(IOUtils.getError(e));
+        } catch (Throwable e){
+            logger.error("线程获取硬件数据异常",IOUtils.getError(e));
         }
     }
 }

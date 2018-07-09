@@ -25,24 +25,26 @@ public class EquipmentStatusThread extends Thread {
     }
     @Override
     public void run() {
-        while(FLAG){
-            boolean isAnswerStart = Global.isEquipmentStatus;
-            Result r = EquipmentServiceImpl.getInstance().get_device_info();
-            boolean converStatusToBoolean = converStatusToBoolean(r.getRet());
-            if (!isAnswerStart == converStatusToBoolean) {
-                if (converStatusToBoolean == false) {
-                    BrowserManager.refreEquipmentState(false);
-                    Global.isEquipmentStatus = false ;
-                }else{
-                    BrowserManager.refreEquipmentState(true);
-                    Global.isEquipmentStatus = true;
+        try {
+            while(FLAG){
+                boolean isAnswerStart = Global.isEquipmentStatus;
+                Result r = EquipmentServiceImpl.getInstance().get_device_info();
+                boolean converStatusToBoolean = converStatusToBoolean(r.getRet());
+                if (!isAnswerStart == converStatusToBoolean) {
+                    if (converStatusToBoolean == false) {
+                        BrowserManager.refreEquipmentState(false);
+                        Global.isEquipmentStatus = false ;
+                    }else{
+                        BrowserManager.refreEquipmentState(true);
+                        Global.isEquipmentStatus = true;
+                    }
                 }
+                    Thread.sleep(2000);
             }
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                logger.error(IOUtils.getError(e));
-            }
+        } catch (InterruptedException e) {
+            logger.error(IOUtils.getError(e));
+        } catch (Throwable e){
+            logger.error("线程获取硬件数据异常",IOUtils.getError(e));
         }
     }
     public static boolean converStatusToBoolean(String status){
