@@ -12,6 +12,7 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 	$scope.classhourList=[]//课程数组
 	$rootScope.isSign=false;//是否是签到
 	$rootScope.studentAttendList=[];//签到人员数组
+	$rootScope.signList=0;//已签到默认0人
 	/*查询班级列表*/
 	var _selectClass = function() {
 		$scope.result = JSON.parse(execute_student("select_class"));
@@ -218,6 +219,7 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 			$rootScope.isSign=true;
 //			toastr.success($scope.result.message);
 			$rootScope.studentAttendList=JSON.parse(execute_attendance("get_sign_in"));
+			$rootScope.signList=JSON.parse(execute_attendance("get_submit_num"));				
 			//console.log("人员列表"+JSON.stringify($rootScope.studentAttendList));
 			/*$scope.param = "classId=" + $scope.setClass.classesobject.key + "&className=" + $scope.setClass.classesobject.value + "&classhourid=" + $scope.sujectNameobject.key+"&classhourname=" +$scope.sujectNameobject.value+ "&suject="+$scope.setClass.subject;			
 			$scope.objectUrl = '../../page/answermoudle/userAttend.html' + '?' + $scope.param;
