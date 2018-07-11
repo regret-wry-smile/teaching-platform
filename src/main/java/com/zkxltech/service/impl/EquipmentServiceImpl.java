@@ -300,23 +300,23 @@ public class EquipmentServiceImpl implements EquipmentService{
     public Result equipmentDatabaseSynchronization() {
         Result r = new Result();
         r.setRet(Constant.ERROR);
-        String get_device_info = ScDll.intance.get_device_info();
-        if (StringUtils.isBlank(get_device_info)) {
-            r.setMessage("设备故障,请重启设备");
-            return r;
-        }
-        StudentInfoSql studentInfoSql = new StudentInfoSql();
-        List<String> iclickerIds = getEquipmentAllUid(get_device_info);
-        //将结果保存到项目全局变量中
-        
-        Global.setIclickerIds(iclickerIds);
-        
-        /**如果设备没有值,直接将库全改为未绑定*/
-        if (ListUtils.isEmpty(iclickerIds)) {
-            r = studentInfoSql.updateStatus(Constant.BING_NO);
-       }else{
-           /**有值的将库里对应的学生改为绑定,没值的全部是未绑定*/
-           try {
+        try{
+            String get_device_info = ScDll.intance.get_device_info();
+            if (StringUtils.isBlank(get_device_info)) {
+                r.setMessage("设备故障,请重启设备");
+                return r;
+            }
+            StudentInfoSql studentInfoSql = new StudentInfoSql();
+            List<String> iclickerIds = getEquipmentAllUid(get_device_info);
+            //将结果保存到项目全局变量中
+            
+            Global.setIclickerIds(iclickerIds);
+            
+            /**如果设备没有值,直接将库全改为未绑定*/
+            if (ListUtils.isEmpty(iclickerIds)) {
+                r = studentInfoSql.updateStatus(Constant.BING_NO);
+           }else{
+               /**有值的将库里对应的学生改为绑定,没值的全部是未绑定*/
                r = studentInfoSql.updateStatusByIclickerIds(iclickerIds,Constant.BING_YES);
                if (r.getRet().equals(Constant.ERROR)) {
                    return r;
@@ -326,11 +326,12 @@ public class EquipmentServiceImpl implements EquipmentService{
                    return r;
                }
                r.setRet(Constant.SUCCESS);
-           } catch (Exception e) {
-               r.setMessage("同步设备与数据库绑定状态失败");
-               r.setDetail(IOUtils.getError(e));
            }
-       }
+        } catch (Exception e) {
+            log.error("", e);
+            r.setMessage("同步设备与数据库绑定状态失败");
+            r.setDetail(IOUtils.getError(e));
+        }
         return r;
     }
     

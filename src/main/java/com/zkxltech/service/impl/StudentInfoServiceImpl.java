@@ -353,58 +353,65 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             r.setMessage("缺少参数");
             return r;
         }
-        JSONObject jo = JSONObject.fromObject(param);
-        if (jo.containsKey("classId")) {
-            String classId = jo.getString("classId");
-            if (StringUtils.isEmpty(classId)) {
-                r.setMessage("班级ID为空");
-                return r;
+        try{
+            JSONObject jo = JSONObject.fromObject(param);
+            if (jo.containsKey("classId")) {
+                String classId = jo.getString("classId");
+                if (StringUtils.isEmpty(classId)) {
+                    r.setMessage("班级ID为空");
+                    return r;
+                }
             }
+            if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
+    			TestMachineThread.startThread(1,"字母题");
+    			 List<StudentInfo> studentInfos = Global.getStudentInfos();
+    		        if (ListUtils.isEmpty(studentInfos)) {
+    		            r.setMessage("未获取到学生信息");
+    		            return r;
+    		        }
+    		        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+    		        for (StudentInfo studentInfo : studentInfos) {
+    		            Map<String, String> studentInfoMap = new HashMap<>();
+    		            studentInfoMap.put("studentName", studentInfo.getStudentName());
+    		            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
+    		            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
+    		        }
+    		}else {
+    			 //开始签到接口有问题,暂用按任意键
+    	        r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
+    	        if (r.getRet().equals(Constant.ERROR)) {
+    	            return r;
+    	        }
+    	        List<StudentInfo> studentInfos = Global.getStudentInfos();
+    	        if (ListUtils.isEmpty(studentInfos)) {
+    	            r.setMessage("未获取到学生信息");
+    	            return r;
+    	        }
+    	        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+    	        for (StudentInfo studentInfo : studentInfos) {
+    	            Map<String, String> studentInfoMap = new HashMap<>();
+    	            studentInfoMap.put("studentName", studentInfo.getStudentName());
+    	            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
+    	            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
+    	        }
+    	        thread = new AttendanceThread();
+    	        thread.start();
+    	    	Global.setModeMsg(Constant.BUSINESS_ATTENDEN);
+    		}
+           
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("操作成功");
+        }catch (Exception e) {
+            log.error("", e);
+            r.setMessage("系统异常");
+            r.setDetail(IOUtils.getError(e));
         }
-        if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-			TestMachineThread.startThread(1,"字母题");
-			 List<StudentInfo> studentInfos = Global.getStudentInfos();
-		        if (ListUtils.isEmpty(studentInfos)) {
-		            r.setMessage("未获取到学生信息");
-		            return r;
-		        }
-		        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
-		        for (StudentInfo studentInfo : studentInfos) {
-		            Map<String, String> studentInfoMap = new HashMap<>();
-		            studentInfoMap.put("studentName", studentInfo.getStudentName());
-		            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
-		            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
-		        }
-		}else {
-			 //开始签到接口有问题,暂用按任意键
-	        r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
-	        if (r.getRet().equals(Constant.ERROR)) {
-	            return r;
-	        }
-	        List<StudentInfo> studentInfos = Global.getStudentInfos();
-	        if (ListUtils.isEmpty(studentInfos)) {
-	            r.setMessage("未获取到学生信息");
-	            return r;
-	        }
-	        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
-	        for (StudentInfo studentInfo : studentInfos) {
-	            Map<String, String> studentInfoMap = new HashMap<>();
-	            studentInfoMap.put("studentName", studentInfo.getStudentName());
-	            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
-	            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
-	        }
-	        thread = new AttendanceThread();
-	        thread.start();
-	    	Global.setModeMsg(Constant.BUSINESS_ATTENDEN);
-		}
-       
-        r.setRet(Constant.SUCCESS);
-        r.setMessage("操作成功");
         return r;
     }
     @Override
     public Result signInStop() {
         Result r = new Result();
+        r.setRet(Constant.ERROR);
         Global.setModeMsg(Constant.BUSINESS_NORMAL);
         if (thread != null && thread instanceof AttendanceThread ) {
             AttendanceThread a = (AttendanceThread)thread;
@@ -413,12 +420,18 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }else{
             log.error("签到线程停止失败");;
         }
-        r = EquipmentServiceImpl.getInstance().answer_stop();
-        if (r.getRet().equals(Constant.ERROR)) {
-            return r;
+        try{
+            r = EquipmentServiceImpl.getInstance().answer_stop();
+            if (r.getRet().equals(Constant.ERROR)) {
+                return r;
+            }
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("停止成功");
+        }catch (Exception e) {
+            log.error("", e);
+            r.setMessage("系统异常");
+            r.setDetail(IOUtils.getError(e));
         }
-        r.setRet(Constant.SUCCESS);
-        r.setMessage("停止成功");
         return r;
     }
     @Override
@@ -433,27 +446,34 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             r.setMessage("参数班级id不能为空");
             return r;
         }
-        r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
-        if (r.getRet().equals(Constant.ERROR)) {
-            return r;
+        try{
+            r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
+            if (r.getRet().equals(Constant.ERROR)) {
+                return r;
+            }
+            Global.setModeMsg(Constant.BUSINESS_ANSWER);
+    //            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
+    //            Result result = impl.selectStudentInfo(param);
+    //            List<Object> item = (List<Object>) result.getItem();
+            List<StudentInfo> studentInfos = Global.getStudentInfos();
+            for (StudentInfo studentInfo : studentInfos) {
+                RedisMapQuick.getStudentInfoMap().put(studentInfo.getIclickerId(), studentInfo);
+            }
+            thread = new QuickThread();
+            thread.start();
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("发送成功");
+        }catch (Exception e) {
+            log.error("", e);
+            r.setMessage("系统异常");
+            r.setDetail(IOUtils.getError(e));
         }
-        Global.setModeMsg(Constant.BUSINESS_ANSWER);
-//            StudentInfoServiceImpl impl = new StudentInfoServiceImpl();
-//            Result result = impl.selectStudentInfo(param);
-//            List<Object> item = (List<Object>) result.getItem();
-        List<StudentInfo> studentInfos = Global.getStudentInfos();
-        for (StudentInfo studentInfo : studentInfos) {
-            RedisMapQuick.getStudentInfoMap().put(studentInfo.getIclickerId(), studentInfo);
-        }
-        thread = new QuickThread();
-        thread.start();
-        r.setRet(Constant.SUCCESS);
-        r.setMessage("发送成功");
         return r;
     }
     @Override
     public Result stopQuickAnswer() {
         Result r = new Result();
+        r.setRet(Constant.ERROR);
         Global.setModeMsg(Constant.BUSINESS_NORMAL);
         if (thread != null && thread instanceof QuickThread) {
             QuickThread m = (QuickThread)thread;
@@ -462,13 +482,19 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }else{
             log.error("\"停止答题\"线程停止失败");
         }
-        r = EquipmentServiceImpl.getInstance().answer_stop();
-        if (r.getRet().equals(Constant.ERROR)) {
-            return r;
+        try{
+            r = EquipmentServiceImpl.getInstance().answer_stop();
+            if (r.getRet().equals(Constant.ERROR)) {
+                return r;
+            }
+            
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("停止成功");
+        }catch (Exception e) {
+            log.error("", e);
+            r.setMessage("系统异常");
+            r.setDetail(IOUtils.getError(e));
         }
-
-        r.setRet(Constant.SUCCESS);
-        r.setMessage("停止成功");
         return r;
     }
     

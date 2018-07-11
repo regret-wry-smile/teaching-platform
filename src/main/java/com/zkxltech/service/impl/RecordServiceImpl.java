@@ -95,18 +95,18 @@ public class RecordServiceImpl implements RecordService{
                 String dates = "";
                 Result r = new Result();
                 r.setRet(Constant.ERROR);
-                Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
-                if (StringUtils.isBlank(record.getClassId())||StringUtils.isBlank(record.getSubject())
-                        ||StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getTestId())) {
-                    BrowserManager.showMessage(false,"缺少参数,请检查班次id,科目,课程id,试卷id四个参数");
-                    return;
-                }
-                //查询课程名称
-                ClassHourSql classHourSql = new ClassHourSql();
-                ClassHour classHour = new ClassHour();
-                classHour.setClassHourId(record.getClassHourId());
                 FileOutputStream out = null ;
                 try{
+                    Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+                    if (StringUtils.isBlank(record.getClassId())||StringUtils.isBlank(record.getSubject())
+                            ||StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getTestId())) {
+                        BrowserManager.showMessage(false,"缺少参数,请检查班次id,科目,课程id,试卷id四个参数");
+                        return;
+                    }
+                    //查询课程名称
+                    ClassHourSql classHourSql = new ClassHourSql();
+                    ClassHour classHour = new ClassHour();
+                    classHour.setClassHourId(record.getClassHourId());
                     r = classHourSql.selectClassHour(classHour);
                     List<ClassHour> classHours = (List<ClassHour>) r.getItem();
                     if (ListUtils.isEmpty(classHours)) {
@@ -302,13 +302,13 @@ public class RecordServiceImpl implements RecordService{
             public void run() {
                 Result r = new Result();
                 r.setRet(Constant.ERROR);
-                Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
-                if (StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getTestId())) {
-                    r.setMessage("缺少参数:课程id和试卷id不能为空");
-                    BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
-                    return ;
-                }
                 try {
+                    Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+                    if (StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getTestId())) {
+                        r.setMessage("缺少参数:课程id和试卷id不能为空");
+                        BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
+                        return ;
+                    }
                     //查询课程的开始时间
                     ClassHourSql classHourSql = new ClassHourSql();
                     ClassHour classHour = new ClassHour();
@@ -477,13 +477,13 @@ public class RecordServiceImpl implements RecordService{
     public Result deleteRecord(Object object) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
-        Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
-        if (StringUtils.isBlank(record.getTestId())||record.getStudentIds()== null || record.getStudentIds().size() < 1) {
-            r.setMessage("试卷id和学生id参数不能为空");
-            return r;
-        }
-        RecordSql sql = new RecordSql();
         try {
+            Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+            if (StringUtils.isBlank(record.getTestId())||record.getStudentIds()== null || record.getStudentIds().size() < 1) {
+                r.setMessage("试卷id和学生id参数不能为空");
+                return r;
+            }
+            RecordSql sql = new RecordSql();
             r = sql.deleteRecordByStudentId(record);
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
@@ -506,14 +506,14 @@ public class RecordServiceImpl implements RecordService{
     public Result selectStudentRecordDetail(Object object) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
-        Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
-        if (StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getClassId())||StringUtils.isBlank(record.getStudentId())
-                ||StringUtils.isBlank(record.getTestId())||StringUtils.isEmpty(record.getSubject())) {
-            r.setMessage("缺少参数,班级id,课程,课时id,试卷id,学生id均不能为空");
-            return r;
-        }
-        RecordSql recordSql = new RecordSql();
         try {
+            Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
+            if (StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getClassId())||StringUtils.isBlank(record.getStudentId())
+                    ||StringUtils.isBlank(record.getTestId())||StringUtils.isEmpty(record.getSubject())) {
+                r.setMessage("缺少参数,班级id,课程,课时id,试卷id,学生id均不能为空");
+                return r;
+            }
+            RecordSql recordSql = new RecordSql();
             r = recordSql.selectRecord(record);
         } catch (Exception e) {
             log.error(IOUtils.getError(e));

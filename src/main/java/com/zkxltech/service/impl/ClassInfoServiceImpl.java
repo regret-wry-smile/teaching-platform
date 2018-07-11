@@ -142,12 +142,12 @@ public class ClassInfoServiceImpl implements ClassInfoService{
         Result r = new Result();
         r.setRet(Constant.ERROR);
         
-        String get_device_info = ScDll.intance.get_device_info();
-        if (StringUtils.isEmpty(get_device_info)) {
-            r.setMessage("设备故障,请重启设备");
-            return r;
-        }
         try {
+            String get_device_info = ScDll.intance.get_device_info();
+            if (StringUtils.isEmpty(get_device_info)) {
+                r.setMessage("设备故障,请重启设备");
+                return r;
+            }
             StudentInfoSql studentInfoSql = new StudentInfoSql();
             r = studentInfoSql.updateStatus(Constant.BING_NO);
             if (r.getRet().equals(Constant.ERROR)) {
@@ -241,20 +241,26 @@ public class ClassInfoServiceImpl implements ClassInfoService{
         }else{
             log.error("绑定线程停止失败");
         }
-        int bind_stop = ScDll.intance.wireless_bind_stop();
-        if (bind_stop == Constant.SEND_ERROR) {
-            int bind_stop2 = ScDll.intance.wireless_bind_stop();
-            if (bind_stop2 == Constant.SEND_ERROR) {
-                r.setRet(Constant.ERROR);
-                r.setMessage("停止指令发送失败");
-                log.info("\"停止绑定\"失败");
-                return r;
+        try{
+            int bind_stop = ScDll.intance.wireless_bind_stop();
+            if (bind_stop == Constant.SEND_ERROR) {
+                int bind_stop2 = ScDll.intance.wireless_bind_stop();
+                if (bind_stop2 == Constant.SEND_ERROR) {
+                    r.setRet(Constant.ERROR);
+                    r.setMessage("停止指令发送失败");
+                    log.info("\"停止绑定\"失败");
+                    return r;
+                }
+               
             }
-           
+            log.info("\"停止绑定\"成功");
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("停止成功");
+        }catch (Exception e) {
+            log.error("", e);
+            r.setMessage("系统异常");
+            r.setDetail(IOUtils.getError(e));
         }
-        log.info("\"停止绑定\"成功");
-        r.setRet(Constant.SUCCESS);
-        r.setMessage("停止成功");
         return r;
     }
 }

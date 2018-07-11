@@ -250,92 +250,104 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         RedisMapSingleAnswer.clearStudentInfoMap();
         RedisMapSingleAnswer.clearSingleAnswerStudentNameMap();
         RedisMapSingleAnswer.clearIclickerAnswerMap();
-        Answer answer = com.zkxltech.ui.util.StringUtils.parseJSON(param, Answer.class);
-        if (answer == null || StringUtils.isEmpty(answer.getType())) {
-            r.setMessage("缺少参数,题目类型不能为空");
-            return r;
-        }
-        //传入类型 ,清空数据
-        RedisMapSingleAnswer.setAnswer(answer);
-        
-        //总的答题人数
-        List<StudentInfo> studentInfos = Global.getStudentInfos();
-        if (ListUtils.isEmpty(studentInfos)) {
-            r.setMessage("未获取到当前班次学生信息");
-            return r;
-        }
-        Map<String,StudentInfo> map = new HashMap<>();
-        RedisMapSingleAnswer.setStudentInfoMap(map);
-        for (StudentInfo studentInfo : studentInfos) {
-            map.put(studentInfo.getIclickerId(), studentInfo);
-        }
-        String type = answer.getType();
-        switch (type) {
-            case Constant.ANSWER_CHAR_TYPE:
-                r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_CHAR);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_A, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_B, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_C, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_D, 0);
-                break;
-            case Constant.ANSWER_NUMBER_TYPE:
-                r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_1, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_2, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_3, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_4, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_5, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_6, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_7, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_8, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_9, 0);
-                break;
-            case Constant.ANSWER_JUDGE_TYPE:
-                r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_TRUE, 0);
-                RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_FALSE, 0);
-                break;
-            default:
-                r.setMessage("参数错误");
+        try{
+            Answer answer = com.zkxltech.ui.util.StringUtils.parseJSON(param, Answer.class);
+            if (answer == null || StringUtils.isEmpty(answer.getType())) {
+                r.setMessage("缺少参数,题目类型不能为空");
                 return r;
+            }
+            //传入类型 ,清空数据
+            RedisMapSingleAnswer.setAnswer(answer);
+            
+            //总的答题人数
+            List<StudentInfo> studentInfos = Global.getStudentInfos();
+            if (ListUtils.isEmpty(studentInfos)) {
+                r.setMessage("未获取到当前班次学生信息");
+                return r;
+            }
+            Map<String,StudentInfo> map = new HashMap<>();
+            RedisMapSingleAnswer.setStudentInfoMap(map);
+            for (StudentInfo studentInfo : studentInfos) {
+                map.put(studentInfo.getIclickerId(), studentInfo);
+            }
+            String type = answer.getType();
+            switch (type) {
+                case Constant.ANSWER_CHAR_TYPE:
+                    r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_CHAR);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_A, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_B, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_C, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_D, 0);
+                    break;
+                case Constant.ANSWER_NUMBER_TYPE:
+                    r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_1, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_2, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_3, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_4, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_5, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_6, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_7, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_8, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_9, 0);
+                    break;
+                case Constant.ANSWER_JUDGE_TYPE:
+                    r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_TRUE, 0);
+                    RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_FALSE, 0);
+                    break;
+                default:
+                    r.setMessage("参数错误");
+                    return r;
+            }
+            if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
+    //			TestMachineThread.startThread(1,"字母题");
+    			TestMachineThread.startThread(1,"数字题");
+    //			TestMachineThread.startThread(1,"判断题");
+    		}else {
+    	        if (r.getRet() == Constant.ERROR) {
+    	            r.setMessage("指令发送失败");
+    	            log.error("单题单选指令发送失败");
+    	            return r;
+    	        }
+    	        
+    	        thread = new SingleAnswerThread();
+    	        thread.start();
+    		}
+            r.setRet(Constant.SUCCESS);
+            Global.setModeMsg(Constant.BUSINESS_ANSWER);
+        }catch (Exception e) {
+            log.error("", e);
+            r.setMessage("系统异常");
+            r.setDetail(IOUtils.getError(e));
         }
-        if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-//			TestMachineThread.startThread(1,"字母题");
-			TestMachineThread.startThread(1,"数字题");
-//			TestMachineThread.startThread(1,"判断题");
-		}else {
-	        if (r.getRet() == Constant.ERROR) {
-	            r.setMessage("指令发送失败");
-	            log.error("单题单选指令发送失败");
-	            return r;
-	        }
-	        
-	        thread = new SingleAnswerThread();
-	        thread.start();
-		}
-        r.setRet(Constant.SUCCESS);
-        Global.setModeMsg(Constant.BUSINESS_ANSWER);
         return r;
     }
 
     @Override
     public Result stopSingleAnswer() {
         Result r = new Result();
-        Global.setModeMsg(Constant.BUSINESS_NORMAL);
-        if (thread != null && thread instanceof SingleAnswerThread ) {
-            SingleAnswerThread a = (SingleAnswerThread)thread;
-            a.setFLAG(false);
-            log.info("单选线程停止成功");
-        }else{
-            log.error("单选线程停止失败");;
+        r.setRet(Constant.ERROR);
+        try{
+            Global.setModeMsg(Constant.BUSINESS_NORMAL);
+            if (thread != null && thread instanceof SingleAnswerThread ) {
+                SingleAnswerThread a = (SingleAnswerThread)thread;
+                a.setFLAG(false);
+                log.info("单选线程停止成功");
+            }else{
+                log.error("单选线程停止失败");;
+            }
+            r = EquipmentServiceImpl.getInstance().answer_stop();
+            if (r.getRet().equals(Constant.ERROR)) {
+                return r;
+            }
+            r.setRet(Constant.SUCCESS);
+            r.setMessage("停止成功");
+        }catch (Exception e) {
+            log.error("", e);
+            r.setMessage("系统异常");
+            r.setDetail(IOUtils.getError(e));
         }
-        r = EquipmentServiceImpl.getInstance().answer_stop();
-        if (r.getRet().equals(Constant.ERROR)) {
-            return r;
-        }
-        r.setRet(Constant.SUCCESS);
-        r.setMessage("停止成功");
-
         return r;
     }
     
