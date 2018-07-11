@@ -34,6 +34,11 @@ public class MultipleAnswerThread extends Thread {
                 Thread.sleep(50);
                 String jsonData = ScDll.intance.get_answer_list();
                 if (!StringUtils.isBlank(jsonData)) {
+                    StringBuilder stringBuilder = new StringBuilder(jsonData);
+                    if (jsonData.startsWith("{")) {
+                        stringBuilder.insert(0, "[").append("]");
+                    }
+                    jsonData = stringBuilder.toString();
                     logger.info("获取到答题数据:===>>"+jsonData);
                     switch (answerType) {
     				case Constant.ANSWER_MULTIPLE_TYPE:

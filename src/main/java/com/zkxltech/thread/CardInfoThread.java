@@ -24,6 +24,11 @@ public class CardInfoThread extends Thread {
                 Thread.sleep(50);
                 String jsonData = ScDll.intance.get_wireless_bind_info() ;
                 if (!StringUtils.isBlank(jsonData)) {
+                    StringBuilder stringBuilder = new StringBuilder(jsonData);
+                    if (jsonData.startsWith("{")) {
+                        stringBuilder.insert(0, "[").append("]");
+                    }
+                    jsonData = stringBuilder.toString();
                     logger.info("获取到答题数据:===>>"+jsonData);
                     RedisMapBind.addBindMap(jsonData);
                 }
