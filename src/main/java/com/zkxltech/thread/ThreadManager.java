@@ -20,7 +20,7 @@ public class ThreadManager {
 	private ThreadManager() {
 		
 	}
-	public ThreadManager getInstance() {
+	public static ThreadManager getInstance() {
 		if(instance==null) {
 			instance = new ThreadManager();
 		}
@@ -31,11 +31,11 @@ public class ThreadManager {
 		threads.add(thread);
 	}
 	
-	public synchronized static void removeThread(Thread thread) {
+	public synchronized void removeThread(Thread thread) {
 		threads.remove(thread);
 	}
 	
-	public synchronized static void printThead() {
+	public synchronized void printThead() {
 		logger.info("当前线程个数:" + threads.size());
 	}
 	
