@@ -23,6 +23,7 @@ import net.sf.json.JSONObject;
  */
 public class RedisMapAttendance {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMapAttendance.class);
+	/**卡号为key  value为 学生名称和考勤的状态*/
 	private static Map<String, Map<String,String>> attendanceMap = Collections.synchronizedMap(new HashMap<>());
 	/**绑定时用来去除重复的提交,代表当前提交的人*/
     private static Set<String> cardIdSet = new HashSet<>();
@@ -33,7 +34,8 @@ public class RedisMapAttendance {
 	        for (int j = 0; j < jsonArray.size(); j++) {
 	            JSONObject jo = (JSONObject) jsonArray.get(j);
 	            String card_id = jo.getString("card_id");
-	            if (cardIdSet.contains(card_id)) {
+	            /*如果attendanceMap里没有该卡号,表示不是本班学生,如果cardIdSet里有值表示已经提交过了*/
+	            if (!attendanceMap.containsKey(card_id) || cardIdSet.contains(card_id)) {
 	                continue;
 	            }
 	            cardIdSet.add(card_id);
