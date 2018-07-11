@@ -36,6 +36,10 @@ public class RedisMapQuick {
                 JSONObject jo = JSONObject.fromObject(object);
                 String card_id = jo.getString("card_id");
                 StudentInfo studentInfo = studentInfoMap.get(card_id);
+                /*如果未找到表示非本班学生*/
+                if (studentInfo == null) {
+                    continue;
+                }
                 quickMap.put("studentName", studentInfo.getStudentName());
                 if (StudentInfoServiceImpl.getThread()!=null && StudentInfoServiceImpl.getThread() instanceof QuickThread) {
                     QuickThread qt= (QuickThread)StudentInfoServiceImpl.getThread();
