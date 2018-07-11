@@ -7,10 +7,7 @@ import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -19,16 +16,18 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.App;
+import com.ejet.core.util.io.IOUtils;
 import com.sun.awt.AWTUtilities;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
@@ -38,13 +37,12 @@ import com.zkxltech.ui.util.PageConstant;
 import com.zkxltech.ui.util.StringConstant;
 import com.zkxltech.ui.util.StringUtils;
 import com.zkxltech.ui.util.SwtTools;
-import org.eclipse.swt.events.MouseTrackAdapter;
 /*
  * 	页面回调指令
  * 	start_answer 开始作答
  */
 public class MainStart {
-
+	private static final Logger log = LoggerFactory.getLogger(MainStart.class);
 	protected Object result;
 	public static Shell shell;
 	
@@ -78,17 +76,22 @@ public class MainStart {
 	}
 	
 	public static void main(String[] args) {
-		//启动答题器通信等接口
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				App.startCommunication();
-			}
-		}).start();
+		try {
+			//启动答题器通信等接口
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					App.startCommunication();
+				}
+			}).start();
+			
+			mianStart = new MainStart(new Shell());
+			mianStart.initialize();
+			mianStart.open();
+		} catch (Exception e) {
+			log.error(IOUtils.getError(e));
+		}
 		
-		mianStart = new MainStart(new Shell());
-		mianStart.initialize();
-		mianStart.open();
 	}
 	
 	//悬浮框
@@ -294,201 +297,206 @@ public class MainStart {
 	
 	
 	private void createContents() {
-		shell = new Shell(shell, SWT.NO_TRIM | SWT.ON_TOP);
-		shell.setBackground(Colors.color_blue02);
-		shell.setVisible(false);
-		shell.setSize(shellMaxWidth, shellMaxHeight);
-		shell.setLocation(shellMainX, shellMainY);
-//		shell.setLayout(new FormLayout());
-		shell.addTraverseListener(new TraverseListener() {
-			public void keyTraversed(TraverseEvent e) {
-				// 屏蔽按下Esc按键
-				if (e.detail == SWT.TRAVERSE_ESCAPE) {
-					e.doit = false;
-				}
-			}
-		});
-		
-		 
-		//关闭
-		CLabel cLabel01 = new CLabel(shell, SWT.NONE);
-		cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
-		cLabel01.setBounds(0, 0, 60, 38);
-		cLabel01.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				if(e.button == 1){
-					MessageBox messageBox = new MessageBox(new Shell(),SWT.ICON_QUESTION|SWT.YES|SWT.NO);
-	        		messageBox.setMessage("确定要退出？");
-	        		if (messageBox.open() == SWT.YES) {
-	        			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//	        			 ClassHourSql classHourSql = new ClassHourSql();
-//	                     classHourSql.updateClassHourById(classHourSql.getId(ClassSelection. classHour), simpleDateFormat.format(new Date()));
-	                     System.exit(0); 
-					}; 
-				}
-			}
-		});
-		
-//		Region allRegion = new Region();      
-//		allRegion.add(0, 0, shell.getSize().x, shell.getSize().y);   
-//		
-//		 Region region = new Region();      
-//	        final ImageData imageData = new ImageData("E:/git/teaching_platform/src/main/java/com/zkxltech/image/粘贴图片.png");      
-//	        if (imageData.alphaData != null) {      
-//	            org.eclipse.swt.graphics.Rectangle pixel = new org.eclipse.swt.graphics.Rectangle(0, 0, 1, 1);      
-//	           
-//	            for (int y = 0; y < imageData.height; y++) {      
-//	                for (int x = 0; x < imageData.width; x++) {
-//	                	System.out.println(imageData.getAlpha(x, y));
-//	                    if (imageData.getAlpha(x, y) != 255 ) {      
-//	                        pixel.x = imageData.x + x ;       
-//	                        pixel.y = imageData.y + y ;    
-//	                        region.add(pixel);
-//	                    }      
-//	                 }      
-//	             }      
-//	         }      
-//	        allRegion.subtract(region); 
-//	        shell.setRegion(allRegion);
-		
-		//答题
-		CLabel cLabel02 = new CLabel(shell, SWT.NONE);
-		cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
-		cLabel02.setBounds(0, 38, 59, 38);
-		cLabel02.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				if(e.button == 1){
-					if (!StringUtils.isEmpty(com.ejet.core.util.constant.Global.classId)) {
-						ClassHourServiceImpl.refreshGload();
+		try {
+			shell = new Shell(shell, SWT.NO_TRIM | SWT.ON_TOP);
+			shell.setBackground(Colors.color_blue02);
+			shell.setVisible(false);
+			shell.setSize(shellMaxWidth, shellMaxHeight);
+			shell.setLocation(shellMainX, shellMainY);
+//			shell.setLayout(new FormLayout());
+			shell.addTraverseListener(new TraverseListener() {
+				public void keyTraversed(TraverseEvent e) {
+					// 屏蔽按下Esc按键
+					if (e.detail == SWT.TRAVERSE_ESCAPE) {
+						e.doit = false;
 					}
-					frame.setVisible(false);
-					shell.setVisible(false);
-					new MainPage(shell,mianStart,StringConstant.PAGE_ANSWER_TYPE).open();
 				}
-			}
-		});
-		//设置
-		CLabel cLabel03 = new CLabel(shell, SWT.NONE);
-		cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
-		cLabel03.setBounds(0, 76, 60, 40);
-		cLabel03.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				if(e.button == 1){
-					frame.setVisible(false);
-					shell.setVisible(false);
-					new MainPage(shell,mianStart,StringConstant.PAGE_SET_TYPE).open();
+			});
+			
+			 
+			//关闭
+			CLabel cLabel01 = new CLabel(shell, SWT.NONE);
+			cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
+			cLabel01.setBounds(0, 0, 60, 38);
+			cLabel01.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDown(MouseEvent e) {
+					if(e.button == 1){
+						MessageBox messageBox = new MessageBox(new Shell(),SWT.ICON_QUESTION|SWT.YES|SWT.NO);
+		        		messageBox.setMessage("确定要退出？");
+		        		if (messageBox.open() == SWT.YES) {
+		        			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		        			 ClassHourSql classHourSql = new ClassHourSql();
+//		                     classHourSql.updateClassHourById(classHourSql.getId(ClassSelection. classHour), simpleDateFormat.format(new Date()));
+		                     System.exit(0); 
+						}; 
+					}
 				}
-			}
-		});
-		//记录
-		CLabel cLabel04 = new CLabel(shell, SWT.NONE);
-		cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
-		cLabel04.setBounds(0, 114, 60, 40);
-		cLabel04.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				if(e.button == 1){
-					frame.setVisible(false);
-					shell.setVisible(false);
-					new MainPage(shell,mianStart,StringConstant.PAGE_RECORD_TYPE).open();
+			});
+			
+//			Region allRegion = new Region();      
+//			allRegion.add(0, 0, shell.getSize().x, shell.getSize().y);   
+//			
+//			 Region region = new Region();      
+//		        final ImageData imageData = new ImageData("E:/git/teaching_platform/src/main/java/com/zkxltech/image/粘贴图片.png");      
+//		        if (imageData.alphaData != null) {      
+//		            org.eclipse.swt.graphics.Rectangle pixel = new org.eclipse.swt.graphics.Rectangle(0, 0, 1, 1);      
+//		           
+//		            for (int y = 0; y < imageData.height; y++) {      
+//		                for (int x = 0; x < imageData.width; x++) {
+//		                	System.out.println(imageData.getAlpha(x, y));
+//		                    if (imageData.getAlpha(x, y) != 255 ) {      
+//		                        pixel.x = imageData.x + x ;       
+//		                        pixel.y = imageData.y + y ;    
+//		                        region.add(pixel);
+//		                    }      
+//		                 }      
+//		             }      
+//		         }      
+//		        allRegion.subtract(region); 
+//		        shell.setRegion(allRegion);
+			
+			//答题
+			CLabel cLabel02 = new CLabel(shell, SWT.NONE);
+			cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
+			cLabel02.setBounds(0, 38, 59, 38);
+			cLabel02.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDown(MouseEvent e) {
+					if(e.button == 1){
+						if (!StringUtils.isEmpty(com.ejet.core.util.constant.Global.classId)) {
+							ClassHourServiceImpl.refreshGload();
+						}
+						frame.setVisible(false);
+						shell.setVisible(false);
+						new MainPage(shell,mianStart,StringConstant.PAGE_ANSWER_TYPE).open();
+					}
 				}
-			}
-		});
-		cLabel01.addMouseTrackListener(new MouseTrackAdapter() {
-		
-			@Override
-			public void mouseEnter(MouseEvent e) {
-				cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close02));
-				cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
-				cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
-				cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
-			}
-
-			@Override
-			public void mouseExit(MouseEvent e) {
-				if(e.x <= 0 || e.x >= Frame_Width || e.y <= 0){
-					Display.getDefault().syncExec(new Runnable() {
-					    public void run() {
-							flag = true;
-					    	closeShell();
-					    	}
-					    });
-					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
+			});
+			//设置
+			CLabel cLabel03 = new CLabel(shell, SWT.NONE);
+			cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
+			cLabel03.setBounds(0, 76, 60, 40);
+			cLabel03.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDown(MouseEvent e) {
+					if(e.button == 1){
+						frame.setVisible(false);
+						shell.setVisible(false);
+						new MainPage(shell,mianStart,StringConstant.PAGE_SET_TYPE).open();
+					}
 				}
-			}
-		});
-		cLabel02.addMouseTrackListener(new MouseTrackAdapter() {
-
-			@Override
-			public void mouseEnter(MouseEvent e) {
-				cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
-				cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer02));
-				cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
-				cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
-			}
-
-			@Override
-			public void mouseExit(MouseEvent e) {
-				if(e.x <= 0 || e.x >= Frame_Width){
-					Display.getDefault().syncExec(new Runnable() {
-					    public void run() {
-							flag = true;
-					    	closeShell();
-					    	}
-					    });
+			});
+			//记录
+			CLabel cLabel04 = new CLabel(shell, SWT.NONE);
+			cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
+			cLabel04.setBounds(0, 114, 60, 40);
+			cLabel04.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDown(MouseEvent e) {
+					if(e.button == 1){
+						frame.setVisible(false);
+						shell.setVisible(false);
+						new MainPage(shell,mianStart,StringConstant.PAGE_RECORD_TYPE).open();
+					}
+				}
+			});
+			cLabel01.addMouseTrackListener(new MouseTrackAdapter() {
+			
+				@Override
+				public void mouseEnter(MouseEvent e) {
+					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close02));
 					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
-				}
-			}
-		});
-		cLabel03.addMouseTrackListener(new MouseTrackAdapter() {
-			@Override
-			public void mouseEnter(MouseEvent e) {
-				cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
-				cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
-				cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set02));
-				cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
-			}
-			@Override
-			public void mouseExit(MouseEvent e) {
-				if(e.x <= 0 || e.x >= Frame_Width){
-					Display.getDefault().syncExec(new Runnable() {
-					    public void run() {
-							flag = true;
-					    	closeShell();
-					    	}
-					    });
 					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
-				}
-			}
-		});
-		cLabel04.addMouseTrackListener(new MouseTrackAdapter() {
-			@Override
-			public void mouseEnter(MouseEvent e) {
-				cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
-				cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
-				cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
-				cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record02));
-			}
-			@Override
-			public void mouseExit(MouseEvent e) {
-				if(e.x <= 0 || e.x >= Frame_Width){
-					Display.getDefault().syncExec(new Runnable() {
-					    public void run() {
-							flag = true;
-					    	closeShell();
-					    	}
-					    });
 					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
 				}
-			}
-		});
+
+				@Override
+				public void mouseExit(MouseEvent e) {
+					if(e.x <= 0 || e.x >= Frame_Width || e.y <= 0){
+						Display.getDefault().syncExec(new Runnable() {
+						    public void run() {
+								flag = true;
+						    	closeShell();
+						    	}
+						    });
+						cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
+					}
+				}
+			});
+			cLabel02.addMouseTrackListener(new MouseTrackAdapter() {
+
+				@Override
+				public void mouseEnter(MouseEvent e) {
+					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
+					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer02));
+					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
+					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
+				}
+
+				@Override
+				public void mouseExit(MouseEvent e) {
+					if(e.x <= 0 || e.x >= Frame_Width){
+						Display.getDefault().syncExec(new Runnable() {
+						    public void run() {
+								flag = true;
+						    	closeShell();
+						    	}
+						    });
+						cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
+					}
+				}
+			});
+			cLabel03.addMouseTrackListener(new MouseTrackAdapter() {
+				@Override
+				public void mouseEnter(MouseEvent e) {
+					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
+					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
+					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set02));
+					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
+				}
+				@Override
+				public void mouseExit(MouseEvent e) {
+					if(e.x <= 0 || e.x >= Frame_Width){
+						Display.getDefault().syncExec(new Runnable() {
+						    public void run() {
+								flag = true;
+						    	closeShell();
+						    	}
+						    });
+						cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
+					}
+				}
+			});
+			cLabel04.addMouseTrackListener(new MouseTrackAdapter() {
+				@Override
+				public void mouseEnter(MouseEvent e) {
+					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
+					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
+					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
+					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record02));
+				}
+				@Override
+				public void mouseExit(MouseEvent e) {
+					if(e.x <= 0 || e.x >= Frame_Width){
+						Display.getDefault().syncExec(new Runnable() {
+						    public void run() {
+								flag = true;
+						    	closeShell();
+						    	}
+						    });
+						cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
+					}
+				}
+			});
+			
+			cLabel01.addMouseTrackListener(SwtTools.showHand(cLabel01));
+			cLabel02.addMouseTrackListener(SwtTools.showHand(cLabel02));
+			cLabel03.addMouseTrackListener(SwtTools.showHand(cLabel03));
+			cLabel04.addMouseTrackListener(SwtTools.showHand(cLabel04));
+		} catch (Exception e) {
+			log.error(IOUtils.getError(e));
+		}
 		
-		cLabel01.addMouseTrackListener(SwtTools.showHand(cLabel01));
-		cLabel02.addMouseTrackListener(SwtTools.showHand(cLabel02));
-		cLabel03.addMouseTrackListener(SwtTools.showHand(cLabel03));
-		cLabel04.addMouseTrackListener(SwtTools.showHand(cLabel04));
 	}
 }
