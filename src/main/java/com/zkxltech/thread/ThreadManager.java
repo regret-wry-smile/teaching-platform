@@ -36,13 +36,13 @@ public class ThreadManager {
 	    printThead();
 	    for (BaseThread baseThread : threads) {
             baseThread.stopThread();
-            threads.remove(baseThread);
         }
-	    logger.info("停止后线程个数:" +threads.size());
+	    threads.clear();
+	    logger.info("停止后线程个数 ==>:" +threads.size());
 	}
 	
 	public synchronized void printThead() {
-		logger.info("当前线程个数:" + threads.size());
+		logger.info("当前线程个数 ==>:" + threads.size());
 	}
 	
 	
