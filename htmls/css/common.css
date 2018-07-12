@@ -7,7 +7,7 @@ html{
 	font-size: 100px;
 }
 body {
-	font-family: "Helvetica Neue", "Helvetica", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "寰蒋闆呴粦", "Arial", "sans-serif";
+	font-family: "Helvetica Neue", "Helvetica", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Arial", "sans-serif";
 }
 ul,
 li {
@@ -67,7 +67,7 @@ p {
 .text-left{
 	text-align: left !important;
 }
-/*宸﹀彸娴姩*/
+/*左右浮动*/
 .pull-left{
 	float: left;
 }
@@ -75,7 +75,7 @@ p {
 	float: right;
 }
 
-/*娓呮娴姩*/
+/*清除浮动*/
 .clearfix:before,
 .clearfix:after {
 	content: "";
@@ -138,7 +138,7 @@ p {
 	color: #fff;
 	font-weight: bold;
 	padding: 0.23rem 0.12rem;	
-	font-family: "寰蒋闆呴粦";
+	font-family: "微软雅黑";
 }
 
 .head ul li a.active{
