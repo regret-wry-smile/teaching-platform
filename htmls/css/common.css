@@ -164,9 +164,9 @@ p {
 	margin: 0;
 } 
 span.hidename{
-	white-space: nowrap;/*鎺у埗鍗曡鏄剧ず*/
-	overflow: hidden;/*瓒呭嚭闅愯棌*/
-	text-overflow: ellipsis;/*闅愯棌鐨勫瓧绗︾敤鐪佺暐鍙疯〃绀�*/
+	white-space: nowrap;/*强制文本在一行内显示*/
+	overflow: hidden;/*隐藏超出内容*/
+	text-overflow: ellipsis;/*溢出文本显示省略号*/
 }
 ul.modbox li{
 	float: left;
@@ -250,7 +250,7 @@ ul.modbox li.active span.title{
 	background: #4cbf40;
 }
 
-/*鎿嶄綔鎸夐挳*/
+/*操作按钮样式*/
 .opbtn a{
 	display: inline-block;
 	width: 0.80rem;
@@ -725,17 +725,17 @@ label.circle{
 	color: #fff;
 }
 
-/*琛ㄦ牸涓嶅厑璁告崲琛�*/
+/*表格固定标题头样式*/
 table{
 	table-layout: fixed;  
 }
 table tr td{
-	 text-overflow: ellipsis; /* for IE */  
+	text-overflow: ellipsis; /* for IE */  
     -moz-text-overflow: ellipsis; /* for Firefox,mozilla */  
     overflow: hidden;  
     white-space: nowrap;  
 }
-/*杩涘害鏉�*/
+/*进度条样式*/
 .progresscon{
 	width: 1.00rem;
 	height: 0.40rem;
@@ -810,7 +810,7 @@ table tr td{
 	cursor: pointer;
 }
 
-/*绛旈涓績鏍峰紡*/
+/*答题中心 单题多选字母样式*/
 
 
 .letter a.letters{
@@ -947,7 +947,7 @@ img.rebtn:active,img.rebtn:hover{
 		font-size: 0.30rem;
 	}
 }
-/*div鍨傜洿姘村钩姝ｅ眳涓�*/
+/*div垂直水平正居中*/
 .maindiv{
 	position: absolute;
 	top: 0;
@@ -969,47 +969,3 @@ img.rebtn:active,img.rebtn:hover{
 	-ms-transform: translate(-50%,-40%);
 	transform: translate(-50%,-40%)
 }
-/*table.classlist tbody tr:hover,
-table.userlist tbody tr:hover{
-	background: #eaeaea;
-}
-table tbody tr td a.del,
-table tbody tr td a.edit {
-	visibility: hidden;
-}
-table  tbody tr:hover td a.del,table  tbody tr:hover td a.edit{
-	visibility: visible;
-}
-table.classlist thead tr th{
-	height: 0.25rem;
-	line-height: 0.25rem;
-	padding: 0.08rem ;
-	vertical-align: middle;
-}
-
-table.classlist tbody tr td{
-	height: 0.26rem;
-	line-height: 0.26rem;
-	padding: 0.06rem ;
-}
-table.userlist thead tr th{
-	height: 0.20rem;
-	line-height: 0.20rem;
-	padding: 0.08rem ;
-	vertical-align: middle;
-}
-table.userlist thead tr th input[type='checkbox']{
-	margin-top: -0.03rem;
-	vertical-align: middle;
-}
-table.answer{
-	color: #fff;
-}
-.modal-title{
-	color: #000;
-}
-.modal-body .form-group label{
-	text-align: right !important;
-}
-
-*/
