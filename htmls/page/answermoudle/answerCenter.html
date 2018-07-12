@@ -34,7 +34,7 @@
 		}
 	</style>
 	<body class="bg clearfix" ng-controller="setClassCtrl" >
-		<div ng-show="!isSign" ng-cloak>
+		<div ng-show="!isSign" ng-cloak class="clearfix">
 			<div class="header clearfix">
 				<div class="pull-left">
 					<a class="btn btnfff" class="mr25">{{curclassName}}</a>
@@ -46,9 +46,9 @@
 					<!--</a>-->
 				</div>				
 			</div>
-			<div class="text-center">
-				<button class="btn circlefff" class="mr25" ng-click="stopClass()">下课</button>
-			</div>
+			<!--<div class="text-center">-->
+				<button class="btn circlefff" ng-click="stopClass()">下课</button>
+		<!--	</div>-->
 		  	<div class="block">
 		  	<ul class="col-4">
 		  		<li>

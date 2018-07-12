@@ -336,11 +336,11 @@ button.circlefff{
 	color: #90a4cc;
 	font-size: 0.30rem;
 	position: fixed;
-	top: 50%;
+	top: 45%;
 	left: 50%;
-	-webkit-transform: translate(-50%, -50%);
-	-ms-transform: translate(-50%, -50%);
-	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -45%);
+	-ms-transform: translate(-50%, -45%);
+	transform: translate(-50%, -45%);
 	margin: 0;
 }
 button.circlefff:hover{
