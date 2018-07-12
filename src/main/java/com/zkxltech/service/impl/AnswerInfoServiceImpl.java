@@ -145,6 +145,8 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	public Result stopObjectiveAnswer(Object testId) {
 
 		result = new Result();
+		/*停止所有线程*/
+		ThreadManager.getInstance().stopAllThread();
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -188,6 +190,8 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 	@Override
 	public Result stopSubjectiveAnswer(Object testId) {
 		result = new Result();
+		/*停止所有线程*/
+		ThreadManager.getInstance().stopAllThread();
 		new Thread(new Runnable() {
 			
 			@Override
