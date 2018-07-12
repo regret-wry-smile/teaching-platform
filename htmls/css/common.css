@@ -335,6 +335,13 @@ button.circlefff{
 	background: #fff;
 	color: #90a4cc;
 	font-size: 0.30rem;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	margin: 0;
 }
 button.circlefff:hover{
 	opacity: 0.8;
@@ -930,8 +937,8 @@ img.rebtn:active,img.rebtn:hover{
 	.modboxs1 .box{
 		width: 8%;
 	}
-	.content button.circlefff{
-		margin: 4%;
+	button.circlefff{
+		/*margin: 4%;*/
 		width: 2.8rem;
 		height: 2.8rem;
 		border-radius: 100%;
