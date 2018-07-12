@@ -14,6 +14,7 @@ import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
 import com.zkxltech.thread.QuickThread;
+import com.zkxltech.thread.ThreadManager;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -41,13 +42,8 @@ public class RedisMapQuick {
                     continue;
                 }
                 quickMap.put("studentName", studentInfo.getStudentName());
-                if (StudentInfoServiceImpl.getThread()!=null && StudentInfoServiceImpl.getThread() instanceof QuickThread) {
-                    QuickThread qt= (QuickThread)StudentInfoServiceImpl.getThread();
-                    qt.setFLAG(false);
-                    logger.info("抢答线程停止成功");
-                }else{
-                    logger.error("抢答线程停止失败");
-                }
+                /*停止所有线程*/
+                ThreadManager.getInstance().stopAllThread();
                 EquipmentServiceImpl.getInstance().answer_stop();
                 Global.setModeMsg(Constant.BUSINESS_PREEMPTIVE);
                 flag = false ;
