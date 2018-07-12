@@ -11,22 +11,15 @@ import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Score;
 import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.ScoreService;
+import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.ScoreThread;
+import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.util.StringUtils;
 
 public class ScoreServiceImpl implements ScoreService{
     private static final Logger logger = LoggerFactory.getLogger(ScoreServiceImpl.class);
 	private Result result = new Result();
-	private static Thread thread ;
 	
-	public static Thread getThread() {
-        return thread;
-    }
-
-    public static void setThread(Thread thread) {
-        ScoreServiceImpl.thread = thread;
-    }
-
     @Override
 	public Result startScore(Object object) {
 		result = new Result();
@@ -91,13 +84,9 @@ public class ScoreServiceImpl implements ScoreService{
     public Result stopScore() {
         Result r = new Result();
         Global.setModeMsg(Constant.BUSINESS_NORMAL);
-        if (thread != null && thread instanceof ScoreThread) {
-            ScoreThread c =  (ScoreThread)thread;
-            c.setFLAG(false);
-            logger.info("评分线程停止成功");
-        }else{
-            logger.error("评分线程停止失败");
-        }
+        /*停止线程管理*/
+        ThreadManager.getInstance().stopAllThread();
+        
         r = EquipmentServiceImpl.getInstance().answer_stop();
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
@@ -110,6 +99,8 @@ public class ScoreServiceImpl implements ScoreService{
     public Result scoreStart(int questionNum) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
+        /*停止所有线程*/
+        ThreadManager.getInstance().stopAllThread();
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("[");
         for (int i = 0; i < questionNum; i++) {
@@ -143,8 +134,10 @@ public class ScoreServiceImpl implements ScoreService{
             }
         }
         logger.info("评分指令发送成功");
-        thread = new ScoreThread();
+        BaseThread thread = new ScoreThread();
         thread.start();
+        /*添加到线程管理*/
+        ThreadManager.getInstance().addThread(thread);
         r.setRet(Constant.SUCCESS);
         r.setMessage("发送成功");
         return r;

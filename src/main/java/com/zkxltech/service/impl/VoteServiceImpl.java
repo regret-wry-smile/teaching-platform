@@ -11,6 +11,8 @@ import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Vote;
 import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.VoteService;
+import com.zkxltech.thread.BaseThread;
+import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.thread.VoteThread;
 import com.zkxltech.ui.util.StringUtils;
 
@@ -75,6 +77,9 @@ public class VoteServiceImpl implements VoteService{
 	public Result stopVote() {
         Result r = new Result();
         Global.setModeMsg(Constant.BUSINESS_NORMAL);
+        /*停止所有线程管理*/
+        ThreadManager.getInstance().stopAllThread();
+        
         if (thread != null && thread instanceof VoteThread) {
             VoteThread c =  (VoteThread)thread;
             c.setFLAG(false);
@@ -92,6 +97,9 @@ public class VoteServiceImpl implements VoteService{
     }
 	@Override
 	public Result startVote(int questionNum) {
+	    /*停止所有线程*/
+	    ThreadManager.getInstance().stopAllThread();
+	    
         Result r = new Result();
         r.setRet(Constant.ERROR);
         StringBuilder strBuilder = new StringBuilder();
@@ -126,8 +134,11 @@ public class VoteServiceImpl implements VoteService{
             }
         }
         logger.info("投票指令发送成功");
-        thread = new VoteThread();
+        BaseThread thread = new VoteThread();
         thread.start();
+        /*添加到线程管理*/
+        ThreadManager.getInstance().addThread(thread);
+        
         r.setRet(Constant.SUCCESS);
         r.setMessage("发送成功");
         return r;
