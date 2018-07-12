@@ -36,16 +36,11 @@ public class EquipmentStatusThread extends BaseThread {
                 boolean isAnswerStart = Global.isEquipmentStatus;
                 Result r = EquipmentServiceImpl.getInstance().get_device_info();
                 boolean converStatusToBoolean = converStatusToBoolean(r.getRet());
-                if (!isAnswerStart == converStatusToBoolean) {
-                    if (converStatusToBoolean == false) {
-                        BrowserManager.refreEquipmentState(false);
-                        Global.isEquipmentStatus = false ;
-                    }else{
-                        BrowserManager.refreEquipmentState(true);
-                        Global.isEquipmentStatus = true;
-                    }
+                if (isAnswerStart != converStatusToBoolean) {
+                    BrowserManager.refreEquipmentState(converStatusToBoolean);
+                    Global.isEquipmentStatus = converStatusToBoolean;
                 }
-                    Thread.sleep(2000);
+                Thread.sleep(2000);
             }
         } catch (InterruptedException e) {
             logger.error(IOUtils.getError(e));

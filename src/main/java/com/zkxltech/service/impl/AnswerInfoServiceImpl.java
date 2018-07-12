@@ -454,6 +454,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         r.setRet(Constant.SUCCESS);
         equipmentStatusThread = new EquipmentStatusThread();
         equipmentStatusThread.start();
+        r.setItem(Global.isEquipmentStatus);
         r.setMessage("启动检查成功");
         return r;
     }
