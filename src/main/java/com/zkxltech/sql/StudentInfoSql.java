@@ -282,7 +282,9 @@ public class StudentInfoSql {
         //update student_info set status = '0' where iclicker_id in('3429469477','6666660002','************')
         StringBuilder sb = new StringBuilder("update student_info set status = "+status+" where iclicker_id "+inOrNotIN+"(");
         for (int i = 0; i< iclickerIds.size();i++) {
+            sb.append("'");
             sb.append(iclickerIds.get(i));
+            sb.append("'");
             if (i != iclickerIds.size()-1) {
                 sb.append(",");
             }
