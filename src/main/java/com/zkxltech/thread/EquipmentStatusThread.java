@@ -14,7 +14,7 @@ import com.zkxltech.service.impl.EquipmentServiceImpl;
  * @author: ZhouWei
  * @date:2018年7月2日 下午12:32:18
  */
-public class EquipmentStatusThread extends Thread {
+public class EquipmentStatusThread extends BaseThread {
     private static final Logger logger = LoggerFactory.getLogger(EquipmentStatusThread.class);
     private boolean FLAG = true;
     public boolean isFLAG() {
@@ -23,6 +23,12 @@ public class EquipmentStatusThread extends Thread {
     public void setFLAG(boolean fLAG) {
         FLAG = fLAG;
     }
+    
+    @Override
+    public void stopThread() {
+        FLAG = false;
+    }
+    
     @Override
     public void run() {
         try {

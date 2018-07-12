@@ -3,17 +3,14 @@ package com.zkxltech.ui.functions;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 
-import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.cache.RedisMapSingleAnswer;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.AnswerInfoService;
 import com.zkxltech.service.ServerService;
-import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.service.impl.AnswerInfoServiceImpl;
 import com.zkxltech.service.impl.ServerServiceImpl;
-import com.zkxltech.service.impl.StudentInfoServiceImpl;
 
 import net.sf.json.JSONObject;
 

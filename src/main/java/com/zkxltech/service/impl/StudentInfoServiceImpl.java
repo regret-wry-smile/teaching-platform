@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import com.ejet.cache.BrowserManager;
 import com.ejet.cache.RedisMapAttendance;
 import com.ejet.cache.RedisMapQuick;
-import com.ejet.cache.RedisMapSingleAnswer;
 import com.ejet.core.util.ICallBack;
 import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.comm.ListUtils;
@@ -22,7 +21,6 @@ import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
 import com.zkxltech.config.ConfigConstant;
-import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
@@ -30,8 +28,9 @@ import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.thread.AttendanceThread;
-import com.zkxltech.thread.MultipleAnswerThread;
+import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.QuickThread;
+import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.TestMachineThread;
 
 import net.sf.json.JSONArray;
@@ -41,16 +40,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	private static final Logger log = LoggerFactory.getLogger(StudentInfoServiceImpl.class);
 	private Result result;
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
-	private static Thread thread;
 	
-	public static Thread getThread() {
-        return thread;
-    }
-
-    public static void setThread(Thread thread) {
-        StudentInfoServiceImpl.thread = thread;
-    }
-
     @Override
 	public Result importStudentInfo2(Object fileNameObj,Object classInfoObj,ICallBack icallback) {
 		result = new Result();
@@ -349,6 +339,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         //每次调用签到先清空数据
         RedisMapAttendance.clearAttendanceMap();
         RedisMapAttendance.clearCardIdSet();
+        /*停止所有线程*/
+        ThreadManager.getInstance().stopAllThread();
         if (param == null) {
             r.setMessage("缺少参数");
             return r;
@@ -394,8 +386,10 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     	            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
     	            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
     	        }
-    	        thread = new AttendanceThread();
+    	        BaseThread thread = new AttendanceThread();
     	        thread.start();
+    	        /*添加到线程管理*/
+    	        ThreadManager.getInstance().addThread(thread);
     	    	Global.setModeMsg(Constant.BUSINESS_ATTENDEN);
     		}
            
@@ -413,13 +407,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         Result r = new Result();
         r.setRet(Constant.ERROR);
         Global.setModeMsg(Constant.BUSINESS_NORMAL);
-        if (thread != null && thread instanceof AttendanceThread ) {
-            AttendanceThread a = (AttendanceThread)thread;
-            a.setFLAG(false);
-            log.info("签到线程停止成功");
-        }else{
-            log.error("签到线程停止失败");;
-        }
+        /*停止所有线程*/
+        ThreadManager.getInstance().stopAllThread();
         try{
             r = EquipmentServiceImpl.getInstance().answer_stop();
             if (r.getRet().equals(Constant.ERROR)) {
@@ -440,6 +429,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         RedisMapQuick.clearQuickMap();
         RedisMapQuick.clearStudentInfoMap();
         RedisMapQuick.getQuickMap().put("studentName", "");
+        /*停止所有线程*/
+        ThreadManager.getInstance().stopAllThread();
         Result r = new Result();
         r.setRet(Constant.ERROR);
         if (param == null) {
@@ -459,8 +450,10 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             for (StudentInfo studentInfo : studentInfos) {
                 RedisMapQuick.getStudentInfoMap().put(studentInfo.getIclickerId(), studentInfo);
             }
-            thread = new QuickThread();
+            BaseThread thread = new QuickThread();
             thread.start();
+            /*添加到线程管理*/
+            ThreadManager.getInstance().addThread(thread);
             r.setRet(Constant.SUCCESS);
             r.setMessage("发送成功");
         }catch (Exception e) {
@@ -475,13 +468,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         Result r = new Result();
         r.setRet(Constant.ERROR);
         Global.setModeMsg(Constant.BUSINESS_NORMAL);
-        if (thread != null && thread instanceof QuickThread) {
-            QuickThread m = (QuickThread)thread;
-            m.setFLAG(false);
-            log.info("\"停止答题\"线程停止成功");
-        }else{
-            log.error("\"停止答题\"线程停止失败");
-        }
+        /*停止所有线程*/
+        ThreadManager.getInstance().stopAllThread();
         try{
             r = EquipmentServiceImpl.getInstance().answer_stop();
             if (r.getRet().equals(Constant.ERROR)) {
@@ -502,13 +490,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     public Result answerStop() {
         Result r = new Result();
         int answer_stop = ScDll.intance.answer_stop();
-        if (thread != null && thread instanceof MultipleAnswerThread) {
-            MultipleAnswerThread m = (MultipleAnswerThread)thread;
-            m.setFLAG(false);
-            log.info("\"停止答题\"线程停止成功");
-        }else{
-            log.error("\"停止答题\"线程停止失败");
-        }
+        /*停止所有线程*/
+        ThreadManager.getInstance().stopAllThread();
         if (answer_stop == Constant.SEND_SUCCESS) {
             //FIXME
             r.setRet(Constant.SUCCESS);

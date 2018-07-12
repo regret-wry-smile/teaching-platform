@@ -10,7 +10,7 @@ import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.scdll.ScDll;
 
-public class MultipleAnswerThread extends Thread {
+public class MultipleAnswerThread extends BaseThread {
     private static final Logger logger = LoggerFactory.getLogger(MultipleAnswerThread.class);
     private boolean FLAG = true;
     private String answerType;
@@ -21,7 +21,10 @@ public class MultipleAnswerThread extends Thread {
         FLAG = fLAG;
     }
     
-    
+    @Override
+    public void stopThread() {
+        FLAG = false;
+    }
   
 	public MultipleAnswerThread(String answerType) {
 		super();

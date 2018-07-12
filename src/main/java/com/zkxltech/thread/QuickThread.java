@@ -8,7 +8,7 @@ import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.scdll.ScDll;
 
-public class QuickThread extends Thread {
+public class QuickThread extends BaseThread {
     private static final Logger logger = LoggerFactory.getLogger(QuickThread.class);
     private boolean FLAG = true;
     public boolean isFLAG() {
@@ -17,6 +17,12 @@ public class QuickThread extends Thread {
     public void setFLAG(boolean fLAG) {
         FLAG = fLAG;
     }
+    
+    @Override
+    public void stopThread() {
+        FLAG = false;
+    }
+    
     @Override
     public void run() {
         try {

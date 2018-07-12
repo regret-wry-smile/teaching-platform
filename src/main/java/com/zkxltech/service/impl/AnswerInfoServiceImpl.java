@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.BrowserManager;
-import com.ejet.cache.RedisMapAttendance;
 import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.cache.RedisMapSingleAnswer;
@@ -24,13 +23,12 @@ import com.zkxltech.domain.Record;
 import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
-import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.AnswerInfoService;
 import com.zkxltech.sql.RecordSql;
-import com.zkxltech.thread.AttendanceThread;
+import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.EquipmentStatusThread;
-import com.zkxltech.thread.MultipleAnswerThread;
 import com.zkxltech.thread.SingleAnswerThread;
+import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.TestMachineThread;
 import com.zkxltech.ui.util.StringUtils;
 
@@ -38,16 +36,8 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
     private static final Logger log = LoggerFactory.getLogger(AnswerInfoServiceImpl.class);
 	private Result result;
 	private RecordSql recordSql = new RecordSql();
-	private static Thread thread;
-	private static Thread equipmentStatusThread;
+	private static BaseThread equipmentStatusThread;
     
-    public static Thread getThread() {
-        return thread;
-    }
-
-    public static void setThread(Thread thread) {
-        AnswerInfoServiceImpl.thread = thread;
-    }
 	@Override
 	public Result startMultipleAnswer(Object object) {
 		result = new Result();
@@ -246,6 +236,8 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
     public Result singleAnswer(Object param) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
+        /*停止所有线程*/
+        ThreadManager.getInstance().stopAllThread();
         RedisMapSingleAnswer.clearSingleAnswerNumMap();
         RedisMapSingleAnswer.clearStudentInfoMap();
         RedisMapSingleAnswer.clearSingleAnswerStudentNameMap();
@@ -310,9 +302,9 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
     	            log.error("单题单选指令发送失败");
     	            return r;
     	        }
-    	        
-    	        thread = new SingleAnswerThread();
+    	        BaseThread thread = new SingleAnswerThread();
     	        thread.start();
+    	        ThreadManager.getInstance().addThread(thread);
     		}
             r.setRet(Constant.SUCCESS);
             Global.setModeMsg(Constant.BUSINESS_ANSWER);
@@ -330,13 +322,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         r.setRet(Constant.ERROR);
         try{
             Global.setModeMsg(Constant.BUSINESS_NORMAL);
-            if (thread != null && thread instanceof SingleAnswerThread ) {
-                SingleAnswerThread a = (SingleAnswerThread)thread;
-                a.setFLAG(false);
-                log.info("单选线程停止成功");
-            }else{
-                log.error("单选线程停止失败");;
-            }
+            ThreadManager.getInstance().stopAllThread();
             r = EquipmentServiceImpl.getInstance().answer_stop();
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
@@ -374,13 +360,15 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
         	 TestMachineThread.stopThread();
 		}else {
-			if (EquipmentServiceImpl.getThread() != null && EquipmentServiceImpl.getThread() instanceof MultipleAnswerThread ) {
-                MultipleAnswerThread a = (MultipleAnswerThread)EquipmentServiceImpl.getThread();
-                a.setFLAG(false);
-                log.info("多选线程停止成功");
-            }else{
-                log.error("多选线程停止失败");;
-            }
+//			if (EquipmentServiceImpl.getThread() != null && EquipmentServiceImpl.getThread() instanceof MultipleAnswerThread ) {
+//                MultipleAnswerThread a = (MultipleAnswerThread)EquipmentServiceImpl.getThread();
+//                a.setFLAG(false);
+//                log.info("多选线程停止成功");
+//            }else{
+//                log.error("多选线程停止失败");;
+//            }
+		    /*停止所有线程*/
+		    ThreadManager.getInstance().stopAllThread();
             r = EquipmentServiceImpl.getInstance().answer_stop();
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
@@ -460,7 +448,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         Result r = new Result();
         r.setRet(Constant.SUCCESS);
         equipmentStatusThread = new EquipmentStatusThread();
-        thread.start();
+        equipmentStatusThread.start();
         r.setMessage("启动检查成功");
         return r;
     }
@@ -469,8 +457,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         Result r = new Result();
         r.setRet(Constant.SUCCESS);
         if (equipmentStatusThread != null) {
-            EquipmentStatusThread t = (EquipmentStatusThread)equipmentStatusThread;
-            t.setFLAG(false);
+            equipmentStatusThread.stopThread();
             r.setMessage("停止成功");
             return r;
         }

@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public class ThreadManager {
 	private static final Logger logger = LoggerFactory.getLogger(ThreadManager.class);
 	private static ThreadManager instance = null;
-	private static List<Thread> threads = Collections.synchronizedList(new ArrayList<>());
+	private static List<BaseThread> threads = Collections.synchronizedList(new ArrayList<>());
 	private ThreadManager() {
 		
 	}
@@ -27,12 +27,18 @@ public class ThreadManager {
 		return instance;
 	}
 	
-	public synchronized void addThread(Thread thread) {
+	public synchronized void addThread(BaseThread thread) {
 		threads.add(thread);
 	}
 	
-	public synchronized void removeThread(Thread thread) {
-		threads.remove(thread);
+	public synchronized void stopAllThread() {
+		//threads.remove(thread);
+	    printThead();
+	    for (BaseThread baseThread : threads) {
+            baseThread.stopThread();
+            threads.remove(baseThread);
+        }
+	    logger.info("停止后线程个数:" +threads.size());
 	}
 	
 	public synchronized void printThead() {

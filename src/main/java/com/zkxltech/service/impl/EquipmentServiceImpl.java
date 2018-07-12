@@ -16,7 +16,9 @@ import com.zkxltech.domain.Result;
 import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.EquipmentService;
 import com.zkxltech.sql.StudentInfoSql;
+import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.MultipleAnswerThread;
+import com.zkxltech.thread.ThreadManager;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -27,16 +29,12 @@ import net.sf.json.JSONObject;
  */
 public class EquipmentServiceImpl implements EquipmentService{
     private static final Logger log = LoggerFactory.getLogger(EquipmentServiceImpl.class);
-    private static Thread thread ;
     private static final EquipmentServiceImpl SINGLE = new EquipmentServiceImpl();  
     
     private EquipmentServiceImpl() {
     }
     public static EquipmentServiceImpl getInstance() {  
         return SINGLE;  
-    }
-    public static Thread getThread() {
-        return thread;
     }
     @Override
     public Result get_device_info() {
@@ -353,7 +351,8 @@ public class EquipmentServiceImpl implements EquipmentService{
 	public Result answerStart2(String answerType,Object param) {
 		Result r = new Result();
         r.setRet(Constant.ERROR);
-        
+        /*停止所有线程*/
+        ThreadManager.getInstance().stopAllThread();
         List<RequestVo> requestVos = (List<RequestVo>) JSONArray.toCollection(JSONArray.fromObject(param), RequestVo.class);
         StringBuilder strBuilder = new StringBuilder();
 		strBuilder.append("[");
@@ -386,8 +385,10 @@ public class EquipmentServiceImpl implements EquipmentService{
         //int answer_start = ScDll.intance.answer_start(1,strBuilder.toString());
         r = answer_start(1, strBuilder.toString());
         if ( r.getRet()== Constant.SUCCESS) {
-            thread = new MultipleAnswerThread(answerType);
+            BaseThread thread = new MultipleAnswerThread(answerType);
             thread.start();
+            //添加到线程管理
+            ThreadManager.getInstance().addThread(thread);
             r.setRet(Constant.SUCCESS);
             r.setMessage("发送成功");
             return r;

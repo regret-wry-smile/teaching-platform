@@ -8,7 +8,7 @@ import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.scdll.ScDll;
 
-public class SingleAnswerThread extends Thread {
+public class SingleAnswerThread extends BaseThread {
     private static final Logger logger = LoggerFactory.getLogger(SingleAnswerThread.class);
     private boolean FLAG = true;
     public boolean isFLAG() {
@@ -17,6 +17,12 @@ public class SingleAnswerThread extends Thread {
     public void setFLAG(boolean fLAG) {
         FLAG = fLAG;
     }
+    
+    @Override
+    public void stopThread() {
+        FLAG = false;
+    }
+    
     @Override
     public void run() {
         try {
