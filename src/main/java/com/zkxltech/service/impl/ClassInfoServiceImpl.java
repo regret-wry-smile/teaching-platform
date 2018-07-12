@@ -20,7 +20,9 @@ import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.ClassInfoService;
 import com.zkxltech.sql.ClassInfoSql;
 import com.zkxltech.sql.StudentInfoSql;
+import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.CardInfoThread;
+import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.util.StringUtils;
 
 import net.sf.json.JSONObject;
@@ -30,16 +32,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 	private Result result;
 	private ClassInfoSql classInfoSql = new ClassInfoSql();
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
-	private static Thread thread;
 	
-	public static Thread getThread() {
-        return thread;
-    }
-
-    public static void setT(Thread thread) {
-        ClassInfoServiceImpl.thread = thread;
-    }
-
     @Override
 	public Result insertClassInfo(Object object) {
 		result = new Result();
@@ -177,6 +170,8 @@ public class ClassInfoServiceImpl implements ClassInfoService{
       //每次调用绑定方法先清空,再存
         RedisMapBind.clearCardIdMap();
         RedisMapBind.clearBindMap();
+        /*停止所有线程*/
+        ThreadManager.getInstance().stopAllThread();
         try {
             int bind_start = ScDll.intance.wireless_bind_start(1,"") ;
             if (bind_start < 1) {
@@ -216,8 +211,11 @@ public class ClassInfoServiceImpl implements ClassInfoService{
             RedisMapBind.getBindMap().put("accomplish", bind);
             RedisMapBind.getBindMap().put("notAccomplish",notBind);
             RedisMapBind.setStudentInfoMap(studentInfoMap);
-            thread = new CardInfoThread();
+            BaseThread thread = new CardInfoThread();
             thread.start();
+            /*添加线程管理*/
+            ThreadManager.getInstance().addThread(thread);
+            
         	Global.setModeMsg(Constant.BUSINESS_BIND);
             r.setItem(bind_start);
             r.setRet(Constant.SUCCESS);
@@ -234,13 +232,8 @@ public class ClassInfoServiceImpl implements ClassInfoService{
     public Result bindStop() {
         Result r = new Result();
         Global.setModeMsg(Constant.BUSINESS_NORMAL);
-        if (thread != null && thread instanceof CardInfoThread) {
-            CardInfoThread c =  (CardInfoThread)thread;
-            c.setFLAG(false);
-            log.info("绑定线程停止成功");
-        }else{
-            log.error("绑定线程停止失败");
-        }
+        /*停止所有线程*/
+        ThreadManager.getInstance().stopAllThread();
         try{
             int bind_stop = ScDll.intance.wireless_bind_stop();
             if (bind_stop == Constant.SEND_ERROR) {
