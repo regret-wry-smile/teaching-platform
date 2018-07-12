@@ -25,9 +25,6 @@ public class AttendanceThread extends BaseThread {
     
     @Override
     public void run() {
-        ThreadManager.getInstance().stopAllThread();
-        /*添加到线程管理*/
-        ThreadManager.getInstance().addThread(this);
         try {
             while(FLAG) {
                 Thread.sleep(50);

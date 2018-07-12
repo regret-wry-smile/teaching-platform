@@ -325,6 +325,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
         Result r = new Result();
         r.setRet(Constant.ERROR);
         try{
+            ThreadManager.getInstance().stopAllThread();
             Global.setModeMsg(Constant.BUSINESS_NORMAL);
             ThreadManager.getInstance().stopAllThread();
             r = EquipmentServiceImpl.getInstance().answer_stop();

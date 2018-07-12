@@ -388,6 +388,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     	        }
     	        BaseThread thread = new AttendanceThread();
     	        thread.start();
+    	        ThreadManager.getInstance().addThread(thread);
     	    	Global.setModeMsg(Constant.BUSINESS_ATTENDEN);
     		}
             r.setRet(Constant.SUCCESS);
@@ -405,6 +406,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     public Result signInStop() {
         Result r = new Result();
         try {
+            ThreadManager.getInstance().stopAllThread();
 	        r.setRet(Constant.ERROR);
 	        Global.setModeMsg(Constant.BUSINESS_NORMAL);
             r = EquipmentServiceImpl.getInstance().answer_stop();
