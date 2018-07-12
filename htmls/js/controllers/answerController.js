@@ -620,6 +620,7 @@ app.controller('classCheckCtrl', function($scope, toastr, $window) {
 
 	//上传服务
 	$scope.uploadServer = function() {
+		if($scope.onePaperInfo) {
 			$('#myModal').modal('show');
 			$scope.result = JSON.parse(execute_answer("upload_server", $scope.onePaperInfo.testId));
 			//		setTimeout(function(){			
@@ -631,12 +632,14 @@ app.controller('classCheckCtrl', function($scope, toastr, $window) {
 			//				$('#myModal').modal('hide');
 			//			}
 			//		},500)	
-
+		}else {
+			toastr.warning("请选择试卷");
 		}
+	}
 		//移除loading
 	$scope.removeLoading = function() {
-			$('#myModal').modal('hide');
-		}
+		$('#myModal').modal('hide');
+	}
 		//显示loading
 	$scope.showLoading = function() {
 		$('#myModal').modal('show');
