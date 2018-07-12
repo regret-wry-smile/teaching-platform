@@ -335,17 +335,17 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     @Override
     public Result signInStart(Object param) {
         Result r = new Result();
-        r.setRet(Constant.ERROR);
-        //每次调用签到先清空数据
-        RedisMapAttendance.clearAttendanceMap();
-        RedisMapAttendance.clearCardIdSet();
-        /*停止所有线程*/
-        ThreadManager.getInstance().stopAllThread();
-        if (param == null) {
-            r.setMessage("缺少参数");
-            return r;
-        }
-        try{
+        try {
+        	r.setRet(Constant.ERROR);
+        	 //每次调用签到先清空数据
+            RedisMapAttendance.clearAttendanceMap();
+            RedisMapAttendance.clearCardIdSet();
+            /*停止所有线程*/
+            ThreadManager.getInstance().stopAllThread();
+            if (param == null) {
+                r.setMessage("缺少参数");
+                return r;
+            }
             JSONObject jo = JSONObject.fromObject(param);
             if (jo.containsKey("classId")) {
                 String classId = jo.getString("classId");
@@ -388,11 +388,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     	        }
     	        BaseThread thread = new AttendanceThread();
     	        thread.start();
-    	        /*添加到线程管理*/
-    	        ThreadManager.getInstance().addThread(thread);
     	    	Global.setModeMsg(Constant.BUSINESS_ATTENDEN);
     		}
-           
             r.setRet(Constant.SUCCESS);
             r.setMessage("操作成功");
         }catch (Exception e) {
@@ -402,21 +399,21 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }
         return r;
     }
+    
+    
     @Override
     public Result signInStop() {
         Result r = new Result();
-        r.setRet(Constant.ERROR);
-        Global.setModeMsg(Constant.BUSINESS_NORMAL);
-        /*停止所有线程*/
-        ThreadManager.getInstance().stopAllThread();
-        try{
+        try {
+	        r.setRet(Constant.ERROR);
+	        Global.setModeMsg(Constant.BUSINESS_NORMAL);
             r = EquipmentServiceImpl.getInstance().answer_stop();
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }
             r.setRet(Constant.SUCCESS);
             r.setMessage("停止成功");
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.error("", e);
             r.setMessage("系统异常");
             r.setDetail(IOUtils.getError(e));
