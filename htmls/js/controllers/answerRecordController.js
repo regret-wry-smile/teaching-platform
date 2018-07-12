@@ -316,6 +316,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 	//导出
 	$scope.exportRecord=function(){		
 		if($scope.setClass.classes&&$scope.setClass.paper&&$scope.setClass.sujectHour&&$scope.setClass.classes){
+			_showModal();
 			var param={
 				classId:$scope.setClass.classes,
 				subject:$scope.setClass.subject,
