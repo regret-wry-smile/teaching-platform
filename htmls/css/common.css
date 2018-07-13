@@ -820,6 +820,9 @@ table tr td{
 .form-group label.selradio input[type='radio']{
 	cursor: pointer;
 }
+.form-group textarea{
+	word-break: break-all;
+}
 
 /*答题中心 单题多选字母样式*/
 

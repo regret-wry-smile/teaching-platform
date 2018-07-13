@@ -3,8 +3,8 @@
     height: 0.56rem;
     position: absolute;
     top: 35%;
-    left:45%;
-    right: 0;
+    left:50%;
+    /*right: 0;*/
     line-height: 0.56rem;
     color: #fff;
     padding-left: 0.40rem;
@@ -16,6 +16,9 @@
     -webkit-border-radius: 5px;
     border-radius: 5px;
     filter: progid:DXImageTransform.Microsoft.Alpha(opacity=10);
+    -webkit-transform: translate(-50%,-35%);
+	-ms-transform: translate(-50%,-35%);
+	transform: translate(-50%,-35%)
 }
 .modal-backdrop.in {
   opacity: 0.1;

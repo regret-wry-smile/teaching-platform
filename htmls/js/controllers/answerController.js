@@ -1,14 +1,16 @@
 //定义模块时引入依赖  
 var app = angular.module('app', ['ui.bootstrap', 'toastr']);
 
-app.controller('mainAnswerCtrl', function($scope, toastr, $window) {
+app.controller('mainAnswerCtrl', function($scope,$rootScope, toastr, $window) {
 		$scope.tabpane = 's';
 		$scope.selAnswerType = function(answerType) {
 			$scope.tabpane = answerType;
 		}
 	})
 	//单选
-app.controller('answerCtrl', function($scope, toastr, $window) {
+app.controller('answerCtrl', function($scope,$rootScope, toastr, $window) {
+	$rootScope.userdetailshow = false; //默认答题详情页面隐藏
+	$rootScope.isStopAswer = false;//默认在停止答题页面
 		//切换答题类型
 		$scope.selType = 'char'; //默认字母
 		$scope.selAnswerType = function(selType) {
@@ -37,7 +39,9 @@ app.controller('answerCtrl', function($scope, toastr, $window) {
 		}
 	})
 	//多选
-app.controller('answerMutilCtrl', function($scope, toastr, $window) {
+app.controller('answerMutilCtrl', function($scope,$rootScope, toastr, $window) {
+	$rootScope.userdetailshow = false; //默认答题详情页面隐藏
+	$rootScope.isStopAswer = false;//默认在停止答题页面
 	$scope.rangeList = ["C", "D", "E", "F"];
 	$scope.range = "C";
 	$scope.range1 = angular.copy($scope.range);
@@ -70,7 +74,7 @@ app.config(['$locationProvider', function($locationProvider) {
 }]);
 
 //停止多选答题
-app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window) {
+app.controller('stopAnswerTypeCtrl', function($scope,$rootScope, toastr, $location, $window) {
 	$('#myModal').modal('hide');
 	//隐藏loading
 	var _hideModal=function(){
@@ -80,8 +84,8 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window
 	var _showModal=function(){
 		$('#myModal').modal('show');
 	}
-	$scope.isStopAswer = false;
-	$scope.userdetailshow = false;
+	$rootScope.isStopAswer = false;//默认在停止答题页面
+	$rootScope.userdetailshow = false; //默认答题详情页面隐藏	
 	$scope.studentNum = 0;
 	var rangeList = []; //答题范围
 	$scope.data = []; //柱状图数据
@@ -114,7 +118,7 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window
 			_hideModal();
 		}
 		if($scope.result.ret == 'success') {
-			$scope.isStopAswer = true;
+			$rootScope.isStopAswer = true;
 			rangeList = JSON.parse(execute_answer("get_multiple_range"));
 			//console.log("答题范围" + JSON.stringify(rangeList))
 			//$scope.rangeList=["A","B","C","D","E"];
@@ -313,18 +317,18 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window
 
 	//查看详情
 	$scope.viewDetail = function() {
-		$scope.userdetailshow = true;
+		$rootScope.userdetailshow = true;
 	}
 	window.onresize = function() {
 		myChart.resize();
 	}
 	//返回柱状图
 	$scope.returnBar = function() {
-		$scope.userdetailshow = !$scope.userdetailshow;
+		$rootScope.userdetailshow = !$rootScope.userdetailshow;
 	}
 });
 //停止单选答题
-app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $window) {	
+app.controller('stopSingeAnswerCtrl', function($scope,$rootScope, $location, toastr, $window) {	
 	$('#myModal').modal('hide');
 	//隐藏loading
 	var _hideModal=function(){
@@ -337,8 +341,8 @@ app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $windo
 		if($location.search()) {
 			$scope.answerType = $location.search().answerType; //单选类型(数字,字母,判断)
 		}
-		$scope.userdetailshow = false; //默认答题详情页面隐藏
-		$scope.isStopAswer = false;
+		$rootScope.userdetailshow = false; //默认答题详情页面隐藏
+		$rootScope.isStopAswer = false;//默认在停止答题页面
 		$scope.studentNum = 0;
 		var rangeList = []; //答题范围
 		$scope.data = []; //柱状图数据
@@ -369,7 +373,7 @@ app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $windo
 					_hideModal();
 				}
 				if($scope.result.ret == 'success') {
-					$scope.isStopAswer = true;
+					$rootScope.isStopAswer = true;
 					$scope.resultmap = JSON.parse(execute_answer("get_single_answer"));
 					console.log("data" + JSON.stringify($scope.resultmap));
 					if($scope.answerType == 'char') {
@@ -557,15 +561,23 @@ app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $windo
 			}
 			//查看详情
 		$scope.viewDetail = function() {
-			$scope.userdetailshow = true;
+			$rootScope.userdetailshow = true;
 		}
 		//返回柱状图
 		$scope.returnBar = function() {
-			$scope.userdetailshow = !$scope.userdetailshow;
+			$rootScope.userdetailshow = !$rootScope.userdetailshow;
 		}
+		
+		//返回开始答题
+		/*$scope.returnPage=function(){
+			$rootScope.userdetailshow = false; //默认答题详情页面隐藏
+			$rootScope.isStopAswer = false;
+		}*/
 })
 	//随堂检测
-app.controller('classCheckCtrl', function($scope, toastr, $window) {
+app.controller('classCheckCtrl', function($scope,$rootScope,toastr,$window) {
+	$rootScope.userdetailshow = false; //默认答题详情页面隐藏
+	$rootScope.isStopAswer = false;//默认在停止答题页面
 	$scope.classInfo = {}; //班级信息
 	$scope.paperInfoList = []; //试卷数组
 	$('#myModal').modal('hide');
@@ -820,7 +832,7 @@ app.controller('oneAnswerDetailCtrl', function($scope, $modalInstance, toastr, i
 })
 
 //人员列表
-app.controller('userAnswerListCtrl', function($scope, toastr, $location, $window, $modal) {
+/*app.controller('userAnswerListCtrl', function($scope, toastr, $location, $window, $modal) {
 	$scope.userAnswerList = []; //人员作答数组
 	if($location.search()) {
 		$scope.userAnswerList = JSON.parse($location.search().userAnswerList);
@@ -831,7 +843,7 @@ app.controller('userAnswerListCtrl', function($scope, toastr, $location, $window
 		$window.location.href = $scope.objectUrl;
 	}
 })
-
+*/
 app.directive('select', function() {
 	return {
 		restrict: 'A',
