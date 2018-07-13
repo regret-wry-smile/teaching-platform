@@ -48,7 +48,10 @@
 		}
 		
 	</style>
-	<body class="bg clearfix" ng-controller="mainAnswerCtrl" >		
+	<body class="bg clearfix" ng-controller="mainAnswerCtrl" >	
+		<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div id="loading" class="loading">加载中</div>
+		</div>
 			<div class="head clearfix ">
 				<ul>
 					<li>
@@ -90,8 +93,7 @@
 				</div>
 				<div class="operatebtn mt20 clearfix text-center">
 			  		<button class="btn savebtn" ng-click="startAnswer()">开始答题</button>
-			  	</div>
-				<div id="refresAnswerNum" ng-click="refresAnswerNum()" style="display:none"></div>
+			  </div>
 			</div>			
 			<div class="tab-pane clearfix" ng-show="tabpane=='m'" ng-controller="answerMutilCtrl" class="maindiv">
 				<div class="content clearfix letter text-center v-center40">
@@ -166,12 +168,6 @@
 				<div id="getTip" ng-click="getTip()" style="display:none;"></div>
 			</div>			
 		</div>	
-		<div id="myModal" class="modal fade" data-keyboard="false"
-	        data-backdrop="static" data-role="dialog"
-	        aria-labelledby="myModalLabel" aria-hidden="true">
-	        <div id="loading" class="loading">加载中</div>
-	    </div>
-		
 		</body>
 
 </html>
