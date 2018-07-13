@@ -34,7 +34,7 @@ public class MultipleAnswerThread extends BaseThread {
     public void run() {
 	    try {
             while(FLAG){
-                Thread.sleep(50);
+                Thread.sleep(100);
                 String jsonData = ScDll.intance.get_answer_list();
                 if (!StringUtils.isBlank(jsonData)) {
                     StringBuilder stringBuilder = new StringBuilder(jsonData);

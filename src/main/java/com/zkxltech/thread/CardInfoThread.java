@@ -27,7 +27,7 @@ public class CardInfoThread extends BaseThread {
     public void run() {
         try {
             while(FLAG){
-                Thread.sleep(50);
+                Thread.sleep(100);
                 String jsonData = ScDll.intance.get_wireless_bind_info() ;
                 if (!StringUtils.isBlank(jsonData)) {
                     StringBuilder stringBuilder = new StringBuilder(jsonData);
