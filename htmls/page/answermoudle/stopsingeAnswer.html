@@ -13,6 +13,7 @@
 		<!--<base href="<%=basePath%>" />-->
 		<link rel="stylesheet" href="../../css/bootstrap.css" />
 		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../css/page.css" />
 		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
 		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
@@ -85,14 +86,18 @@
 		}
 	</style>
 	<body class="bg clearfix" ng-controller="stopSingeAnswerCtrl">
+		<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div id="loading" class="loading">加载中</div>
+		</div>
+		<div ng-cloak >
 		<!--柱状图start-->
-		<div ng-cloak class="content content1 clearfix" style="margin: 0; padding: 0;  opacity: 0; " ng-class="{'op':isStopAswer&&!userdetailshow}">
+		<div class="content content1 clearfix" style="margin: 0; padding: 0;  opacity: 0; " ng-class="{'op':isStopAswer&&!userdetailshow}">
 			<div class="modbox text-center clearfix" style="width:100%;height:100%;position: absolute;top:0rem;left:0;right: 0;bottom:0rem;margin: 0;">
 				<div id="recordbar" class="clearfix" style="position: absolute;left:0;height:100%; right:0; top:0;bottom:300px;padding:0 0.25rem 0.45rem ; "></div>
 			</div>
 		</div>
 		<!--柱状图end-->
-		<div ng-cloak class="tab-content" ng-show="!userdetailshow">
+		<div class="tab-content" ng-show="!userdetailshow">
 			<!--停止答题start-->
 			<div class="tab-pane" ng-show="!isStopAswer">
 				<label class="circle">
@@ -122,7 +127,7 @@
 			</div>
 		</div>
 		<!--答题人员列表start-->
-		<div ng-cloak ng-show="userdetailshow">
+		<div ng-show="userdetailshow">
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/menu.png" class="ml25 pt20" />
@@ -140,6 +145,7 @@
 				</div>
 
 			</div>
+		</div>
 		</div>
 	</body>
 

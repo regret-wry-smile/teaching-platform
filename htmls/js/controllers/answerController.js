@@ -71,7 +71,15 @@ app.config(['$locationProvider', function($locationProvider) {
 
 //停止多选答题
 app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window) {
-
+	$('#myModal').modal('hide');
+	//隐藏loading
+	var _hideModal=function(){
+		$('#myModal').modal('hide');
+	}
+	//显示loading
+	var _showModal=function(){
+		$('#myModal').modal('show');
+	}
 	$scope.isStopAswer = false;
 	$scope.userdetailshow = false;
 	$scope.studentNum = 0;
@@ -84,6 +92,7 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window
 	$scope.answerResult = []; //选择的作答结果
 	$scope.answerRate = 0; //正确率
 	$scope.studentCount=0;//总人数
+	var ajaxnum1=0;//防止页面闪烁
 	//获取答题人数
 	$scope.refresAnswerNum = function() {
 			$scope.result = JSON.parse(execute_answer("get_multiple_answer_num"));
@@ -98,7 +107,12 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window
 	var dom = document.getElementById("recordbar");
 	var myChart = echarts.init(dom);
 	$scope.stopAnswer = function() {
+		ajaxnum1=1;
+		_showModal();
 		$scope.result = JSON.parse(execute_answer("stop_multiple_answer"));
+		if(ajaxnum1==1){
+			_hideModal();
+		}
 		if($scope.result.ret == 'success') {
 			$scope.isStopAswer = true;
 			rangeList = JSON.parse(execute_answer("get_multiple_range"));
@@ -310,7 +324,16 @@ app.controller('stopAnswerTypeCtrl', function($scope, toastr, $location, $window
 	}
 });
 //停止单选答题
-app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $window) {
+app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $window) {	
+	$('#myModal').modal('hide');
+	//隐藏loading
+	var _hideModal=function(){
+		$('#myModal').modal('hide');
+	}
+	//显示loading
+	var _showModal=function(){
+		$('#myModal').modal('show');
+	}
 		if($location.search()) {
 			$scope.answerType = $location.search().answerType; //单选类型(数字,字母,判断)
 		}
@@ -327,18 +350,24 @@ app.controller('stopSingeAnswerCtrl', function($scope, $location, toastr, $windo
 		$scope.totalStudent=0;//总人数
 		$scope.studentNum=0;
 		//获取答题人数
+		var ajaxnum1=0;//防止页面闪烁
 		$scope.refresAnswerNum = function() {
 				$scope.result = JSON.parse(execute_answer("get_single_answer_num"));
 				$scope.studentNum = $scope.result.current;
 				$scope.totalStudent = $scope.result.totalStudent;
-				console.log("获取答题" + JSON.stringify($scope.result))
+				console.log("获取答题" + JSON.stringify($scope.result));
 			}
 			//停止答题
 		var dom = document.getElementById("recordbar");
 		dom.style.width = (window.innerWidth + 'px') / 100 + 'rem';
 		var myChart = echarts.init(dom);
 		$scope.stopAnswer = function() {
+				ajaxnum1=1;
+				_showModal();
 				$scope.result = JSON.parse(execute_answer("stop_single_answer"));
+				if(ajaxnum1==1){
+					_hideModal();
+				}
 				if($scope.result.ret == 'success') {
 					$scope.isStopAswer = true;
 					$scope.resultmap = JSON.parse(execute_answer("get_single_answer"));

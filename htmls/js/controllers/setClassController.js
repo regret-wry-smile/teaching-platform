@@ -108,7 +108,19 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 		})
 		
 	}
-	
+	//查询设备连接状态
+	var _selectequip=function(){
+		$scope.equipresult=JSON.parse(execute_answer("check_equipment_status_start"));//设备状态
+			if($scope.equipresult.ret=='success'){
+				$rootScope.equipstatus=JSON.stringify($scope.equipresult.item);
+				if($rootScope.equipstatus==true){
+					$rootScope.equipstatus='1';
+				}else{
+					$rootScope.equipstatus='0';
+				}
+			}
+			console.log("设备状态"+JSON.stringify($rootScope.equipstatus));
+	}
 	//跳转到答题中心页面
 	$scope.startClass=function(){
        var param={
@@ -120,15 +132,21 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
        }
        console.log(JSON.stringify(param))
       	$scope.result=JSON.parse(execute_record("start_class",JSON.stringify(param))); 
-        	console.log(JSON.stringify($scope.result))
-	    if($scope.result.ret=='success'){
+        	//console.log(JSON.stringify($scope.result))
+	    if($scope.result.ret=='success'){	    	
+			//_selectequip();
 	      	$scope.objectUrl = '../../page/answermoudle/answerCenter.html';
 	      	$window.location.href = $scope.objectUrl;	
+	      	
 	    }else{
 	    	toastr.error($scope.result.message);
 	    }
 		
 	}
+	
+	/*$scope.refreEquipmentState=function(){
+		_selectequip();
+	}*/
 	//打开添加课时弹框
 	$scope.addClassHour=function(){
 		var item={

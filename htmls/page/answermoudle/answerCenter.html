@@ -33,9 +33,10 @@
 			position: relative;
 		}
 	</style>
-	<body class="bg clearfix" ng-controller="setClassCtrl" >
+	<body class="bg clearfix" ng-controller="setClassCtrl">
 		<div ng-show="!isSign" ng-cloak class="clearfix">
-			<div class="header clearfix">
+			<label class="dot" ng-class="{'1': 'green', '0': 'grey'}[equipstatus]"></label>
+			<div class="header clearfix">			
 				<div class="pull-left">
 					<a class="btn btnfff" class="mr25">{{curclassName}}</a>
 				</div>
@@ -79,6 +80,7 @@
 		  		</li>
 		  	</ul>
 		  	</div>
+		  	<div id="refreEquipmentState" ng-click="refreEquipmentState()" style="display:none"></div>
 		  	</div>
 		<div ng-show="isSign" ng-cloak ng-controller="userAttendCtrl">
 			<div class="header clearfix">
