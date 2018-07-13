@@ -63,13 +63,16 @@
 			opacity: 0.8;
 			cursor: pointer;
 		}
+		#divload{
+			display: none;
+		}
 	</style>
 
 	<body class="bg clearfix" ng-controller="stopAnswerTypeCtrl">
 		<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div id="loading" class="loading">加载中</div>
 		</div>
-		<div ng-cloak>
+		<div ng-cloak id="divload">
 		<!--柱状图start-->
 		<div class="content content1 clearfix" style="margin: 0; padding: 0;  opacity: 0; " ng-class="{'op':isStopAswer&&!userdetailshow}">
 			<div class="modbox text-center clearfix" style="width:100%;height:100%;position: absolute;top:0rem;left:0;right: 0;bottom:0rem;margin: 0;">
@@ -147,4 +150,21 @@
 			boxzoom: true
 		});
 	})
+	function dynamicLoad(){ 
+		var divload = document.getElementById("divload");
+		var _doc=document.getElementsByTagName('head')[0]; 
+		var script=document.createElement('script'); 
+		script.setAttribute('type','text/javascript');
+		script.setAttribute('src','../../js/controllers/answerController.js');
+		_doc.appendChild(script); 
+		script.onload=script.onreadystatechange=function(){
+			if(!this.readyState||this.readyState=='loaded'||this.readyState=='complete'){
+				divload.style.display = "block";
+			}else{
+				
+			}
+			script.onload=script.onreadystatechange=null; 
+		}
+		}
+	dynamicLoad();
 </script>
