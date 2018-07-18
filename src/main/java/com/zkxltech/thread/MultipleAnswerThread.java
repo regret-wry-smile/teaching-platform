@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
+import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
@@ -35,7 +36,7 @@ public class MultipleAnswerThread extends BaseThread {
 	    try {
             while(FLAG){
                 Thread.sleep(100);
-                String jsonData = ScDll.intance.get_answer_list();
+                String jsonData = SerialPortManager.readFromPort();
                 if (!StringUtils.isBlank(jsonData)) {
                     StringBuilder stringBuilder = new StringBuilder(jsonData);
                     if (jsonData.startsWith("{")) {
