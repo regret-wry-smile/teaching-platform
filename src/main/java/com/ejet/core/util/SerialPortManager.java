@@ -190,7 +190,6 @@ public class SerialPortManager {
             }
 
         }
-        System.out.println("读取usb端口数据>>>"+str);
         return str;
 	}
 

@@ -2,6 +2,7 @@ package com.zkxltech.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +21,10 @@ import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.EquipmentService2;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.thread.BaseThread;
+import com.zkxltech.thread.MsgThread;
 import com.zkxltech.thread.MultipleAnswerThread;
 import com.zkxltech.thread.ThreadManager;
 
-import gnu.io.SerialPortEventListener;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -47,27 +48,13 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 		Result r = new Result();
 		try {
 			if (SerialPortManager.sendToPort(EquipmentConstant.GET_DEVICE_INFO_CODE)) {
-				// new Thread(new Runnable() {
-				// int time = 3;
-				// @Override
-				// public void run() {
-				// while (time>0) {
-				// String str =
-				// SerialListener.getDataMap(EquipmentConstant.GET_DEVICE_INFO);
-				// if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
-				// time--;
-				// try {
-				// Thread.sleep(1000);
-				// } catch (InterruptedException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-				// }else {
-				// time = 0;
-				// }
-				// }
-				// }
-				// }).start();
+				Vector<Thread> threads = new Vector<Thread>();
+				Thread iThread = new MsgThread(EquipmentConstant.GET_DEVICE_INFO_CODE);
+				threads.add(iThread);
+				iThread.start();
+				// 等待所有线程执行完毕
+				iThread.join();
+				
 				String str = SerialListener.getDataMap(EquipmentConstant.GET_DEVICE_INFO);
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);

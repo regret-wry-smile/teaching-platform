@@ -78,7 +78,6 @@ public class SerialListener  implements SerialPortEventListener {
                 	logger.info("【串口接收到的数据】"+data);
                 	JSONObject jsonObject = JSONObject.fromObject(data);
                 	dataMap.put((String) jsonObject.get("fun"), jsonObject.toString());
-                	//TODO 发送指令的返回结果
                 }
             } catch (Exception e) {
             	logger.error(IOUtils.getError(e));
