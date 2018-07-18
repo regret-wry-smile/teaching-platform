@@ -58,7 +58,8 @@ public class SettingServiceImpl implements SettingService{
 			//发送信道
 			//接收信道
 			//发送功率
-			Result get_device_info = EquipmentServiceImpl.getInstance().get_device_info();
+//			Result get_device_info = EquipmentServiceImpl.getInstance().get_device_info();
+			Result get_device_info = EquipmentServiceImpl2.getInstance().get_device_info();
 			Object item = get_device_info.getItem();
 			if (StringUtils.isEmpty(item)) {
                 result.setRet(Constant.ERROR);
@@ -116,13 +117,13 @@ public class SettingServiceImpl implements SettingService{
                 return result;
             }
 			
-			int set_channel = ScDll.intance.set_channel(tx_ch, rx_ch);
-			if (set_channel == Constant.SEND_ERROR) {
+			result = EquipmentServiceImpl2.getInstance().set_channel(tx_ch, rx_ch);
+			if (result.getRet() == Constant.ERROR) {
 			    result.setMessage("设置信道失败");
                 return result;
             }
-			int set_tx_power = ScDll.intance.set_tx_power(tx_power);
-			if (set_tx_power == Constant.SEND_ERROR) {
+			result = EquipmentServiceImpl2.getInstance().set_tx_power(tx_power);
+			if (result.getRet() == Constant.ERROR) {
 			    result.setMessage("设置功率失败");
 			    log.error("设置功率失败");
 			    return result;

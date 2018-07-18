@@ -1,5 +1,9 @@
 package com.ejet.core.util;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,10 +19,25 @@ public class SerialListener  implements SerialPortEventListener {
 	private static String command = ""; //指令
 	private SerialPort serialport ;
 	
+	private static Map<String, Object> dataMap = Collections.synchronizedMap(new HashMap<String, Object>());
+	
     public SerialListener(SerialPort serialport) {
 		super();
 		this.serialport = serialport;
 	}
+    
+    /**
+     * 清空缓存
+     */
+    public static void clearMap(){
+    	dataMap.clear();
+    }
+    /**
+     * 获取缓存中的数据
+     */
+    public static String getDataMap(String type){
+    	return (String) dataMap.get(type);
+    }
 	/**
      * 处理监控到的串口事件
      */
@@ -58,7 +77,7 @@ public class SerialListener  implements SerialPortEventListener {
                 	data = SerialPortManager.readFromPort();
                 	logger.info("【串口接收到的数据】"+data);
                 	JSONObject jsonObject = JSONObject.fromObject(data);
-                	System.out.println(jsonObject.get("fun"));
+                	dataMap.put((String) jsonObject.get("fun"), jsonObject.toString());
                 	//TODO 发送指令的返回结果
                 }
             } catch (Exception e) {

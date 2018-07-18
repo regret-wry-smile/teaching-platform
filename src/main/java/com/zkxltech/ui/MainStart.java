@@ -7,7 +7,11 @@ import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseMotionAdapter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -29,8 +33,10 @@ import org.slf4j.LoggerFactory;
 import com.App;
 import com.ejet.core.util.io.IOUtils;
 import com.sun.awt.AWTUtilities;
+import com.sun.jna.Native;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
+import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.impl.ClassHourServiceImpl;
 import com.zkxltech.ui.util.Colors;
 import com.zkxltech.ui.util.PageConstant;
@@ -494,6 +500,36 @@ public class MainStart {
 			cLabel02.addMouseTrackListener(SwtTools.showHand(cLabel02));
 			cLabel03.addMouseTrackListener(SwtTools.showHand(cLabel03));
 			cLabel04.addMouseTrackListener(SwtTools.showHand(cLabel04));
+			
+			
+			
+//			//重连机制
+//			new Thread(new Runnable() {
+//				
+//				@Override
+//				public void run() {
+//					while (true) {
+//						String retCode = ScDll.intance.get_device_info();
+//						if (StringUtils.isEmpty(retCode)) {
+//							  try {  
+//								  ScDll intance = (ScDll)  
+//										    myClassReloadingFactory.newInstance("com.jenkov.MyObject");  
+//							    } catch (Exception ex) {  
+//							        log.error("卸载dll文件出错，需要重启服务器！", ex);  
+//							        throw new RuntimeException(ex);  
+//							    }  
+//						}
+//						System.out.println(retCode);
+//						try {
+//							Thread.sleep(2000);
+//						} catch (InterruptedException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					}
+//					
+//				}
+//			}).start();
 		} catch (Exception e) {
 			log.error(IOUtils.getError(e));
 		}

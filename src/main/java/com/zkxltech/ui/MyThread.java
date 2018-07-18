@@ -150,7 +150,7 @@ class MyThread extends Thread {
 
 			System.out.println("同时上传学生个数:"+studentNum);
 			try {
-				 Thread.sleep(500);
+				 Thread.sleep(50);
 			} catch (InterruptedException e) {
 			}
 			// 循环发送数据
@@ -162,6 +162,7 @@ class MyThread extends Thread {
 					break;
 				case "字母题":
 //					RedisMapClassTestAnswer.addRedisMapClassTestAnswer1(jsonData); //随堂检测
+					 jsonData = "[{'fun':'update_answer_list','card_id':'3429830485','rssi':'-59','update_time':'2018-07-13 16:10:37:816','answers':[{'type':'m','id':'1','answer':''}]},{'fun':'update_answer_list','card_id':'3429555765','rssi':'-75','update_time':'2018-07-13 16:10:37:826','answers':[{'type':'m','id':'1','answer':''}]},{'fun':'update_answer_list','card_id':'3429555829','rssi':'-80','update_time':'2018-07-13 16:10:37:851','answers':[{'type':'m','id':'1','answer':''}]},{'fun':'update_answer_list','card_id':'3430198741','rssi':'-77','update_time':'2018-07-13 16:10:37:882','answers':[{'type':'m','id':'1','answer':''}]},{'fun':'update_answer_list','card_id':'3429470117','rssi':'-80','update_time':'2018-07-13 16:10:37:909','answers':[{'type':'m','id':'1','answer':''}]}],";
 					RedisMapAttendance.addAttendance(jsonData); //签到
 //					RedisMapSingleAnswer.addAnswer(jsonData);
 					break;

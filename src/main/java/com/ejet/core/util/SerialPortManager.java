@@ -13,6 +13,7 @@ import java.util.TooManyListenersException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.service.impl.ClassHourServiceImpl;
 
 public class SerialPortManager {
@@ -127,14 +128,17 @@ public class SerialPortManager {
 	 * @throws SerialPortOutputStreamCloseFailure
 	 *             关闭串口对象的输出流出错
 	 */
-	public static void sendToPort(String s){
+	public static boolean sendToPort(String s){
 		byte[] order = strToByteArray(s);
 		OutputStream out = null;
 		try {
 			out = serialPort.getOutputStream();
 			out.write(order);
 			out.flush();
+			return true;
 		} catch (IOException e) {
+			logger.error(IOUtils.getError(e));
+			return false;
 		} finally {
 			try {
 				if (out != null) {
@@ -142,6 +146,7 @@ public class SerialPortManager {
 					out = null;
 				}
 			} catch (IOException e) {
+				logger.error(IOUtils.getError(e));
 			}
 		}
 	}
@@ -159,17 +164,22 @@ public class SerialPortManager {
         String str = "";
 
         try {
-            
             in = serialPort.getInputStream();
-            int bufflenth = in.available();        //获取buffer里的数据长度
-            byte[] bytes = new byte[2014];
-            while (bufflenth != 0) {                             
-            	bytes = new byte[bufflenth];    //初始化byte数组为buffer中数据的长度
-                in.read(bytes);
-                bufflenth = in.available();
-            } 
-            str = new String(bytes);
+//            int bufflenth = in.available();        //获取buffer里的数据长度
+            byte[] bytes = new byte[1];
+//            while (bufflenth != 0) {                             
+//            	bytes = new byte[bufflenth];    //初始化byte数组为buffer中数据的长度
+//                in.read(bytes);
+//                bufflenth = in.read();
+//            } 
+//            str = new String(bytes);
+            int bytesRead = in.read(bytes);
+    	    while (bytesRead != 0) {
+    	    	str += new String(bytes).trim();
+    	        bytesRead = in.read(bytes);
+    	    }
         } catch (IOException e) {
+        	e.printStackTrace();
         } finally {
             try {
                 if (in != null) {
