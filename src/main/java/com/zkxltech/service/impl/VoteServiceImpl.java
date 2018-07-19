@@ -1,17 +1,22 @@
 package com.zkxltech.service.impl;
 
+import java.util.Vector;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapVote;
+import com.ejet.core.util.SerialListener;
+import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Vote;
-import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.VoteService;
 import com.zkxltech.thread.BaseThread;
+import com.zkxltech.thread.MsgThread;
 import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.thread.VoteThread;
 import com.zkxltech.ui.util.StringUtils;
@@ -87,7 +92,7 @@ public class VoteServiceImpl implements VoteService{
         }else{
             logger.error("投票线程停止失败");
         }
-        r = EquipmentServiceImpl.getInstance().answer_stop();
+        r = EquipmentServiceImpl2.getInstance().answer_stop();
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
@@ -97,51 +102,71 @@ public class VoteServiceImpl implements VoteService{
     }
 	@Override
 	public Result startVote(int questionNum) {
-	    /*停止所有线程*/
-	    ThreadManager.getInstance().stopAllThread();
-	    
+
         Result r = new Result();
-        r.setRet(Constant.ERROR);
-        StringBuilder strBuilder = new StringBuilder();
-        strBuilder.append("[");
-        for (int i = 0; i < questionNum; i++) {
-          strBuilder.append("{");
-          String id = String.valueOf(i+1);
-          String type = "s";
-          String range = "";
-          try {
-            range = "A-C";
-          } catch (Exception e2) {
-            range = "";
-          }
-          strBuilder.append("'id':'"+id+"',");
-          strBuilder.append("'type':'"+type+"',");
-          strBuilder.append("'range':'"+range+"'");
-          strBuilder.append("}");
-          
-          if (questionNum-1 != i) {
-            strBuilder.append(",");
-          }
-        }
-        strBuilder.append("]");
-        int answer_start = ScDll.intance.answer_start(0, strBuilder.toString());
-        if (answer_start == Constant.SEND_ERROR) {
-            int answer_start2 = ScDll.intance.answer_start(0, strBuilder.toString());
-            if (answer_start2 == Constant.SEND_ERROR) {
-                r.setMessage("指令发送失败");
-                logger.error("投票指令发送失败");
-                return r;
+        try {
+        	/*停止所有线程*/
+    	    ThreadManager.getInstance().stopAllThread();
+    	    
+            r.setRet(Constant.ERROR);
+            StringBuilder strBuilder = new StringBuilder();
+            strBuilder.append("[");
+            for (int i = 0; i < questionNum; i++) {
+              strBuilder.append("{");
+              String id = String.valueOf(i+1);
+              String type = "s";
+              String range = "";
+              try {
+                range = "A-C";
+              } catch (Exception e2) {
+                range = "";
+              }
+              strBuilder.append("'id':'"+id+"',");
+              strBuilder.append("'type':'"+type+"',");
+              strBuilder.append("'range':'"+range+"'");
+              strBuilder.append("}");
+              
+              if (questionNum-1 != i) {
+                strBuilder.append(",");
+              }
             }
-        }
-        logger.info("投票指令发送成功");
-        BaseThread thread = new VoteThread();
-        thread.start();
-        /*添加到线程管理*/
-        ThreadManager.getInstance().addThread(thread);
-        
-        r.setRet(Constant.SUCCESS);
-        r.setMessage("发送成功");
-        return r;
+            strBuilder.append("]");
+            if (SerialPortManager.sendToPort(EquipmentConstant.ANSWER_START_CODE(strBuilder.toString()))) {
+    			Vector<Thread> threads = new Vector<Thread>();
+    			Thread iThread = new MsgThread(EquipmentConstant.ANSWER_START);
+    			threads.add(iThread);
+    			iThread.start();
+    			// 等待所有线程执行完毕
+    			iThread.join();
+
+    			String str = SerialListener.getDataMap(EquipmentConstant.ANSWER_START);
+    			if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
+    				r.setRet(Constant.ERROR);
+    				r.setMessage("指令发送失败");
+    				return r;
+    			}
+    			r.setItem(str);
+    			SerialListener.clearMap();
+    			r.setRet(Constant.SUCCESS);
+
+    			BaseThread thread = new VoteThread();
+    			thread.start();
+    			/* 添加到线程管理 */
+    			ThreadManager.getInstance().addThread(thread);
+    			r.setRet(Constant.SUCCESS);
+    			r.setMessage("发送成功");
+    		} else {
+    			r.setRet(Constant.ERROR);
+    			r.setMessage("指令发送失败");
+    		}
+    		return r;
+		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
+			r.setRet(Constant.ERROR);
+			r.setMessage("指令发送失败");
+			return r;
+		}
+	    
     }
 	
 	@Override

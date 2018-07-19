@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapBind;
+import com.ejet.core.util.SerialListener;
 import com.ejet.core.util.comm.StringUtils;
+import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.scdll.ScDll;
 
@@ -28,7 +30,7 @@ public class CardInfoThread extends BaseThread {
         try {
             while(FLAG){
                 Thread.sleep(100);
-                String jsonData = ScDll.intance.get_wireless_bind_info() ;
+                String jsonData = SerialListener.getDataMap(EquipmentConstant.UPDATE_WIRELESS_CARD_INFO);
                 if (!StringUtils.isBlank(jsonData)) {
                     StringBuilder stringBuilder = new StringBuilder(jsonData);
                     if (jsonData.startsWith("{")) {
@@ -37,6 +39,7 @@ public class CardInfoThread extends BaseThread {
                     jsonData = stringBuilder.toString();
                     logger.info("获取到答题数据:===>>"+jsonData);
                     RedisMapBind.addBindMap(jsonData);
+                    SerialListener.clearMap();
                 }
             }
         } catch (InterruptedException e) {

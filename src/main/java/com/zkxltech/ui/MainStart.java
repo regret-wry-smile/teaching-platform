@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -31,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.App;
+import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.io.IOUtils;
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.Native;
@@ -502,24 +504,20 @@ public class MainStart {
 			cLabel04.addMouseTrackListener(SwtTools.showHand(cLabel04));
 			
 			
-			
 //			//重连机制
 //			new Thread(new Runnable() {
 //				
 //				@Override
 //				public void run() {
 //					while (true) {
-//						String retCode = ScDll.intance.get_device_info();
-//						if (StringUtils.isEmpty(retCode)) {
-//							  try {  
-//								  ScDll intance = (ScDll)  
-//										    myClassReloadingFactory.newInstance("com.jenkov.MyObject");  
-//							    } catch (Exception ex) {  
-//							        log.error("卸载dll文件出错，需要重启服务器！", ex);  
-//							        throw new RuntimeException(ex);  
-//							    }  
+//						boolean isOnline = false;
+//						List<String> sList = SerialPortManager.findPort();
+//						for (int i = 0; i < sList.size(); i++) {
+//							if("COM4".equals(sList.get(i))){
+//								isOnline = true;
+//							}
 //						}
-//						System.out.println(retCode);
+//						System.out.println(isOnline);
 //						try {
 //							Thread.sleep(2000);
 //						} catch (InterruptedException e) {

@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapAttendance;
+import com.ejet.core.util.SerialListener;
 import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.comm.StringUtils;
+import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.scdll.ScDll;
 
@@ -29,7 +31,7 @@ public class AttendanceThread extends BaseThread {
         try {
             while(FLAG) {
                 Thread.sleep(100);
-                String jsonData = SerialPortManager.readFromPort();
+                String jsonData = SerialListener.getDataMap(EquipmentConstant.UPDATE_ANSWER_LIST);
                 if (!StringUtils.isBlank(jsonData)) {
                     StringBuilder stringBuilder = new StringBuilder(jsonData);
                     if (jsonData.startsWith("{")) {
@@ -38,6 +40,7 @@ public class AttendanceThread extends BaseThread {
                     jsonData = stringBuilder.toString();
                     logger.info("获取到答题数据:===>>"+jsonData);
                     RedisMapAttendance.addAttendance(jsonData);
+                    SerialListener.clearMap();
                 }
             }
         } catch (InterruptedException e) {

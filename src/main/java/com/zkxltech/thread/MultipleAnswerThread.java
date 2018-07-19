@@ -5,9 +5,11 @@ import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
+import com.ejet.core.util.SerialListener;
 import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.scdll.ScDll;
 
@@ -36,7 +38,7 @@ public class MultipleAnswerThread extends BaseThread {
 	    try {
             while(FLAG){
                 Thread.sleep(100);
-                String jsonData = SerialPortManager.readFromPort();
+                String jsonData = SerialListener.getDataMap(EquipmentConstant.UPDATE_ANSWER_LIST);
                 if (!StringUtils.isBlank(jsonData)) {
                     StringBuilder stringBuilder = new StringBuilder(jsonData);
                     if (jsonData.startsWith("{")) {
@@ -57,7 +59,7 @@ public class MultipleAnswerThread extends BaseThread {
     				default:
     					break;
     				}
-                	
+                    SerialListener.clearMap();
                 }
             }
 	    } catch (InterruptedException e) {

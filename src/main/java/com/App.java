@@ -48,8 +48,7 @@ public class App {
 				@Override
 				public void run() {
 					try {
-						SerialPortManager usbTool = new SerialPortManager();
-				        usbTool.openPort("COM4",1152000);
+						SerialPortManager.openPort("COM4",1152000);
 					} catch (Exception e) {
 						logger.error("初始化端口错误", e);
 					}

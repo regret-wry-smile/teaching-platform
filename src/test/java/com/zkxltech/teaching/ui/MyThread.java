@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
+import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.constant.Constant;
 
 import net.sf.json.JSONArray;
@@ -149,8 +150,9 @@ class MyThread extends Thread {
 			}
 			// 循环发送数据
 			if (!"".equals(jsonData)) {
+				 SerialPortManager.sendToPort(jsonData); //获取设备信息
 				/*多选*/
-				RedisMapMultipleAnswer.addEveryAnswerInfo(jsonData);
+//				RedisMapMultipleAnswer.addEveryAnswerInfo(jsonData);
 //				/*客观题*/
 //				RedisMapClassTestAnswer.addRedisMapClassTestAnswer1(jsonData);
 //				/*主观题*/
@@ -159,4 +161,27 @@ class MyThread extends Thread {
 
 		}
 	}
+	
+//	@Override
+//	public void run() {
+//		while (true) {
+//			jsonData = randomData();
+//
+//			System.out.println("同时上传学生个数:"+studentNum);
+//			try {
+//				 Thread.sleep(3000);
+//			} catch (InterruptedException e) {
+//			}
+//			// 循环发送数据
+//			if (!"".equals(jsonData)) {
+//				/*多选*/
+//				RedisMapMultipleAnswer.addEveryAnswerInfo(jsonData);
+////				/*客观题*/
+////				RedisMapClassTestAnswer.addRedisMapClassTestAnswer1(jsonData);
+////				/*主观题*/
+////				RedisMapClassTestAnswer.addRedisMapClassTestAnswer2(jsonData);
+//			}
+//
+//		}
+//	}
 }

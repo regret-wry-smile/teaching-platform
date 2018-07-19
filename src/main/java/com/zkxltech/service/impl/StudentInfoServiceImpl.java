@@ -370,7 +370,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
     		        }
     		}else {
     			 //开始签到接口有问题,暂用按任意键
-    	        r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
+    	        r = EquipmentServiceImpl2.getInstance().answer_start(0, Constant.ANSWER_STR);
     	        if (r.getRet().equals(Constant.ERROR)) {
     	            return r;
     	        }
@@ -409,7 +409,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             ThreadManager.getInstance().stopAllThread();
 	        r.setRet(Constant.ERROR);
 	        Global.setModeMsg(Constant.BUSINESS_NORMAL);
-            r = EquipmentServiceImpl.getInstance().answer_stop();
+            r = EquipmentServiceImpl2.getInstance().answer_stop();
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }
@@ -437,7 +437,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             return r;
         }
         try{
-            r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
+            r = EquipmentServiceImpl2.getInstance().answer_start(0, Constant.ANSWER_STR);
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }
@@ -470,7 +470,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         /*停止所有线程*/
         ThreadManager.getInstance().stopAllThread();
         try{
-            r = EquipmentServiceImpl.getInstance().answer_stop();
+            r = EquipmentServiceImpl2.getInstance().answer_stop();
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }

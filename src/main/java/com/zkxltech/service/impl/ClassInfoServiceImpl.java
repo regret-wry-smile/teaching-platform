@@ -3,14 +3,18 @@ package com.zkxltech.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.BrowserManager;
 import com.ejet.cache.RedisMapBind;
+import com.ejet.core.util.SerialListener;
+import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.ClassInfo;
@@ -22,6 +26,7 @@ import com.zkxltech.sql.ClassInfoSql;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.CardInfoThread;
+import com.zkxltech.thread.MsgThread;
 import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.util.StringUtils;
 
@@ -136,9 +141,9 @@ public class ClassInfoServiceImpl implements ClassInfoService{
         r.setRet(Constant.ERROR);
         
         try {
-            String get_device_info = ScDll.intance.get_device_info();
-            if (StringUtils.isEmpty(get_device_info)) {
-                r.setMessage("设备故障,请重启设备");
+        	r = EquipmentServiceImpl2.getInstance().clear_wl();
+            if (Constant.ERROR.equals(r.getRet())) {
+                r.setMessage("清除失败");
                 return r;
             }
             StudentInfoSql studentInfoSql = new StudentInfoSql();
@@ -172,18 +177,8 @@ public class ClassInfoServiceImpl implements ClassInfoService{
         RedisMapBind.clearBindMap();
         /*停止所有线程*/
         ThreadManager.getInstance().stopAllThread();
-        try {
-            int bind_start = ScDll.intance.wireless_bind_start(1,"") ;
-            if (bind_start < 1) {
-                int bind_start2 = ScDll.intance.wireless_bind_start(1,"") ;
-                if (bind_start2 < 1) {
-                    log.error("\"开始绑定\"指令发送失败");
-                    r.setMessage("指令发送失败");
-                    return r;
-                }
-            }
-            log.info("\"开始绑定\"指令发送成功");
-            /**根据班级id查询学生信息*/
+		try {
+			/**根据班级id查询学生信息*/
             StudentInfoServiceImpl sis= new StudentInfoServiceImpl();
             Result result = sis.selectStudentInfo(param);
             List<StudentInfo> studentInfos = (List)result.getItem();
@@ -205,50 +200,71 @@ public class ClassInfoServiceImpl implements ClassInfoService{
                     studentInfoMap.put(studentInfo.getIclickerId(), studentInfo);
                 }
             }
-            /**存入静态map*/
-            RedisMapBind.getBindMap().put("studentName", null);
-            RedisMapBind.getBindMap().put("code", bind_start);
-            RedisMapBind.getBindMap().put("accomplish", bind);
-            RedisMapBind.getBindMap().put("notAccomplish",notBind);
-            RedisMapBind.setStudentInfoMap(studentInfoMap);
-            BaseThread thread = new CardInfoThread();
-            thread.start();
-            /*添加线程管理*/
-            ThreadManager.getInstance().addThread(thread);
+           
             
-        	Global.setModeMsg(Constant.BUSINESS_BIND);
-            r.setItem(bind_start);
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("操作成功");
-        } catch (Exception e) {
-            r.setMessage("操作失败");
-            r.setDetail(e.getMessage());
-            log.error(IOUtils.getError(e));
-        } 
-        return r;
+			if (SerialPortManager.sendToPort(EquipmentConstant.WIRELESS_BIND_START_CODE)) {
+				Vector<Thread> threads = new Vector<Thread>();
+				Thread iThread = new MsgThread(EquipmentConstant.ANSWER_START);
+				threads.add(iThread);
+				iThread.start();
+				// 等待所有线程执行完毕
+				iThread.join();
+				
+				String str = SerialListener.getDataMap(EquipmentConstant.WIRELESS_BIND_START);
+				int bindCode;
+				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
+					r.setRet(Constant.ERROR);
+					r.setMessage("指令发送失败");
+					return r;
+				}else {
+					bindCode = JSONObject.fromObject(str).getInt("result");
+					if (bindCode<0) {
+						r.setRet(Constant.ERROR);
+						r.setMessage("指令发送失败");
+						return r;
+					}
+				}
+				SerialListener.clearMap();
+				r.setRet(Constant.SUCCESS);
+				
+				RedisMapBind.setStudentInfoMap(studentInfoMap);
+	            BaseThread thread = new CardInfoThread();
+	            thread.start();
+	            /*添加线程管理*/
+	            ThreadManager.getInstance().addThread(thread);
+	            
+	        	Global.setModeMsg(Constant.BUSINESS_BIND);
+	            r.setRet(Constant.SUCCESS);
+	            r.setMessage("操作成功");
+	            
+	            /**存入静态map*/
+	            RedisMapBind.getBindMap().put("studentName", null);
+	            RedisMapBind.getBindMap().put("code", bindCode);
+	            RedisMapBind.getBindMap().put("accomplish", bind);
+	            RedisMapBind.getBindMap().put("notAccomplish",notBind);
+				
+			} else {
+				r.setRet(Constant.ERROR);
+				r.setMessage("指令发送失败");
+			}
+		} catch (Exception e) {
+			log.error(IOUtils.getError(e));
+			r.setRet(Constant.ERROR);
+			r.setMessage("指令发送失败");
+		}
+
+		return r;
+      
     }
     
     @Override
     public Result bindStop() {
         Result r = new Result();
         Global.setModeMsg(Constant.BUSINESS_NORMAL);
-        /*停止所有线程*/
-        ThreadManager.getInstance().stopAllThread();
         try{
-            int bind_stop = ScDll.intance.wireless_bind_stop();
-            if (bind_stop == Constant.SEND_ERROR) {
-                int bind_stop2 = ScDll.intance.wireless_bind_stop();
-                if (bind_stop2 == Constant.SEND_ERROR) {
-                    r.setRet(Constant.ERROR);
-                    r.setMessage("停止指令发送失败");
-                    log.info("\"停止绑定\"失败");
-                    return r;
-                }
-               
-            }
-            log.info("\"停止绑定\"成功");
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("停止成功");
+            /*停止所有线程*/
+            ThreadManager.getInstance().stopAllThread();
+          r = EquipmentServiceImpl2.getInstance().bind_stop();
         }catch (Exception e) {
             log.error("", e);
             r.setMessage("系统异常");

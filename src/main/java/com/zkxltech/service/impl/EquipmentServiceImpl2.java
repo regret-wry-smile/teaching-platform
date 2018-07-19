@@ -550,7 +550,7 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 	public Result answer_start(int is_quick_response, String answer_str) {
 		Result r = new Result();
 		try {
-			if (SerialPortManager.sendToPort(answer_str)) {
+			if (SerialPortManager.sendToPort(EquipmentConstant.ANSWER_START_CODE(answer_str))) {
 				Vector<Thread> threads = new Vector<Thread>();
 				Thread iThread = new MsgThread(EquipmentConstant.ANSWER_START);
 				threads.add(iThread);
@@ -559,6 +559,39 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 				iThread.join();
 				
 				String str = SerialListener.getDataMap(EquipmentConstant.ANSWER_START);
+				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
+					r.setRet(Constant.ERROR);
+					r.setMessage("指令发送失败");
+					return r;
+				}else {
+					r = EquipmentUtils.parseResult(str);
+				}
+				SerialListener.clearMap();
+			} else {
+				r.setRet(Constant.ERROR);
+				r.setMessage("指令发送失败");
+			}
+		} catch (Exception e) {
+			log.error(IOUtils.getError(e));
+			r.setRet(Constant.ERROR);
+			r.setMessage("指令发送失败");
+		}
+
+		return r;
+	}
+	
+	public Result bind_stop() {
+		Result r = new Result();
+		try {
+			if (SerialPortManager.sendToPort(EquipmentConstant.WIRELESS_BIND_STOP_CODE)) {
+				Vector<Thread> threads = new Vector<Thread>();
+				Thread iThread = new MsgThread(EquipmentConstant.WIRELESS_BIND_STOP);
+				threads.add(iThread);
+				iThread.start();
+				// 等待所有线程执行完毕
+				iThread.join();
+				
+				String str = SerialListener.getDataMap(EquipmentConstant.WIRELESS_BIND_STOP);
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
@@ -579,14 +612,37 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 
 		return r;
 	}
+	
+	public Result clear_wl() {
+		Result r = new Result();
+		try {
+			if (SerialPortManager.sendToPort(EquipmentConstant.CLEAR_WL_CODE)) {
+				Vector<Thread> threads = new Vector<Thread>();
+				Thread iThread = new MsgThread(EquipmentConstant.CLEAR_WL);
+				threads.add(iThread);
+				iThread.start();
+				// 等待所有线程执行完毕
+				iThread.join();
+				
+				String str = SerialListener.getDataMap(EquipmentConstant.CLEAR_WL);
+				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
+					r.setRet(Constant.ERROR);
+					r.setMessage("指令发送失败");
+					return r;
+				}
+				r.setItem(str);
+				SerialListener.clearMap();
+				r.setRet(Constant.SUCCESS);
+			} else {
+				r.setRet(Constant.ERROR);
+				r.setMessage("指令发送失败");
+			}
+		} catch (Exception e) {
+			log.error(IOUtils.getError(e));
+			r.setRet(Constant.ERROR);
+			r.setMessage("指令发送失败");
+		}
 
-	// public static void main(String[] args) {
-	// List<RequestVo> list = new ArrayList<RequestVo>();
-	// RequestVo requestVo1 = new RequestVo();
-	// requestVo1.setId("1");
-	// requestVo1.setRange("A-F");
-	// requestVo1.setType("m");
-	// list.add(requestVo1);
-	// new EquipmentServiceImpl().answerStart2(list);
-	// }
+		return r;
+	}
 }

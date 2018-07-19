@@ -91,7 +91,7 @@ public class SerialPortManager {
 	 * @param serialport
 	 *            待关闭的串口对象
 	 */
-	public static void closePort(SerialPort serialPort) {
+	public static void closePort() {
 		if (serialPort != null) {
 			serialPort.close();
 			serialPort = null;
@@ -179,7 +179,14 @@ public class SerialPortManager {
     	        bytesRead = in.read(bytes);
     	    }
         } catch (IOException e) {
-        	e.printStackTrace();
+//        	SerialPortManager.closePort();
+//        	logger.info("【串口中断3s后重连..】");
+//        	try {
+//				Thread.sleep(3000);
+//			} catch (InterruptedException e1) {
+//				logger.error(IOUtils.getError(e));
+//			}
+//        	SerialPortManager.openPort("COM4",1152000);
         } finally {
             try {
                 if (in != null) {
@@ -187,6 +194,7 @@ public class SerialPortManager {
                     in = null;
                 }
             } catch(IOException e) {
+            	logger.error(IOUtils.getError(e));
             }
 
         }

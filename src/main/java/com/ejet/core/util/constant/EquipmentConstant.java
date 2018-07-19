@@ -12,6 +12,11 @@ public class EquipmentConstant {
 	 */
 	public static String ANSWER_START = "answer_start";
 	/**
+	 * 答题信息
+	 */
+	public static String UPDATE_ANSWER_LIST = "update_answer_list";
+	
+	/**
 	 * 停止答题
 	 */
 	public static String ANSWER_STOP = "answer_stop";
@@ -36,6 +41,11 @@ public class EquipmentConstant {
 	 * 开始绑定
 	 */
 	public static String WIRELESS_BIND_START = "wireless_bind_start";
+	/**
+	 * 获取绑定信息
+	 */
+	public static String UPDATE_WIRELESS_CARD_INFO = "update_wireless_card_info";
+	
 	/**
 	 * 停止绑定
 	 */
@@ -64,6 +74,20 @@ public class EquipmentConstant {
 			}
 		}
 		s.append("]}");
+		return s.toString();
+	}
+	/**
+	 * 开始答题硬件指令
+	 * @param answers 题目信息
+	 * @return
+	 */
+	public static String ANSWER_START_CODE(String answers) {
+		StringBuilder s = new StringBuilder();
+		s.append("{'fun': 'answer_start','time': '");
+		s.append(StringUtils.formatDateTime(new Date(),"yyyy-MM-dd HH:mm:ss:S"));
+		s.append("', 'questions': ");
+		s.append(answers);
+		s.append("}");
 		return s.toString();
 	}
 	/**
