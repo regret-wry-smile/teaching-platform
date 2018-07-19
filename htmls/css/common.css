@@ -960,6 +960,12 @@ img.rebtn:active,img.rebtn:hover{
 		color: #90a4cc;
 		font-size: 0.30rem;
 	}
+	.text.vote label{
+		font-size: 0.26rem;
+	}
+	.text.vote p{
+		font-size: 0.20rem;
+	}
 }
 /*div垂直水平正居中*/
 .maindiv{
