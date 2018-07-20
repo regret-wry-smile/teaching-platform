@@ -11,10 +11,7 @@ import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
-import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.EquipmentServiceImpl2;
-import com.zkxltech.service.impl.StudentInfoServiceImpl;
-import com.zkxltech.thread.QuickThread;
 import com.zkxltech.thread.ThreadManager;
 
 import net.sf.json.JSONArray;

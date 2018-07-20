@@ -6,12 +6,10 @@ import org.slf4j.LoggerFactory;
 import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
 import com.ejet.core.util.SerialListener;
-import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.io.IOUtils;
-import com.zkxltech.scdll.ScDll;
 
 public class MultipleAnswerThread extends BaseThread {
     private static final Logger logger = LoggerFactory.getLogger(MultipleAnswerThread.class);

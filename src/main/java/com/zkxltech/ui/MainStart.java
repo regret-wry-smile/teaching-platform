@@ -7,12 +7,7 @@ import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseMotionAdapter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -32,13 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.App;
-import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.io.IOUtils;
 import com.sun.awt.AWTUtilities;
-import com.sun.jna.Native;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
-import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.impl.ClassHourServiceImpl;
 import com.zkxltech.ui.util.Colors;
 import com.zkxltech.ui.util.PageConstant;

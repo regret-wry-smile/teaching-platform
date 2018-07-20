@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,6 +103,7 @@ public class SerialListener  implements SerialPortEventListener {
                 }
             } catch (Exception e) {
             	logger.error(IOUtils.getError(e));
+            	SerialPortManager.openPort("COM4",1152000);
             }
             break;
         }

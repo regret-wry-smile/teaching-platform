@@ -20,7 +20,6 @@ import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
-import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.ClassInfoService;
 import com.zkxltech.sql.ClassInfoSql;
 import com.zkxltech.sql.StudentInfoSql;
@@ -151,8 +150,8 @@ public class ClassInfoServiceImpl implements ClassInfoService{
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }
-            int clear_wl = ScDll.intance.clear_wl();
-            if (clear_wl == Constant.SEND_SUCCESS) {
+            r = EquipmentServiceImpl2.getInstance().clear_wl();
+            if (Constant.SUCCESS == r.getRet()) {
                 JSONObject jsono = JSONObject.fromObject(param);
                 if (jsono.containsKey("classId")) {
                     BrowserManager.refreshStudent(jsono.getString("classId"));

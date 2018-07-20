@@ -106,7 +106,7 @@ public class EquipmentConstant {
 	 */
 	public static String SET_CHANNEL_CODE(int tx_ch,int rx_ch) {
 		StringBuilder s = new StringBuilder();
-		s.append("{'fun': 'set_channel','tx_ch': '"+tx_ch+"','rx_ch': '"+tx_ch+"'}");
+		s.append("{'fun': 'set_channel','tx_ch': '"+tx_ch+"','rx_ch': '"+rx_ch+"'}");
 		
 		return s.toString();
 	}

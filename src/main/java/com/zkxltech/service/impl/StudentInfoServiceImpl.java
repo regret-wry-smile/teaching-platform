@@ -24,7 +24,6 @@ import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
-import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.thread.AttendanceThread;
@@ -485,24 +484,5 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         return r;
     }
     
-    @Override
-    public Result answerStop() {
-        Result r = new Result();
-        int answer_stop = ScDll.intance.answer_stop();
-        /*停止所有线程*/
-        ThreadManager.getInstance().stopAllThread();
-        if (answer_stop == Constant.SEND_SUCCESS) {
-            //FIXME
-            r.setRet(Constant.SUCCESS);
-            r.setMessage("停止成功");
-            log.info("\"停止答题\"指令发送成功");
-            return r;
-        }else{
-            log.error("\"停止答题\"指令发送失败");
-        }
-        r.setRet(Constant.ERROR);
-        r.setMessage("停止失败");
-        return r;
-    }
 
 }

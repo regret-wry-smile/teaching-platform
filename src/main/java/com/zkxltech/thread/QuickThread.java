@@ -5,11 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapQuick;
 import com.ejet.core.util.SerialListener;
-import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.io.IOUtils;
-import com.zkxltech.scdll.ScDll;
 
 public class QuickThread extends BaseThread {
     private static final Logger logger = LoggerFactory.getLogger(QuickThread.class);

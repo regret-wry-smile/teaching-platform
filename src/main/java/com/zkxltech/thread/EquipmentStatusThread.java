@@ -8,7 +8,6 @@ import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Result;
-import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.EquipmentServiceImpl2;
 
 /**

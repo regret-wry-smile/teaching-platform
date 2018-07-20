@@ -17,9 +17,7 @@ import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Answer;
-import com.zkxltech.domain.RequestVo;
 import com.zkxltech.domain.Result;
-import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.EquipmentService2;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.thread.BaseThread;
@@ -79,294 +77,6 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 		return r;
 	}
 
-	@Deprecated
-	@Override
-	public Result set_raise_hand(int raise_hand) {
-		Result r = new Result();
-		int set_raise_hand = ScDll.intance.set_raise_hand(raise_hand);
-		if (set_raise_hand == Constant.SEND_SUCCESS) {
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("设置成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("设置失败");
-		return r;
-	}
-
-	@Deprecated
-	@Override
-	public Result set_sign_in(int attendance) {
-		Result r = new Result();
-		int set_sign_in = ScDll.intance.set_sign_in(attendance);
-		if (set_sign_in == Constant.SEND_SUCCESS) {
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("设置成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("设置失败");
-		return r;
-	}
-
-	@Deprecated
-	@Override
-	public Result set_student_id(String student_id_str) {
-		Result r = new Result();
-		int set_student_id = ScDll.intance.set_student_id(student_id_str);
-		if (set_student_id == Constant.SEND_SUCCESS) {
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("操作成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("操作失败");
-		return r;
-	}
-
-	@Deprecated
-	@Override
-	public Result get_student_id_info() {
-		Result r = new Result();
-		String get_student_id_info = ScDll.intance.get_student_id_info();
-		if (!StringUtils.isBlank(get_student_id_info)) {
-			r.setItem(get_student_id_info);
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("操作成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("操作失败");
-		return r;
-	}
-
-	@Override
-	public Result set_channel(int tx_ch, int rx_ch) {
-		Result r = new Result();
-		try {
-			if (SerialPortManager.sendToPort(EquipmentConstant.SET_CHANNEL_CODE(tx_ch, rx_ch))) {
-				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread(EquipmentConstant.GET_DEVICE_INFO_CODE);
-				threads.add(iThread);
-				iThread.start();
-				// 等待所有线程执行完毕
-				iThread.join();
-				
-				String str = SerialListener.getDataMap(EquipmentConstant.SET_CHANNEL);
-				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
-					r.setRet(Constant.ERROR);
-					r.setMessage("指令发送失败");
-					return r;
-				}
-				r.setItem(str);
-				SerialListener.clearMap();
-				r.setRet(Constant.SUCCESS);
-			} else {
-				r.setRet(Constant.ERROR);
-				r.setMessage("指令发送失败");
-			}
-		} catch (Exception e) {
-			log.error(IOUtils.getError(e));
-			r.setRet(Constant.ERROR);
-			r.setMessage("指令发送失败");
-		}
-		return r;
-	}
-
-	@Override
-	public Result set_tx_power(int tx_power) {
-		Result r = new Result();
-		try {
-			if (SerialPortManager.sendToPort(EquipmentConstant.SET_TX_POWER_CODE(tx_power))) {
-				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread(EquipmentConstant.GET_DEVICE_INFO_CODE);
-				threads.add(iThread);
-				iThread.start();
-				// 等待所有线程执行完毕
-				iThread.join();
-				
-				String str = SerialListener.getDataMap(EquipmentConstant.SET_CHANNEL);
-				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
-					r.setRet(Constant.ERROR);
-					r.setMessage("指令发送失败");
-					return r;
-				}
-				r.setItem(str);
-				SerialListener.clearMap();
-				r.setRet(Constant.SUCCESS);
-			} else {
-				r.setRet(Constant.ERROR);
-				r.setMessage("指令发送失败");
-			}
-		} catch (Exception e) {
-			log.error(IOUtils.getError(e));
-			r.setRet(Constant.ERROR);
-			r.setMessage("指令发送失败");
-		}
-		return r;
-	}
-
-	@Override
-	public Result read_card_uid_start() {
-		Result r = new Result();
-		int read_card_uid_start = ScDll.intance.read_card_uid_start();
-		if (read_card_uid_start == Constant.SEND_SUCCESS) {
-			r.setItem(read_card_uid_start);
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("操作成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("操作失败");
-		return r;
-	}
-
-	@Override
-	public Result get_card_uid_Info() {
-		Result r = new Result();
-		String get_card_uid_Info = ScDll.intance.get_card_uid_Info();
-		// FIXME
-		if (!StringUtils.isBlank(get_card_uid_Info)) {
-			r.setItem(get_card_uid_Info);
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("读取成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("读取失败");
-		return r;
-	}
-
-	@Override
-	public Result read_card_uid_stop() {
-		Result r = new Result();
-		int read_card_uid_stop = ScDll.intance.read_card_uid_stop();
-		if (read_card_uid_stop == Constant.SEND_SUCCESS) {
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("停止成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("停止失败");
-		return r;
-	}
-
-	@Override
-	public Result get_wireless_bind_info() {
-		Result r = new Result();
-		String get_wireless_bind_info = ScDll.intance.get_wireless_bind_info();
-		if (!StringUtils.isBlank(get_wireless_bind_info)) {
-			r.setItem(get_wireless_bind_info);
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("获取成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("获取失败");
-		return r;
-	}
-
-	@Override
-	public Result raise_hand_start() {
-		Result r = new Result();
-		int raise_hand_start = ScDll.intance.raise_hand_start();
-		// FIXME
-		if (raise_hand_start == Constant.SEND_SUCCESS) {
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("操作成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("操作失败");
-		return r;
-	}
-
-	@Override
-	public Result raise_hand_stop() {
-		Result r = new Result();
-		int raise_hand_stop = ScDll.intance.raise_hand_stop();
-		if (raise_hand_stop == Constant.SEND_SUCCESS) {
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("停止成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("停止失败");
-		return r;
-	}
-
-	@Override
-	public Result get_raise_hand_list() {
-		Result r = new Result();
-		String get_raise_hand_list = ScDll.intance.get_raise_hand_list();
-		if (!StringUtils.isBlank(get_raise_hand_list)) {
-			r.setItem(get_raise_hand_list);
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("获取成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("获取失败");
-		return r;
-	}
-
-	@Override
-	public Result get_sign_in_list() {
-		Result r = new Result();
-		String get_sign_in_list = ScDll.intance.get_sign_in_list();
-		if (!StringUtils.isBlank(get_sign_in_list)) {
-			r.setItem(get_sign_in_list);
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("获取成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("获取失败");
-		return r;
-	}
-
-	@Override
-	public Result set_attendance_24g(int is_open, int pro_index) {
-		Result r = new Result();
-		int set_attendance_24g = ScDll.intance.set_attendance_24g(is_open, pro_index);
-		if (set_attendance_24g == Constant.SEND_SUCCESS) {
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("设置成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("设置失败");
-		return r;
-	}
-
-	@Override
-	public Result set_wireless_student_id(String uid_str, String student_id_str) {
-		Result r = new Result();
-		int set_wireless_student_id = ScDll.intance.set_wireless_student_id(uid_str, student_id_str);
-		if (set_wireless_student_id == Constant.SEND_SUCCESS) {
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("设置成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("设置失败");
-		return r;
-	}
-
-	@Override
-	public Result get_wireless_student_id_info() {
-		Result r = new Result();
-		String get_wireless_student_id_info = ScDll.intance.get_wireless_student_id_info();
-		if (!StringUtils.isBlank(get_wireless_student_id_info)) {
-			r.setItem(get_wireless_student_id_info);
-			r.setRet(Constant.SUCCESS);
-			r.setMessage("获取成功");
-			return r;
-		}
-		r.setRet(Constant.ERROR);
-		r.setMessage("获取失败");
-		return r;
-	}
 
 	/** 设备和数据库绑定的状态同步 */
 	@Override
@@ -645,4 +355,73 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 
 		return r;
 	}
+
+
+	@Override
+	public Result set_channel(int tx_ch, int rx_ch) {
+		Result r = new Result();
+		try {
+			if (SerialPortManager.sendToPort(EquipmentConstant.SET_CHANNEL_CODE(tx_ch, rx_ch))) {
+				Vector<Thread> threads = new Vector<Thread>();
+				Thread iThread = new MsgThread(EquipmentConstant.SET_CHANNEL);
+				threads.add(iThread);
+				iThread.start();
+				// 等待所有线程执行完毕
+				iThread.join();
+				
+				String str = SerialListener.getDataMap(EquipmentConstant.SET_CHANNEL);
+				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
+					r.setRet(Constant.ERROR);
+					r.setMessage("指令发送失败");
+					return r;
+				}else {
+					r = EquipmentUtils.parseResult(str);
+				}
+				SerialListener.clearMap();
+			} else {
+				r.setRet(Constant.ERROR);
+				r.setMessage("指令发送失败");
+			}
+		} catch (Exception e) {
+			log.error(IOUtils.getError(e));
+			r.setRet(Constant.ERROR);
+			r.setMessage("指令发送失败");
+		}
+
+		return r;
+	}
+
+	@Override
+	public Result set_tx_power(int tx_power) {
+		Result r = new Result();
+		try {
+			if (SerialPortManager.sendToPort(EquipmentConstant.SET_TX_POWER_CODE(tx_power))) {
+				Vector<Thread> threads = new Vector<Thread>();
+				Thread iThread = new MsgThread(EquipmentConstant.SET_TX_POWER);
+				threads.add(iThread);
+				iThread.start();
+				// 等待所有线程执行完毕
+				iThread.join();
+				
+				String str = SerialListener.getDataMap(EquipmentConstant.SET_TX_POWER);
+				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
+					r.setRet(Constant.ERROR);
+					r.setMessage("指令发送失败");
+					return r;
+				}else {
+					r = EquipmentUtils.parseResult(str);
+				}
+				SerialListener.clearMap();
+			} else {
+				r.setRet(Constant.ERROR);
+				r.setMessage("指令发送失败");
+			}
+		} catch (Exception e) {
+			log.error(IOUtils.getError(e));
+			r.setRet(Constant.ERROR);
+			r.setMessage("指令发送失败");
+		}
+
+		return r;
+	};
 }

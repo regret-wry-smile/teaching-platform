@@ -9,7 +9,6 @@ import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Setting;
 import com.zkxltech.domain.User;
-import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.SettingService;
 import com.zkxltech.ui.enums.SettingEnum;
 import com.zkxltech.ui.util.StringUtils;
@@ -159,13 +158,13 @@ public class SettingServiceImpl implements SettingService{
 			    result.setMessage("读取配置文件\"答题器发送功率\"默认设置失败");
                 return result;
             }
-			int set_channel = ScDll.intance.set_channel(tx_ch, rx_ch);
-			if (set_channel == Constant.SEND_ERROR) {
+			result=EquipmentServiceImpl2.getInstance().set_channel(tx_ch, rx_ch);
+			if (Constant.ERROR == result.getRet()) {
                 result.setMessage("系统信道设置失败,请重试或重启设备");
                 return result;
             }
-			int set_tx_power = ScDll.intance.set_tx_power(tx_power);
-			if (set_tx_power == Constant.SEND_ERROR) {
+			result = EquipmentServiceImpl2.getInstance().set_tx_power(tx_power);
+			if (Constant.ERROR == result.getRet()) {
                 result.setMessage("设置答题器发送功率失败,请重试或重启设备");
                 return result;
             }

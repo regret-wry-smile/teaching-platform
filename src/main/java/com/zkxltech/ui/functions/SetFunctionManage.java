@@ -6,7 +6,6 @@ import org.eclipse.swt.browser.BrowserFunction;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.SettingService;
-import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.EquipmentServiceImpl2;
 import com.zkxltech.service.impl.SettingServiceImpl;
 

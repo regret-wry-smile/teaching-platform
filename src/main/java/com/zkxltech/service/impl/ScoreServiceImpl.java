@@ -14,7 +14,6 @@ import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Score;
-import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.ScoreService;
 import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.MsgThread;
