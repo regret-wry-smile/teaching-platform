@@ -1,7 +1,10 @@
 package com.ejet.core.util;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -19,8 +22,11 @@ public class SerialListener  implements SerialPortEventListener {
 	private static final Logger logger = LoggerFactory.getLogger(SerialPortEventListener.class);
 	private static String command = ""; //指令
 	private SerialPort serialport ;
+	private static String str = "\\{'fun";
 	
-	private static Map<String, Object> dataMap = Collections.synchronizedMap(new HashMap<String, Object>());
+	private static List<String> dataList = Collections.synchronizedList(new ArrayList<String>());	
+	
+	private static Object lock = new Object();
 	
     public SerialListener(SerialPort serialport) {
 		super();
@@ -33,13 +39,34 @@ public class SerialListener  implements SerialPortEventListener {
      * 清空缓存
      */
     public static void clearMap(){
-    	dataMap.clear();
+    	dataList.clear();
     }
+    
+    /**
+     * 移除缓存
+     */
+    public static void removeList(List<String> list){
+    	synchronized (lock) {
+    		Iterator<String> iterator = dataList.iterator();
+        	while (iterator.hasNext()) {
+        		String s =iterator.next();
+        		for (int i = 0; i < list.size(); i++) {
+    				if (list.get(i).equals(s)) {
+    					dataList.remove(s);
+    				}
+    			}
+    		}
+		}
+//    	dataList.removeAll(list);
+    }
+    
     /**
      * 获取缓存中的数据
      */
-    public static String getDataMap(String type){
-    	return (String) dataMap.get(type);
+    public static List<String> getDataMap(){
+    	synchronized (lock) {
+    		return  dataList;
+    	}
     }
 	/**
      * 处理监控到的串口事件
@@ -76,7 +103,6 @@ public class SerialListener  implements SerialPortEventListener {
                 if (serialport == null) {
                 	logger.error("串口对象为空！监听失败！");
                 } else {
-                	dataMap.clear();
                     // 读取串口数据
                 	data = SerialPortManager.readFromPort();
                 	logger.info("【串口接收到的数据】"+data);
@@ -89,8 +115,17 @@ public class SerialListener  implements SerialPortEventListener {
 						}
                 		switch (verfifyData(data)) {
 						case 0:
-							JSONObject jsonObject = JSONObject.fromObject(data);
-                        	dataMap.put((String) jsonObject.get("fun"), jsonObject.toString());
+							String[] strs = data.split(str);
+							for (int i = 0; i < strs.length; i++) {
+								if (!StringUtils.isEmpty(strs[i])) {
+									strs[i] = "{'fun" + strs[i];
+									JSONObject jsonObject = JSONObject.fromObject(strs[i]);
+									synchronized (lock) {
+										dataList.add(jsonObject.toString());
+									}
+								}
+							}
+							
 							break;
 						case 1: //如果是前部分
 							stringBuffer.setLength(0);

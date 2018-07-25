@@ -33,19 +33,21 @@ public class RedisMapAttendance {
 			JSONArray jsonArray = JSONArray.fromObject(jsonData);
 	        for (int j = 0; j < jsonArray.size(); j++) {
 	            JSONObject jo = (JSONObject) jsonArray.get(j);
-	            String card_id = jo.getString("card_id");
-	            /*如果attendanceMap里没有该卡号,表示不是本班学生,如果cardIdSet里有值表示已经提交过了*/
-	            if (!attendanceMap.containsKey(card_id) || cardIdSet.contains(card_id)) {
-	                continue;
-	            }
-	            cardIdSet.add(card_id);
-	            Map<String, String> map = attendanceMap.get(card_id);
-	            for (String key : map.keySet()) {
-	                if (key.equals("status")) {
-	                    map.put(key, Constant.ATTENDANCE_YES);
-	                }
-	            }
-	            BrowserManager.refresAttendance();
+	            if (!jo.containsKey("result")) {
+	            	String card_id = jo.getString("card_id");
+		            /*如果attendanceMap里没有该卡号,表示不是本班学生,如果cardIdSet里有值表示已经提交过了*/
+		            if (!attendanceMap.containsKey(card_id) || cardIdSet.contains(card_id)) {
+		                continue;
+		            }
+		            cardIdSet.add(card_id);
+		            Map<String, String> map = attendanceMap.get(card_id);
+		            for (String key : map.keySet()) {
+		                if (key.equals("status")) {
+		                    map.put(key, Constant.ATTENDANCE_YES);
+		                }
+		            }
+		            BrowserManager.refresAttendance();
+				}
 	        }
 		} catch (Exception e) {
 			logger.info("【签到】"+IOUtils.getError(e));

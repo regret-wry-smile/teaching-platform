@@ -55,7 +55,7 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap(EquipmentConstant.GET_DEVICE_INFO);
+				String str = SerialListener.getDataMap().get(0);
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
@@ -91,7 +91,7 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap(EquipmentConstant.GET_DEVICE_INFO);
+				String str = SerialListener.getDataMap().get(0);
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
@@ -142,7 +142,7 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 		for (Object object : jsonArray) {
 			JSONObject jo = JSONObject.fromObject(object);
 			String uid = jo.getString("uid");
-			if (!StringUtils.isBlank(uid)) {
+			if (!com.zkxltech.ui.util.StringUtils.isEmpty(uid)) {
 				uids.add(uid);
 			}
 		}
@@ -193,7 +193,7 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap(EquipmentConstant.ANSWER_START);
+				String str = SerialListener.getDataMap().get(0);
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
@@ -235,7 +235,7 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap(EquipmentConstant.ANSWER_STOP);
+				String str = SerialListener.getDataMap().get(0);
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
@@ -268,7 +268,7 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap(EquipmentConstant.ANSWER_START);
+				String str = SerialListener.getDataMap().get(0);
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
@@ -301,7 +301,7 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap(EquipmentConstant.WIRELESS_BIND_STOP);
+				String str = SerialListener.getDataMap().get(0);
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
@@ -334,7 +334,7 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap(EquipmentConstant.CLEAR_WL);
+				String str = SerialListener.getDataMap().get(0);
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
@@ -369,7 +369,7 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap(EquipmentConstant.SET_CHANNEL);
+				String str = SerialListener.getDataMap().get(0);
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
@@ -403,7 +403,7 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap(EquipmentConstant.SET_TX_POWER);
+				String str = SerialListener.getDataMap().get(0);
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");

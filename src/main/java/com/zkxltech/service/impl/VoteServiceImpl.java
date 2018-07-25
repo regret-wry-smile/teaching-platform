@@ -139,7 +139,7 @@ public class VoteServiceImpl implements VoteService{
     			// 等待所有线程执行完毕
     			iThread.join();
 
-    			String str = SerialListener.getDataMap(EquipmentConstant.ANSWER_START);
+    			String str = SerialListener.getDataMap().get(0);
     			if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
     				r.setRet(Constant.ERROR);
     				r.setMessage("指令发送失败");

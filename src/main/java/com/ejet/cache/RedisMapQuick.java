@@ -33,18 +33,20 @@ public class RedisMapQuick {
             JSONArray jsonArray = JSONArray.fromObject(jsonData);
             for (Object object : jsonArray) {
                 JSONObject jo = JSONObject.fromObject(object);
-                String card_id = jo.getString("card_id");
-                StudentInfo studentInfo = studentInfoMap.get(card_id);
-                /*如果未找到表示非本班学生*/
-                if (studentInfo == null) {
-                    continue;
+                if (!jo.containsKey("result")) {
+                	String card_id = jo.getString("card_id");
+                    StudentInfo studentInfo = studentInfoMap.get(card_id);
+                    /*如果未找到表示非本班学生*/
+                    if (studentInfo == null) {
+                        continue;
+                    }
+                    quickMap.put("studentName", studentInfo.getStudentName());
+                    /*停止所有线程*/
+                    ThreadManager.getInstance().stopAllThread();
+                    EquipmentServiceImpl2.getInstance().answer_stop();
+                    Global.setModeMsg(Constant.BUSINESS_PREEMPTIVE);
+                    flag = false ;
                 }
-                quickMap.put("studentName", studentInfo.getStudentName());
-                /*停止所有线程*/
-                ThreadManager.getInstance().stopAllThread();
-                EquipmentServiceImpl2.getInstance().answer_stop();
-                Global.setModeMsg(Constant.BUSINESS_PREEMPTIVE);
-                flag = false ;
             }
         }
     }

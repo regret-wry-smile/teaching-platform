@@ -23,17 +23,24 @@ public class MsgThread extends Thread{
 			int time = 3;
 			String str = "";
 			while (flag) { //硬件指令等待响应
-				str = SerialListener.getDataMap(type);
-				if (!StringUtils.isEmpty(str)) {
-					flag = false;
-				}else {
-					if (!(time>0)) {
+				if (SerialListener.getDataMap() != null && SerialListener.getDataMap().size()>0) {
+					str = SerialListener.getDataMap().get(0);
+					if (!StringUtils.isEmpty(str)) {
 						flag = false;
 					}else {
-						time -- ;
+						if (!(time>0)) {
+							flag = false;
+						}else {
+							time -- ;
+						}
+						Thread.sleep(100);
 					}
+				}else {
+					time -- ;
 					Thread.sleep(100);
 				}
+				
+				
 			}
 		} catch (Exception e) {
 			logger.error(IOUtils.getError(e));

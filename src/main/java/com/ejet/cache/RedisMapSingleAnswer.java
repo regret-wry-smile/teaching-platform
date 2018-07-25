@@ -48,43 +48,45 @@ public class RedisMapSingleAnswer {
         JSONArray jsonArray= JSONArray.fromObject(jsonData);
         for (Object object : jsonArray) {
             JSONObject jsonObject = JSONObject.fromObject(object);
-            String card_id = jsonObject.getString("card_id");
-            StudentInfo studentInfo = studentInfoMap.get(card_id);
-            if (studentInfo == null) { //如果根据卡号未找到学生,表示不是本班的
-                continue;
-            }
-            JSONArray answers =  JSONArray.fromObject(jsonObject.get("answers"));
-            for (Object answerOb : answers) {
-                JSONObject answerJO = JSONObject.fromObject(answerOb);
-                String result = answerJO.getString("answer");
-                if (StringUtils.isEmpty(result)) {
-                    continue;
-                }
-                if (iclickerAnswerMap.containsKey(card_id)) { //已经提交过,将以前提交的答题总数减一,并将以前该答题对象的学生名称去掉,将新值重新添加
-                    String lastAnswer = iclickerAnswerMap.get(card_id);
-                    Integer countNum = singleAnswerNumMap.get(lastAnswer);
-                    singleAnswerNumMap.put(lastAnswer, --countNum);
-                    List<String> list = singleAnswerStudentNameMap.get(lastAnswer);
-                    list.remove(studentInfo.getStudentName());
-                }
-                iclickerAnswerMap.put(card_id, result);
-                switch (answer.getType()) {
-                    case Constant.ANSWER_CHAR_TYPE:
-                        setCharCount(result);
-                        break;
-                    case Constant.ANSWER_NUMBER_TYPE:
-                        setNumberCount(result);
-                        break;
-                    case Constant.ANSWER_JUDGE_TYPE:
-                        setJudgeCount(result);
-                        break;
-                }
-               List<String> list = singleAnswerStudentNameMap.get(result);
-               if (list == null) {
-                   list = new ArrayList<>();
-                   singleAnswerStudentNameMap.put(result, list);
-               }
-               list.add(studentInfo.getStudentName());
+            if (!jsonObject.containsKey("result")) {
+            	  String card_id = jsonObject.getString("card_id");
+                  StudentInfo studentInfo = studentInfoMap.get(card_id);
+                  if (studentInfo == null) { //如果根据卡号未找到学生,表示不是本班的
+                      continue;
+                  }
+                  JSONArray answers =  JSONArray.fromObject(jsonObject.get("answers"));
+                  for (Object answerOb : answers) {
+                      JSONObject answerJO = JSONObject.fromObject(answerOb);
+                      String result = answerJO.getString("answer");
+                      if (StringUtils.isEmpty(result)) {
+                          continue;
+                      }
+                      if (iclickerAnswerMap.containsKey(card_id)) { //已经提交过,将以前提交的答题总数减一,并将以前该答题对象的学生名称去掉,将新值重新添加
+                          String lastAnswer = iclickerAnswerMap.get(card_id);
+                          Integer countNum = singleAnswerNumMap.get(lastAnswer);
+                          singleAnswerNumMap.put(lastAnswer, --countNum);
+                          List<String> list = singleAnswerStudentNameMap.get(lastAnswer);
+                          list.remove(studentInfo.getStudentName());
+                      }
+                      iclickerAnswerMap.put(card_id, result);
+                      switch (answer.getType()) {
+                          case Constant.ANSWER_CHAR_TYPE:
+                              setCharCount(result);
+                              break;
+                          case Constant.ANSWER_NUMBER_TYPE:
+                              setNumberCount(result);
+                              break;
+                          case Constant.ANSWER_JUDGE_TYPE:
+                              setJudgeCount(result);
+                              break;
+                      }
+                     List<String> list = singleAnswerStudentNameMap.get(result);
+                     if (list == null) {
+                         list = new ArrayList<>();
+                         singleAnswerStudentNameMap.put(result, list);
+                     }
+                     list.add(studentInfo.getStudentName());
+                  }
             }
         }
         BrowserManager.refresAnswerNum();

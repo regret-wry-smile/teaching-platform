@@ -48,7 +48,11 @@ public class App {
 				@Override
 				public void run() {
 					try {
-						SerialPortManager.openPort("COM4",1152000);
+//						List<String> list = SerialPortManager.findPort();
+//						if (list != null && list.size()>0) {
+//							SerialPortManager.openPort(list.get(0),1152000);
+//						}
+						SerialPortManager.openPort("COM7",1152000);
 					} catch (Exception e) {
 						logger.error("初始化端口错误", e);
 					}

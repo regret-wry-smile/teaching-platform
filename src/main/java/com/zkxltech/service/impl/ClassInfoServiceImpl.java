@@ -209,7 +209,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap(EquipmentConstant.WIRELESS_BIND_START);
+				String str = SerialListener.getDataMap().get(0);
 				int bindCode;
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);

@@ -97,7 +97,7 @@ public class SettingServiceImpl implements SettingService{
 			result.setRet(Constant.ERROR);
 			Setting setting = StringUtils.parseJSON(object, Setting.class);
 			String name = setting.getName();
-			if (com.ejet.core.util.comm.StringUtils.isBlank(name)) {
+			if (StringUtils.isEmpty(name)) {
                 result.setMessage("缺少参数,系统信道名称为空");
                 return result;
             }
