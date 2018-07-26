@@ -14,8 +14,15 @@ public class TestUSB {
 	public static void main(String[] args) {
 		//加载log4j日志配置
 		PropertyConfigurator.configure(ConfigConstant.log4jFile);
-		SerialPortManager usbTool = new SerialPortManager();
-        usbTool.openPort("COM4",1152000);
+		List<String> list = SerialPortManager.findPort();
+		for (int i = 0; i < list.size(); i++) {
+			try {
+				SerialPortManager.openPort(list.get(i),1152000);
+				break;
+			} catch (Exception e) {
+				System.out.println("初始化串口失败。");
+			}
+		}
 //        SerialPortManager.sendToPort("{'fun': 'get_device_info'}"); //获取设备信息
         SerialPortManager.sendToPort(" {'fun': 'set_channel','tx_ch': '90','rx_ch': '110'}"); 
        

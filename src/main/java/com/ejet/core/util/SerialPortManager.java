@@ -45,6 +45,9 @@ public class SerialPortManager {
 	 * @param baudrate
 	 *            波特率
 	 * @return 串口对象
+	 * @throws PortInUseException 
+	 * @throws NoSuchPortException 
+	 * @throws UnsupportedCommOperationException 
 	 * @throws SerialPortParameterFailure
 	 *             设置串口参数失败
 	 * @throws NotASerialPort
@@ -54,33 +57,24 @@ public class SerialPortManager {
 	 * @throws PortInUse
 	 *             端口已被占用
 	 */
-	public static final SerialPort openPort(String portName, int baudrate){
-		try {
-			// 通过端口名识别端口
-			CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
-			// 打开端口，并给端口名字和一个timeout（打开操作的超时时间）
-			CommPort commPort = portIdentifier.open(portName, 2000);
-			// 判断是不是串口
-			if (commPort instanceof SerialPort) {
-				serialPort = (SerialPort) commPort;
-				try {
-					// 设置一下串口的波特率等参数
-					serialPort.setSerialPortParams(baudrate, SerialPort.DATABITS_8, SerialPort.STOPBITS_2,
-							SerialPort.PARITY_NONE);
-					addListener(serialPort, new SerialListener(serialPort));
-				} catch (UnsupportedCommOperationException e) {
-					e.printStackTrace();
-//					throw new SerialPortParameterFailure();
-				}
+	public static final SerialPort openPort(String portName, int baudrate) throws PortInUseException, NoSuchPortException, UnsupportedCommOperationException{
+		// 通过端口名识别端口
+		CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+		// 打开端口，并给端口名字和一个timeout（打开操作的超时时间）
+		CommPort commPort = portIdentifier.open(portName, 2000);
+		// 判断是不是串口
+		if (commPort instanceof SerialPort) {
+			serialPort = (SerialPort) commPort;
+			// 设置一下串口的波特率等参数
+			serialPort.setSerialPortParams(baudrate, SerialPort.DATABITS_8, SerialPort.STOPBITS_2,
+					SerialPort.PARITY_NONE);
+			addListener(serialPort, new SerialListener(serialPort));
 
-				logger.info("开启usb端口...");
-				return serialPort;
-			} else {
-				// 不是串口
-//				throw new NotASerialPort();
-			}
-		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.info("开启usb端口...");
+			return serialPort;
+		} else {
+			// 不是串口
+//						throw new NotASerialPort();
 		}
 		return serialPort;
 	}

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapVote;
+import com.ejet.core.util.EquipmentUtils;
 import com.ejet.core.util.SerialListener;
 import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.constant.Constant;
@@ -16,7 +17,7 @@ import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Vote;
 import com.zkxltech.service.VoteService;
 import com.zkxltech.thread.BaseThread;
-import com.zkxltech.thread.MsgThread;
+import com.zkxltech.thread.MsgThread2;
 import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.thread.VoteThread;
 import com.zkxltech.ui.util.StringUtils;
@@ -133,18 +134,20 @@ public class VoteServiceImpl implements VoteService{
             strBuilder.append("]");
             if (SerialPortManager.sendToPort(EquipmentConstant.ANSWER_START_CODE(strBuilder.toString()))) {
     			Vector<Thread> threads = new Vector<Thread>();
-    			Thread iThread = new MsgThread(EquipmentConstant.ANSWER_START);
+    			Thread iThread = new MsgThread2(EquipmentConstant.ANSWER_START);
     			threads.add(iThread);
     			iThread.start();
     			// 等待所有线程执行完毕
     			iThread.join();
 
-    			String str = SerialListener.getDataMap().get(0);
-    			if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
-    				r.setRet(Constant.ERROR);
-    				r.setMessage("指令发送失败");
-    				return r;
-    			}
+    			String str = SerialListener.getRetCode();
+				SerialListener.clearRetCode();
+				r = EquipmentUtils.parseResult(str);
+				if (Constant.ERROR.equals(r.getRet())) {
+					r.setRet(Constant.ERROR);
+					r.setMessage("指令发送失败");
+					return r;
+				}
     			r.setItem(str);
     			SerialListener.clearMap();
     			r.setRet(Constant.SUCCESS);

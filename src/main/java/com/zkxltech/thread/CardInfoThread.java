@@ -43,6 +43,7 @@ public class CardInfoThread extends BaseThread {
                     jsonData = stringBuilder.toString();
                     logger.info("获取到答题数据:===>>"+jsonData);
                     RedisMapBind.addBindMap(jsonData);
+                    SerialListener.removeList(data);
                 }
             }
         } catch (InterruptedException e) {

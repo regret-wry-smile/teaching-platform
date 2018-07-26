@@ -26,6 +26,7 @@ import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.CardInfoThread;
 import com.zkxltech.thread.MsgThread;
+import com.zkxltech.thread.MsgThread2;
 import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.util.StringUtils;
 
@@ -203,13 +204,14 @@ public class ClassInfoServiceImpl implements ClassInfoService{
             
 			if (SerialPortManager.sendToPort(EquipmentConstant.WIRELESS_BIND_START_CODE)) {
 				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread(EquipmentConstant.ANSWER_START);
+				Thread iThread = new MsgThread2(EquipmentConstant.WIRELESS_BIND_START);
 				threads.add(iThread);
 				iThread.start();
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap().get(0);
+				String str = SerialListener.getRetCode();
+				SerialListener.clearRetCode();
 				int bindCode;
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);

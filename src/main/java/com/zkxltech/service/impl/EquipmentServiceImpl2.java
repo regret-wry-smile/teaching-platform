@@ -22,6 +22,7 @@ import com.zkxltech.service.EquipmentService2;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.MsgThread;
+import com.zkxltech.thread.MsgThread2;
 import com.zkxltech.thread.MultipleAnswerThread;
 import com.zkxltech.thread.ThreadManager;
 
@@ -187,14 +188,16 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 			
 			if (SerialPortManager.sendToPort(EquipmentConstant.ANSWER_START_CODE(answers))) {
 				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread(EquipmentConstant.ANSWER_START);
+				Thread iThread = new MsgThread2(EquipmentConstant.ANSWER_START);
 				threads.add(iThread);
 				iThread.start();
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap().get(0);
-				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
+				String str = SerialListener.getRetCode();
+				SerialListener.clearRetCode();
+				r = EquipmentUtils.parseResult(str);
+				if (Constant.ERROR.equals(r.getRet())) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
 					return r;
@@ -229,14 +232,17 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 		try {
 			if (SerialPortManager.sendToPort(EquipmentConstant.ANSWER_STOP_CODE)) {
 				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread(EquipmentConstant.ANSWER_STOP);
+				Thread iThread = new MsgThread2(EquipmentConstant.ANSWER_STOP);
 				threads.add(iThread);
 				iThread.start();
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap().get(0);
-				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
+				String str = SerialListener.getRetCode();
+				SerialListener.clearRetCode();
+				SerialListener.clearStringBuffer();
+				r = EquipmentUtils.parseResult(str);
+				if (Constant.ERROR.equals(r.getRet())) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
 					return r;
@@ -262,14 +268,16 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 		try {
 			if (SerialPortManager.sendToPort(EquipmentConstant.ANSWER_START_CODE(answer_str))) {
 				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread(EquipmentConstant.ANSWER_START);
+				Thread iThread = new MsgThread2(EquipmentConstant.ANSWER_START);
 				threads.add(iThread);
 				iThread.start();
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap().get(0);
-				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
+				String str = SerialListener.getRetCode();
+				SerialListener.clearRetCode();
+				r = EquipmentUtils.parseResult(str);
+				if (Constant.ERROR.equals(r.getRet())) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
 					return r;
@@ -295,14 +303,17 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 		try {
 			if (SerialPortManager.sendToPort(EquipmentConstant.WIRELESS_BIND_STOP_CODE)) {
 				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread(EquipmentConstant.WIRELESS_BIND_STOP);
+				Thread iThread = new MsgThread2(EquipmentConstant.WIRELESS_BIND_STOP);
 				threads.add(iThread);
 				iThread.start();
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap().get(0);
-				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
+				String str = SerialListener.getRetCode();
+				SerialListener.clearRetCode();
+				SerialListener.clearStringBuffer();
+				r = EquipmentUtils.parseResult(str);
+				if (Constant.ERROR.equals(r.getRet())) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
 					return r;
@@ -328,14 +339,16 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 		try {
 			if (SerialPortManager.sendToPort(EquipmentConstant.CLEAR_WL_CODE)) {
 				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread(EquipmentConstant.CLEAR_WL);
+				Thread iThread = new MsgThread2(EquipmentConstant.CLEAR_WL);
 				threads.add(iThread);
 				iThread.start();
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap().get(0);
-				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
+				String str = SerialListener.getRetCode();
+				SerialListener.clearRetCode();
+				r = EquipmentUtils.parseResult(str);
+				if (Constant.ERROR.equals(r.getRet())) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
 					return r;
@@ -363,13 +376,14 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 		try {
 			if (SerialPortManager.sendToPort(EquipmentConstant.SET_CHANNEL_CODE(tx_ch, rx_ch))) {
 				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread(EquipmentConstant.SET_CHANNEL);
+				Thread iThread = new MsgThread2(EquipmentConstant.SET_CHANNEL);
 				threads.add(iThread);
 				iThread.start();
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap().get(0);
+				String str = SerialListener.getRetCode();
+				SerialListener.clearRetCode();
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");
@@ -397,13 +411,14 @@ public class EquipmentServiceImpl2 implements EquipmentService2 {
 		try {
 			if (SerialPortManager.sendToPort(EquipmentConstant.SET_TX_POWER_CODE(tx_power))) {
 				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread(EquipmentConstant.SET_TX_POWER);
+				Thread iThread = new MsgThread2(EquipmentConstant.SET_TX_POWER);
 				threads.add(iThread);
 				iThread.start();
 				// 等待所有线程执行完毕
 				iThread.join();
 				
-				String str = SerialListener.getDataMap().get(0);
+				String str = SerialListener.getRetCode();
+				SerialListener.clearRetCode();
 				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
 					r.setRet(Constant.ERROR);
 					r.setMessage("指令发送失败");

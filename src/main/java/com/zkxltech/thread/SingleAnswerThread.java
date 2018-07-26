@@ -43,7 +43,7 @@ public class SingleAnswerThread extends BaseThread {
                     jsonData = stringBuilder.toString();
                     logger.info("获取到答题数据:===>>"+jsonData);
                     RedisMapSingleAnswer.addAnswer(jsonData);
-//                    SerialListener.clearMap();
+                    SerialListener.removeList(data);
                 }
             }
         } catch (InterruptedException e) {

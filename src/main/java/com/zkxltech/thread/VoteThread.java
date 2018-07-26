@@ -43,7 +43,7 @@ public class VoteThread extends BaseThread {
                     jsonData = stringBuilder.toString();
                     logger.info("获取到答题数据:===>>"+jsonData);
                     RedisMapVote.addVoteDetailInfo(jsonData);
-//                    SerialListener.clearMap();
+                    SerialListener.removeList(data);
                 }
             }
         } catch (InterruptedException e) {

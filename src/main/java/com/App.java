@@ -47,14 +47,14 @@ public class App {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					try {
-//						List<String> list = SerialPortManager.findPort();
-//						if (list != null && list.size()>0) {
-//							SerialPortManager.openPort(list.get(0),1152000);
-//						}
-						SerialPortManager.openPort("COM7",1152000);
-					} catch (Exception e) {
-						logger.error("初始化端口错误", e);
+					List<String> list = SerialPortManager.findPort();
+					for (int i = 0; i < list.size(); i++) {
+						try {
+							SerialPortManager.openPort(list.get(i),1152000);
+							break;
+						} catch (Exception e) {
+							logger.error("初始化串口失败。");
+						}
 					}
 				}
 			}).start();

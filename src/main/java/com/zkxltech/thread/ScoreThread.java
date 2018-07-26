@@ -43,7 +43,7 @@ public class ScoreThread extends BaseThread {
                     jsonData = stringBuilder.toString();
                     logger.info("获取到答题数据:===>>"+jsonData);
                     RedisMapScore.addscoreDetailInfo(jsonData);
-//                    SerialListener.clearMap();
+                    SerialListener.removeList(data);
                 }
             }
         } catch (InterruptedException e) {

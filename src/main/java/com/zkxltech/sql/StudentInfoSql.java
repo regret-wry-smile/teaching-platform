@@ -255,7 +255,7 @@ public class StudentInfoSql {
 			String studentId = (String) listMaps.get(i).get("kh");
 			String studentName = (String) listMaps.get(i).get("xm");
 			String kid = (String) listMaps.get(i).get("KID");
-			String string = "insert into student_info (id,class_id,class_name,student_id,student_name,iclicker_id) values('"+id+"','"+classId+"','"
+			String string = "insert into student_info (class_id,class_name,student_id,student_name,iclicker_id) values('"+classId+"','"
 					+classId+"','"+studentId+"','"+studentName+"','"+kid+"');";
 			sqls.add(string);
 		}

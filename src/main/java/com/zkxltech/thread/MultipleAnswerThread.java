@@ -14,6 +14,7 @@ import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.io.IOUtils;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class MultipleAnswerThread extends BaseThread {
     private static final Logger logger = LoggerFactory.getLogger(MultipleAnswerThread.class);
@@ -62,7 +63,7 @@ public class MultipleAnswerThread extends BaseThread {
     				default:
     					break;
     				}
-//                    SerialListener.clearMap();
+                    SerialListener.removeList(data);
                 }
             }
 	    } catch (InterruptedException e) {
