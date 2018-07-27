@@ -2,31 +2,31 @@ package com.ejet.core.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.ui.util.StringUtils;
 
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
-import gnu.io.UnsupportedCommOperationException;
-import net.sf.json.JSONObject;
 
 public class SerialListener  implements SerialPortEventListener {
 	private static final Logger logger = LoggerFactory.getLogger(SerialPortEventListener.class);
 	private static String command = ""; //指令
 	private SerialPort serialport ;
 	private static String str = "\\{'fun";
+	private static int index = 0; 
+	private static String comName = "";
+	
+	public static void setComName(String comNameStr){
+		comName = comNameStr;
+	}
 	/**
 	 * 返回数据
 	 */
@@ -89,13 +89,6 @@ public class SerialListener  implements SerialPortEventListener {
     		return  dataList;
     	}
     }
-	//FIXME 测试
-//    private static List<String> lists = new ArrayList<String>();
-//    private static int index = 0;
-//    {
-//    	lists.add("{'fun':'update_answer_list','card_id':'1822572044','rssi':'-43','update_time':'2018-07-2516:52:26:360','answers':[{'type':'m','id':'1','answer':''}]}{'fun':'update_answer_list','card_id':'3574606604','rssi':'-53','update_time':'2018-07-2516:52:26:367','answers':[{'type':'m','id':'1','answer':''}]}{'fun':'update_answer_list','card_id':'0369175308','rssi':'-53','update_time':");
-//    	lists.add("'2018-07-2516:52:26:367','answers':[{'type':'m','id':'1','answer':''}]}");
-//    }
     /**
      * 处理监控到的串口事件
      */
@@ -129,46 +122,76 @@ public class SerialListener  implements SerialPortEventListener {
                 if (serialport == null) {
                 	logger.error("串口对象为空！监听失败！");
                 } else {
-                	new Thread(new Runnable() {
-						
-						@Override
-						public void run() {
-			                   // 读取串口数据
-							String  data = SerialPortManager.readFromPort();
-		                	logger.info("【串口接收到的数据】"+data);
-		                	if (!StringUtils.isEmpty(data)) {
-		                		if (data.split("result").length>1) {
-									retData = data;
-								}else {
-									//FIXME 测试
-//									data = lists.get(index);
-//									index ++;
-									String[] strs = data.split(str);
-									for (int i = 0; i < strs.length; i++) {
-										if (!StringUtils.isEmpty(strs[i])) {
-											if (i != 0) {
-												strs[i] = "{'fun" + strs[i];
-											}
+                    // 读取串口数据
+					String  data = SerialPortManager.readFromPort();
+                	logger.info("【串口接收到的数据】"+data);
+                	if (!StringUtils.isEmpty(data)) {
+                		if (data.split("result").length>1) {
+							retData = data;
+						}else {
+							String[] strs = data.split(str);
+							for (int i = 0; i < strs.length; i++) {
+								if (!StringUtils.isEmpty(strs[i])) {
+									if (i != 0) {
+										strs[i] = "{'fun" + strs[i];
+									}
+									try {
+										JSONObject jsonObject = (JSONObject) JSONObject.parse(strs[i]);
+										dataList.add(jsonObject.toString());
+									} catch (Exception e) {
+										if (stringBuffer.length()>0) {
 											try {
-												JSONObject jsonObject = JSONObject.fromObject(strs[i]);
+												stringBuffer.append(strs[i]);
+												JSONObject jsonObject = (JSONObject) JSONObject.parse(stringBuffer.toString());
 												dataList.add(jsonObject.toString());
-											} catch (Exception e) {
-												if (stringBuffer.length()>0) {
-													stringBuffer.append(strs[i]);
-													dataList.add(stringBuffer.toString());
-													logger.info("本次不完整数据与上次不完整数据拼接:"+stringBuffer.toString());
-													stringBuffer.setLength(0);
-												}else {
-													stringBuffer.append(strs[i]);
-													logger.info("本次不完整数据:"+stringBuffer);
-												}
+												logger.info("本次不完整数据与上次不完整数据拼接:"+stringBuffer.toString());
+												stringBuffer.setLength(0);
+											} catch (Exception e2) { //如果拼接后还是错误格式，就舍弃上次不完整的数据
+												stringBuffer.setLength(0);
+												stringBuffer.append(strs[i]);
 											}
+											
+										}else {
+											stringBuffer.append(strs[i]);
+											logger.info("本次不完整数据:"+stringBuffer);
 										}
 									}
 								}
-		                	}
+							}
 						}
-					}).start();
+                	}else {
+						if (index > 1) {
+							index = 0;
+							SerialPortManager.closePort();	
+							new Thread(new Runnable() {
+								@Override
+								public void run() {
+
+									boolean flag = true;
+									while (flag) {
+										try {
+											List<String> strings = SerialPortManager.findPort();
+											for (int i = 0; i < strings.size(); i++) {
+												if (comName.equals(strings.get(i))) {
+													SerialPortManager.openPort(comName,1152000);
+													flag = false;
+												}
+											}
+										} catch (Exception e) {
+											logger.info("串口连接失败");
+										}
+										try {
+											Thread.sleep(3000);
+										} catch (InterruptedException e) {
+											logger.info(IOUtils.getError(e));
+										}
+									}
+								}
+							}).start();
+						}else {
+							index++;
+						}
+					}
                 }
             } catch (Exception e) {
             	logger.error(IOUtils.getError(e));

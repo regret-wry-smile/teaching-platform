@@ -6,6 +6,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ejet.core.util.SerialListener;
 import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
@@ -51,6 +52,7 @@ public class App {
 					for (int i = 0; i < list.size(); i++) {
 						try {
 							SerialPortManager.openPort(list.get(i),1152000);
+							SerialListener.setComName(list.get(i));
 							break;
 						} catch (Exception e) {
 							logger.error("初始化串口失败。");

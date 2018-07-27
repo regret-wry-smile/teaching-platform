@@ -2,6 +2,7 @@ package com.ejet.cache;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -61,6 +62,19 @@ public class RedisMapAttendance {
 	    for (String key : keySet) {
             list.add(attendanceMap.get(key));
         }
+//	    Collections.sort(list, new Comparator<Map<String, String>>() {
+//
+//			@Override
+//			public int compare(Map<String, String> o1, Map<String, String> o2) {
+//				int name1 = Integer.parseInt(o1.get("studentName").substring(1, 4));
+//				int name2 = Integer.parseInt(o2.get("studentName").substring(1, 4));
+//				if (name1>name2) {
+//					return 1;
+//				}else {
+//					return -1;
+//				}
+//			}
+//		});
 	    return JSONArray.fromObject(list).toString();
 	}
 	/*获取当前班级提交的人数*/
