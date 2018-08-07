@@ -195,11 +195,6 @@ public class SerialListener  implements SerialPortEventListener {
                 }
             } catch (Exception e) {
             	logger.error(IOUtils.getError(e));
-            	try {
-            		SerialPortManager.openPort("COM4",1152000);
-				} catch (Exception e2) {
-					logger.error(IOUtils.getError(e2));
-				}
             }
             break;
         }
