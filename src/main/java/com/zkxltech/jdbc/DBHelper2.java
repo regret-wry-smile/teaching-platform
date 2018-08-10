@@ -36,8 +36,6 @@ public class DBHelper2{
 		Connection conn = null;
 		Statement stmt = null;
 		try {
-			Class.forName(driver);
-			
 			conn = getConnection();
 		    stmt = conn.createStatement();
 		    stmt.executeUpdate(sql);
@@ -62,7 +60,6 @@ public class DBHelper2{
 		PreparedStatement pStmt = null;
 		ResultSet rs = null;
 		try {
-			Class.forName(driver);
 			conn = getConnection();
 	//	    System.out.println("Opened database successfully");
 			conn.setAutoCommit(false);
