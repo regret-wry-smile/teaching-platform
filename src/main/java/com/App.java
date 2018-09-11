@@ -6,6 +6,8 @@ import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ejet.core.util.SerialListener;
+import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
@@ -43,22 +45,21 @@ public class App {
     		PropertyConfigurator.configure(ConfigConstant.log4jFile);
     		logger.info("======================= {} =======================", Global.VERSION );
 			//程序启动模式，服务端还是客户端
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					try {
-//						if(Global.isTeacher()) { //作为教师端启动
-//							startNettyServer();
-//						} else  {
-//							LiveNettyClientHelper.startNettyClient();
-//							//启动设备通信
-//					    	DeviceComm.init();
-//						}
-//					} catch (Exception e) {
-//						logger.error("启动Netty服务错误", e);
-//					}
-//				}
-//			}).start();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					List<String> list = SerialPortManager.findPort();
+					for (int i = 0; i < list.size(); i++) {
+						try {
+							SerialPortManager.openPort(list.get(i),1152000);
+							SerialListener.setComName(list.get(i));
+							break;
+						} catch (Exception e) {
+							logger.error("初始化串口失败。");
+						}
+					}
+				}
+			}).start();
 			
         } catch (Exception e) {
 			logger.error("程序启动异常", e);

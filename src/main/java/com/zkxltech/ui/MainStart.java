@@ -494,6 +494,32 @@ public class MainStart {
 			cLabel02.addMouseTrackListener(SwtTools.showHand(cLabel02));
 			cLabel03.addMouseTrackListener(SwtTools.showHand(cLabel03));
 			cLabel04.addMouseTrackListener(SwtTools.showHand(cLabel04));
+			
+			
+//			//重连机制
+//			new Thread(new Runnable() {
+//				
+//				@Override
+//				public void run() {
+//					while (true) {
+//						boolean isOnline = false;
+//						List<String> sList = SerialPortManager.findPort();
+//						for (int i = 0; i < sList.size(); i++) {
+//							if("COM4".equals(sList.get(i))){
+//								isOnline = true;
+//							}
+//						}
+//						System.out.println(isOnline);
+//						try {
+//							Thread.sleep(2000);
+//						} catch (InterruptedException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					}
+//					
+//				}
+//			}).start();
 		} catch (Exception e) {
 			log.error(IOUtils.getError(e));
 		}

@@ -1,39 +1,45 @@
 package com.zkxltech.service.impl;
 
+import java.util.Vector;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapScore;
+import com.ejet.core.util.EquipmentUtils;
+import com.ejet.core.util.SerialListener;
+import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Score;
-import com.zkxltech.scdll.ScDll;
 import com.zkxltech.service.ScoreService;
 import com.zkxltech.thread.BaseThread;
+import com.zkxltech.thread.MsgThread2;
 import com.zkxltech.thread.ScoreThread;
 import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.util.StringUtils;
 
-public class ScoreServiceImpl implements ScoreService{
-    private static final Logger logger = LoggerFactory.getLogger(ScoreServiceImpl.class);
+public class ScoreServiceImpl implements ScoreService {
+	private static final Logger logger = LoggerFactory.getLogger(ScoreServiceImpl.class);
 	private Result result = new Result();
-	
-    @Override
+
+	@Override
 	public Result startScore(Object object) {
 		result = new Result();
-		RedisMapScore.clearMap();//清除评分缓存
+		RedisMapScore.clearMap();// 清除评分缓存
 		try {
-		    Score score =  (Score) StringUtils.parseJSON(object, Score.class);
-		    RedisMapScore.addScoreInfo(score); //保存评分主题信息
-		    Result reStart = scoreStart(score.getPrograms().size());
-		    if (reStart.getRet().equals(Constant.ERROR)) {
-               result.setMessage(reStart.getMessage());
-               return result;
-            }
+			Score score = (Score) StringUtils.parseJSON(object, Score.class);
+			RedisMapScore.addScoreInfo(score); // 保存评分主题信息
+			Result reStart = scoreStart(score.getPrograms().size());
+			if (reStart.getRet().equals(Constant.ERROR)) {
+				result.setMessage(reStart.getMessage());
+				return result;
+			}
 			Global.setModeMsg(Constant.BUSINESS_SCORE);
-			//将评分主题相关信息保存到缓存
+			// 将评分主题相关信息保存到缓存
 			result.setMessage("开始评分！");
 			result.setRet(Constant.SUCCESS);
 			return result;
@@ -62,12 +68,12 @@ public class ScoreServiceImpl implements ScoreService{
 			return result;
 		}
 	}
-	
+
 	@Override
 	public Result getScoreTitleInfo() {
 		result = new Result();
 		try {
-			result.setItem(RedisMapScore.getScoreInfo()); //保存评分主题信息
+			result.setItem(RedisMapScore.getScoreInfo()); // 保存评分主题信息
 			result.setRet(Constant.SUCCESS);
 			result.setMessage("获取评分主题成功！");
 			return result;
@@ -80,66 +86,87 @@ public class ScoreServiceImpl implements ScoreService{
 		}
 	}
 
-    @Override
-    public Result stopScore() {
-        Result r = new Result();
-        Global.setModeMsg(Constant.BUSINESS_NORMAL);
-        /*停止线程管理*/
-        ThreadManager.getInstance().stopAllThread();
-        
-        r = EquipmentServiceImpl.getInstance().answer_stop();
-        if (r.getRet().equals(Constant.ERROR)) {
-            return r;
-        }
-        r.setRet(Constant.SUCCESS);
-        r.setMessage("停止成功");
-        return r;
-    }
-    @Override
-    public Result scoreStart(int questionNum) {
-        Result r = new Result();
-        r.setRet(Constant.ERROR);
-        /*停止所有线程*/
-        ThreadManager.getInstance().stopAllThread();
-        StringBuilder strBuilder = new StringBuilder();
-        strBuilder.append("[");
-        for (int i = 0; i < questionNum; i++) {
-          strBuilder.append("{");
-          String id = String.valueOf(i+1);
-          String type = "d";
-          String range = "";
-          try {
-            range = "0-9";
-          } catch (Exception e2) {
-            range = "";
-          }
-          strBuilder.append("'id':'"+id+"',");
-          strBuilder.append("'type':'"+type+"',");
-          strBuilder.append("'range':'"+range+"'");
-          strBuilder.append("}");
-          
-          if (questionNum-1 != i) {
-            strBuilder.append(",");
-          }
-        }
-        strBuilder.append("]");
-        int answer_start = ScDll.intance.answer_start(0, strBuilder.toString());
-        if (answer_start == Constant.SEND_ERROR) {
-            int answer_start2 = ScDll.intance.answer_start(0, strBuilder.toString());
-            if (answer_start2 == Constant.SEND_ERROR) {
-                r.setMessage("指令发送失败");
-                logger.error("评分指令发送失败");
-                return r;
-                
-            }
-        }
-        logger.info("评分指令发送成功");
-        BaseThread thread = new ScoreThread();
-        thread.start();
-        /*添加到线程管理*/
-        ThreadManager.getInstance().addThread(thread);
-        r.setRet(Constant.SUCCESS);
-        r.setMessage("发送成功");
-        return r;
-    }
+	@Override
+	public Result stopScore() {
+		Result r = new Result();
+		Global.setModeMsg(Constant.BUSINESS_NORMAL);
+		/* 停止线程管理 */
+		ThreadManager.getInstance().stopAllThread();
+
+		r = EquipmentServiceImpl2.getInstance().answer_stop();
+		if (r.getRet().equals(Constant.ERROR)) {
+			return r;
+		}
+		r.setRet(Constant.SUCCESS);
+		r.setMessage("停止成功");
+		return r;
+	}
+
+	@Override
+	public Result scoreStart(int questionNum) {
+		Result r = new Result();
+		try {
+			r.setRet(Constant.ERROR);
+			/* 停止所有线程 */
+			ThreadManager.getInstance().stopAllThread();
+			StringBuilder strBuilder = new StringBuilder();
+			strBuilder.append("[");
+			for (int i = 0; i < questionNum; i++) {
+				strBuilder.append("{");
+				String id = String.valueOf(i + 1);
+				String type = "d";
+				String range = "";
+				try {
+					range = "0-9";
+				} catch (Exception e2) {
+					range = "";
+				}
+				strBuilder.append("'id':'" + id + "',");
+				strBuilder.append("'type':'" + type + "',");
+				strBuilder.append("'range':'" + range + "'");
+				strBuilder.append("}");
+
+				if (questionNum - 1 != i) {
+					strBuilder.append(",");
+				}
+			}
+			strBuilder.append("]");
+
+			if (SerialPortManager.sendToPort(EquipmentConstant.ANSWER_START_CODE(strBuilder.toString()))) {
+				Vector<Thread> threads = new Vector<Thread>();
+				Thread iThread = new MsgThread2(EquipmentConstant.ANSWER_START);
+				threads.add(iThread);
+				iThread.start();
+				// 等待所有线程执行完毕
+				iThread.join();
+
+				String str = SerialListener.getRetCode();
+				SerialListener.clearRetCode();
+				r = EquipmentUtils.parseResult(str);
+				if (Constant.ERROR.equals(r.getRet())) {
+					r.setRet(Constant.ERROR);
+					r.setMessage("指令发送失败");
+					return r;
+				}
+				r.setItem(str);
+				r.setRet(Constant.SUCCESS);
+
+				BaseThread thread = new ScoreThread();
+				thread.start();
+				/* 添加到线程管理 */
+				ThreadManager.getInstance().addThread(thread);
+				r.setRet(Constant.SUCCESS);
+				r.setMessage("发送成功");
+			} else {
+				r.setRet(Constant.ERROR);
+				r.setMessage("指令发送失败");
+			}
+			return r;
+		} catch (Exception e) {
+			logger.error(IOUtils.getError(e));
+			r.setRet(Constant.ERROR);
+			r.setMessage("指令发送失败");
+			return r;
+		}
+	}
 }

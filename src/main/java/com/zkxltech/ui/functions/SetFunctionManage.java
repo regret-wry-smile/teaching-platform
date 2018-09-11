@@ -6,7 +6,7 @@ import org.eclipse.swt.browser.BrowserFunction;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.SettingService;
-import com.zkxltech.service.impl.EquipmentServiceImpl;
+import com.zkxltech.service.impl.EquipmentServiceImpl2;
 import com.zkxltech.service.impl.SettingServiceImpl;
 
 import net.sf.json.JSONObject;
@@ -48,7 +48,8 @@ public class SetFunctionManage extends BrowserFunction{
 				break;
 			case "equipment_database_synchronization":
 			    /* 同步设备和数据库中卡对应的学生的绑定状态*/
-			    result = EquipmentServiceImpl.getInstance().equipmentDatabaseSynchronization();
+//			    result = EquipmentServiceImpl.getInstance().equipmentDatabaseSynchronization();
+			    result = EquipmentServiceImpl2.getInstance().equipmentDatabaseSynchronization();
                 break;
 			default:
 				result.setRet(Constant.ERROR);

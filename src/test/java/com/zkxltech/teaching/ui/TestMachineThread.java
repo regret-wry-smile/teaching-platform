@@ -16,8 +16,8 @@ public class TestMachineThread {
 //	//					String method = "score";
 //				//	String method = "abc";
 //					//								String method = "vote";
-////							String type = "字母题";
-//												String type = "多选题";
+//							String type = "字母题";
+//							//				String type = "多选题";
 ////										String type = "数字题";
 //										//						String type = "判断题";
 //		Thread t = new MyThread(url,method,1,type);
@@ -33,8 +33,8 @@ public class TestMachineThread {
 	//					String method = "score";
 				//	String method = "abc";
 					//								String method = "vote";
-//							String type = "字母题";
-												String type = "多选题";
+							String type = "字母题";
+//												String type = "多选题";
 //										String type = "数字题";
 										//						String type = "判断题";
 		Thread t = new MyThread(url,method,1,type);

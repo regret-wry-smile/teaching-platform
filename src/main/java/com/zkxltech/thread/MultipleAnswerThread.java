@@ -1,14 +1,20 @@
 package com.zkxltech.thread;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
+import com.ejet.core.util.SerialListener;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
+import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.io.IOUtils;
-import com.zkxltech.scdll.ScDll;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class MultipleAnswerThread extends BaseThread {
     private static final Logger logger = LoggerFactory.getLogger(MultipleAnswerThread.class);
@@ -35,8 +41,9 @@ public class MultipleAnswerThread extends BaseThread {
 	    try {
             while(FLAG){
                 Thread.sleep(100);
-                String jsonData = ScDll.intance.get_answer_list();
-                if (!StringUtils.isBlank(jsonData)) {
+                List<String> data = SerialListener.getDataMap();
+                if (!StringUtils.isBlankList(data)) {
+                	String jsonData = JSONArray.fromObject(data).toString();
                     StringBuilder stringBuilder = new StringBuilder(jsonData);
                     if (jsonData.startsWith("{")) {
                         stringBuilder.insert(0, "[").append("]");
@@ -56,7 +63,7 @@ public class MultipleAnswerThread extends BaseThread {
     				default:
     					break;
     				}
-                	
+                    SerialListener.removeList(data);
                 }
             }
 	    } catch (InterruptedException e) {

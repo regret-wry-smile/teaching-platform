@@ -2,6 +2,7 @@ package com.ejet.cache;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,19 +34,21 @@ public class RedisMapAttendance {
 			JSONArray jsonArray = JSONArray.fromObject(jsonData);
 	        for (int j = 0; j < jsonArray.size(); j++) {
 	            JSONObject jo = (JSONObject) jsonArray.get(j);
-	            String card_id = jo.getString("card_id");
-	            /*如果attendanceMap里没有该卡号,表示不是本班学生,如果cardIdSet里有值表示已经提交过了*/
-	            if (!attendanceMap.containsKey(card_id) || cardIdSet.contains(card_id)) {
-	                continue;
-	            }
-	            cardIdSet.add(card_id);
-	            Map<String, String> map = attendanceMap.get(card_id);
-	            for (String key : map.keySet()) {
-	                if (key.equals("status")) {
-	                    map.put(key, Constant.ATTENDANCE_YES);
-	                }
-	            }
-	            BrowserManager.refresAttendance();
+	            if (!jo.containsKey("result")) {
+	            	String card_id = jo.getString("card_id");
+		            /*如果attendanceMap里没有该卡号,表示不是本班学生,如果cardIdSet里有值表示已经提交过了*/
+		            if (!attendanceMap.containsKey(card_id) || cardIdSet.contains(card_id)) {
+		                continue;
+		            }
+		            cardIdSet.add(card_id);
+		            Map<String, String> map = attendanceMap.get(card_id);
+		            for (String key : map.keySet()) {
+		                if (key.equals("status")) {
+		                    map.put(key, Constant.ATTENDANCE_YES);
+		                }
+		            }
+		            BrowserManager.refresAttendance();
+				}
 	        }
 		} catch (Exception e) {
 			logger.info("【签到】"+IOUtils.getError(e));
@@ -59,6 +62,19 @@ public class RedisMapAttendance {
 	    for (String key : keySet) {
             list.add(attendanceMap.get(key));
         }
+//	    Collections.sort(list, new Comparator<Map<String, String>>() {
+//
+//			@Override
+//			public int compare(Map<String, String> o1, Map<String, String> o2) {
+//				int name1 = Integer.parseInt(o1.get("studentName").substring(1, 4));
+//				int name2 = Integer.parseInt(o2.get("studentName").substring(1, 4));
+//				if (name1>name2) {
+//					return 1;
+//				}else {
+//					return -1;
+//				}
+//			}
+//		});
 	    return JSONArray.fromObject(list).toString();
 	}
 	/*获取当前班级提交的人数*/

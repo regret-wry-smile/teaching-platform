@@ -125,22 +125,24 @@ public class RedisMapScore {
 		JSONArray jsonArray = JSONArray.fromObject(jsonData); 
         for (int  i= 0; i < jsonArray.size(); i++) {
         	JSONObject jsonObject = jsonArray.getJSONObject(i); //，每个学生的作答信息
-        	String carId = jsonObject.getString("card_id"); //答题器编号
-        	if (verifyCardId(carId)) {
-        		JSONArray answers =  JSONArray.fromObject(jsonObject.get("answers"));
-        		for (int j = 0; j < answers.size(); j++) {
-        			JSONObject answeJSONObject = answers.getJSONObject(j);
-        			String num = answeJSONObject.getString("id");//节目编号(题目编号)
-//        			String answer = answeJSONObject.getString("answer");//答案
-        			keyScoreDetailInfoMap[1] = num;
-        			keyScoreDetailInfoMap[2] = carId;
-        			Answer answer = (Answer) JSONObject.toBean((JSONObject) RedisMapUtil.getRedisMap(scoreDetailInfoMap, keyScoreDetailInfoMap, 0), Answer.class);
-        			if (answer!= null && !StringUtils.isEmpty(answer.getAnswer())) {
-        				continue;
-					}
-        			RedisMapUtil.setRedisMap(scoreDetailInfoMap, keyScoreDetailInfoMap, 0, answeJSONObject);
-				}
-			}
+        	if (!jsonObject.containsKey("result")) {
+        		String carId = jsonObject.getString("card_id"); //答题器编号
+            	if (verifyCardId(carId)) {
+            		JSONArray answers =  JSONArray.fromObject(jsonObject.get("answers"));
+            		for (int j = 0; j < answers.size(); j++) {
+            			JSONObject answeJSONObject = answers.getJSONObject(j);
+            			String num = answeJSONObject.getString("id");//节目编号(题目编号)
+//            			String answer = answeJSONObject.getString("answer");//答案
+            			keyScoreDetailInfoMap[1] = num;
+            			keyScoreDetailInfoMap[2] = carId;
+            			Answer answer = (Answer) JSONObject.toBean((JSONObject) RedisMapUtil.getRedisMap(scoreDetailInfoMap, keyScoreDetailInfoMap, 0), Answer.class);
+            			if (answer!= null && !StringUtils.isEmpty(answer.getAnswer())) {
+            				continue;
+    					}
+            			RedisMapUtil.setRedisMap(scoreDetailInfoMap, keyScoreDetailInfoMap, 0, answeJSONObject);
+    				}
+    			}  
+        	}
         }
         BrowserManager.refresScore();
     }

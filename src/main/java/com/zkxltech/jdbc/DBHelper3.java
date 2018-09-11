@@ -20,12 +20,12 @@ import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.domain.Result;
 
 /**
- * 服务器mysqlJDBC链接
+ * 服务器oracleJDBC链接
  * @author zkxl
  *
  */
-public class DBHelper2{
-	private static final Logger log = LoggerFactory.getLogger(DBHelper2.class);
+public class DBHelper3{
+	private static final Logger log = LoggerFactory.getLogger(DBHelper3.class);
 	
 	private static String url= ConfigConstant.serverDbConfig.getUrl(); 
 	private static String userName =  ConfigConstant.serverDbConfig.getUser_name();
@@ -36,6 +36,8 @@ public class DBHelper2{
 		Connection conn = null;
 		Statement stmt = null;
 		try {
+			Class.forName(driver);
+			
 			conn = getConnection();
 		    stmt = conn.createStatement();
 		    stmt.executeUpdate(sql);
@@ -119,7 +121,6 @@ public class DBHelper2{
 		Connection conn = null;
 		PreparedStatement pStmt = null;
 		try {
-			Class.forName(driver);
 			conn = getConnection();
 //		    System.out.println("Opened database successfully");
 			conn.setAutoCommit(false);
@@ -155,5 +156,10 @@ public class DBHelper2{
 	public static Connection getConnection() throws ClassNotFoundException, SQLException{
 		Class.forName(driver);
 		return DriverManager.getConnection(url,userName,password);
+	}
+	
+	public static void main(String[] args) {
+		String[] key = {"id"};
+		DBHelper3.onQuery("select * from student", key, null);
 	}
 }

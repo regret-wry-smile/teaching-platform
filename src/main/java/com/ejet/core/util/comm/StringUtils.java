@@ -3,6 +3,7 @@ package com.ejet.core.util.comm;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +36,10 @@ public class StringUtils {
      */
     public static boolean isBlank(String str) {
         return (str == null || str.trim().length() == 0);
+    }
+    
+    public static boolean isBlankList(List<String> list) {
+        return (list == null || !(list.size()>0));
     }
 
     /**

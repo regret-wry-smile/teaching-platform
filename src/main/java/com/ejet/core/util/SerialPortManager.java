@@ -13,6 +13,7 @@ import java.util.TooManyListenersException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.service.impl.ClassHourServiceImpl;
 
 public class SerialPortManager {
@@ -44,6 +45,9 @@ public class SerialPortManager {
 	 * @param baudrate
 	 *            波特率
 	 * @return 串口对象
+	 * @throws PortInUseException 
+	 * @throws NoSuchPortException 
+	 * @throws UnsupportedCommOperationException 
 	 * @throws SerialPortParameterFailure
 	 *             设置串口参数失败
 	 * @throws NotASerialPort
@@ -53,33 +57,24 @@ public class SerialPortManager {
 	 * @throws PortInUse
 	 *             端口已被占用
 	 */
-	public static final SerialPort openPort(String portName, int baudrate){
-		try {
-			// 通过端口名识别端口
-			CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
-			// 打开端口，并给端口名字和一个timeout（打开操作的超时时间）
-			CommPort commPort = portIdentifier.open(portName, 2000);
-			// 判断是不是串口
-			if (commPort instanceof SerialPort) {
-				serialPort = (SerialPort) commPort;
-				try {
-					// 设置一下串口的波特率等参数
-					serialPort.setSerialPortParams(baudrate, SerialPort.DATABITS_8, SerialPort.STOPBITS_2,
-							SerialPort.PARITY_NONE);
-					addListener(serialPort, new SerialListener(serialPort));
-				} catch (UnsupportedCommOperationException e) {
-					e.printStackTrace();
-//					throw new SerialPortParameterFailure();
-				}
+	public static final SerialPort openPort(String portName, int baudrate) throws PortInUseException, NoSuchPortException, UnsupportedCommOperationException{
+		// 通过端口名识别端口
+		CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+		// 打开端口，并给端口名字和一个timeout（打开操作的超时时间）
+		CommPort commPort = portIdentifier.open(portName, 2000);
+		// 判断是不是串口
+		if (commPort instanceof SerialPort) {
+			serialPort = (SerialPort) commPort;
+			// 设置一下串口的波特率等参数
+			serialPort.setSerialPortParams(baudrate, SerialPort.DATABITS_8, SerialPort.STOPBITS_2,
+					SerialPort.PARITY_NONE);
+			addListener(serialPort, new SerialListener(serialPort));
 
-				logger.info("开启usb端口...");
-				return serialPort;
-			} else {
-				// 不是串口
-//				throw new NotASerialPort();
-			}
-		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.info("开启usb端口...");
+			return serialPort;
+		} else {
+			// 不是串口
+//						throw new NotASerialPort();
 		}
 		return serialPort;
 	}
@@ -90,7 +85,7 @@ public class SerialPortManager {
 	 * @param serialport
 	 *            待关闭的串口对象
 	 */
-	public static void closePort(SerialPort serialPort) {
+	public static void closePort() {
 		if (serialPort != null) {
 			serialPort.close();
 			serialPort = null;
@@ -127,14 +122,17 @@ public class SerialPortManager {
 	 * @throws SerialPortOutputStreamCloseFailure
 	 *             关闭串口对象的输出流出错
 	 */
-	public static void sendToPort(String s){
+	public static boolean sendToPort(String s){
 		byte[] order = strToByteArray(s);
 		OutputStream out = null;
 		try {
 			out = serialPort.getOutputStream();
 			out.write(order);
 			out.flush();
+			return true;
 		} catch (IOException e) {
+			logger.error(IOUtils.getError(e));
+			return false;
 		} finally {
 			try {
 				if (out != null) {
@@ -142,6 +140,7 @@ public class SerialPortManager {
 					out = null;
 				}
 			} catch (IOException e) {
+				logger.error(IOUtils.getError(e));
 			}
 		}
 	}
@@ -159,17 +158,29 @@ public class SerialPortManager {
         String str = "";
 
         try {
-            
             in = serialPort.getInputStream();
-            int bufflenth = in.available();        //获取buffer里的数据长度
-            byte[] bytes = new byte[2014];
-            while (bufflenth != 0) {                             
-            	bytes = new byte[bufflenth];    //初始化byte数组为buffer中数据的长度
-                in.read(bytes);
-                bufflenth = in.available();
-            } 
-            str = new String(bytes);
+//            int bufflenth = in.available();        //获取buffer里的数据长度
+            byte[] bytes = new byte[1];
+//            while (bufflenth != 0) {                             
+//            	bytes = new byte[bufflenth];    //初始化byte数组为buffer中数据的长度
+//                in.read(bytes);
+//                bufflenth = in.read();
+//            } 
+//            str = new String(bytes);
+            int bytesRead = in.read(bytes);
+    	    while (bytesRead != 0) {
+    	    	str += new String(bytes).trim();
+    	        bytesRead = in.read(bytes);
+    	    }
         } catch (IOException e) {
+//        	SerialPortManager.closePort();
+//        	logger.info("【串口中断3s后重连..】");
+//        	try {
+//				Thread.sleep(3000);
+//			} catch (InterruptedException e1) {
+//				logger.error(IOUtils.getError(e));
+//			}
+//        	SerialPortManager.openPort("COM4",1152000);
         } finally {
             try {
                 if (in != null) {
@@ -177,10 +188,10 @@ public class SerialPortManager {
                     in = null;
                 }
             } catch(IOException e) {
+            	logger.error(IOUtils.getError(e));
             }
 
         }
-        System.out.println("读取usb端口数据>>>"+str);
         return str;
 	}
 
