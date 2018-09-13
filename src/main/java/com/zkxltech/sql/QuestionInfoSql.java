@@ -161,6 +161,7 @@ public class QuestionInfoSql {
 					}
 					break;
 				case "数字":
+					range = (String) rowList.get(i).get(4);
 					if (!verifyNumRange(range)) {
 						result.setMessage("第"+(i+1)+"行答案范围格式错误！");
 						return result;
