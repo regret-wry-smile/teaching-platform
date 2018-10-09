@@ -48,7 +48,6 @@ public class RecordServiceImpl implements RecordService{
     private Result result ;
     
     private RecordSql recordSql = new RecordSql();
-    //FIXME 导入答题记录
     @Override
     public Result exportRecord(Object object) {
         result = new Result();
@@ -89,9 +88,9 @@ public class RecordServiceImpl implements RecordService{
                 //查询
                 String fileName = "";
                 String titleName = "课程名称为[";
-                String testName = "试卷名称："; //FIXME 试卷名称
-                String className = "班级名称:"; //FIXME 班级名称
-                String studentSum = "学生人数:";//FIXME 学生人数
+                String testName = "试卷名称："; 
+                String className = "班级名称:"; 
+                String studentSum = "学生人数:";
                 String dates = "";
                 Result r = new Result();
                 r.setRet(Constant.ERROR);
