@@ -447,8 +447,8 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			}
 			$scope.result = JSON.parse(execute_student("clear_bind",JSON.stringify(param)));
 			if($scope.result.ret=='success'){
-				_selectStudent();
 				toastr.success($scope.result.message);
+				_selectStudent();
 			}else{
 				toastr.error($scope.result.message);
 			}
