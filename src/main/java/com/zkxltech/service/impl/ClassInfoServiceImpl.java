@@ -153,10 +153,10 @@ public class ClassInfoServiceImpl implements ClassInfoService{
             }
             r = EquipmentServiceImpl2.getInstance().clear_wl();
             if (Constant.SUCCESS == r.getRet()) {
-                JSONObject jsono = JSONObject.fromObject(param);
-                if (jsono.containsKey("classId")) {
-                    BrowserManager.refreshStudent(jsono.getString("classId"));
-                }
+//                JSONObject jsono = JSONObject.fromObject(param);
+//                if (jsono.containsKey("classId")) {
+//                    BrowserManager.refreshStudent(jsono.getString("classId"));
+//                }
                 r.setRet(Constant.SUCCESS);
                 r.setMessage("清除成功");
                 return r;

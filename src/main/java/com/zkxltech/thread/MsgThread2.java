@@ -33,14 +33,14 @@ public class MsgThread2 extends Thread{
 						}else {
 							time -- ;
 						}
-						Thread.sleep(100);
+						Thread.sleep(500);
 					}
 				}else {
 					if (!(time>0)) {
 						flag = false;
 					}else {
 						time -- ;
-						Thread.sleep(100);
+						Thread.sleep(500);
 					}
 				}
 				
