@@ -8,20 +8,39 @@ app.controller('voteCtrl', function($rootScope,$scope,$modal,toastr) {
 	}
 	$scope.object="";
 	//$scope.obejctList=[""];
-	$scope.obejctList=[{txt:''}]
+	$scope.obejctList=[{txt:'',isChecked:false}]
 
 	//添加小对象
 	$scope.additem=function(){
 		if($scope.obejctList.length<5){
 		var item={
-			txt:''
+			txt:'',
+			isChecked:false
 		}
 		$scope.obejctList.push(item);
 		}
 	}
-	$scope.delObject=function(){
+	/*$scope.delObject=function(){
 		if($scope.obejctList.length>1){
 			$scope.obejctList.splice($scope.obejctList.length-1,1);
+		}
+	}*/
+	var obejctindex='';
+	$scope.seldelObject=function(obindex,item){
+		obejctindex=obindex;
+		angular.forEach($scope.obejctList, function(object, index) {
+        if(obejctindex != index) {
+        	 object.isChecked = false;
+       	 }else{
+       	 	 object.isChecked = true;
+       	 }
+		})
+	}
+	$scope.delObject=function(){
+		if($scope.obejctList.length>1){
+			$scope.obejctList[obejctindex].isChecked=false;
+			$scope.obejctList.splice(obejctindex,1);			
+			//$scope.obejctList.splice($scope.obejctList.length-1,1);
 		}
 	}
 	//开始投票到投票统计页面

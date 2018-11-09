@@ -23,7 +23,7 @@
 		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
 		<script src="../../js/jquery.nicescroll.min.js"></script>
 		<script src="../../js/common.js"></script>
-		<!--<script src="../../js/vconsole.min.js"></script>-->
+		<script src="../../js/vconsole.min.js"></script>
 		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
 		<script src="../../js/controllers/setquickMarkController.js"></script>
 		  <!--[if IE 8]>
@@ -42,6 +42,9 @@
 		}
 		.col-sm-2.object{
 			width:15%;
+		}
+		.object input[type=text].select{
+			border: 1px solid #04BE02;
 		}
 		
 	</style>
@@ -73,7 +76,8 @@
 	  					<div class="form-group ">
 					  	<label for="firstname pull-left" class="col-sm-2 control-label text-right">评分对象</label>
 						<div class="col-sm-2 object" ng-repeat="item in obejctList track by $index">
-					  		<input type="text" autocomplete="off" name="object"  id="" value=""  class="form-control" ng-model="item.txt" maxlength="5" required/>						    	
+							<input type="checkbox" ng-model="item.isChecked" style="display: none;"/>
+					  		<input type="text" autocomplete="off" name="object"  id="" value=""  class="form-control" ng-class="{'select':item.isChecked==true}"  ng-model="item.txt" maxlength="5" required ng-click="seldelObject($index,item)" />						    	
 					  	</div>
 					  	<span ng-show="myForm.object.$invalid" class="warning">*</span>
 					  	</div>

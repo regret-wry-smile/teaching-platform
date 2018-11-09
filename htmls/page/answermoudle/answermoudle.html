@@ -93,7 +93,10 @@
 				</div>
 				<div class="operatebtn mt20 clearfix text-center">
 			  		<button class="btn savebtn" ng-click="startAnswer()">开始答题</button>
-			  </div>
+			  		<a href="javascript:history.go(-1);" style="position: absolute;right: 30px;">
+						<img src="../../image/return01.png"  class="rebtn"/>
+					</a>
+			 	</div>
 			</div>			
 			<div class="tab-pane clearfix" ng-show="tabpane=='m'" ng-controller="answerMutilCtrl" class="maindiv">
 				<div class="content clearfix letter text-center v-center40">
@@ -111,8 +114,11 @@
 				<div class="operatebtn mt20 clearfix text-center">
 					<!-- <a href="../../page/answermoudle/stopAnswerType.html"> -->
 			  		<button class="btn savebtn" ng-click="startAnswer()">开始答题</button>
-			  		<!-- </a> -->
-			  </div>
+			  		<!-- </a> -->		
+			  		<a href="javascript:history.go(-1);" style="position: absolute;right: 30px;">
+						<img src="../../image/return01.png"  class="rebtn"/>
+					</a>
+			  </div>	
 			</div>
 			<div class="tab-pane" ng-show="tabpane=='c'" ng-controller="classCheckCtrl">
 				<div class="header clearfix">
@@ -162,6 +168,9 @@
 			  		<button class="btn savebtn" ng-click="AnswerSrcoe()">主观题记分</button>
 			  		<!--</a>	-->		  		
 			  		<button class="btn savebtn" ng-click="uploadServer()">上传服务</button>
+			  		<a href="javascript:history.go(-1);" style="position: absolute;right: 30px;">
+						<img src="../../image/return01.png"  class="rebtn"/>
+					</a>
 			  </div>
 			  <div id="removeLoading" ng-click="removeLoading()" style="display:none;"></div>
 				<div id="showLoading" ng-click="showLoading()" style="display:none;"></div>

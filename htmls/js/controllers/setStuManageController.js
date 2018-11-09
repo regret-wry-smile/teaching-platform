@@ -609,7 +609,7 @@ app.controller('findBindModalCtrl',function($scope,$modalInstance,toastr){
 	$scope.ok = function(){
 		var result = JSON.parse(execute_student("bind_stop"));
 		if(result.ret == 'success'){
-			toastr.success("指令发送成功！");
+			/*toastr.success("指令发送成功！");*/
 		}else{
 			toastr.error("指令发送失败！");
 		}

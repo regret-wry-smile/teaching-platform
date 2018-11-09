@@ -18,6 +18,12 @@ app.controller('LoginCtrl', function($scope, toastr) {
 			toastr.error($scope.result.message);
 		}
 	}
+	$scope.enterEvent = function(e) {
+		var keycode = window.event ? e.keyCode : e.which;
+		if(keycode == 13) {
+			$scope.Login();
+		}
+	}
 })
 app.controller('setmoduleCtrl', function($scope, toastr) {
 		$scope.infoAllNameList = ["第一组", "第二组", "第三组", "第四组", "第五组", "第六组", "第七组", "第八组", "第九组", "第十组"]; //信道设置数组

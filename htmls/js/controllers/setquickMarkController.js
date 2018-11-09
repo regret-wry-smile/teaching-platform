@@ -1,25 +1,41 @@
 //定义模块时引入依赖  
 var app=angular.module('app',['ui.bootstrap','toastr']);
 app.controller('quickMarkCtrl', function($rootScope,$scope,$modal,toastr) {
+	$scope.isClick=false;
 	$scope.markInfo={
 		title:"",//主题
 		describe:"",//主题描述
 		programs:[],
 	}
 	$scope.object="";
-	$scope.obejctList=[{txt:''}]
+
+	$scope.obejctList=[{txt:'',isChecked:false}]
 	//添加小对象
 	$scope.additem=function(){
 		if($scope.obejctList.length<5){
 		var item={
-			txt:''
+			txt:'',
+			isChecked:false
 		}
 		$scope.obejctList.push(item);
 		}
+	};
+	var obejctindex='';
+	$scope.seldelObject=function(obindex,item){
+		obejctindex=obindex;
+		angular.forEach($scope.obejctList, function(object, index) {
+        if(obejctindex != index) {
+        	 object.isChecked = false;
+       	 }else{
+       	 	 object.isChecked = true;
+       	 }
+		})
 	}
 	$scope.delObject=function(){
 		if($scope.obejctList.length>1){
-			$scope.obejctList.splice($scope.obejctList.length-1,1);
+			$scope.obejctList[obejctindex].isChecked=false;
+			$scope.obejctList.splice(obejctindex,1);			
+			//$scope.obejctList.splice($scope.obejctList.length-1,1);
 		}
 	}
 	//开始评分到评分统计页面
