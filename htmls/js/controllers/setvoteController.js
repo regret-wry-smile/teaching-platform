@@ -45,10 +45,8 @@ app.controller('voteCtrl', function($rootScope,$scope,$modal,toastr) {
 	}
 	//开始投票到投票统计页面
 	$scope.startVote=function(){
-	var arr=[];
 	var nary=[];
-	arr=angular.copy($scope.obejctList);
-	nary=arr.sort();
+	nary=angular.copy($scope.obejctList);
 	$scope.voteInfo.programs=[];
 	var flag = false;
 	for(var i=0;i<nary.length;i++){	

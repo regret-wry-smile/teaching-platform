@@ -40,10 +40,8 @@ app.controller('quickMarkCtrl', function($rootScope,$scope,$modal,toastr) {
 	}
 	//开始评分到评分统计页面
 	$scope.startMark=function(){
-	var arr=[];
 	var nary=[];
-	arr=angular.copy($scope.obejctList);
-	nary=arr.sort();
+	nary=angular.copy($scope.obejctList);
 	$scope.markInfo.programs=[];
 	var flag = false;
 	for(var i=0;i<nary.length;i++){	
