@@ -300,10 +300,8 @@ public class MainStart {
 		try {
 			shell = new Shell(shell, SWT.NO_TRIM | SWT.ON_TOP);
 			shell.setBackground(Colors.color_blue02);
-			shell.setVisible(false);
 			shell.setSize(shellMaxWidth, shellMaxHeight);
 			shell.setLocation(shellMainX, shellMainY);
-//			shell.setLayout(new FormLayout());
 			shell.addTraverseListener(new TraverseListener() {
 				public void keyTraversed(TraverseEvent e) {
 					// 屏蔽按下Esc按键
@@ -334,28 +332,6 @@ public class MainStart {
 					}
 				}
 			});
-			
-//			Region allRegion = new Region();      
-//			allRegion.add(0, 0, shell.getSize().x, shell.getSize().y);   
-//			
-//			 Region region = new Region();      
-//		        final ImageData imageData = new ImageData("E:/git/teaching_platform/src/main/java/com/zkxltech/image/粘贴图片.png");      
-//		        if (imageData.alphaData != null) {      
-//		            org.eclipse.swt.graphics.Rectangle pixel = new org.eclipse.swt.graphics.Rectangle(0, 0, 1, 1);      
-//		           
-//		            for (int y = 0; y < imageData.height; y++) {      
-//		                for (int x = 0; x < imageData.width; x++) {
-//		                	System.out.println(imageData.getAlpha(x, y));
-//		                    if (imageData.getAlpha(x, y) != 255 ) {      
-//		                        pixel.x = imageData.x + x ;       
-//		                        pixel.y = imageData.y + y ;    
-//		                        region.add(pixel);
-//		                    }      
-//		                 }      
-//		             }      
-//		         }      
-//		        allRegion.subtract(region); 
-//		        shell.setRegion(allRegion);
 			
 			//答题
 			CLabel cLabel02 = new CLabel(shell, SWT.NONE);
@@ -498,32 +474,6 @@ public class MainStart {
 			cLabel02.addMouseTrackListener(SwtTools.showHand(cLabel02));
 			cLabel03.addMouseTrackListener(SwtTools.showHand(cLabel03));
 			cLabel04.addMouseTrackListener(SwtTools.showHand(cLabel04));
-			
-			
-//			//重连机制
-//			new Thread(new Runnable() {
-//				
-//				@Override
-//				public void run() {
-//					while (true) {
-//						boolean isOnline = false;
-//						List<String> sList = SerialPortManager.findPort();
-//						for (int i = 0; i < sList.size(); i++) {
-//							if("COM4".equals(sList.get(i))){
-//								isOnline = true;
-//							}
-//						}
-//						System.out.println(isOnline);
-//						try {
-//							Thread.sleep(2000);
-//						} catch (InterruptedException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//					}
-//					
-//				}
-//			}).start();
 		} catch (Exception e) {
 			log.error(IOUtils.getError(e));
 		}

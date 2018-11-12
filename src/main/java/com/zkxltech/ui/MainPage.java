@@ -1,5 +1,7 @@
 package com.zkxltech.ui;
 
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 
 import org.eclipse.swt.SWT;
@@ -11,6 +13,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -42,9 +45,10 @@ import com.zkxltech.ui.functions.StudentFunctionManage;
 import com.zkxltech.ui.functions.TestPaperFunctionManage;
 import com.zkxltech.ui.functions.VoteFunctionManage;
 import com.zkxltech.ui.util.PageConstant;
+import com.zkxltech.ui.util.StringConstant;
 import com.zkxltech.ui.util.SwtTools;
 
-public class MainPage extends Dialog {
+public class MainPage{
 	private static final Logger log = LoggerFactory.getLogger(MainPage.class);
 	protected Object result;
 	protected Display display;
@@ -61,7 +65,6 @@ public class MainPage extends Dialog {
 	private String pageType; /*页面类型1答题2设置3记录*/
     
 	public MainPage(Shell parent,MainStart mainStart,String pageType) {
-		super(parent);
 		this.mainStart = mainStart;
 		this.pageType = pageType;
 	}
@@ -71,7 +74,7 @@ public class MainPage extends Dialog {
 		createContents();
 		shell.open();
 		shell.layout();
-		Display display = getParent().getDisplay();
+		display = Display.getDefault();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -83,8 +86,12 @@ public class MainPage extends Dialog {
 	private void initData(){
 		/*屏幕宽高*/
 		Window_Width = Toolkit.getDefaultToolkit().getScreenSize().width;  
-	    Window_Height = Toolkit.getDefaultToolkit().getScreenSize().height;
-	    shellWidth = (int) (Window_Width * 0.48);
+	  
+	    GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		Rectangle maximumWindowBounds = graphicsEnvironment.getMaximumWindowBounds();
+//		Window_Height = Toolkit.getDefaultToolkit().getScreenSize().height;
+		Window_Height = maximumWindowBounds.height;
+		shellWidth = (int) (Window_Width * 0.48);
 	    shellHeight = shellWidth * 600 / 920;
 
 	    /*窗口宽高*/
@@ -97,7 +104,7 @@ public class MainPage extends Dialog {
 
 	private void createContents() {
 		try {
-			shell = new Shell(getParent(), SWT.PRIMARY_MODAL);
+			shell = new Shell(display, SWT.NONE);
 			shell.addTraverseListener(new TraverseListener() {
 				public void keyTraversed(TraverseEvent e) {
 					// 屏蔽按下Esc按键
@@ -106,10 +113,10 @@ public class MainPage extends Dialog {
 					}
 				}
 			});
-			shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			shell.setText("电子答题器");
+			Image image = new Image(display, this.getClass().getResourceAsStream(PageConstant.image01));//这里是图片路径
+			shell.setText(com.zkxltech.config.Global.VERSION);
+			shell.setImage(image);
 			shell.setSize(shellWidth, shellHeight);
-			// shell.setLocation(400, 150);
 			shell.setLocation(Display.getCurrent().getClientArea().width / 2 - shell.getShell().getSize().x / 2,
 					Display.getCurrent().getClientArea().height / 2 - shell.getSize().y / 2);
 			shell.setLayout(new FormLayout());
