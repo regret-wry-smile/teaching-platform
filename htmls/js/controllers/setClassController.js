@@ -392,6 +392,8 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
 			$scope.result=JSON.parse(execute_preemptive("stop_quick_answer"));	
 			if($scope.result.ret=='success'){
 				$scope.isStopAswer=false;
+				$scope.studentName='停止答题';
+				$scope.time=0;
 				toastr.success($scope.result.message);
 			}else{
 				$scope.isStopAswer=true;
