@@ -218,6 +218,10 @@ public class RecordServiceImpl implements RecordService{
                             map.put("type", type);
                             if ( answer == null ||answer.equals("null") || answer.equals("")) {
                                 answer = "";
+                            }else if("true".equals(answer)){
+                            	answer = "√";
+                            }else if("false".equals(answer)){
+                            	answer = "×";
                             }
                             map.put("answer", answer);
                             map.put("result", result);
