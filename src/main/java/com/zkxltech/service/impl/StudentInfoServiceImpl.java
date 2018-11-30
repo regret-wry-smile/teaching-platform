@@ -20,7 +20,6 @@ import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
-import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
@@ -30,7 +29,6 @@ import com.zkxltech.thread.AttendanceThread;
 import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.QuickThread;
 import com.zkxltech.thread.ThreadManager;
-import com.zkxltech.ui.TestMachineThread;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -353,43 +351,27 @@ public class StudentInfoServiceImpl implements StudentInfoService{
                     return r;
                 }
             }
-            if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-    			TestMachineThread.startThread(1,"字母题");
-    			 List<StudentInfo> studentInfos = Global.getStudentInfos();
-    		        if (ListUtils.isEmpty(studentInfos)) {
-    		            r.setMessage("未获取到学生信息");
-    		            return r;
-    		        }
-    		        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
-    		        for (StudentInfo studentInfo : studentInfos) {
-    		            Map<String, String> studentInfoMap = new HashMap<>();
-    		            studentInfoMap.put("studentName", studentInfo.getStudentName());
-    		            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
-    		            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
-    		        }
-    		}else {
-    			 //开始签到接口有问题,暂用按任意键
-    	        r = EquipmentServiceImpl2.getInstance().answer_start(0, Constant.ANSWER_STR);
-    	        if (r.getRet().equals(Constant.ERROR)) {
-    	            return r;
-    	        }
-    	        List<StudentInfo> studentInfos = Global.getStudentInfos();
-    	        if (ListUtils.isEmpty(studentInfos)) {
-    	            r.setMessage("未获取到学生信息");
-    	            return r;
-    	        }
-    	        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
-    	        for (StudentInfo studentInfo : studentInfos) {
-    	            Map<String, String> studentInfoMap = new HashMap<>();
-    	            studentInfoMap.put("studentName", studentInfo.getStudentName());
-    	            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
-    	            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
-    	        }
-    	        BaseThread thread = new AttendanceThread();
-    	        thread.start();
-    	        ThreadManager.getInstance().addThread(thread);
-    	    	Global.setModeMsg(Constant.BUSINESS_ATTENDEN);
-    		}
+            //开始签到接口有问题,暂用按任意键
+	        r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
+	        if (r.getRet().equals(Constant.ERROR)) {
+	            return r;
+	        }
+	        List<StudentInfo> studentInfos = Global.getStudentInfos();
+	        if (ListUtils.isEmpty(studentInfos)) {
+	            r.setMessage("未获取到学生信息");
+	            return r;
+	        }
+	        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+	        for (StudentInfo studentInfo : studentInfos) {
+	            Map<String, String> studentInfoMap = new HashMap<>();
+	            studentInfoMap.put("studentName", studentInfo.getStudentName());
+	            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
+	            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
+	        }
+	        BaseThread thread = new AttendanceThread();
+	        thread.start();
+	        ThreadManager.getInstance().addThread(thread);
+	    	Global.setModeMsg(Constant.BUSINESS_ATTENDEN);
             r.setRet(Constant.SUCCESS);
             r.setMessage("操作成功");
         }catch (Exception e) {
@@ -408,7 +390,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             ThreadManager.getInstance().stopAllThread();
 	        r.setRet(Constant.ERROR);
 	        Global.setModeMsg(Constant.BUSINESS_NORMAL);
-            r = EquipmentServiceImpl2.getInstance().answer_stop();
+            r = EquipmentServiceImpl.getInstance().answer_stop();
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }
@@ -436,7 +418,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
             return r;
         }
         try{
-            r = EquipmentServiceImpl2.getInstance().answer_start(0, Constant.ANSWER_STR);
+            r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.ANSWER_STR);
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }
@@ -469,7 +451,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         /*停止所有线程*/
         ThreadManager.getInstance().stopAllThread();
         try{
-            r = EquipmentServiceImpl2.getInstance().answer_stop();
+            r = EquipmentServiceImpl.getInstance().answer_stop();
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }

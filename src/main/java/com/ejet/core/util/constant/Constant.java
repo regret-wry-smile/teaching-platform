@@ -59,9 +59,22 @@ public class Constant {
     public static final String SINGLE_ANSWER_CHAR = "[{'type':'s','id':'1','range':'A-D'}]";
     /* 数字题型*/
     public static final String SINGLE_ANSWER_NUMBER = "[{'type':'d','id':'1','range':'0-9'}]";
-    /* 判断答案*/
+    /* 判断题*/
     public static final String SINGLE_ANSWER_JUDGE = "[{'type':'j','id':'1','range':''}]";
-    /*考勤抢答用*/
+    /* 多选题*/
+    private static String multiple_answer_char  = "[{'type':'m','id':'1','range':''}]";
+    /**
+     * 多选题
+     * @param range 范围
+     * @return
+     */
+    public static String getMultipleAnswerCHAR (String range) {
+    	multiple_answer_char = "[{'type':'m','id':'1','range':'"+range+"'}]";
+		return multiple_answer_char ;
+	}
+
+
+	/*考勤抢答用*/
     public static final String ANSWER_STR = "[{'type':'g','id':'1','range':''}]";
     /*试卷题目  状态启用*/
     public static final String STATUS_ENABLED = "1";

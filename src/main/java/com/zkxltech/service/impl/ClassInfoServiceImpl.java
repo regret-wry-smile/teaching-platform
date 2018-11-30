@@ -3,20 +3,16 @@ package com.zkxltech.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ejet.cache.BrowserManager;
 import com.ejet.cache.RedisMapBind;
-import com.ejet.core.util.SerialListener;
-import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
-import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
+import com.zkxltech.device.DeviceComm;
 import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
@@ -25,12 +21,8 @@ import com.zkxltech.sql.ClassInfoSql;
 import com.zkxltech.sql.StudentInfoSql;
 import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.CardInfoThread;
-import com.zkxltech.thread.MsgThread;
-import com.zkxltech.thread.MsgThread2;
 import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.util.StringUtils;
-
-import net.sf.json.JSONObject;
 
 public class ClassInfoServiceImpl implements ClassInfoService{
     private static final Logger log = LoggerFactory.getLogger(ClassInfoServiceImpl.class);
@@ -141,7 +133,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
         r.setRet(Constant.ERROR);
         
         try {
-        	r = EquipmentServiceImpl2.getInstance().clear_wl();
+        	r = EquipmentServiceImpl.getInstance().clear_wl();
             if (Constant.ERROR.equals(r.getRet())) {
                 r.setMessage("清除失败");
                 return r;
@@ -151,7 +143,6 @@ public class ClassInfoServiceImpl implements ClassInfoService{
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }
-            r = EquipmentServiceImpl2.getInstance().clear_wl();
             if (Constant.SUCCESS == r.getRet()) {
 //                JSONObject jsono = JSONObject.fromObject(param);
 //                if (jsono.containsKey("classId")) {
@@ -168,86 +159,62 @@ public class ClassInfoServiceImpl implements ClassInfoService{
         r.setMessage("清除失败");
         return r;
     }
-    @Override
-    public Result bindStart(Object param) {
-        Result r = new Result();
-        r.setRet(Constant.ERROR);
-      //每次调用绑定方法先清空,再存
-        RedisMapBind.clearCardIdMap();
-        RedisMapBind.clearBindMap();
-        /*停止所有线程*/
-        ThreadManager.getInstance().stopAllThread();
+
+	@Override
+	public Result bindStart(Object param) {
+		Result r = new Result();
+		r.setRet(Constant.ERROR);
+		// 每次调用绑定方法先清空,再存
+		RedisMapBind.clearCardIdMap();
+		RedisMapBind.clearBindMap();
+		/* 停止所有线程 */
+		ThreadManager.getInstance().stopAllThread();
 		try {
-			/**根据班级id查询学生信息*/
-            StudentInfoServiceImpl sis= new StudentInfoServiceImpl();
-            Result result = sis.selectStudentInfo(param);
-            List<StudentInfo> studentInfos = (List)result.getItem();
-            if (result== null || ListUtils.isEmpty(studentInfos)) {
-                r.setMessage("您还未上传学生信息");
-                return r;
-            }
-            /**将查出来的学生信息按学生编号进行分类,并存入静态map中*/
-            Map<String, StudentInfo> studentInfoMap = new HashMap<>();
-            /**按绑定状态进行分类*/
-            int bind = 0,notBind = 0 ;
-            for (StudentInfo studentInfo : studentInfos) {
-                if (studentInfo.getStatus().equals(Constant.BING_YES)) {
-                    ++bind;
-                }else{
-                    ++notBind;
-                }
-                if (!StringUtils.isEmpty(studentInfo.getIclickerId())) {
-                    studentInfoMap.put(studentInfo.getIclickerId(), studentInfo);
-                }
-            }
-           
-            
-			if (SerialPortManager.sendToPort(EquipmentConstant.WIRELESS_BIND_START_CODE)) {
-				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread2(EquipmentConstant.WIRELESS_BIND_START);
-				threads.add(iThread);
-				iThread.start();
-				// 等待所有线程执行完毕
-				iThread.join();
-				
-				String str = SerialListener.getRetCode();
-				SerialListener.clearRetCode();
-				int bindCode;
-				if (com.zkxltech.ui.util.StringUtils.isEmpty(str)) {
-					r.setRet(Constant.ERROR);
-					r.setMessage("指令发送失败");
-					return r;
-				}else {
-					bindCode = JSONObject.fromObject(str).getInt("result");
-					if (bindCode<0) {
-						r.setRet(Constant.ERROR);
-						r.setMessage("指令发送失败");
-						return r;
-					}
+			/** 根据班级id查询学生信息 */
+			StudentInfoServiceImpl sis = new StudentInfoServiceImpl();
+			Result result = sis.selectStudentInfo(param);
+			List<StudentInfo> studentInfos = (List) result.getItem();
+			if (result == null || ListUtils.isEmpty(studentInfos)) {
+				r.setMessage("您还未上传学生信息");
+				return r;
+			}
+			/** 将查出来的学生信息按学生编号进行分类,并存入静态map中 */
+			Map<String, StudentInfo> studentInfoMap = new HashMap<>();
+			/** 按绑定状态进行分类 */
+			int bind = 0, notBind = 0;
+			for (StudentInfo studentInfo : studentInfos) {
+				if (studentInfo.getStatus().equals(Constant.BING_YES)) {
+					++bind;
+				} else {
+					++notBind;
 				}
-				SerialListener.clearMap();
-				r.setRet(Constant.SUCCESS);
-				
-				RedisMapBind.setStudentInfoMap(studentInfoMap);
-	            BaseThread thread = new CardInfoThread();
-	            thread.start();
-	            /*添加线程管理*/
-	            ThreadManager.getInstance().addThread(thread);
-	            
-	        	Global.setModeMsg(Constant.BUSINESS_BIND);
-	            r.setRet(Constant.SUCCESS);
-	            r.setMessage("操作成功");
-	            
-	            /**存入静态map*/
-	            RedisMapBind.getBindMap().put("studentName", null);
-	            RedisMapBind.getBindMap().put("code", bindCode);
-	            RedisMapBind.getBindMap().put("accomplish", bind);
-	            RedisMapBind.getBindMap().put("notAccomplish",notBind);
-				
-			} else {
+				if (!StringUtils.isEmpty(studentInfo.getIclickerId())) {
+					studentInfoMap.put(studentInfo.getIclickerId(), studentInfo);
+				}
+			}
+
+			int str = DeviceComm.wirelessBindStart(1, "");
+			if (str < 0) {
 				r.setRet(Constant.ERROR);
 				r.setMessage("指令发送失败");
+				return r;
 			}
+
+			RedisMapBind.setStudentInfoMap(studentInfoMap);
+			BaseThread thread = new CardInfoThread();
+			thread.start();
+			/* 添加线程管理 */
+			ThreadManager.getInstance().addThread(thread);
+
+			Global.setModeMsg(Constant.BUSINESS_BIND);
+			r.setRet(Constant.SUCCESS);
+			r.setMessage("操作成功");
+
+			/** 存入静态map */
+			RedisMapBind.getBindMap().put("studentName", null);
+			RedisMapBind.getBindMap().put("code", str);
+			RedisMapBind.getBindMap().put("accomplish", bind);
+			RedisMapBind.getBindMap().put("notAccomplish", notBind);
 		} catch (Exception e) {
 			log.error(IOUtils.getError(e));
 			r.setRet(Constant.ERROR);
@@ -255,8 +222,8 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 		}
 
 		return r;
-      
-    }
+
+	}
     
     @Override
     public Result bindStop() {
@@ -265,7 +232,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
         try{
             /*停止所有线程*/
             ThreadManager.getInstance().stopAllThread();
-          r = EquipmentServiceImpl2.getInstance().bind_stop();
+          r = EquipmentServiceImpl.getInstance().bind_stop();
         }catch (Exception e) {
             log.error("", e);
             r.setMessage("系统异常");

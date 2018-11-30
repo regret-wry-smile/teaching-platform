@@ -11,7 +11,7 @@ import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
-import com.zkxltech.service.impl.EquipmentServiceImpl2;
+import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.thread.ThreadManager;
 
 import net.sf.json.JSONArray;
@@ -43,7 +43,7 @@ public class RedisMapQuick {
                     quickMap.put("studentName", studentInfo.getStudentName());
                     /*停止所有线程*/
                     ThreadManager.getInstance().stopAllThread();
-                    EquipmentServiceImpl2.getInstance().answer_stop();
+                    EquipmentServiceImpl.getInstance().answer_stop();
                     Global.setModeMsg(Constant.BUSINESS_PREEMPTIVE);
                     flag = false ;
                 }

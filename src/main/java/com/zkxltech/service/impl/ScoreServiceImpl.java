@@ -1,23 +1,17 @@
 package com.zkxltech.service.impl;
 
-import java.util.Vector;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapScore;
-import com.ejet.core.util.EquipmentUtils;
-import com.ejet.core.util.SerialListener;
-import com.ejet.core.util.SerialPortManager;
 import com.ejet.core.util.constant.Constant;
-import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
+import com.zkxltech.device.DeviceComm;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.Score;
 import com.zkxltech.service.ScoreService;
 import com.zkxltech.thread.BaseThread;
-import com.zkxltech.thread.MsgThread2;
 import com.zkxltech.thread.ScoreThread;
 import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.util.StringUtils;
@@ -93,7 +87,7 @@ public class ScoreServiceImpl implements ScoreService {
 		/* 停止线程管理 */
 		ThreadManager.getInstance().stopAllThread();
 
-		r = EquipmentServiceImpl2.getInstance().answer_stop();
+		r = EquipmentServiceImpl.getInstance().answer_stop();
 		if (r.getRet().equals(Constant.ERROR)) {
 			return r;
 		}
@@ -132,35 +126,19 @@ public class ScoreServiceImpl implements ScoreService {
 			}
 			strBuilder.append("]");
 
-			if (SerialPortManager.sendToPort(EquipmentConstant.ANSWER_START_CODE(strBuilder.toString()))) {
-				Vector<Thread> threads = new Vector<Thread>();
-				Thread iThread = new MsgThread2(EquipmentConstant.ANSWER_START);
-				threads.add(iThread);
-				iThread.start();
-				// 等待所有线程执行完毕
-				iThread.join();
-
-				String str = SerialListener.getRetCode();
-				SerialListener.clearRetCode();
-				r = EquipmentUtils.parseResult(str);
-				if (Constant.ERROR.equals(r.getRet())) {
-					r.setRet(Constant.ERROR);
-					r.setMessage("指令发送失败");
-					return r;
-				}
-				r.setItem(str);
-				r.setRet(Constant.SUCCESS);
-
-				BaseThread thread = new ScoreThread();
-				thread.start();
-				/* 添加到线程管理 */
-				ThreadManager.getInstance().addThread(thread);
-				r.setRet(Constant.SUCCESS);
-				r.setMessage("发送成功");
-			} else {
+			int ret = DeviceComm.answerStart(strBuilder.toString());
+			if (ret != 0) {
 				r.setRet(Constant.ERROR);
 				r.setMessage("指令发送失败");
+				return r;
 			}
+
+			BaseThread thread = new ScoreThread();
+			thread.start();
+			/* 添加到线程管理 */
+			ThreadManager.getInstance().addThread(thread);
+			r.setRet(Constant.SUCCESS);
+			r.setMessage("发送成功");
 			return r;
 		} catch (Exception e) {
 			logger.error(IOUtils.getError(e));

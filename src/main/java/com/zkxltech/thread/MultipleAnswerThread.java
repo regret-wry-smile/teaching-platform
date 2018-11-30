@@ -7,14 +7,12 @@ import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
-import com.ejet.core.util.SerialListener;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
-import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.io.IOUtils;
+import com.zkxltech.device.DeviceComm;
 
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 public class MultipleAnswerThread extends BaseThread {
     private static final Logger logger = LoggerFactory.getLogger(MultipleAnswerThread.class);
@@ -41,15 +39,15 @@ public class MultipleAnswerThread extends BaseThread {
 	    try {
             while(FLAG){
                 Thread.sleep(100);
-                List<String> data = SerialListener.getDataMap();
-                if (!StringUtils.isBlankList(data)) {
+                String data = DeviceComm.getAnswerList();
+                if (!StringUtils.isBlank(data) && !"[]".equals(data)) {
+                    logger.info("获取到答题数据:===>>"+data);
                 	String jsonData = JSONArray.fromObject(data).toString();
-                    StringBuilder stringBuilder = new StringBuilder(jsonData);
-                    if (jsonData.startsWith("{")) {
-                        stringBuilder.insert(0, "[").append("]");
-                    }
-                    jsonData = stringBuilder.toString();
-                    logger.info("获取到答题数据:===>>"+jsonData);
+//                    StringBuilder stringBuilder = new StringBuilder(jsonData);
+//                    if (jsonData.startsWith("{")) {
+//                        stringBuilder.insert(0, "[").append("]");
+//                    }
+//                    jsonData = stringBuilder.toString();
                     switch (answerType) {
     				case Constant.ANSWER_MULTIPLE_TYPE:
     					RedisMapMultipleAnswer.addEveryAnswerInfo(jsonData);
@@ -63,7 +61,6 @@ public class MultipleAnswerThread extends BaseThread {
     				default:
     					break;
     				}
-                    SerialListener.removeList(data);
                 }
             }
 	    } catch (InterruptedException e) {

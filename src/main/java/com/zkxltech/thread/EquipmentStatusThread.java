@@ -8,7 +8,7 @@ import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.Result;
-import com.zkxltech.service.impl.EquipmentServiceImpl2;
+import com.zkxltech.service.impl.EquipmentServiceImpl;
 
 /**
  * @author: ZhouWei
@@ -34,8 +34,7 @@ public class EquipmentStatusThread extends BaseThread {
         try {
             while(FLAG){
                 boolean isAnswerStart = Global.isEquipmentStatus;
-//                Result r = EquipmentServiceImpl.getInstance().get_device_info();
-                Result r = EquipmentServiceImpl2.getInstance().get_device_info();
+                Result r = EquipmentServiceImpl.getInstance().get_device_info();
                 boolean converStatusToBoolean = converStatusToBoolean(r.getRet());
                 if (isAnswerStart != converStatusToBoolean) {
                     BrowserManager.refreEquipmentState(converStatusToBoolean);

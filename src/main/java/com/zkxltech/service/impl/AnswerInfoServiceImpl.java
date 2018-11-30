@@ -16,7 +16,6 @@ import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
-import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.QuestionInfo;
 import com.zkxltech.domain.Record;
@@ -29,7 +28,6 @@ import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.EquipmentStatusThread;
 import com.zkxltech.thread.SingleAnswerThread;
 import com.zkxltech.thread.ThreadManager;
-import com.zkxltech.ui.TestMachineThread;
 import com.zkxltech.ui.util.StringUtils;
 
 public class AnswerInfoServiceImpl implements AnswerInfoService{
@@ -47,11 +45,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 			List<RequestVo> list = new ArrayList<RequestVo>();
 			list.add(requestVo);
 			RedisMapMultipleAnswer.startAnswer(requestVo.getRange());
-			if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-				TestMachineThread.startThread(1,"多选题");
-			}else {
-				result = EquipmentServiceImpl2.getInstance().answerStart2(Constant.ANSWER_MULTIPLE_TYPE,list);
-			}
+			result = EquipmentServiceImpl.getInstance().answerStart2(Constant.ANSWER_MULTIPLE_TYPE,list);
 			if (Constant.ERROR.equals(result.getRet())) {
 				result.setRet(Constant.ERROR);
 				result.setMessage("开始答题指令发送失败！");
@@ -99,36 +93,31 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 
 			RedisMapClassTestAnswer.startClassTest(questionInfos2); //缓存初始化
 			
-			if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-				TestMachineThread.startThread(40,"字母题");
-			}else {
-				List<RequestVo> requestVos = new ArrayList<RequestVo>();
-				for (int i = 0; i < questionInfos2.size(); i++) {
-					RequestVo requestVo = new RequestVo();
-					requestVo.setId(questionInfos2.get(i).getQuestionId());
-					if (Constant.DANXUANTI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
-						requestVo.setType("s");
-					}else if (Constant.DUOXUANTI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
-						requestVo.setType("m");
-					}else if (Constant.PANDUANTI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
-						requestVo.setType("j");
-					}else if (Constant.SHUZITI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
-						requestVo.setType("d");
-					}else {
-						requestVo.setType("g");
-					}
-					
-					requestVo.setRange(questionInfos2.get(i).getRange());
-					requestVos.add(requestVo);
+			List<RequestVo> requestVos = new ArrayList<RequestVo>();
+			for (int i = 0; i < questionInfos2.size(); i++) {
+				RequestVo requestVo = new RequestVo();
+				requestVo.setId(questionInfos2.get(i).getQuestionId());
+				if (Constant.DANXUANTI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
+					requestVo.setType("s");
+				}else if (Constant.DUOXUANTI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
+					requestVo.setType("m");
+				}else if (Constant.PANDUANTI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
+					requestVo.setType("j");
+				}else if (Constant.SHUZITI_NUM.equals(questionInfos2.get(i).getQuestionType())) {
+					requestVo.setType("d");
+				}else {
+					requestVo.setType("g");
 				}
 				
-				result = EquipmentServiceImpl2.getInstance().answerStart2(Constant.ANSWER_CLASS_TEST_OBJECTIVE,requestVos); //发送硬件指令
-				if (Constant.ERROR.equals(result.getRet())) {
-					result.setMessage("硬件指令发送失败！");
-					return result;
-				}
+				requestVo.setRange(questionInfos2.get(i).getRange());
+				requestVos.add(requestVo);
 			}
 			
+			result = EquipmentServiceImpl.getInstance().answerStart2(Constant.ANSWER_CLASS_TEST_OBJECTIVE,requestVos); //发送硬件指令
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("硬件指令发送失败！");
+				return result;
+			}
 		
 			result.setRet(Constant.SUCCESS);
 			Global.setModeMsg(Constant.BUSINESS_CLASSTEST);
@@ -151,15 +140,11 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 			@Override
 			public void run() {
 				try {
-					if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-			        	 TestMachineThread.stopThread();
-					}else {
-						//调用硬件停止指令
-						result = EquipmentServiceImpl2.getInstance().answer_stop(); //发送硬件指令
-						if (Constant.ERROR.equals(result.getRet())) {
-							BrowserManager.showMessage(false, "硬件指令发送失败！");
-							return ;
-						}
+					//调用硬件停止指令
+					result = EquipmentServiceImpl.getInstance().answer_stop(); //发送硬件指令
+					if (Constant.ERROR.equals(result.getRet())) {
+						BrowserManager.showMessage(false, "硬件指令发送失败！");
+						return ;
 					}
 					//删除原来的记录
 					List<Record> records = RedisMapClassTestAnswer.getObjectiveRecordList();
@@ -197,15 +182,11 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 			@Override
 			public void run() {
 				try {
-					if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-			        	 TestMachineThread.stopThread();
-					}else {
-						//调用硬件停止指令
-						result = EquipmentServiceImpl2.getInstance().answer_stop(); //发送硬件指令
-						if (Constant.ERROR.equals(result.getRet())) {
-							BrowserManager.showMessage(false, "硬件指令发送失败！");
-							return ;
-						}
+					//调用硬件停止指令
+					result = EquipmentServiceImpl.getInstance().answer_stop(); //发送硬件指令
+					if (Constant.ERROR.equals(result.getRet())) {
+						BrowserManager.showMessage(false, "硬件指令发送失败！");
+						return ;
 					}
 					//删除原来的记录
 					List<Record> records = RedisMapClassTestAnswer.getSubjectiveRecordList();
@@ -269,14 +250,14 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
             String type = answer.getType();
             switch (type) {
                 case Constant.ANSWER_CHAR_TYPE:
-                    r = EquipmentServiceImpl2.getInstance().answer_start(0, Constant.SINGLE_ANSWER_CHAR);
+                    r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_CHAR);
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_A, 0);
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_B, 0);
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_C, 0);
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.CHAR_D, 0);
                     break;
                 case Constant.ANSWER_NUMBER_TYPE:
-                    r = EquipmentServiceImpl2.getInstance().answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
+                    r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_NUMBER);
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_1, 0);
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_2, 0);
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_3, 0);
@@ -288,7 +269,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.NUMBER_9, 0);
                     break;
                 case Constant.ANSWER_JUDGE_TYPE:
-                    r = EquipmentServiceImpl2.getInstance().answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
+                    r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_JUDGE);
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_TRUE, 0);
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_FALSE, 0);
                     break;
@@ -296,19 +277,13 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
                     r.setMessage("参数错误");
                     return r;
             }
-            if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-    //			TestMachineThread.startThread(1,"字母题");
-    			TestMachineThread.startThread(1,"数字题");
-    //			TestMachineThread.startThread(1,"判断题");
-    		}else {
-    	        if (r.getRet() == Constant.ERROR) {
-    	            r.setMessage("指令发送失败");
-    	            return r;
-    	        }
-    	        BaseThread thread = new SingleAnswerThread();
-    	        thread.start();
-    	        ThreadManager.getInstance().addThread(thread);
-    		}
+            if (r.getRet() == Constant.ERROR) {
+	            r.setMessage("指令发送失败");
+	            return r;
+	        }
+	        BaseThread thread = new SingleAnswerThread();
+	        thread.start();
+	        ThreadManager.getInstance().addThread(thread);
             r.setRet(Constant.SUCCESS);
             Global.setModeMsg(Constant.BUSINESS_ANSWER);
         }catch (Exception e) {
@@ -327,7 +302,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
             ThreadManager.getInstance().stopAllThread();
             Global.setModeMsg(Constant.BUSINESS_NORMAL);
             ThreadManager.getInstance().stopAllThread();
-            r = EquipmentServiceImpl2.getInstance().answer_stop();
+            r = EquipmentServiceImpl.getInstance().answer_stop();
             if (r.getRet().equals(Constant.ERROR)) {
                 return r;
             }
@@ -361,23 +336,12 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
     public Result stopMultipleAnswer() {
         Result r = new Result();
         Global.setModeMsg(Constant.BUSINESS_NORMAL);
-        if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-        	 TestMachineThread.stopThread();
-		}else {
-//			if (EquipmentServiceImpl.getThread() != null && EquipmentServiceImpl.getThread() instanceof MultipleAnswerThread ) {
-//                MultipleAnswerThread a = (MultipleAnswerThread)EquipmentServiceImpl.getThread();
-//                a.setFLAG(false);
-//                log.info("多选线程停止成功");
-//            }else{
-//                log.error("多选线程停止失败");;
-//            }
-		    /*停止所有线程*/
-		    ThreadManager.getInstance().stopAllThread();
-            r = EquipmentServiceImpl2.getInstance().answer_stop();
-            if (r.getRet().equals(Constant.ERROR)) {
-                return r;
-            }
-		}
+        /*停止所有线程*/
+	    ThreadManager.getInstance().stopAllThread();
+        r = EquipmentServiceImpl.getInstance().answer_stop();
+        if (r.getRet().equals(Constant.ERROR)) {
+            return r;
+        }
        
         r.setRet(Constant.SUCCESS);
         r.setMessage("停止成功");
@@ -415,26 +379,20 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 			
 			RedisMapClassTestAnswer.startClassTest(questionInfos2); //缓存初始化
 			
-			if (Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test())) {
-				TestMachineThread.startThread(5,"数字题");
-			}else {
-				
-				List<RequestVo> requestVos = new ArrayList<RequestVo>();
-				for (int i = 0; i < questionInfos2.size(); i++) {
-					RequestVo requestVo = new RequestVo();
-					requestVo.setId(questionInfos2.get(i).getQuestionId());
-					requestVo.setType("d");
-					requestVo.setRange("0-"+(int)Double.parseDouble(questionInfos2.get(i).getScore()));
-					requestVos.add(requestVo);
-				}
-				
-				result = EquipmentServiceImpl2.getInstance().answerStart2(Constant.ANSWER_CLASS_TEST_SUBJECTIVE,requestVos); //发送硬件指令
-				if (Constant.ERROR.equals(result.getRet())) {
-					result.setMessage("硬件指令发送失败！");
-					return result;
-				}
+			List<RequestVo> requestVos = new ArrayList<RequestVo>();
+			for (int i = 0; i < questionInfos2.size(); i++) {
+				RequestVo requestVo = new RequestVo();
+				requestVo.setId(questionInfos2.get(i).getQuestionId());
+				requestVo.setType("d");
+				requestVo.setRange("0-"+(int)Double.parseDouble(questionInfos2.get(i).getScore()));
+				requestVos.add(requestVo);
 			}
 			
+			result = EquipmentServiceImpl.getInstance().answerStart2(Constant.ANSWER_CLASS_TEST_SUBJECTIVE,requestVos); //发送硬件指令
+			if (Constant.ERROR.equals(result.getRet())) {
+				result.setMessage("硬件指令发送失败！");
+				return result;
+			}
 			
 			result.setRet(Constant.SUCCESS);
 			Global.setModeMsg(Constant.BUSINESS_ANSWER);

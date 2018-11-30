@@ -1,17 +1,12 @@
 package com.zkxltech.thread;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ejet.cache.RedisMapAttendance;
-import com.ejet.core.util.SerialListener;
 import com.ejet.core.util.comm.StringUtils;
-import com.ejet.core.util.constant.EquipmentConstant;
 import com.ejet.core.util.io.IOUtils;
-
-import net.sf.json.JSONArray;
+import com.zkxltech.device.DeviceComm;
 
 public class AttendanceThread extends BaseThread {
     private static final Logger logger = LoggerFactory.getLogger(AttendanceThread.class);
@@ -33,8 +28,12 @@ public class AttendanceThread extends BaseThread {
         try {
             while(FLAG) {
                 Thread.sleep(100);
-                
-                List<String> data = SerialListener.getDataMap();
+                String jsonData = DeviceComm.getAnswerList();
+                if (!StringUtils.isBlank(jsonData) && !"[]".equals(jsonData)) {
+                     logger.info("获取到答题数据:===>>"+jsonData);
+                	 RedisMapAttendance.addAttendance(jsonData);
+				}
+                /*List<String> data = SerialListener.getDataMap();
                 if (!StringUtils.isBlankList(data)) {
                 	String jsonData = JSONArray.fromObject(data).toString();
                     StringBuilder stringBuilder = new StringBuilder(JSONArray.fromObject(jsonData).toString());
@@ -44,11 +43,8 @@ public class AttendanceThread extends BaseThread {
                     jsonData = stringBuilder.toString();
                     logger.info("获取到答题数据:===>>"+jsonData);
                     RedisMapAttendance.addAttendance(jsonData);
-//                    SerialListener.clearMap();
-
-
                     SerialListener.removeList(data);
-                }
+                }*/
             }
         } catch (InterruptedException e) {
             logger.error(IOUtils.getError(e));
