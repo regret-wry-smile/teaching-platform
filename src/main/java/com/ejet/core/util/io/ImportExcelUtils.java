@@ -1,18 +1,18 @@
 package com.ejet.core.util.io;
 
-import java.io.IOException;  
-import java.io.InputStream;  
-import java.text.DecimalFormat;  
-import java.text.SimpleDateFormat;  
-import java.util.ArrayList;  
-import java.util.List;  
-  
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;  
-import org.apache.poi.ss.usermodel.Cell;  
-import org.apache.poi.ss.usermodel.Row;  
-import org.apache.poi.ss.usermodel.Sheet;  
-import org.apache.poi.ss.usermodel.Workbook;  
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;  
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
   
   
 public class ImportExcelUtils {  
@@ -110,8 +110,12 @@ public class ImportExcelUtils {
                 List<Object> li = new ArrayList<Object>();  
                 for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {  
                     cell = row.getCell(y);
-                    
-                    li.add(getCellValue(cell));  
+                    if (cell != null){
+                        li.add(getCellValue(cell));
+                    }
+                    else {
+                        cols--;
+                    }
                 }  
                 if (li.size()==cols) {
                 	list.add(li);  

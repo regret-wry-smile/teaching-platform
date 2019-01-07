@@ -38,20 +38,23 @@ public class QuestionInfoSql {
 				sqls.add("insert into test_paper (subject,test_id,test_name,describe,atype) values('"+subject+"','"+
 						testId+"','"+rowList.get(i).get(2)+"','"+rowList.get(i).get(3)+"','0')"); //新增试卷信息
 			}else{
-				String range = "";
-				if(rowList.get(i).size() == 5){
+				String range = " ";
+				if(rowList.get(i).size() == 6){
 					range = (String) rowList.get(i).get(4);
 				}
 				//0单选；1多选；2判断；3数字；4主观题
 				String type = (String) rowList.get(i).get(2);
 				String  trueAnswer = "";
+				String score = "";
 				trueAnswer = (String) rowList.get(i).get(3);
 				switch (type) {
 				case "单选":
 					type = "0";
+					score = (String) rowList.get(i).get(5);
 					break;
 				case "多选":
 					type = "1";
+					score = (String) rowList.get(i).get(5);
 					break;
 				case "判断":
 					type = "2";
@@ -60,9 +63,11 @@ public class QuestionInfoSql {
 					}else if("错".equals(trueAnswer)){
 						trueAnswer = "false";
 					}
+					score = (String) rowList.get(i).get(4);
 					break;
 				case "数字":
 					type = "3";
+					score = (String) rowList.get(i).get(5);
 					break;
 				default:
 					result.setRet(Constant.ERROR);
@@ -70,8 +75,8 @@ public class QuestionInfoSql {
 					return result;
 				}
 				//插入题目信息
-				sql = "insert into question_info (test_id,question_id,question,question_type,true_answer,range,status) values('"+testId+"','"+
-						rowList.get(i).get(0)+"','"+rowList.get(i).get(1)+"','"+type+"','"+trueAnswer+"','"+range+"','1')";	
+				sql = "insert into question_info (test_id,question_id,question,question_type,true_answer,range,score,status) values('"+testId+"','"+
+						rowList.get(i).get(0)+"','"+rowList.get(i).get(1)+"','"+type+"','"+trueAnswer+"','"+range+"','"+score+"','1')";
 				sqls.add(sql);
 			}
 		}
@@ -121,8 +126,11 @@ public class QuestionInfoSql {
                         result.setMessage("第"+(i+1)+"行单选不能是多选答案！");
                         return result;
                     }
-					if(rowList.get(i).size() != 5){
-						result.setMessage("第"+(i+1)+"行缺少作答范围！");
+                    if(StringUtils.isEmpty(rowList.get(i).get(4))){
+                    	result.setMessage("第"+(i+1)+"行缺少答题范围！");
+					}
+					if(rowList.get(i).size() != 6){
+						result.setMessage("第"+(i+1)+"行缺少此题分数！");
 						return result;
 					}
 					range = (String) rowList.get(i).get(4);
@@ -136,7 +144,7 @@ public class QuestionInfoSql {
 					}
 					break;
 				case "多选":
-					if(rowList.get(i).size() != 5){
+					if(rowList.get(i).size() != 6){
 						result.setMessage("第"+(i+1)+"行列数格式错误！");
 						return result;
 					}
@@ -151,7 +159,7 @@ public class QuestionInfoSql {
 					}
 					break;
 				case "判断":
-					if(rowList.get(i).size() != 4){
+					if(rowList.get(i).size() != 5){
 						result.setMessage("第"+(i+1)+"行列数格式错误！");
 						return result;
 					}
@@ -181,8 +189,7 @@ public class QuestionInfoSql {
 		if (questionIds.stream().distinct().collect(Collectors.toList()).size() != questionIds.size()) {
 			result.setMessage("题号有重复！");
 			return result;
-		};
-		
+		}
 		result.setRet(Constant.SUCCESS);
 		return result;
 	}
