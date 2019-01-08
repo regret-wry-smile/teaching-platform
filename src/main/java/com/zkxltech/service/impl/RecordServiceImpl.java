@@ -1,47 +1,28 @@
 package com.zkxltech.service.impl;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ejet.cache.BrowserManager;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.comm.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
-import com.zkxltech.domain.ClassHour;
-import com.zkxltech.domain.ClassInfo;
-import com.zkxltech.domain.QuestionInfo;
-import com.zkxltech.domain.Record;
-import com.zkxltech.domain.Result;
-import com.zkxltech.domain.StudentInfo;
-import com.zkxltech.domain.TestPaper;
+import com.zkxltech.domain.*;
 import com.zkxltech.service.RecordService;
-import com.zkxltech.sql.ClassHourSql;
-import com.zkxltech.sql.ClassInfoSql;
-import com.zkxltech.sql.QuestionInfoSql;
-import com.zkxltech.sql.RecordSql;
-import com.zkxltech.sql.StudentInfoSql;
-import com.zkxltech.sql.TestPaperSql;
+import com.zkxltech.sql.*;
 import com.zkxltech.ui.util.ExportExcel;
-
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RecordServiceImpl implements RecordService{
     private static final Logger log = LoggerFactory.getLogger(RecordServiceImpl.class);
@@ -383,15 +364,20 @@ public class RecordServiceImpl implements RecordService{
                         //按正确和错误进行分类
                         Map<Object, List<Record>> resultMap = ListUtils.getClassificationMap(list, "result");
                         float b = 0;
+                        float score = 0;
                         if (resultMap != null && resultMap.size() > 0) {
                             List<Record> corrects = resultMap.get(Constant.RESULT_TRUE);//得到所有正确的答案总数
                             if (!com.zkxltech.ui.util.StringUtils.isEmptyList(corrects)) {
                             	  b = (float)corrects.size() / questInfos.size();
+                                for (Record correct:corrects) {
+                                    score = score + Float.parseFloat(correct.getScore());
+                                }
 							}
                         }
                         Record resultRocord = new Record();
                         resultRocord.setStudentId((String)key);
                         resultRocord.setStudentName(list.get(0).getStudentName());
+                        resultRocord.setScore(String.valueOf(score));
                         resultRocord.setPercentage(b);
                         resultRocord.setTestName(testPaper.getTestName());
                         resultRocord.setTime(classHour.getStartTime());
