@@ -150,6 +150,7 @@
 								<th style="width: 10%;">姓名</th>
 								<th style="width: 15%;">试卷名称</th>
 								<th style="width: 10%;">正确率</th>
+								<th style="width: 8%;">总分</th>
 								<th style="width: 12%;">时间</th>
 								<th style="width: 10%;" class="pr1">全选
 								<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>
@@ -175,9 +176,10 @@
 								<td style="width: 10%;">{{item.studentName}}</td>
 								<td style="width: 15%;">{{item.testName}}</td>
 								<td style="width: 10%;">{{item.result}}</td>
+								<th style="width: 8%;">{{item.score}}</th>
 								<td style="width: 12%;">{{item.time}}</td>	
 								<td style="width: 10%;" class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-							</tr>
+							</tr>							
 							</tbody>
 					</table>
 					</div>
