@@ -614,7 +614,7 @@ table.userlistchild tbody tr{
 
 table.userlistchild tbody tr:first-child,
 table.classlist tbody tr:first-child{
-	border-top: none;
+	border-top: none !important;
 }
 table tbody tr td a.del,
 table tbody tr td a.edit {
@@ -634,8 +634,13 @@ table.classlist thead tr th,table.userlist thead tr th{
 	/*border-bottom: 1px solid #f5f5f5 !important;*/
 	
 }
+table.classlist tbody tr:first-child td,table.userlistchild tbody tr:first-child td{
+	border-top: none;
+}
 table.userlist thead tr {
-	border-bottom: 2px solid #f5f5f5 !important;
+	/*border-bottom: 2px solid #f5f5f5 !important;*/
+}
+
 }
 table.papertable{
 	background: #fff;
