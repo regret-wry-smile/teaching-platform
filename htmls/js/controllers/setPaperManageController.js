@@ -443,7 +443,8 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 			questionType: '2', //(0单选，1多选，2判断，3数字,-1字母)
 			selLetter: '0',//(0：单选，1：多选)
 			/*range:'A-D',*/
-			trueAnswer: 'true'
+			trueAnswer: 'true',
+			score:'',
 		};
 		/*是否校验题目成功*/
 		$scope.isTrue=false;
@@ -523,7 +524,8 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 				question: $scope.testInfo.question,
 				questionType: $scope.testInfo.questionType,
 				trueAnswer: $scope.testInfo.trueAnswer,
-				range: $scope.testInfo.range
+				range: $scope.testInfo.range,
+				score: $scope.testInfo.score
 			}
 			console.log("参数" + JSON.stringify(param))
 			$scope.result = JSON.parse(execute_testPaper("insert_question", JSON.stringify(param)));
@@ -631,7 +633,8 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 				question: $scope.testInfo.question,
 				questionType: $scope.testInfo.questionType,
 				trueAnswer: $scope.testInfo.trueAnswer,
-				range: $scope.testInfo.range
+				range: $scope.testInfo.range,
+				score: $scope.testInfo.score
 			}
 			//console.log("参数" + JSON.stringify(param))
 			$scope.result = JSON.parse(execute_testPaper("update_question", JSON.stringify(param)));

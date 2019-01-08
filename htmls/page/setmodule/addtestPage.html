@@ -119,6 +119,13 @@
 						<span ng-show="myForm.singleLetter.$invalid" ng-if="testInfo.selLetter=='0'" class="warning">单选*</span>
 						<span ng-show="myForm.mutilLetter.$invalid" ng-if="testInfo.selLetter=='1'" class="warning">多选*</span>
 					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">分数</label>
+						<div class="col-sm-8">
+							<input type="text" autocomplete="off" name="score" id="" value="" class="form-control" ng-model="testInfo.score" ng-pattern="/^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/"  placeholder="分数可填，可不填"/>
+						</div>
+						<span ng-show="myForm.score.$invalid" class="warning">*</span>
+					</div>
 
 				</div>
 				<div class="modal-footer text-center">
@@ -163,6 +170,7 @@
 								<th style="width: 15%;">题目内容</th>
 								<th style="width: 10%;">答案类型</th>
 								<th style="width: 10%;">答案</th>
+								<th style="width: 10%;">分数</th>
 							</tr>
 						</thead>
 					</table>
@@ -175,6 +183,7 @@
 									<td style="width: 15%;">{{item.question}}</td>
 									<td style="width: 10%;">{{item.questionType|questionType}}</td>
 									<td style="width: 10%;">{{item.trueAnswer|AnswerType}}</td>	
+									<td style="width: 10%;">{{item.score}}</td>	
 								</tr>
 							</tbody>
 						</table>
