@@ -71,7 +71,14 @@ public class QuestionInfoSql {
 					break;
 				default:
 					result.setRet(Constant.ERROR);
-					result.setMessage((i+1)+"行题目类型有误!");
+					result.setMessage("第"+(i+1)+"行题目类型有误!");
+					return result;
+				}
+				try {
+					Integer.valueOf(score);
+				}catch (Exception e){
+					result.setRet(Constant.ERROR);
+					result.setMessage("第"+(i+1)+"行分数类型有误!");
 					return result;
 				}
 				//插入题目信息
