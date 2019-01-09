@@ -643,7 +643,10 @@ table.userlist thead tr {
 
 }
 table.papertable{
-	background: #fff;
+	background: #fff ;
+}
+table.papertable tr{
+	background: #fff !important;
 }
 span.sub{
 	display: inline-block;
