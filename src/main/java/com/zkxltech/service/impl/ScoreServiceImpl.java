@@ -115,8 +115,8 @@ public class ScoreServiceImpl implements ScoreService {
 				} catch (Exception e2) {
 					range = "";
 				}
-				strBuilder.append("'id':'" + id + "',");
 				strBuilder.append("'type':'" + type + "',");
+				strBuilder.append("'id':'" + id + "',");
 				strBuilder.append("'range':'" + range + "'");
 				strBuilder.append("}");
 

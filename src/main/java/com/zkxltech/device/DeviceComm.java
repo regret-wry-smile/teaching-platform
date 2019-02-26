@@ -68,6 +68,7 @@ public class DeviceComm {
 	 * @return
 	 */
 	public static int answerStart(List<Answer> answers){
+		log.info("【调用dll- 开始答题(多题) 发送】"+EquipmentConstant.ANSWER_START_CODE(answers));
 		int str = SerialDll.INSTANTCE.answer_start(0, EquipmentConstant.ANSWER_START_CODE(answers));
 		log.info("【调用dll- 开始答题(多题)】"+str);
 		return str;
@@ -83,6 +84,7 @@ public class DeviceComm {
 	 * @return
 	 */
 	public static int answerStart(String answers){
+		log.info("【调用dll- 开始答题(单题) 发送】"+EquipmentConstant.ANSWER_START_CODE(answers));
 		int str = SerialDll.INSTANTCE.answer_start(1, EquipmentConstant.ANSWER_START_CODE(answers));
 		log.info("【调用dll- 开始答题(单题)】"+str);
 		return str;
