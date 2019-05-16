@@ -92,13 +92,20 @@ public class TempAuth {
      *
      * @return xuyuanjie
      */
-    public static Date decrypt() throws Exception {
+    public static Date decrypt() {
+        Calendar instance = Calendar.getInstance();
+        instance.set(2010,10,1);
+        Date decode = instance.getTime();
         BASE64Decoder decoder = new BASE64Decoder();
         String encode = ConfigConstant.projectConf.getJurisdiction();
-        String str = new String(decoder.decodeBuffer(encode));//解码
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date decode = sdf.parse(str);
-        return decode;
+        try {
+            String str = new String(decoder.decodeBuffer(encode));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            decode = sdf.parse(str);
+            return decode;
+        } catch (Exception e) {
+            return decode;
+        }
     }
 
 }
