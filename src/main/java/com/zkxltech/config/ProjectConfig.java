@@ -40,6 +40,10 @@ public class ProjectConfig {
 	 * 默认发送功率
 	 */
 	private String power;
+	/**
+	 * 默认权限日期
+	 */
+	private String jurisdiction;
 
 	public String getApp_type() {
 		return app_type;
@@ -104,7 +108,12 @@ public class ProjectConfig {
 	public void setPower(String power) {
 		this.power = power;
 	}
-	
-	
 
+	public String getJurisdiction() {
+		return jurisdiction;
+	}
+
+	public void setJurisdiction(String jurisdiction) {
+		this.jurisdiction = jurisdiction;
+	}
 }

@@ -37,7 +37,7 @@ public interface SerialDll extends Library  {
 	 * @return
 	 */
 	int wireless_bind_stop( );
-	
+
 	/**
 	 * 开始答题
 	 * @return

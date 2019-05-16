@@ -1,17 +1,18 @@
 package com;
 
-import java.util.List;
-
-import org.apache.log4j.PropertyConfigurator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.ejet.core.util.TempAuth;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
+import com.zkxltech.ui.MessageShell;
+import org.apache.log4j.PropertyConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  *
@@ -42,6 +43,12 @@ public class App {
         	//加载log4j日志配置
     		PropertyConfigurator.configure(ConfigConstant.log4jFile);
     		logger.info("======================= {} =======================", Global.VERSION );
+    		//验证授权
+			if (!TempAuth.isAuth()){
+				new MessageShell("授权已过期!");
+				System.exit(0);
+				return;
+			}
 //			//程序启动模式，服务端还是客户端
 //			new Thread(new Runnable() {
 //				@Override
