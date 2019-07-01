@@ -7,6 +7,8 @@ public interface QuestionService {
 	Result importQuestion(Object object);
 	/*新增题目*/
 	Result insertQuestion(Object object);
+	/*批量新增题目*/
+	Result insertQuestions(Object object);
 //	/**
 //	 * 从缓存中查询所有题目信息
 //	 * @return

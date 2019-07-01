@@ -72,6 +72,28 @@ public class QuestionServiceImpl implements QuestionService{
 	}
 
 	@Override
+	public Result insertQuestions(Object object) {
+		result = new Result();
+		try {
+			List<QuestionInfo> questionInfos = (List<QuestionInfo>) JSONArray.toCollection(JSONArray.fromObject(object),QuestionInfo.class);
+			result = questionInfoSql.insertQuestionInfo(questionInfos);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				result.setMessage("添加题目成功!");
+			}else {
+				result.setMessage("添加题目失败！");
+			}
+			result.setRet(Constant.SUCCESS);
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("添加题目失败！");
+			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
+			return result;
+		}
+	}
+
+	@Override
 	public Result selectQuestion(Object object) {
 		result = new Result();
 		try {

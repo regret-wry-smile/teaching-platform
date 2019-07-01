@@ -116,6 +116,9 @@ public class TestPaperFunctionManage extends BrowserFunction{
 			case "insert_question":
 				result = questionService.insertQuestion(params[1]);
 				break;
+			case "insert_questions":
+				result = questionService.insertQuestions(params[1]);
+				break;
 			case "update_question":
 				result = questionService.updateQuestion(params[1]);
 				break;
