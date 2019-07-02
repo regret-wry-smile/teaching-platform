@@ -282,24 +282,29 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
 		//保存试卷
 	$scope.savePaper = function() {
         var result1 = JSON.parse(execute_testPaper("insert_questions", JSON.stringify($scope.subjectList)));
-		if($scope.subjectList.length > 0) {
-			var param = {
-				testId: $scope.testId,
-				subject: $scope.subject,
-				testName: $scope.paperInfo.testName, //试卷名称
-				describe: $scope.paperInfo.describe, //试卷描述			
-			}
-			$scope.result = JSON.parse(execute_testPaper("insert_paper", JSON.stringify(param)));
-			if($scope.result.ret == 'success') {
-				toastr.success($scope.result.message);
-				history.go(-1);
-			} else {
-				toastr.error($scope.result.message);
-				console.log(JSON.stringify($scope.result.detail))
-			}
-		} else {
-			toastr.warning('该试卷没有题目，请先添加题目');
-		}
+        if(result1.ret=='success') {
+            if ($scope.subjectList.length > 0) {
+                var param = {
+                    testId: $scope.testId,
+                    subject: $scope.subject,
+                    testName: $scope.paperInfo.testName, //试卷名称
+                    describe: $scope.paperInfo.describe, //试卷描述
+                }
+                $scope.result = JSON.parse(execute_testPaper("insert_paper", JSON.stringify(param)));
+                if ($scope.result.ret == 'success') {
+                    toastr.success($scope.result.message);
+                    setTimeout(function(){
+                        history.go(-1);
+					},800)
+                } else {
+                    toastr.error($scope.result.message);
+                }
+            } else {
+                toastr.warning('该试卷没有题目，请先添加题目');
+            }
+        }else{
+            toastr.error(result1.message);
+        }
 	}
 
 })
@@ -320,7 +325,6 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
         describe:searchURL.split("&")[1].split("=")[1],
         subject:searchURL.split("&")[3].split("=")[1],
 	}
-    console.log("编辑试卷"+JSON.stringify($scope.paperInfo))
 	$scope.subjectList = []; //题目数组
 	$scope.checkedId = [];
 	$scope.onechecked = [];
@@ -537,26 +541,33 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
 		//修改试卷
 	$scope.savePaper = function() {
         var result1 = JSON.parse(execute_testPaper("insert_questions", JSON.stringify($scope.subjectList)));
-		if($scope.subjectList.length > 0) {
-			var param = {
-					id: $scope.paperInfo.id,
-					testId: $scope.paperInfo.testId,
-					subject: $scope.paperInfo.subject,
-					testName: $scope.paperInfo.testName, //试卷名称
-					describe: $scope.paperInfo.describe, //试卷描述			
-				}
-				//console.log(JSON.stringify(param))
-			$scope.result = JSON.parse(execute_testPaper("update_paper", JSON.stringify(param)));
-			if($scope.result.ret == 'success') {
-				toastr.success($scope.result.message);
-				history.go(-1);
-			} else {
-				toastr.error($scope.result.message);
-				console.log(JSON.stringify($scope.result.detail))
-			}
-		} else {
-			toastr.warning('该试卷没有题目，请先添加题目');
-		}
+		if(result1.ret=='success'){
+            if($scope.subjectList.length > 0) {
+                var param = {
+                    id: $scope.paperInfo.id,
+                    testId: $scope.paperInfo.testId,
+                    subject: $scope.paperInfo.subject,
+                    testName: $scope.paperInfo.testName, //试卷名称
+                    describe: $scope.paperInfo.describe, //试卷描述
+                }
+                //console.log(JSON.stringify(param))
+                $scope.result = JSON.parse(execute_testPaper("update_paper", JSON.stringify(param)));
+                if($scope.result.ret == 'success') {
+                    toastr.success($scope.result.message);
+                    setTimeout(function(){
+                        history.go(-1);
+                    },800)
+                } else {
+                    toastr.error($scope.result.message);
+                    console.log(JSON.stringify($scope.result.detail))
+                }
+            } else {
+                toastr.warning('该试卷没有题目，请先添加题目');
+            }
+        }else{
+            toastr.error(result1.message);
+        }
+
 	}
 });
 //新增题目控制器
@@ -736,7 +747,6 @@ app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, 
             }
             questionList.push(param)
 		}
-        toastr.success("新增题目成功");
         $modalInstance.close(questionList);
         /*$scope.result = JSON.parse(execute_testPaper("insert_question", JSON.stringify(param)));
         if($scope.result.ret == 'success') {
