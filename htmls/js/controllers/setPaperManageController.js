@@ -861,11 +861,10 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
             if(questionList.length>0){
             	for(var i=0;i<questionList.length;i++){
 					if($scope.testInfo.questionId==questionList[i].questionId){
-                        questionList.splice(i, 1);
+                        questionList.splice(i,1,param);
 					}
 				}
 			}
-            questionList.push(param)
             $modalInstance.close(questionList);
 			//console.log("参数" + JSON.stringify(param))
 			/*$scope.result = JSON.parse(execute_testPaper("update_question", JSON.stringify(param)));
