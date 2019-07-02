@@ -76,7 +76,7 @@ public class QuestionServiceImpl implements QuestionService{
 		result = new Result();
 		try {
 			List<QuestionInfo> questionInfos = (List<QuestionInfo>) JSONArray.toCollection(JSONArray.fromObject(object),QuestionInfo.class);
-			result = questionInfoSql.insertQuestionInfo(questionInfos);
+			result = questionInfoSql.updateOrSaveStudents(questionInfos);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("添加题目成功!");
 			}else {
