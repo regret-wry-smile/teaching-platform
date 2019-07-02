@@ -261,7 +261,7 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
             backdrop: false,
             resolve: {
                 infos: function() {
-                    return $scope.paperInfo.testId;
+                    return  $scope.testId;
                 },
                 questionList:function(){
                     return  $scope.subjectList
@@ -271,6 +271,9 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
         });
         modalInstance.result.then(function(info) {
 		console.log("数据"+JSON.stringify(info))
+			if(info&&info.length>0){
+                $scope.subjectList=info;
+			}
 
         }, function() {
             //$log.info('Modal dismissed at: ' + new Date());
@@ -278,6 +281,7 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
     }
 		//保存试卷
 	$scope.savePaper = function() {
+        var result1 = JSON.parse(execute_testPaper("insert_questions", JSON.stringify($scope.subjectList)));
 		if($scope.subjectList.length > 0) {
 			var param = {
 				testId: $scope.testId,
@@ -303,9 +307,20 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
 //编辑试卷控制器
 app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $location, $window, toastr) {
 	//console.log(JSON.stringify($location.search()))
-	if($location.search()) {
+	/*if($location.search()) {
 		$scope.paperInfo = $location.search();
+	}*/
+    var searchURL = window.location.search;
+    searchURL = searchURL.substring(1, searchURL.length);
+    $scope.paperInfo={
+        testId:searchURL.split("&")[4].split("=")[1],
+        testName:searchURL.split("&")[5].split("=")[1],
+		id:searchURL.split("&")[2].split("=")[1],
+        atype:searchURL.split("&")[0].split("=")[1],
+        describe:searchURL.split("&")[1].split("=")[1],
+        subject:searchURL.split("&")[3].split("=")[1],
 	}
+    console.log("编辑试卷"+JSON.stringify($scope.paperInfo))
 	$scope.subjectList = []; //题目数组
 	$scope.checkedId = [];
 	$scope.onechecked = [];
@@ -331,7 +346,7 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
 			angular.forEach($scope.subjectList, function(i) {
 				i.checked = true;
 				var item = i;
-				$scope.checkedId.push(i.id.toString());
+				$scope.checkedId.push(i.questionId);
 				$scope.onechecked.push(item);
 
 			})
@@ -349,11 +364,11 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
 		$scope.onechecked = [];
 		$scope.checkedId = [];
 		angular.forEach($scope.subjectList, function(i) {
-			var index = $scope.checkedId.indexOf(i.id);
+			var index = $scope.checkedId.indexOf(i.questionId);
 			if(i.checked && index === -1) {
 				var item = i;
 				$scope.onechecked.push(item);
-				$scope.checkedId.push(i.id.toString());
+				$scope.checkedId.push(i.questionId);
 
 			} else if(!i.checked && index !== -1) {
 				$scope.selected = false;
@@ -392,6 +407,7 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
 			});
 		}
     //批量添加题目
+	var extraSubjectList=[];
     $scope.addBatchSubject = function() {
         var modalInstance = $modal.open({
             templateUrl: 'addBatchSubjectModal.html',
@@ -400,12 +416,19 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
             backdrop: false,
             resolve: {
                 infos: function() {
-                    return $scope.paperInfo.testId;
+                    return  $scope.paperInfo.testId
+                },
+                questionList:function(){
+                    return  $scope.subjectList
                 }
+
             }
         });
         modalInstance.result.then(function(info) {
-            _selectQuestion();
+            if(info&&info.length>0){
+                $scope.subjectList=info;
+                extraSubjectList=info;
+            }
 
         }, function() {
             //$log.info('Modal dismissed at: ' + new Date());
@@ -423,18 +446,26 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
 				resolve: {
 					infos: function() {
 						return item;
-					}
+					},
+                    questionList: function() {
+                        return $scope.subjectList
+                    },
+
 				}
 			});
 			modalInstance.result.then(function(info) {
-				_selectQuestion();
+
+				//_selectQuestion();
+				if(info&&info.length>0){
+                    $scope.subjectList=info;
+				}
 			}, function() {
 				//$log.info('Modal dismissed at: ' + new Date());
 			});
 		}
 		//删除题目 
 	$scope.delSuject = function(item) {
-			if($scope.checkedId.length > 0) {
+			if($scope.onechecked.length > 0) {
 				var content = "删除题目";
 				var modalInstance = $modal.open({
 					templateUrl: 'sureModal.html',
@@ -448,17 +479,54 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
 					}
 				});
 				modalInstance.result.then(function(info) {
-					var param = $scope.checkedId;
-					$scope.result = JSON.parse(execute_testPaper("delete_question", JSON.stringify(param)));
-					if($scope.result.ret == 'success') {
-						toastr.success($scope.result.message);
-						_selectQuestion();
-						$scope.onechecked = [];
-						$scope.checkedId = [];
-						$scope.selected = false;
-					} else {
-						toastr.error($scope.result.message);
+				var hascheckedId=[];
+				var hasnocheckedId=[];
+
+                    $scope.onechecked.forEach(function(item){
+						if(item.id){
+                            hascheckedId.push(item.id)
+
+						}else{
+                            hasnocheckedId.push(item)
+						}
+					})
+                    console.log(JSON.stringify(hascheckedId))
+                    if(hascheckedId&&hascheckedId.length>0){
+                        var param = hascheckedId;
+                        console.log("参数"+JSON.stringify(param))
+                        $scope.result = JSON.parse(execute_testPaper("delete_question", JSON.stringify(param)));
+                        if($scope.result.ret == 'success') {
+                            $scope.onechecked = [];
+                            $scope.checkedId = [];
+                            $scope.selected = false;
+                            toastr.success($scope.result.message);
+                            //_selectQuestion();
+                            for(var i=0;i<$scope.subjectList.length;i++){
+                                for(var j=0;j<hascheckedId.length;j++){
+                                    if(hascheckedId[j]==$scope.subjectList[i].id){
+                                        $scope.subjectList.splice(i,1)
+                                    }
+                                }
+                            }
+
+                        } else {
+                            toastr.error($scope.result.message);
+                        }
 					}
+					if(hasnocheckedId&&hasnocheckedId.length>0){
+
+						for(var i=0;i<$scope.subjectList.length;i++){
+							for(var j=0;j<hasnocheckedId.length;j++){
+								if(hasnocheckedId[j]==$scope.subjectList[i]){
+                                    $scope.subjectList.splice(i,1)
+								}
+							}
+						}
+                        $scope.onechecked = [];
+                        $scope.checkedId = [];
+                        $scope.selected = false;
+					}
+
 				}, function() {
 					//$log.info('Modal dismissed at: ' + new Date());
 				});
@@ -468,6 +536,7 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
 		}
 		//修改试卷
 	$scope.savePaper = function() {
+        var result1 = JSON.parse(execute_testPaper("insert_questions", JSON.stringify($scope.subjectList)));
 		if($scope.subjectList.length > 0) {
 			var param = {
 					id: $scope.paperInfo.id,
@@ -607,7 +676,7 @@ app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, 
         score:'',
     };
     /*是否校验题目成功*/
-    $scope.isTrue=false;
+    //$scope.isTrue=false;
     if(infos) {
         $scope.testId = angular.copy(infos);
     }
@@ -630,31 +699,6 @@ app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, 
             $scope.testInfo.trueAnswer = '';
         }
     }
-
-    //查询该试卷的题号
-    var _selectQuestion = function() {
-        var param = {
-            testId: $scope.testId,
-            questionId: $scope.testInfo.questionId
-        }
-        console.log(JSON.stringify(param));
-        $scope.result = JSON.parse(execute_testPaper("select_question", JSON.stringify(param)));
-        console.log(JSON.stringify($scope.result));
-        if($scope.result.ret == 'success') {
-            if($scope.result.item.length > 0) {
-                $scope.myForm.questionId.$error.required=true;
-                $scope.myForm.questionId.$invalid=true;
-                $scope.myForm.$invalid=true;
-                $scope.isTrue=false;
-                toastr.warning("该题号已存在，请重新输入",{preventOpenDuplicates:true});
-            }else{
-                $scope.isTrue=true;
-            }
-        } else {
-            toastr.error($scope.result.message);
-        }
-    }
-
     //校验题号
     $scope.changetitle = function() {
         if($scope.testInfo.questionId) {
@@ -667,7 +711,7 @@ app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, 
     }
     //切换字母范围
     $scope.changeRange=function(range){
-        $scope.testInfo.range = range;
+      //  $scope.testInfo.range = range;
     }
     $scope.ok = function() {
         if($scope.testInfo.questionType == '-1') {
@@ -682,9 +726,8 @@ app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, 
         for(var i=0;i<$scope.testInfo.questionNum;i++){
         	var param = {
                 //id:$scope.idnum,
-                questionNum:$scope.testInfo.questionNum,
                 testId: $scope.testId,
-                questionId: i+1,
+                questionId: questionList.length>0?parseInt(questionList[questionList.length-1].questionId)+1:i+1,
                 question: $scope.testInfo.question,
                 questionType: $scope.testInfo.questionType,
                 trueAnswer: $scope.testInfo.trueAnswer,
@@ -695,8 +738,6 @@ app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, 
 		}
         toastr.success("新增题目成功");
         $modalInstance.close(questionList);
-        console.log("参数" + JSON.stringify(param))
-
         /*$scope.result = JSON.parse(execute_testPaper("insert_question", JSON.stringify(param)));
         if($scope.result.ret == 'success') {
             toastr.success($scope.result.message);
@@ -710,8 +751,9 @@ app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, 
     }
 })
 	//编辑题目控制器
-app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $scope, $modal, toastr, infos) {
-		$scope.title = "编辑题目";
+app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $scope, $modal, toastr, infos,questionList) {
+    var questionList=questionList.length>0?questionList:[];
+	$scope.title = "编辑题目";
 		if(infos) {
 			$scope.testInfo = angular.copy(infos);
 			/*if(typeof $scope.testInfo.questionId == 'string') {
@@ -795,6 +837,7 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 					$scope.testInfo.questionType = '1';
 				}
 			}
+            if(questionList&&questionList)
 			var param = {
 				id: $scope.testInfo.id,
 				testId: $scope.testInfo.testId,
@@ -805,14 +848,23 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 				range: $scope.testInfo.range,
 				score: $scope.testInfo.score
 			}
+            if(questionList.length>0){
+            	for(var i=0;i<questionList.length;i++){
+					if($scope.testInfo.questionId==questionList[i].questionId){
+                        questionList.splice(i, 1);
+					}
+				}
+			}
+            questionList.push(param)
+            $modalInstance.close(questionList);
 			//console.log("参数" + JSON.stringify(param))
-			$scope.result = JSON.parse(execute_testPaper("update_question", JSON.stringify(param)));
+			/*$scope.result = JSON.parse(execute_testPaper("update_question", JSON.stringify(param)));
 			if($scope.result.ret == 'success') {
 				toastr.success($scope.result.message);
-				$modalInstance.close('success');
+				$modalInstance.close(questionList);
 			} else {
 				toastr.error($scope.result.message);
-			}
+			}*/
 		}
 		$scope.cancel = function() {
 			$modalInstance.dismiss('cancel');

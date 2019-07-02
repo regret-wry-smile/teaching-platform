@@ -123,7 +123,8 @@
 
 		</div>
 		<div class="modal-footer text-center">
-			<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="mysubjectForm.$invalid||!isTrue">确定</button>
+			<!--<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="mysubjectForm.$invalid||!isTrue">确定</button>-->
+			<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="mysubjectForm.$invalid">确定</button>
 			<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
 		</div>
 	</form>
@@ -267,7 +268,7 @@
 			</div>
 		</div>
 		<div class="opbtn clearfix pt10">
-			<a href="javascript:;" ng-click="addSubject()" >新增题目</a>
+			<!--<a href="javascript:;" ng-click="addSubject()" >新增题目</a>-->
 			<a href="javascript:;" ng-click="addBatchSubject()" style="width: auto;">批量新增题目</a>
 		</div>
 		<div class="operatebtn pt10 clearfix">
