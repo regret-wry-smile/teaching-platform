@@ -518,7 +518,7 @@ public class QuestionInfoSql {
                         questionInfo.getQuestionId()+"','"+questionInfo.getQuestion()+"','"+questionInfo.getQuestionType()+"','"+questionInfo.getTrueAnswer()+"','"+questionInfo.getRange()+"','"+questionInfo.getScore()+"')");
             }else {
                 //更新题目信息
-                sqlBuilder.append("update question_info set question = '"+questionInfo.getQuestion()+"',questionType = '"+questionInfo.getQuestionType()+"',trueAnswer ='"+
+                sqlBuilder.append("update question_info set question = '"+questionInfo.getQuestion()+"',question_type = '"+questionInfo.getQuestionType()+"',true_answer ='"+
                         questionInfo.getTrueAnswer()+"',range = '"+questionInfo.getRange()+"',score = '"+questionInfo.getScore()+"' where id = '" +questionInfo.getId()+"'");
             }
             sqls.add(sqlBuilder.toString());
