@@ -340,7 +340,7 @@ public class QuestionInfoSql {
 				index++;
 			}
 		}
-		sqlBuilder.append(" order by status desc");
+		sqlBuilder.append(" order by CAST(question_id AS DECIMAL),status asc");
 		return dbHelper.onQuery(sqlBuilder.toString(), questionInfo);
 	}
 	
