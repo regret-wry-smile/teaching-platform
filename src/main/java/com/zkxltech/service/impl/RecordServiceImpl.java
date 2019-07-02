@@ -206,7 +206,7 @@ public class RecordServiceImpl implements RecordService{
                             }
                             map.put("answer", answer);
                             map.put("result", result);
-                            listMaps.set(5+questionId,map);
+                            listMaps.set(6+j,map);
                         }
                         listMaps.set(3,String.valueOf(scoreSum));//总分
                         listMaps.set(4,String.format("%.2f",trueSum * 100/questionSum)+"%");//正确率
