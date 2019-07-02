@@ -169,6 +169,7 @@
 						<thead>
 							<tr >
 								<th style="width: 5%;">序号</th>
+								<th style="width: 8%;">科目</th>
 								<th style="width: 10%;">名称</th>
 								<th style="width: 25%;">描述</th>
 								<th style="width: 10%;">操作</th>
@@ -180,6 +181,7 @@
 						<tbody>
 							<tr ng-repeat="paperInfo in paperInfoList track by $index">
 								<td style="width: 5%;">{{$index+1}}</td>
+								<td style="width:8%;">{{paperInfo.subject}}</td>
 								<td style="width: 10%;">{{paperInfo.testName}}</td>
 								<td style="width: 25%;">{{paperInfo.describe}}</td>
 								<td style="width: 10%;"><a ng-href="{{objectUrl}}" class="edit mr5" ng-click="editPaper(paperInfo)">编辑</a><a href="javascript:;" class="del" ng-click="delPaper(paperInfo)">删除</a></td>
