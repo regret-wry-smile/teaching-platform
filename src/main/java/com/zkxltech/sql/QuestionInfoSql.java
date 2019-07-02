@@ -390,8 +390,8 @@ public class QuestionInfoSql {
 		for (int i = 0; i < questionInfos.size(); i++) {
 			QuestionInfo questionInfo = questionInfos.get(i);
 			//插入题目信息
-			String sql = "insert into question_info (test_id,question_id,question,question_type,true_answer,range) values('"+questionInfo.getTestId()+"','"+
-					questionInfo.getQuestionId()+"','"+questionInfo.getQuestion()+"','"+questionInfo.getQuestionType()+"','"+questionInfo.getTrueAnswer()+"','"+questionInfo.getRange()+"')";	
+			String sql = "insert into question_info (test_id,question_id,question,question_type,true_answer,range,score) values('"+questionInfo.getTestId()+"','"+
+					questionInfo.getQuestionId()+"','"+questionInfo.getQuestion()+"','"+questionInfo.getQuestionType()+"','"+questionInfo.getTrueAnswer()+"','"+questionInfo.getRange()+"','"+questionInfo.getScore()+"')";
 			sqls.add(sql);
 		}
 		return dbHelper.onUpdateByGroup(sqls);
