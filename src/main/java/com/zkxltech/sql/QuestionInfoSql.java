@@ -400,7 +400,6 @@ public class QuestionInfoSql {
 	
 	/**
 	 * 主键批量删除题目
-	 * @param studentInfo
 	 * @return
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
@@ -503,20 +502,27 @@ public class QuestionInfoSql {
 		}
 		return DBHelper.onUpdateByGroup(sqls);
 	}
-	
-//	public static void main(String[] args) {
-//		StudentInfo studentInfo = new StudentInfo();
-//		studentInfo.setId(104320);
-//		studentInfo.setStatus("1");
-//		studentInfo.setIclickerId("9999999");
-//		try {
-//			new StudentInfoSql().updateStudent(studentInfo);
-//		} catch (IllegalArgumentException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+
+    /**
+     * 批量更新或新增生
+     *
+     * */
+    public Result updateOrSaveStudents(List<QuestionInfo> questionInfos) throws IllegalArgumentException, IllegalAccessException{
+        List<String> sqls = new ArrayList<String>();
+        for(int i = 0; i < questionInfos.size(); i++) {
+            QuestionInfo questionInfo = questionInfos.get(i);
+            StringBuilder sqlBuilder = new StringBuilder();
+            if (StringUtils.isEmpty(questionInfo.getId()) || "null".equals(questionInfo.getId())){
+                //插入题目信息
+                sqlBuilder.append("insert into question_info (test_id,question_id,question,question_type,true_answer,range,score) values('"+questionInfo.getTestId()+"','"+
+                        questionInfo.getQuestionId()+"','"+questionInfo.getQuestion()+"','"+questionInfo.getQuestionType()+"','"+questionInfo.getTrueAnswer()+"','"+questionInfo.getRange()+"','"+questionInfo.getScore()+"')");
+            }else {
+                //更新题目信息
+                sqlBuilder.append("update question_info set question = '"+questionInfo.getQuestion()+"',questionType = '"+questionInfo.getQuestionType()+"',trueAnswer ='"+
+                        questionInfo.getTrueAnswer()+"',range = '"+questionInfo.getRange()+"',score = '"+questionInfo.getScore()+"' where id = '" +questionInfo.getId()+"'");
+            }
+            sqls.add(sqlBuilder.toString());
+        }
+        return DBHelper.onUpdateByGroup(sqls);
+    }
 }
