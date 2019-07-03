@@ -14,11 +14,8 @@ import javax.swing.JFrame;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -404,6 +401,16 @@ public class MainStart {
 					}
 				}
 			});
+			cLabel01.addMouseMoveListener(new MouseMoveListener() {
+				@Override
+				public void mouseMove(MouseEvent mouseEvent) {
+					cLabel01.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
+					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close02));
+					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
+					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
+					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
+				}
+			});
 			cLabel02.addMouseTrackListener(new MouseTrackAdapter() {
 
 				@Override
@@ -427,6 +434,16 @@ public class MainStart {
 					}
 				}
 			});
+			cLabel02.addMouseMoveListener(new MouseMoveListener() {
+				@Override
+				public void mouseMove(MouseEvent mouseEvent) {
+					cLabel02.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
+					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
+					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer02));
+					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
+					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
+				}
+			});
 			cLabel03.addMouseTrackListener(new MouseTrackAdapter() {
 				@Override
 				public void mouseEnter(MouseEvent e) {
@@ -446,6 +463,16 @@ public class MainStart {
 						    });
 						cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
 					}
+				}
+			});
+			cLabel03.addMouseMoveListener(new MouseMoveListener() {
+				@Override
+				public void mouseMove(MouseEvent mouseEvent) {
+					cLabel03.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
+					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
+					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
+					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set02));
+					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
 				}
 			});
 			cLabel04.addMouseTrackListener(new MouseTrackAdapter() {
@@ -469,7 +496,16 @@ public class MainStart {
 					}
 				}
 			});
-			
+			cLabel04.addMouseMoveListener(new MouseMoveListener() {
+				@Override
+				public void mouseMove(MouseEvent mouseEvent) {
+					cLabel04.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
+					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
+					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
+					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
+					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record02));
+				}
+			});
 			cLabel01.addMouseTrackListener(SwtTools.showHand(cLabel01));
 			cLabel02.addMouseTrackListener(SwtTools.showHand(cLabel02));
 			cLabel03.addMouseTrackListener(SwtTools.showHand(cLabel03));
