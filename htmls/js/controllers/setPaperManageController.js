@@ -693,7 +693,7 @@ app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, 
     }
     $scope.testInfo.questionType1 = angular.copy($scope.testInfo.questionType);
     $scope.testInfo.selLetter1=angular.copy($scope.testInfo.selLetter);
-    $scope.testInfo.range = 'A-D';
+    $scope.testInfo.range = '';
     $scope.testInfo.range1 = angular.copy($scope.testInfo.range);
     //切换答案类型
     $scope.changequesType = function(quesType) {
@@ -708,6 +708,7 @@ app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, 
             $scope.testInfo.trueAnswer = 'true';
         } else if($scope.testInfo.questionType == '3') {
             $scope.testInfo.trueAnswer = '';
+            $scope.testInfo.range = '0-9';
         }
     }
     //校验题号
@@ -789,8 +790,10 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 				$scope.testInfo.range1 = angular.copy($scope.testInfo.range);
 			}else if($scope.testInfo.questionType == '2') {
 				$scope.testInfo.trueAnswer = 'true';
+                $scope.testInfo.range = '';
 			} else if($scope.testInfo.questionType == '3') {
 				$scope.testInfo.trueAnswer = '';
+                $scope.testInfo.range = '0-9';
 			}
 		}
 
