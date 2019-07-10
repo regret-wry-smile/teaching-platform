@@ -74,7 +74,7 @@ app.config(['$locationProvider', function($locationProvider) {
 }]);
 
 //停止多选答题
-app.controller('stopAnswerTypeCtrl', function($scope, $rootScope, toastr, $location, $window) {
+app.controller('stopAnswerTypeCtrl', function($scope, $rootScope, toastr, $window) {
 	$('#myModal').modal('hide');
 	//隐藏loading
 	var _hideModal = function() {
@@ -350,7 +350,7 @@ app.controller('stopSingeAnswerCtrl', function($scope, $rootScope, toastr, $wind
 	// 		}
 	var searchURL = window.location.search;
 	if (searchURL) {
-		$scope.answerType = getQueryString('answerType')
+		$scope.answerType = getQueryString('answerType') //单选类型(数字,字母,判断)
 	}
 
 	$rootScope.userdetailshow = false; //默认答题详情页面隐藏
@@ -705,11 +705,24 @@ app.controller('classCheckCtrl', function($scope, $rootScope, toastr, $window) {
 	}
 })
 //随堂检测人员进度条控制器
-app.controller('classuserCheckCtrl', function($scope, toastr, $location, $window, $modal) {
-	if ($location.search()) {
+app.controller('classuserCheckCtrl', function($scope, toastr, $window, $modal) {
+	/*if ($location.search()) {
 		$scope.paperInfo = $location.search(); //试卷id	答题类型answerType("0":主观答题,"1":客观答题)
 		console.log(JSON.stringify($scope.paperInfo))
-	}
+	}*/
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+    var searchURL = window.location.search;
+    if (searchURL) {
+        $scope.paperInfo={
+            answerType:getQueryString('answerType'), //单选类型(数字,字母,判断)
+            testId:getQueryString('testId') //试卷Id
+		}
+    }
 	$scope.AllanswerInfo = []; //作答信息数组	
 	$scope.oneanswerList = []; //个人答题详情
 	$('#myModal').modal('hide'); //默认隐藏loading
