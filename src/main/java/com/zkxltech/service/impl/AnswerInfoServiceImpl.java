@@ -244,8 +244,12 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
             }
             Map<String,StudentInfo> map = new HashMap<>();
             RedisMapSingleAnswer.setStudentInfoMap(map);
-            for (StudentInfo studentInfo : studentInfos) {
-                map.put(studentInfo.getIclickerId(), studentInfo);
+			for (int i = 0;i< studentInfos.size();i++) {
+				StudentInfo studentInfo = studentInfos.get(i);
+				if ("************".equals(studentInfo.getIclickerId()) || com.zkxltech.ui.util.StringUtils.isEmpty(studentInfo.getIclickerId())){
+					continue;
+				}
+				map.put(studentInfo.getIclickerId(), studentInfo);
             }
             String type = answer.getType();
             switch (type) {

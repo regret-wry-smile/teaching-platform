@@ -1,5 +1,6 @@
 package com.zkxltech.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -174,7 +175,20 @@ public class ClassHourServiceImpl implements ClassHourService{
 					result.setRet(Constant.ERROR);
 					return result;
 				}
-				Global.setStudentInfos((List<StudentInfo>)result.getItem());
+				List<StudentInfo> studentInfos = (List<StudentInfo>)result.getItem();
+				List<StudentInfo> bindStudentInfos = new ArrayList<StudentInfo>();
+//				List<StudentInfo> allStudentInfos = new ArrayList<StudentInfo>();
+				for (int i=0;i<studentInfos.size();i++){
+					StudentInfo stu = studentInfos.get(i);
+					if("1".equals(stu.getStatus())){
+						bindStudentInfos.add(stu);
+					}
+//					if ("************".equals(stu.getIclickerId()) || StringUtils.isEmpty(stu.getIclickerId())){
+//						stu.setIclickerId("*********"+i);
+//					}
+//					allStudentInfos.add(stu);
+				}
+				Global.setStudentInfos(bindStudentInfos);
 			}else {
 				result.setMessage("查询学生信息失败！");
 				result.setRet(Constant.ERROR);

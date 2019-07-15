@@ -361,13 +361,17 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	            r.setMessage("未获取到学生信息");
 	            return r;
 	        }
-	        /**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
-	        for (StudentInfo studentInfo : studentInfos) {
-	            Map<String, String> studentInfoMap = new HashMap<>();
-	            studentInfoMap.put("studentName", studentInfo.getStudentName());
-	            studentInfoMap.put("status", Constant.ATTENDANCE_NO);
-	            RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
-	        }
+			/**将查出来的学生信息按卡的id进行分类,并存入静态map中*/
+			for (int i = 0;i< studentInfos.size();i++) {
+				StudentInfo studentInfo = studentInfos.get(i);
+				Map<String, String> studentInfoMap = new HashMap<>();
+				studentInfoMap.put("studentName", studentInfo.getStudentName());
+				studentInfoMap.put("status", Constant.ATTENDANCE_NO);
+				if ("************".equals(studentInfo.getIclickerId()) || com.zkxltech.ui.util.StringUtils.isEmpty(studentInfo.getIclickerId())){
+					studentInfo.setIclickerId("*********"+i);
+				}
+				RedisMapAttendance.getAttendanceMap().put(studentInfo.getIclickerId(), studentInfoMap);
+			}
 	        BaseThread thread = new AttendanceThread();
 	        thread.start();
 	        ThreadManager.getInstance().addThread(thread);
