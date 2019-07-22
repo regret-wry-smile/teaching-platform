@@ -10,7 +10,7 @@ public class Global {
 	/**
 	 * 版本信息
 	 */
-	public static final String VERSION = "互动课堂v2.0.0";
+	public static final String VERSION = "互动课堂v2.0.1";
 	/**
 	 * 是否教师端
 	 */
