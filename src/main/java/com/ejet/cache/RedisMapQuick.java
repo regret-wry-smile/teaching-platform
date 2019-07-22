@@ -42,10 +42,9 @@ public class RedisMapQuick {
                     }
                     quickMap.put("studentName", studentInfo.getStudentName());
                     /*停止所有线程*/
-                    ThreadManager.getInstance().stopAllThread();
-                    EquipmentServiceImpl.getInstance().answer_stop();
+//                    ThreadManager.getInstance().stopAllThread();
+//                    EquipmentServiceImpl.getInstance().answer_stop();
                     Global.setModeMsg(Constant.BUSINESS_PREEMPTIVE);
-                    flag = false ;
                 }
             }
         }
@@ -66,6 +65,7 @@ public class RedisMapQuick {
         RedisMapQuick.studentInfoMap = studentInfoMap;
     }
     public static void clearQuickMap() {
+        flag = false ;
         quickMap.clear();
     }
     public static void clearStudentInfoMap() {
