@@ -221,6 +221,150 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
 	$scope.returnPage = function() {
 			window.location.href = "../../page/setmodule/testPaperManage.html";
 		}
+    //全选
+    $scope.selectAll = function(data) {
+        if($scope.selected) {
+            $scope.onechecked = [];
+            angular.forEach($scope.subjectList, function(i) {
+                i.checked = true;
+                var item = i;
+                $scope.checkedId.push(i.questionId);
+                $scope.onechecked.push(item);
+
+            })
+        } else {
+            angular.forEach($scope.subjectList, function(i) {
+                i.checked = false;
+                $scope.onechecked = [];
+                $scope.checkedId = [];
+            })
+        }
+
+    };
+    //单选
+    $scope.selectOne = function(param) {
+        $scope.onechecked = [];
+        $scope.checkedId = [];
+        angular.forEach($scope.subjectList, function(i) {
+            var index = $scope.checkedId.indexOf(i.questionId);
+            if(i.checked && index === -1) {
+                var item = i;
+                $scope.onechecked.push(item);
+                $scope.checkedId.push(i.questionId);
+
+            } else if(!i.checked && index !== -1) {
+                $scope.selected = false;
+                $scope.onechecked.splice(index, 1);
+                $scope.checkedId.splice(index, 1);
+            };
+        })
+
+        if($scope.subjectList.length === $scope.onechecked.length) {
+            $scope.selected = true;
+        } else {
+            $scope.selected = false;
+        }
+    };
+
+    $scope.editSuject = function(item) {
+        console.log(JSON.stringify(item))
+        var modalInstance = $modal.open({
+            /*templateUrl: 'addSubjectModal.html',*/
+            templateUrl:'editSubjectModal.html',
+            controller: 'editSubjectModalCtrl',
+            size: 'md',
+            backdrop: false,
+            resolve: {
+                infos: function() {
+                    return item;
+                },
+                questionList: function() {
+                    return $scope.subjectList
+                },
+
+            }
+        });
+        modalInstance.result.then(function(info) {
+
+            //_selectQuestion();
+            if(info&&info.length>0){
+                $scope.subjectList=info;
+            }
+        }, function() {
+            //$log.info('Modal dismissed at: ' + new Date());
+        });
+    }
+    //删除题目
+    $scope.delSuject = function(item) {
+        if($scope.onechecked.length > 0) {
+            var content = "删除题目";
+            var modalInstance = $modal.open({
+                templateUrl: 'sureModal.html',
+                controller: 'sureModalCtrl',
+                size: 'sm',
+                backdrop: false,
+                resolve: {
+                    content: function() {
+                        return content;
+                    }
+                }
+            });
+            modalInstance.result.then(function(info) {
+                var hascheckedId=[];
+                var hasnocheckedId=[];
+
+                $scope.onechecked.forEach(function(item){
+                    if(item.id){
+                        hascheckedId.push(item.id)
+
+                    }else{
+                        hasnocheckedId.push(item)
+                    }
+                })
+                console.log(JSON.stringify(hascheckedId))
+                // if(hascheckedId&&hascheckedId.length>0){
+                //     var param = hascheckedId;
+                //     console.log("参数"+JSON.stringify(param))
+                //     $scope.result = JSON.parse(execute_testPaper("delete_question", JSON.stringify(param)));
+                //     if($scope.result.ret == 'success') {
+                //         $scope.onechecked = [];
+                //         $scope.checkedId = [];
+                //         $scope.selected = false;
+                //         toastr.success($scope.result.message);
+                //         //_selectQuestion();
+                //         for(var i=0;i<$scope.subjectList.length;i++){
+                //             for(var j=0;j<hascheckedId.length;j++){
+                //                 if(hascheckedId[j]==$scope.subjectList[i].id){
+                //                     $scope.subjectList.splice(i,1)
+                //                 }
+                //             }
+                //         }
+				//
+                //     } else {
+                //         toastr.error($scope.result.message);
+                //     }
+                // }
+                if(hasnocheckedId&&hasnocheckedId.length>0){
+
+                    for(var i=0;i<$scope.subjectList.length;i++){
+                        for(var j=0;j<hasnocheckedId.length;j++){
+                            if(hasnocheckedId[j]==$scope.subjectList[i]){
+                                $scope.subjectList.splice(i,1)
+                            }
+                        }
+                    }
+                    $scope.onechecked = [];
+                    $scope.checkedId = [];
+                    $scope.selected = false;
+                }
+
+            }, function() {
+                //$log.info('Modal dismissed at: ' + new Date());
+            });
+        } else {
+            toastr.warning("请先勾选至少一个题目");
+        }
+    }
 		//添加题目
 	$scope.addSubject = function() {
 			var modalInstance = $modal.open({
