@@ -47,7 +47,7 @@
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/set.png" class="ml25" />
-					<span>设置</span>
+					<span>Setting</span>
 				</div>
 				<!--<div class="pull-right">
 					<img src="../../image/return.png" />
@@ -56,7 +56,7 @@
 			<div ng-cloak class="content content1 bgf5 clearfix">
 				<form class="form-horizontal clearfix" role="form">
 				  <div class="form-group">
-				    <label for="firstname" class="col-sm-2 control-label">系统信道设置</label>
+				    <label for="firstname" class="col-sm-3 control-label">Channel Setting</label>
 				    <div class="col-sm-5">
 				    <select class="single" select1 ng-model="chain" defalutvalue='chain1' ng-change="changeChain(chain)" list='infoAllNameList'>
 						<!--<option ng-repeat="item in infoAllNameList track by $index" value="{{item}}">{{item}}</option>-->
@@ -70,8 +70,8 @@
 				    </div>
 				  </div>
 				  <div class="form-group">
-				    <label for="lastname" class="col-sm-2 control-label">答题器发送功率</label>
-				   	<div class="col-sm-10">
+				    <label for="lastname" class="col-sm-3 control-label">Channel Intensity</label>
+				   	<div class="col-sm-5">
 				   		<select class="single" select ng-model="sendpower" defalutvalue='sendpower1' ng-change="changeSendPower(sendpower)" >
 				   			<option value="1">1</option>
 				   			<option value="2">2</option>
@@ -101,13 +101,13 @@
 				  
 				</form>
 				<div class="opbtn clearfix">
-				  	<a href="javascript:;" ng-click="readSet()">读取</a>
-				  	<a href="javascript:;" ng-click="set()">设置</a>
-				  	<a href="javascript:;" ng-click="setDefault()">设为默认值</a>
+				  	<a href="javascript:;" ng-click="readSet()">Read</a>
+				  	<a href="javascript:;" ng-click="set()">Set</a>
+				  	<a href="javascript:;" ng-click="setDefault()">Default</a>
 			  	</div>
 			  	<div class="operatebtn mt20 clearfix">
-			  		<button class="btn btn-primary btn-lg mr5" ng-click="stuManage()">学生管理</button>
-				 	<button class="btn btn-primary btn-lg " ng-click="paperManage()">试卷管理</button>
+			  		<button class="btn btn-primary btn-lg mr5" ng-click="stuManage()">Student Management</button>
+				 	<button class="btn btn-primary btn-lg " ng-click="paperManage()">Test Management</button>
 			  	</div>
 				  
 			</div>

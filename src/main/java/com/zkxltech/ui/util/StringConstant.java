@@ -29,5 +29,5 @@ public class StringConstant {
 	/**
 	 * 接收率发送功率
 	 */
-	public static String[] SUBJECTS =  {"语文","数学","外语","物理","化学","生物","政治","历史","地理","文综","理综"};
+	public static String[] SUBJECTS =  {"English", "General Knowledge", "Science", "Chemistry", "Physics", "Maths", "Hindi","Geography", "History", "Civics", "Computers", "Evs", "Biology"};
 }
