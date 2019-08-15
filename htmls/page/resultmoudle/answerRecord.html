@@ -56,19 +56,19 @@
 		<script type="text/ng-template" id="oneAnswerDetailModal.html">
 					<div class="modal-header">
 						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-						<h4 class="modal-title">{{}}作答详情</h4>
+						<h4 class="modal-title">{{}}Answer Details</h4>
 					</div>
 					<div class="modal-body" id="oneanswer" style="max-height: 3.0rem;overflow: auto;" >
 						<table class="table">
 							<thead>
 								<tr>
-									<th>序号</th>
-									<th>题号</th>
-									<th>题目</th>
-									<th>题目类型</th>
-									<th>正确答案|最高分</th>
-									<th>作答答案|得分</th>									
-									<th>作答结果</th>								
+									<th>NO.</th>
+									<th>Question ID</th>
+									<th>Question</th>
+									<th>Question Type</th>
+									<th>Right Answer|Highest Score</th>
+									<th>Answer|Score</th>
+									<th>Answer Result</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -88,7 +88,7 @@
 						
 					</div>
 					<div class="modal-footer text-center">
-						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>			
+						<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
 					</div>
 			</script>
 		<!--确认弹框-->
@@ -96,14 +96,14 @@
 				<form name="myForm" novalidate="novalidate">
 					<div class="modal-header">
 						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-						<h4 class="modal-title">确认</h4>
+						<h4 class="modal-title">Confirm</h4>
 					</div>
 					<div class="modal-body">
 						{{content}}
 					</div>
 					<div class="modal-footer text-center">
-						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
-						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
+						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">Sure</button>
+						<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
 			
 					</div>
 			</form>
@@ -111,7 +111,7 @@
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/set.png" class="ml25" />
-					<span>作答记录</span>
+					<span>Answer Record</span>
 				</div>
 				<div class="pull-right">
 					<!--<a href="javascript:history.go(-1);">
@@ -121,38 +121,38 @@
 			</div>
 			<div ng-cloak class="content content1 bgf5 clearfix" style="top: 1.2rem;">		
 				<div class="searchbar clearfix">
-				    <label >班级</label>			    	
+				    <label >Class</label>
 			    	<select class="single" select2 ng-model="setClass.classes" defalutvalue='setClass.classes1' ng-change="changeClass(setClass.classes)" list='classList'>
 						<!--<option ng-repeat="item in classList track by $index" value="{{item}}">{{item.value}}</option>-->
 					</select>
-					<label >科目</label>
+					<label >Subject</label>
 					<select class="single" select1 ng-model="setClass.subject" defalutvalue='setClass.subject1' list="subjectlists" ng-change="changeSubject(setClass.subject)">
 				   			<option ng-repeat="subjectitem in subjectlists track by $index" value="{{subjectitem}}">{{subjectitem}}</option>
 					</select>
-					<label>课程</label>
+					<label>Course</label>
 				   <select class="single" select2 ng-model="setClass.sujectHour" defalutvalue='setClass.sujectHour1'  ng-change="changeClassHour(setClass.sujectHour)" list="classhourList" >
 			   			<!--<option ng-repeat="houritem in classhourList track by $index" value="{{houritem}}">{{houritem.value}}</option>-->
 					</select>		
 					<!--<select class="single" select2 ng-model="setClass.sujectHour" defalutvalue='setClass.sujectHour1' list='classhourList' ng-change="changeClassHour(setClass.sujectHour)" >
 						</select>-->
-					<label >试卷</label>
+					<label >Paper</label>
 			    	<select class="single" select2 ng-model="setClass.paper" defalutvalue='setClass.paper1'  ng-change="changePaper(setClass.paper)" list='paperList'>
 						<!--<option ng-repeat="paperitem in paperList track by $index" value="{{paperitem}}">{{paperitem.value}}</option>-->
 					</select>
-					<a href="javascript:;" class="del ml20 mr10" ng-click="deleteRcord()">删除</a>
-					<a href="javascript:;" class="edit" ng-click="exportRecord()">导出</a>
+					<a href="javascript:;" class="del ml20 mr10" ng-click="deleteRcord()">Delete</a>
+					<a href="javascript:;" class="edit" ng-click="exportRecord()">Export</a>
 				</div>
 				<div class="col-main" style="position: absolute;top: 0.6rem;left: 0;right: 0;bottom: .25rem;overflow-x: hidden;overflow-y: auto; width:100%;padding:0 0.25rem;">	
 					<table class="table table-stripe subject">
 						<thead>
 							<tr >
-								<th style="width: 5%;">序号</th>
-								<th style="width: 10%;">姓名</th>
-								<th style="width: 15%;">试卷名称</th>
-								<th style="width: 10%;">正确率</th>
-								<th style="width: 8%;">总分</th>
-								<th style="width: 12%;">时间</th>
-								<th style="width: 10%;" class="pr1">全选
+								<th style="width: 5%;">NO.</th>
+								<th style="width: 10%;">Name</th>
+								<th style="width: 15%;">Paper Name</th>
+								<th style="width: 10%;">Correct</th>
+								<th style="width: 8%;">Total Score</th>
+								<th style="width: 12%;">Date</th>
+								<th style="width: 10%;" class="pr1">Select All
 								<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>
 							</tr>
 						</thead>					

@@ -95,7 +95,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 		});
 		modalInstance.result.then(function(info) {
 			var classListlength=0;
-			console.log("班级id"+JSON.stringify(info))
+			console.log("Class ID"+JSON.stringify(info))
 			/*if(info){
 				_selectClass();
 				for(var i=0;i<$scope.classList.length;i++){
@@ -169,7 +169,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			});
 			
 		}else{
-			toastr.warning("请先选择一个班级");
+			toastr.warning("Please choose a class first");
 		}
 			
 		};
@@ -200,7 +200,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	
 	// 删除班级	 
 	$scope.deleteClass=function(item){
-		var content="删除班级";
+		var content="Delete Class";
 		var modalInstance = $modal.open({
 			templateUrl: 'sureModal.html',
 			controller: 'sureModalCtrl',
@@ -283,7 +283,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			$scope.result = JSON.parse(execute_student("bind_start", JSON.stringify(param)));
 			//		console.log(JSON.stringify(result));
 			if($scope.result.ret == "success") {
-				var content = "一键配对";
+				var content = "Quick Pairing";
 				var modalInstance = $modal.open({
 					templateUrl: 'findBindModal.html',
 					controller: 'findBindModalCtrl',
@@ -305,7 +305,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 				toastr.error($scope.result.message);
 			}
 		}else{
-			toastr.warning("当前没有班级，请先添加班级");
+			toastr.warning("There is no class at present, please add class first");
 		}
 		
 		
@@ -358,7 +358,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	//删除学生
 	$scope.deleteStudent=function(){
 		if($scope.checkedId.length>0){
-			var content="删除选中学生";
+			var content="Delete selected student";
 			var modalInstance = $modal.open({
 				templateUrl: 'sureModal.html',
 				controller: 'sureModalCtrl',
@@ -389,14 +389,14 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 				//$log.info('Modal dismissed at: ' + new Date());
 			});
 		}else{
-			toastr.warning("请选择学生");
+			toastr.warning("Please select student");
 		}
 		
 	}
 	//解绑
 	$scope.unbindStu=function(){
 		if($scope.checkedId.length>0){
-			var content="解绑";
+			var content="unbundling";
 			var modalInstance = $modal.open({
 				templateUrl: 'sureModal.html',
 				controller: 'sureModalCtrl',
@@ -423,12 +423,12 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 			}, function() {
 			});
 		}else{
-			toastr.warning("请选择学生");
+			toastr.warning("Please select a student");
 		}
 	}
 	//清除白名单
 	$scope.clearStu=function(){
-		var content="清除白名单";
+		var content="Clear Whitelist";
 		var modalInstance = $modal.open({
 			templateUrl: 'sureModal.html',
 			controller: 'sureModalCtrl',
@@ -507,7 +507,7 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 	var _showModal=function(){
 		$('#myModal').modal('show');
 	}
-	$scope.title="导入学生";
+	$scope.title=" Import Student";
 	$scope.className="某班级";
 	//console.log("吃哈哈哈"+JSON.stringify(infos));
 	if(infos){
@@ -518,7 +518,7 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 			$scope.isfileType=false;		
 		}else{
 			$scope.isfileType=true;
-			$scope.title="【服务器】导入学生";
+			$scope.title="【server】Import Student";
 		}
 		
 	}else{
@@ -545,11 +545,11 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 				var extStart = $scope.filepath.lastIndexOf(".");
 				var ext = $scope.filepath.substring(extStart, $scope.filepath.length).toUpperCase();
 				if(ext != ".XLS" && ext != ".XLSX") {
-					toastr.warning("只能导入.XLSX、.XLS类型文件");
+					toastr.warning("Only .XLSX、.XLS files can be imported");
 					return ;
 				}else{	
 					//_showModal();
-					console.log("班级"+JSON.stringify(infos)+"地址"+$scope.filepath)
+					console.log("Class"+JSON.stringify(infos)+"FilePath"+$scope.filepath)
 					$scope.result=JSON.parse(execute_student("import_student",$scope.filepath,JSON.stringify(infos)));
 					console.log("本地导入学生"+JSON.stringify($scope.result))
 					if($scope.result.ret=='success'){
@@ -563,7 +563,7 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 					//$('#myModal').modal('show');
 				}
 			}else{
-				toastr.warning("请选择文件");
+				toastr.warning("Please select file");
 			}
 		}else{
 			_showModal();
@@ -587,7 +587,7 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 })
 //确认弹出框
 app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
-	$scope.content='是否进行'+angular.copy(content)+'操作？';
+	$scope.content='Do you want to operate '+angular.copy(content)+'？';
 	$scope.ok = function() {
 		$modalInstance.close('success');
 	}
@@ -611,7 +611,7 @@ app.controller('findBindModalCtrl',function($scope,$modalInstance,toastr){
 		if(result.ret == 'success'){
 			/*toastr.success("指令发送成功！");*/
 		}else{
-			toastr.error("指令发送失败！");
+			toastr.error("Instruction Sending Failure！");
 		}
 		/*关闭定时器*/
 		$modalInstance.close();
@@ -620,7 +620,7 @@ app.controller('findBindModalCtrl',function($scope,$modalInstance,toastr){
 //添加学生控制器
 app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos){
 	console.log(JSON.stringify(infos))
-	$scope.title="添加学生";
+	$scope.title="Add Student";
 	if(infos){
 		$scope.classId=infos.classId;
 		$scope.className=infos.className;
@@ -643,7 +643,7 @@ app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos
 			$scope.result = JSON.parse(execute_student("select_student",JSON.stringify(param)));
 			if($scope.result.ret=='success'){
 				if($scope.result.item.length>0){
-					toastr.warning('该学号已存在，请重新输入');
+					toastr.warning('The student id already exists,Please enter it again');
 					$scope.myForm.studentId.$invalid=true;
 					$scope.myForm.$invalid=true;	
 				}
@@ -663,7 +663,7 @@ app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos
 			$scope.result = JSON.parse(execute_student("select_student",JSON.stringify(param)));
 			if($scope.result.ret=='success'){
 				if($scope.result.item.length>0){
-				toastr.warning('该答题器编号已存在，请重新输入');
+				toastr.warning('The Keypad ID already exists,Please enter it again');
 				   	$scope.myForm.iclickerId.$invalid=true;
 					$scope.myForm.$invalid=true;	
 				}
@@ -703,7 +703,7 @@ app.controller('addStudentModalCtrl',function($scope,$modalInstance,toastr,infos
 })
 	//编辑学生控制器
 app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,infos){
-	$scope.title="编辑学生";
+	$scope.title="Edit Student";
 	if(infos){
 		$scope.student=angular.copy(infos);
 		console.log(JSON.stringify(infos))
@@ -724,7 +724,7 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 						$scope.myForm.studentId.$error.required=true;
 						$scope.myForm.studentId.$invalid=true;
 						$scope.myForm.$invalid=true;
-						toastr.warning("该学号已存在，请重新输入",{preventOpenDuplicates:true});
+						toastr.warning("The student id already exists,Please enter it again",{preventOpenDuplicates:true});
 					}					
 				}
 			} else {
@@ -747,7 +747,7 @@ app.controller('editStudentModalCtrl',function($scope,$modalInstance,toastr,info
 						$scope.myForm.iclickerId.$error.required=true;
 						$scope.myForm.iclickerId.$invalid=true;
 						$scope.myForm.$invalid=true;
-						toastr.warning('该答题器编号已存在，请重新输入',{preventOpenDuplicates:true});
+						toastr.warning('The answerer number already exists,Please enter it again',{preventOpenDuplicates:true});
 					}
 					
 				}
@@ -788,7 +788,7 @@ app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toa
 		classId:"" //班级id
 	}
 	$scope.classInfo.atype1=angular.copy($scope.classInfo.atype);
-	$scope.title="添加班级";
+	$scope.title="Add Class";
 	//班级id查重
 	$scope.selectClass=function(){
 		if($scope.classInfo.classId){
@@ -799,7 +799,7 @@ app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toa
 			console.log(JSON.stringify($scope.result))
 			if($scope.result.ret=='success'){
 				if($scope.result.item.length>0){
-					toastr.warning('该班级id已存在，请重新输入');
+					toastr.warning('The class ID already exists,Please enter it again');
 					$scope.myForm.classId.$invalid=true;
 					$scope.myForm.$invalid=true;
 				} 
@@ -819,7 +819,7 @@ app.controller('addClassModalCtrl',function($scope,$modalInstance,$rootScope,toa
 			console.log(JSON.stringify($scope.result))
 			if($scope.result.ret=='success'){
 				if($scope.result.item.length>0){
-					toastr.warning('该班级名称已存在，请重新输入');
+					toastr.warning('The class name already exists. Please enter it again');
 					$scope.myForm.name.$invalid=true;
 					$scope.myForm.$invalid=true;
 				} 
@@ -855,7 +855,7 @@ app.controller('editClassModalCtrl',function($scope,$modalInstance,$rootScope,to
 		$scope.classInfo=angular.copy(infos);
 	}
 	$scope.classInfo.atype1=angular.copy($scope.classInfo.atype);
-	$scope.title="编辑班级";
+	$scope.title="Edit Class";
 	$scope.noedit=true;
 	
 	$scope.selectClass=function(){
@@ -871,7 +871,7 @@ app.controller('editClassModalCtrl',function($scope,$modalInstance,$rootScope,to
 						$scope.myForm.classId.$error.required=true;
 						$scope.myForm.classId.$invalid=true;
 						$scope.myForm.$invalid=true;
-						toastr.warning("该班级id已存在，请重新输入",{preventOpenDuplicates:true});
+						toastr.warning("The class id already exists,Please enter it again",{preventOpenDuplicates:true});
 					}					
 				}
 			} else {
@@ -894,7 +894,7 @@ app.controller('editClassModalCtrl',function($scope,$modalInstance,$rootScope,to
 						$scope.myForm.name.$error.required=true;
 						$scope.myForm.name.$invalid=true;
 						$scope.myForm.$invalid=true;
-						toastr.warning("该班级名称已存在，请重新输入",{preventOpenDuplicates:true});
+						toastr.warning("The class name already exists. Please enter it again",{preventOpenDuplicates:true});
 					}					
 				}
 			} else {
@@ -932,7 +932,7 @@ app.directive('select', function() {
 			if(scope.defalutvalue){
 				$(element).multiselect({
 				multiple: false,
-				selectedHtmlValue: '请选择',
+				selectedHtmlValue: 'Select',
 				defalutvalue:scope.defalutvalue,
 				change: function() {
 					$(element).val($(this).val());
