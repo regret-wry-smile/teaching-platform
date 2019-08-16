@@ -60,4 +60,6 @@ public interface StudentInfoService {
     Result signInStop();
     Result quickAnswer(Object param);
     Result stopQuickAnswer();
+
+	Result updateStudent(StudentInfo studentInfo);
 }

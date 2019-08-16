@@ -60,6 +60,11 @@ public class MainPage{
 		}
 		return result;
 	}
+
+	//最小化返回显示状态
+	public void returnWindow(){
+		shell.setVisible(true);
+	}
 	
 	private void initData(){
 		/*屏幕宽高*/
@@ -82,7 +87,7 @@ public class MainPage{
 
 	private void createContents() {
 		try {
-			shell = new Shell(display, SWT.NONE);
+			shell = new Shell(display, SWT.NO_TRIM|SWT.ON_TOP);
 			shell.addTraverseListener(new TraverseListener() {
 				public void keyTraversed(TraverseEvent e) {
 					// 屏蔽按下Esc按键
@@ -251,7 +256,8 @@ public class MainPage{
 
 				@Override
 				public void handleEvent(Event event) {
-					shell.setMinimized(true);
+					shell.setVisible(false);
+					mainStart.floatingWindow2();
 				}
 			});
 			changeMin.addMouseTrackListener(SwtTools.showHand(changeMin));

@@ -40,39 +40,39 @@
 			<!--新增班级start-->
 			<form name="myForm" class="form-horizontal clearfix" role="form" novalidate="novalidate">
 				<div class="modal-header">
-					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
+					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
 					<h4 class="modal-title">{{title}}</h4>
 				</div>
 				<div class="modal-body">
-					<div class="form-group" ng-show="(title!='Edit Class')">
-						<label for="firstname" class="col-sm-3 control-label">Choose State</label>
+					<div class="form-group" ng-show="(title!='编辑班级')">
+						<label for="firstname" class="col-sm-3 control-label">选择状态</label>
 						<div class="col-sm-8">
 							<select class="single" select ng-model="classInfo.atype" name="atype" defalutvalue='classInfo.atype1' required>
-								<option value="0">local</option>
-								<option value="1">online</option>
+								<option value="0">本地</option>
+								<option value="1">在线</option>
 							</select>
 						</div>
 						<span ng-show="myForm.atype.$invalid" class="warning">*</span>
 					</div>
-					<div class="form-group" ng-if="classInfo.atype=='1'&&(title!='Edit Class')">
-						<label for="firstname" class="col-sm-3 control-label">Class ID</label>
+					<div class="form-group" ng-if="classInfo.atype=='1'&&(title!='编辑班级')">
+						<label for="firstname" class="col-sm-3 control-label">班级ID</label>
 						<div class="col-sm-8">
-							<input type="text" autocomplete="off" name="classId" id="" value="" class="form-control" ng-model="classInfo.classId" required maxlength="10" placeholder="Please enter a number no longer than 10 digits" ng-change="selectClass()" ng-pattern="/^[0-9]\d*$/" maxlength="10"/>
+							<input type="text" autocomplete="off" name="classId" id="" value="" class="form-control" ng-model="classInfo.classId" required maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-change="selectClass()" ng-pattern="/^[0-9]\d*$/" maxlength="10"/>
 						</div>
 						<span ng-show="myForm.classId.$invalid" class="warning">*</span>
 					</div>
 					<div class="form-group">
-						<label for="firstname" class="col-sm-3 control-label">Class Name</label>
+						<label for="firstname" class="col-sm-3 control-label">名称</label>
 						<div class="col-sm-8">
-							<input type="text" autocomplete="off" name="name" id="" value="" class="form-control" ng-model="classInfo.className" required maxlength="10" placeholder="Please enter a length of no more than 10 characters" ng-pattern="/(^\s*)|(\s*$)/g" ng-change="selectClassName()"/>
+							<input type="text" autocomplete="off" name="name" id="" value="" class="form-control" ng-model="classInfo.className" required maxlength="10" placeholder="请输入长度不能超过10位字符" ng-pattern="/(^\s*)|(\s*$)/g" ng-change="selectClassName()"/>
 						</div>
 						<span ng-show="myForm.name.$invalid" class="warning">*</span>
 					</div>				
 					
 				</div>
 				<div class="modal-footer text-center">
-					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid">OK</button>
-					<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid">确定</button>
+					<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
 
 				</div>
 			</form>
@@ -81,7 +81,7 @@
 		<script type="text/ng-template" id="importFile.html">
 			<form name="myForm" class="form-horizontal clearfix" role="form" novalidate="novalidate">
 				<div class="modal-header">
-					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
+					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
 					<h4 class="modal-title">{{title}}</h4>
 				</div>
 				<div class="modal-body">
@@ -95,17 +95,17 @@
 						</div>
 						<span ng-show="myForm.fileType.$invalid" class="warning">*</span>
 					</div>-->
-					<p ng-show="isfileType==true" class="pt10 pb20">&nbsp;&nbsp;Are sure to import students into 【{{className}}】?</p>
+					<p ng-show="isfileType==true" class="pt10 pb20">&nbsp;&nbsp;确定导入学生到【{{className}}】中?</p>
 					<div class="form-group" ng-show="fileType=='0'">
-						<label for="firstname" class="col-sm-3 control-label">Choose File</label>
+						<label for="firstname" class="col-sm-3 control-label">选择文件</label>
 						<div class="col-sm-8">
 							<input type="file" class="form-control" name="file" id="uploadFile" value="" validFile ng-model="filepath" onchange='angular.element(this).scope().fileChanged(this)' />
 						</div>
 						<span ng-show="myForm.file.$invalid" class="warning">*</span>
 					</div>
 					<div class="modal-footer text-center">
-						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">OK</button>
-						<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
+						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
 
 					</div>
 					
@@ -115,15 +115,15 @@
 		<script type="text/ng-template" id="sureModal.html">
 			<form name="myForm" novalidate="novalidate">
 				<div class="modal-header">
-					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
-					<h4 class="modal-title">Confirm</h4>
+					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+					<h4 class="modal-title">确认</h4>
 				</div>
 				<div class="modal-body">
 					{{content}}
 				</div>
 				<div class="modal-footer text-center">
-					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">OK</button>
-					<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
+					<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
 
 				</div>
 			</form>
@@ -132,24 +132,24 @@
 		<script type="text/ng-template" id="findBindModal.html">
 			<form name="myForm" novalidate="novalidate">
 				<div class="modal-header">
-					<button type="button" class="close" style="margin-top: -0.10rem;" ng-click="ok()"><span aria-hidden="true" >×</span><span class="sr-only">close</span></button>
+					<button type="button" class="close" style="margin-top: -0.10rem;" ng-click="ok()"><span aria-hidden="true" >×</span><span class="sr-only">关闭</span></button>
 				</div>
 				<div class="modal-body" id="Modal">
 					<p class="clearfix">
-						<span class="tip pull-left">Matching...</span>
-						<span class="pull-right pr20 mb20">Identification Code:{{bindInfo.code}}</span>
+						<span class="tip pull-left">正在匹配...</span>
+						<span class="pull-right pr20 mb20">识别码{{bindInfo.code}}</span>
 					</p>
 					<div class="clearfix pt5">
 						<div class="pull-left">
 							<h4>{{bindInfo.studentName}}</h4>
-							<span>Keypad</span>
+							<span>答题器</span>
 						</div>
 						<div class="pull-right">
 							<img src="../../image/datiqi.png" />
 						</div>
 					</div>
 					<h4 class="clearfix text-center">
-							<span>{{bindInfo.accomplish}} Completion Pairing</span>/<span>{{bindInfo.notAccomplish}} Not Paired</span>
+							<span>{{bindInfo.accomplish}}位完成配对</span>/<span>{{bindInfo.notAccomplish}}位未完成配对</span>						
 						</h4>
 					<div id="refreshBindCard" ng-click="refreshBindCard()" style="display:none;"></div>
 				</div>
@@ -159,35 +159,35 @@
 		<script type="text/ng-template" id="addStudentModal.html">
 			<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
 				<div class="modal-header">
-					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
+					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
 					<h4 class="modal-title">{{title}}</h4>
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="firstname" class="col-sm-3 control-label">Student ID</label>
+						<label for="firstname" class="col-sm-3 control-label">学号</label>
 						<div class="col-sm-8">
-							<input type="text" autocomplete="off" name="studentId" value="" class="form-control" ng-model="student.studentId" required ng-pattern="/^[0-9]\d*$/" maxlength="10" onkeyup="this.value=this.value.replace(/[^\w]/g,'');" placeholder="Please enter a number no longer than 10 digits" ng-change="blurStunum()" />
+							<input type="text" autocomplete="off" name="studentId" value="" class="form-control" ng-model="student.studentId" required ng-pattern="/^[0-9]\d*$/" maxlength="10" onkeyup="this.value=this.value.replace(/[^\w]/g,'');" placeholder="请输入长度不能超过10位的数字" ng-change="blurStunum()" />
 						</div>
 						<span ng-show="myForm.studentId.$invalid" class="warning">*</span>
 					</div>
 					<div class="form-group">
-						<label for="firstname" class="col-sm-3 control-label">Name</label>
+						<label for="firstname" class="col-sm-3 control-label">姓名</label>
 						<div class="col-sm-8">
-							<input type="text" autocomplete="off" name="studentName" value="" class="form-control" ng-model="student.studentName" required maxlength="10"  placeholder="Please enter a length of no more than 10 characters" />
+							<input type="text" autocomplete="off" name="studentName" value="" class="form-control" ng-model="student.studentName" required maxlength="10"  placeholder="请输入长度不能超过10位字符" />
 						</div>
 						<span ng-show="myForm.studentName.$dirty&&myForm.studentName.$invalid" class="warning">*</span>
 					</div>
-					<div class="form-group">
-						<label for="firstname" class="col-sm-3 control-label">Keypad ID</label>
-						<div class="col-sm-8">
-							<input type="text" autocomplete="off" name="iclickerId" id="" value="" class="form-control" ng-model="student.iclickerId" ng-pattern="/^\d{10}$/" maxlength="10" placeholder="Please enter a number of 10 digits in length" onkeyup="this.value=this.value.replace(/[^\w]/g,'');" ng-blur="blurDevicenum(myForm.iclickerId.$dirty)" required/>
-						</div>
-						<span ng-show="myForm.iclickerId.$invalid" class="warning">*</span>
-					</div>
+					<!--<div class="form-group">-->
+						<!--<label for="firstname" class="col-sm-3 control-label">答题器编号</label>-->
+						<!--<div class="col-sm-8">-->
+							<!--<input type="text" autocomplete="off" name="iclickerId" id="" value="" class="form-control" ng-model="student.iclickerId" ng-pattern="/^\d{10}$/" maxlength="10" placeholder="请输入长度为10位的数字" onkeyup="this.value=this.value.replace(/[^\w]/g,'');" ng-blur="blurDevicenum(myForm.iclickerId.$dirty)" required/>-->
+						<!--</div>-->
+						<!--<span ng-show="myForm.iclickerId.$invalid" class="warning">*</span>-->
+					<!--</div>-->
 				</div>
 				<div class="modal-footer text-center">
-					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid">Ok</button>
-					<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid">确定</button>
+					<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
 
 				</div>
 			</form>
@@ -195,29 +195,29 @@
 		<div class="header clearfix">
 			<div class="pull-left">
 				<img src="../../image/set.png" class="ml25" />
-				<span>Student Management</span>
+				<span>学生管理</span>
 			</div>
 			<div class="pull-right">
-				<img src="../../image/return.png" class="rebtn" ng-click="returnPage()" title="Go Back"/>
+				<img src="../../image/return.png" class="rebtn" ng-click="returnPage()" title="返回"/>
 			</div>
 		</div>
 		<div ng-cloak class="content content1 bgf5 clearfix">
 			<div class="opbtn clearfix mb20 bgf5">
-				<a href="javascript:;" ng-click="addClass()">Add Class</a>
-				<a href="javascript:;" ng-click="quickBind()" style="width: auto" class="pr10">Quick Pairing</a>
-				<a href="javascript:;" ng-click="patchImport()" style="width: auto;" class="pr10">Import NameList</a>
+				<a href="javascript:;" ng-click="addClass()">添加班级</a>
+				<a href="javascript:;" ng-click="quickBind()">一键配对</a>
+				<a href="javascript:;" ng-click="patchImport()">导入学生</a>
 				<!--	<a href="javascript:;" ng-click="serverImport()">服务获取学生</a>-->
-				<a href="javascript:;" ng-click="addStudent()" style="width: auto" class="pr10">Insert Student</a>
-				<a href="javascript:;" class="warning" ng-click="deleteStudent()">Delete</a>
-				<a href="javascript:;" class="warning" ng-click="unbindStu()">Unpair</a>
-				<a href="javascript:;" class="warning" ng-click="clearStu()" style="width: auto">Clear All Pairing</a>
+				<a href="javascript:;" ng-click="addStudent()">新增学生</a>
+				<a href="javascript:;" class="warning" ng-click="deleteStudent()">删除</a>
+				<a href="javascript:;" class="warning" ng-click="unbindStu()">解绑</a>
+				<a href="javascript:;" class="warning" ng-click="clearStu()">清除白名单</a>
 			</div>
-				<div class="pannel clearfix" style="position: absolute; top:.6rem ; left: 0.20rem; right: 0; bottom: .25rem;overflow-x: hidden">
+				<div class="pannel clearfix" style="position: absolute; top:.5rem ; left: 0.20rem; right: 0; bottom: .25rem;overflow-x: hidden">						
 					<div class="col-sub pull-left"  style="overflow-x: hidden;position: absolute;top: 0; overflow-y: auto;  width:20%; height: 100%;">
 				<table class="table table-stripe classlist" >
 					<thead>
 						<tr>
-							<th>Class List</th>
+							<th>班级列表</th>
 						</tr>
 					</thead>
 				</table>
@@ -232,26 +232,26 @@
 						<tr ng-repeat="item in classList track by $index" ng-click="changeClass(item,$index)" style="width: 100%;" title="{{item.className}}">
 							<td >
 								<span class="sub" ng-class="{'1': 'green', '0': 'grey'}[item.atype]"></span>
-								<span class="name hidename" ng-class="{active:isActive == $index}" style="display:inline-block; width: 30%;vertical-align: middle;">{{item.className}}</span>
-								<a href="javascript:;" class="del pull-right pr5" ng-click="$event.stopPropagation();deleteClass(item)">delete</a>
-								<a href="javascript:;" class="edit pull-right pr5" ng-click="$event.stopPropagation();editClass(item,$index)">edit</a>
+								<span class="name hidename" ng-class="{active:isActive == $index}" style="display:inline-block; width: 50%;vertical-align: middle;">{{item.className}}</span>
+								<a href="javascript:;" class="del pull-right pr5" ng-click="$event.stopPropagation();deleteClass(item)">删除</a>
+								<a href="javascript:;" class="edit pull-right pr5" ng-click="$event.stopPropagation();editClass(item,$index)">编辑</a>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 				</div>
 			</div>
-				<div class="col-main pull-left" style=" position: absolute; left: 20%; top: 0px; bottom: 0; right: 0;overflow-x: hidden;overflow-y: auto;height: 100%; width:79%;  ">
+				<div class="col-main pull-left" style=" position: absolute; left: 20%; top: -1px; bottom: 0; right: 0;overflow-x: hidden;overflow-y: auto;height: 100%; width:79%;  ">
 					<table class="table table-stripe userlist" >
 						<thead>
 							<tr>
-								<th style="width: 5%;">NO.</th>
-								<th style="width: 10%;">Student ID</th>
-								<th style="width: 10%;">Name</th>
-								<th style="width: 10%;">Keypad ID</th>
-								<th style="width: 15%;">Pairing Status</th>
-								<th style="width: 10%;">Operation</th>
-								<th style="width: 10%;" class="pr1">Select All
+								<th style="width: 5%;">序号</th>
+								<th style="width: 10%;">学号</th>
+								<th style="width: 15%;">姓名</th>
+								<th style="width: 10%;">答题器编号</th>
+								<th style="width: 10%;">配对情况</th>
+								<th style="width: 10%;">操作</th>
+								<th style="width: 10%;" class="pr1">全选
 									<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>
 							</tr>
 						</thead>
@@ -263,11 +263,11 @@
 								<tr ng-repeat="item in studentList track by $index" ng-click="$event.stopPropagation();" >
 									<td style="width: 5%;">{{$index+1}}</td>
 									<td style="width: 10%;">{{item.studentId}}</td>
-									<td style="width: 10%;" title="{{item.studentName}}">{{item.studentName}}</td>
+									<td style="width: 15%;" title="{{item.studentName}}">{{item.studentName}}</td>
 									<td style="width: 10%;">{{item.iclickerId}}</td>
-									<td style="width: 15%;">{{item.status=='1'?'Paired':'Unpaired'}}</td>
+									<td style="width: 10%;">{{item.status=='1'?'已绑定':'未绑定'}}</td>
 									<td style="width: 10%;">
-										<a href="javascript:;" class="edit" ng-click="updateStdent(item)">edit</a>
+										<a href="javascript:;" class="edit" ng-click="updateStdent(item)">编辑</a>
 									</td>
 									<td style="width: 10%;" class="ml5 "><input type="checkbox" style="margin-left: 0.32rem;"  ng-model="item.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
 								</tr>
@@ -305,7 +305,7 @@
 		})
 		$('.single1').multiselect({
 			multiple: false,
-			selectedHtmlValue: 'Please select'
+			selectedHtmlValue: '请选择'
 		});
 	});
 </script>

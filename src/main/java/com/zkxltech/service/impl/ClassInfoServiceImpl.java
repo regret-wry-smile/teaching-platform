@@ -1,12 +1,5 @@
 package com.zkxltech.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ejet.cache.RedisMapBind;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
@@ -23,13 +16,20 @@ import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.CardInfoThread;
 import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ClassInfoServiceImpl implements ClassInfoService{
     private static final Logger log = LoggerFactory.getLogger(ClassInfoServiceImpl.class);
 	private Result result;
 	private ClassInfoSql classInfoSql = new ClassInfoSql();
 	private StudentInfoSql studentInfoSql = new StudentInfoSql();
-	
+
     @Override
 	public Result insertClassInfo(Object object) {
 		result = new Result();
@@ -40,14 +40,14 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			}
 			result = classInfoSql.insertClassInfo(classInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("Class add successful!");
+				result.setMessage("新增班级成功!");
 			}else {
-				result.setMessage("Failed to add class！");
+				result.setMessage("新增班级失败！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("Failed to add class！");
+			result.setMessage("新增班级失败！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -61,14 +61,14 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			ClassInfo classInfo =  (ClassInfo) StringUtils.parseJSON(object, ClassInfo.class);
 			result = classInfoSql.selectClassInfo(classInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("Class select successful!");
+				result.setMessage("查询班级成功!");
 			}else {
-				result.setMessage("Failed to select class！");
+				result.setMessage("查询班级失败！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("Failed to select class！");
+			result.setMessage("查询班级失败！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -82,23 +82,23 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			ClassInfo classInfo =  (ClassInfo) StringUtils.parseJSON(object, ClassInfo.class);
 			result = classInfoSql.deleteClassInfo(classInfo); //删除班级
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("Class delete successful!");
+				result.setMessage("删除班级成功!");
 			}else {
-				result.setMessage("Failed to delete class！");
+				result.setMessage("删除班级失败！");
 				return result;
 			}
 			StudentInfo studentInfo = new StudentInfo();
 			studentInfo.setClassId(classInfo.getClassId());  //删除学生
 			studentInfoSql.deleteStudent(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("Class delete successful!");
+				result.setMessage("删除班级成功!");
 			}else {
-				result.setMessage("Failed to delete class！");
+				result.setMessage("删除班级失败！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("Failed to delete class！");
+			result.setMessage("删除班级失败！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -112,14 +112,14 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			ClassInfo classInfo =  (ClassInfo) StringUtils.parseJSON(object, ClassInfo.class);
 			result = classInfoSql.updateClassInfo(classInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("Successfully modified the class!");
+				result.setMessage("修改班级成功!");
 			}else {
-				result.setMessage("Failed to modify the class！");
+				result.setMessage("修改班级失败！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("Failed to modify the class！");
+			result.setMessage("修改班级失败！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -131,11 +131,11 @@ public class ClassInfoServiceImpl implements ClassInfoService{
     public Result clearWl(Object param) {
         Result r = new Result();
         r.setRet(Constant.ERROR);
-        
+
         try {
         	r = EquipmentServiceImpl.getInstance().clear_wl();
             if (Constant.ERROR.equals(r.getRet())) {
-                r.setMessage("Clear failed");
+                r.setMessage("清除失败");
                 return r;
             }
             StudentInfoSql studentInfoSql = new StudentInfoSql();
@@ -149,14 +149,14 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 //                    BrowserManager.refreshStudent(jsono.getString("classId"));
 //                }
                 r.setRet(Constant.SUCCESS);
-                r.setMessage("Clear success");
+                r.setMessage("清除成功");
                 return r;
             }
         } catch (Exception e) {
             r.setDetail(IOUtils.getError(e));
             log.error(IOUtils.getError(e));
         }
-        r.setMessage("Clear failed");
+        r.setMessage("清除失败");
         return r;
     }
 
@@ -173,7 +173,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			/** 根据班级id查询学生信息 */
 			StudentInfoServiceImpl sis = new StudentInfoServiceImpl();
 			Result result = sis.selectStudentInfo(param);
-			List<StudentInfo> studentInfos = (List) result.getItem();
+			List<StudentInfo> studentInfos = (List) result.getItem();//查询所有的学生信息
 			if (result == null || ListUtils.isEmpty(studentInfos)) {
 				r.setMessage("You have not uploaded student information");
 				return r;
@@ -182,11 +182,17 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			Map<String, StudentInfo> studentInfoMap = new HashMap<>();
 			/** 按绑定状态进行分类 */
 			int bind = 0, notBind = 0;
+			//未绑定的学生信息
+			List<StudentInfo> noStudentInfos = new ArrayList<>();
+			//已绑定的学生信息
+			List<StudentInfo> studentInfosl = new ArrayList<>();
 			for (StudentInfo studentInfo : studentInfos) {
 				if (studentInfo.getStatus().equals(Constant.BING_YES)) {
 					++bind;
+					studentInfosl.add(studentInfo);
 				} else {
 					++notBind;
+					noStudentInfos.add(studentInfo);
 				}
 				if (!StringUtils.isEmpty(studentInfo.getIclickerId())) {
 					studentInfoMap.put(studentInfo.getIclickerId(), studentInfo);
@@ -196,10 +202,11 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			int str = DeviceComm.wirelessBindStart(1, "");
 			if (str < 0) {
 				r.setRet(Constant.ERROR);
-				r.setMessage("Instruction sending failure");
+				r.setMessage("Instruction sending failed");
 				return r;
 			}
-
+			RedisMapBind.setNoStudentInfos(noStudentInfos);
+			RedisMapBind.setStudentInfosl(studentInfosl);
 			RedisMapBind.setStudentInfoMap(studentInfoMap);
 			BaseThread thread = new CardInfoThread();
 			thread.start();
@@ -208,7 +215,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 
 			Global.setModeMsg(Constant.BUSINESS_BIND);
 			r.setRet(Constant.SUCCESS);
-			r.setMessage("Operation successful");
+			r.setMessage("operate successfully\n");
 
 			/** 存入静态map */
 			RedisMapBind.getBindMap().put("studentName", null);
@@ -218,13 +225,13 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 		} catch (Exception e) {
 			log.error(IOUtils.getError(e));
 			r.setRet(Constant.ERROR);
-			r.setMessage("Instruction sending failure");
+			r.setMessage("Send instruction failed");
 		}
 
 		return r;
 
 	}
-    
+
     @Override
     public Result bindStop() {
         Result r = new Result();
@@ -235,7 +242,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
           r = EquipmentServiceImpl.getInstance().bind_stop();
         }catch (Exception e) {
             log.error("", e);
-            r.setMessage("System Exception");
+            r.setMessage("系统异常");
             r.setDetail(IOUtils.getError(e));
         }
         return r;

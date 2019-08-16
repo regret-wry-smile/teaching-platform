@@ -95,7 +95,7 @@ public class StudentFunctionManage extends BrowserFunction{
 				break;
 			case "get_bind_info":
 				return RedisMapBind.getBindMapValue();
-				/**清除白名单位(解绑)*/
+			/**清除白名单位(解绑)*/
 			case "clear_bind":
 			    result = classInfoService.clearWl(param);
 			    break;
