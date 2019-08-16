@@ -321,15 +321,15 @@
 			<div ng-cloak class="content content1 bgf5 clearfix">		
 				<form class="form-horizontal clearfix" name="myForm" novalidate>
 		  			<div class="form-group">
-				  	<label for="firstname" class="col-sm-2 control-label">Paper Name</label>
-				  	<div class="col-sm-9">
+				  	<label for="firstname" class="col-sm-3 control-label">Paper Name</label>
+				  	<div class="col-sm-8">
 			    	<input type="text" autocomplete="off" name="testName" id="" value=""  class="form-control" ng-model="paperInfo.testName" required maxlength="20"/>										
 				    </div>
 				    <span ng-show="myForm.testName.$invalid" class="warning">*</span>
 					</div>
 					<div class="form-group">
-				  	<label for="firstname" class="col-sm-2 control-label">Paper Describes</label>
-				    <div class="col-sm-9">
+				  	<label for="firstname" class="col-sm-3 control-label">Paper Describes</label>
+				    <div class="col-sm-8">
 				    	<textarea  class="form-control" rows="3" ng-model="paperInfo.describe" maxlength="200"></textarea>
 					</div>
 					</div>
@@ -337,10 +337,10 @@
 					<table class="table table-stripe subject" >
 						<thead>
 							<tr>
-								<th style="width: 10%;">NO.</th>
+								<th style="width: 5%;">NO.</th>
 								<th style="width: 10%;">Question ID</th>
 								<th style="width: 15%;">Question Content</th>
-								<th style="width: 10%;">Answer Type</th>
+								<th style="width: 15%;">Answer Type</th>
 								<th style="width: 10%;">Answer</th>
 								<th style="width: 10%;">Score</th>
 								<th style="width: 10%;">operation</th>
@@ -353,10 +353,10 @@
 						<table class="table table-stripe subject text-left">		
 						<tbody>
 							<tr ng-repeat="quesitem in subjectList track by $index" ng-click="$event.stopPropagation();">
-								<td style="width: 10%;">{{$index+1}}</td>
+								<td style="width: 5%;">{{$index+1}}</td>
 								<td style="width: 10%;">{{quesitem.questionId}}</td>
 								<td style="width: 15%;">{{quesitem.question}}</td>
-								<td style="width: 10%;">{{quesitem.questionType|questionType}}</td>
+								<td style="width: 15%;">{{quesitem.questionType|questionType}}</td>
 								<td style="width: 10%;">{{quesitem.trueAnswer|AnswerType}}</td>	
 								<td style="width: 10%;">{{quesitem.score}}</td>						
 								<td style="width: 10%;">
@@ -371,9 +371,9 @@
 			  	</div>
 			  	<div class="opbtn clearfix pt10">
 				  	<!--<a href="javascript:;"  ng-click="addSubject()">新增题目</a>-->
-					<a href="javascript:;" ng-click="addBatchSubject()" style="width: auto;">Batch Insert Questions</a>
+					<a href="javascript:;" ng-click="addBatchSubject()" style="width: auto;" class="pr5">Batch Insert Questions</a>
 				  	<!--<a href="javascript:;" ng-click="importSubject()">导入</a>-->
-				  	<a href="javascript:;" ng-click="delSuject()">Delete Question</a>
+				  	<a href="javascript:;" ng-click="delSuject()" style="width: auto;">Delete Question</a>
 			  	</div>
 			  	<div class="operatebtn pt10 clearfix">
 			  		<button class="btn btn-primary btn-lg" ng-click="savePaper()" ng-disabled="!myForm.$valid">Save</button>

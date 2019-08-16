@@ -210,9 +210,9 @@
 				<a href="javascript:;" ng-click="addStudent()">Insert Student</a>
 				<a href="javascript:;" class="warning" ng-click="deleteStudent()">Delete</a>
 				<a href="javascript:;" class="warning" ng-click="unbindStu()">Unpair</a>
-				<a href="javascript:;" class="warning" ng-click="clearStu()">Clear whitelist</a>
+				<a href="javascript:;" class="warning" ng-click="clearStu()">Clear All Pairing</a>
 			</div>
-				<div class="pannel clearfix" style="position: absolute; top:.5rem ; left: 0.20rem; right: 0; bottom: .25rem;overflow-x: hidden">						
+				<div class="pannel clearfix" style="position: absolute; top:.8rem ; left: 0.20rem; right: 0; bottom: .25rem;overflow-x: hidden">
 					<div class="col-sub pull-left"  style="overflow-x: hidden;position: absolute;top: 0; overflow-y: auto;  width:20%; height: 100%;">
 				<table class="table table-stripe classlist" >
 					<thead>
@@ -232,7 +232,7 @@
 						<tr ng-repeat="item in classList track by $index" ng-click="changeClass(item,$index)" style="width: 100%;" title="{{item.className}}">
 							<td >
 								<span class="sub" ng-class="{'1': 'green', '0': 'grey'}[item.atype]"></span>
-								<span class="name hidename" ng-class="{active:isActive == $index}" style="display:inline-block; width: 50%;vertical-align: middle;">{{item.className}}</span>
+								<span class="name hidename" ng-class="{active:isActive == $index}" style="display:inline-block; width: 30%;vertical-align: middle;">{{item.className}}</span>
 								<a href="javascript:;" class="del pull-right pr5" ng-click="$event.stopPropagation();deleteClass(item)">delete</a>
 								<a href="javascript:;" class="edit pull-right pr5" ng-click="$event.stopPropagation();editClass(item,$index)">edit</a>
 							</td>
@@ -241,15 +241,15 @@
 				</table>
 				</div>
 			</div>
-				<div class="col-main pull-left" style=" position: absolute; left: 20%; top: -1px; bottom: 0; right: 0;overflow-x: hidden;overflow-y: auto;height: 100%; width:79%;  ">
+				<div class="col-main pull-left" style=" position: absolute; left: 20%; top: 0px; bottom: 0; right: 0;overflow-x: hidden;overflow-y: auto;height: 100%; width:79%;  ">
 					<table class="table table-stripe userlist" >
 						<thead>
 							<tr>
 								<th style="width: 5%;">NO.</th>
 								<th style="width: 10%;">Student ID</th>
-								<th style="width: 15%;">Name</th>
+								<th style="width: 10%;">Name</th>
 								<th style="width: 10%;">Keypad ID</th>
-								<th style="width: 10%;">Pairing Status</th>
+								<th style="width: 15%;">Pairing Status</th>
 								<th style="width: 10%;">Operation</th>
 								<th style="width: 10%;" class="pr1">Select All
 									<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>
@@ -263,9 +263,9 @@
 								<tr ng-repeat="item in studentList track by $index" ng-click="$event.stopPropagation();" >
 									<td style="width: 5%;">{{$index+1}}</td>
 									<td style="width: 10%;">{{item.studentId}}</td>
-									<td style="width: 15%;" title="{{item.studentName}}">{{item.studentName}}</td>
+									<td style="width: 10%;" title="{{item.studentName}}">{{item.studentName}}</td>
 									<td style="width: 10%;">{{item.iclickerId}}</td>
-									<td style="width: 10%;">{{item.status=='1'?'Paired':'Unpaired'}}</td>
+									<td style="width: 15%;">{{item.status=='1'?'Paired':'Unpaired'}}</td>
 									<td style="width: 10%;">
 										<a href="javascript:;" class="edit" ng-click="updateStdent(item)">edit</a>
 									</td>
