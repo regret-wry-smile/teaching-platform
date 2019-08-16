@@ -393,10 +393,10 @@ app.controller('stopSingeAnswerCtrl', function($scope, $rootScope, toastr, $wind
 			} else if ($scope.answerType == 'number') {
 				rangeList = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 			} else if ($scope.answerType == 'judge') {
-				rangeList = ["对", "错"];
+				rangeList = ["TRUE", "FALSE"];
 				$scope.resultmap = {
-					"对": $scope.resultmap["true"],
-					"错": $scope.resultmap["false"]
+					"TRUE": $scope.resultmap["true"],
+					"FALSE": $scope.resultmap["false"]
 				}
 			}
 			//$scope.rangeList=["A","B","C","D","E"];

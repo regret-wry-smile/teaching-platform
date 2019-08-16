@@ -183,7 +183,7 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 	$scope.delClassHour=function(){
 		console.log(JSON.stringify($scope.sujectNameobject))
 		if($scope.setClass.sujectName){
-			var content="删除课程";
+			var content="delete course";
 			var modalInstance = $modal.open({
 				templateUrl: 'sureModal.html',
 				controller: 'sureModalCtrl',
@@ -216,7 +216,7 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 				//$log.info('Modal dismissed at: ' + new Date());
 			});
 		}else{
-			toastr.success("当前没有可删除的课程")
+			toastr.success("There are currently no classes to delete")
 		}
 	}
 	var _init=function(){
@@ -375,7 +375,7 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
 		}else{
 			console.log($scope.time)		
 			if($scope.time==0){
-				$scope.studentName="抢答中...";		
+				$scope.studentName="Answering...";
 				$scope.result=JSON.parse(execute_preemptive("set_flag_start_quick"));	
 				if($scope.result.ret=='success'){					
 				}else{
@@ -392,7 +392,7 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
 			$scope.result=JSON.parse(execute_preemptive("stop_quick_answer"));	
 			if($scope.result.ret=='success'){
 				$scope.isStopAswer=false;
-				$scope.studentName='停止答题';
+				$scope.studentName='Stop Answering';
 				$scope.time=0;
 				toastr.success($scope.result.message);
 			}else{
@@ -408,7 +408,7 @@ app.controller('stopAnswerCtrl', function($rootScope,$scope,$modal,toastr,$inter
 })
 //确认弹出框
 app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
-	$scope.content='是否进行'+angular.copy(content)+'操作？';
+	$scope.content='Are you sure to '+angular.copy(content);
 	$scope.ok = function() {
 		$modalInstance.close('success');
 	}

@@ -86,11 +86,11 @@
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/check.png" class="ml25 pt20" />
-					<span>检测</span>
+					<span>Test</span>
 				</div>
 				<div class="pull-right">
-					<button class="btn savebtn" class="mr5" ng-show="isgatherPaper" ng-click="gatherPaper()">收取试卷</button>
-					<a href="javascript:history.go(-1);"  ng-show="!isgatherPaper" title="返回">
+					<button class="btn savebtn" class="mr5" ng-show="isgatherPaper" ng-click="gatherPaper()">Collect Paper</button>
+					<a href="javascript:history.go(-1);"  ng-show="!isgatherPaper" title="return">
 					<img src="../../image/return.png"  class="rebtn"/>
 					</a>
 				</div>
@@ -104,7 +104,7 @@
 					</p>					
 					<div class="progress">
 					   <!-- <div class="progress-bar" ng-style="{width:{{item.percent}}*100 +'%'}" style="width:'%';background: #7ee074;">{{item.percent*100}}%</div>	-->
-					    <div class="progress-bar" ng-style="item.style" style="width:'%';background: #7ee074;">{{item.percent*100 | number:1}}%</div>	
+					    <div class="progress-bar" ng-style="item.style" style="background: #7ee074;">{{item.percent*100 | number:1}}%</div>
 					     <!--<div class="progress-bar" ng-style="{width:{{item.count}}*100/{{questionSum}}+'%'}" style="width:'%';background: green;">{{item.count*100/questionSum | number:1}}%</div>		-->
 					 </div>
 				</div>			
