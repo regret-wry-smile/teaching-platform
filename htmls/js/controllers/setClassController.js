@@ -291,7 +291,7 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 	}
 })
 app.controller('addClassHourCtrl', function($rootScope,$scope,$modal,$modalInstance,toastr,infos) {	
-	$scope.title="添加课程";
+	$scope.title="Add Course";
 	$scope.classInfo={
 		classHourName:''
 	}

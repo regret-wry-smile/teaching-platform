@@ -1,52 +1,30 @@
 package com.zkxltech.ui;
 
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ejet.cache.BrowserManager;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.service.impl.ClassHourServiceImpl;
-import com.zkxltech.service.impl.StudentInfoServiceImpl;
-import com.zkxltech.ui.functions.AnswerFunctionManage;
-import com.zkxltech.ui.functions.AttendanceFunctionManage;
-import com.zkxltech.ui.functions.PreemptiveFunctionManage;
-import com.zkxltech.ui.functions.RecordFunctionManage;
-import com.zkxltech.ui.functions.ScoreFunctionManage;
-import com.zkxltech.ui.functions.SetFunctionManage;
-import com.zkxltech.ui.functions.StudentFunctionManage;
-import com.zkxltech.ui.functions.TestPaperFunctionManage;
-import com.zkxltech.ui.functions.VoteFunctionManage;
+import com.zkxltech.ui.functions.*;
 import com.zkxltech.ui.util.PageConstant;
-import com.zkxltech.ui.util.StringConstant;
 import com.zkxltech.ui.util.SwtTools;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.wb.swt.SWTResourceManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
 
 public class MainPage{
 	private static final Logger log = LoggerFactory.getLogger(MainPage.class);
@@ -168,7 +146,7 @@ public class MainPage{
 			titleText.setLayoutData(fd_titleText);
 			titleText.setFont(SWTResourceManager.getFont("微软雅黑", 12, SWT.NORMAL));
 			titleText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			titleText.setText("互动课堂");
+			titleText.setText("Smart Classroom System");
 
 			CLabel closeLabel = new CLabel(composite_set, SWT.NONE);
 //			FormData fd_closeLabel = new FormData();
@@ -196,25 +174,25 @@ public class MainPage{
 						mainStart.floatingWindow();
 						return;
 					case Constant.BUSINESS_ANSWER:
-						message = "请先停止答题";
+						message = "Please stop answering questions first";
 						break;
 					case Constant.BUSINESS_SCORE:
-						message = "请先停止评分";
+						message = "Please stop grading first";
 						break;
 					case Constant.BUSINESS_VOTE:
-						message = "请先停止投票";
+						message = "Please stop voting first";
 						break;
 					case Constant.BUSINESS_ATTENDEN:
-						message = "请先停止签到";
+						message = "Please stop signing first";
 						break;
 					case Constant.BUSINESS_PREEMPTIVE:
-						message = "请先停止抢答";
+						message = "Please stop answering first";
 						break;
 					case Constant.BUSINESS_CLASSTEST:
-						message = "请先收取试卷";
+						message = "Please collect the test papers first";
 						break;
 					case Constant.BUSINESS_BIND:
-						message = "请先停止绑定";
+						message = "Please stop binding first";
 						break;
 					default:
 						return;
