@@ -92,7 +92,7 @@ public class ScoreServiceImpl implements ScoreService {
 			return r;
 		}
 		r.setRet(Constant.SUCCESS);
-		r.setMessage("停止成功");
+		r.setMessage("Stop Success");
 		return r;
 	}
 
@@ -129,7 +129,7 @@ public class ScoreServiceImpl implements ScoreService {
 			int ret = DeviceComm.answerStart(strBuilder.toString());
 			if (ret != 0) {
 				r.setRet(Constant.ERROR);
-				r.setMessage("指令发送失败");
+				r.setMessage("Instruction sending failure");
 				return r;
 			}
 
@@ -138,12 +138,12 @@ public class ScoreServiceImpl implements ScoreService {
 			/* 添加到线程管理 */
 			ThreadManager.getInstance().addThread(thread);
 			r.setRet(Constant.SUCCESS);
-			r.setMessage("发送成功");
+			r.setMessage("Send Success");
 			return r;
 		} catch (Exception e) {
 			logger.error(IOUtils.getError(e));
 			r.setRet(Constant.ERROR);
-			r.setMessage("指令发送失败");
+			r.setMessage("Instruction sending failure");
 			return r;
 		}
 	}

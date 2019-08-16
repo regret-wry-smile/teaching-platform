@@ -35,14 +35,14 @@ public class QuestionServiceImpl implements QuestionService{
 			String fileName = String.valueOf(object);
 			result = questionInfoSql.importQuestion(ImportExcelUtils.getBankListByExcel2(new FileInputStream(new File(fileName)), fileName));
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("导入成功!");
+				result.setMessage("Import success!");
 			}else {
-				result.setMessage("导入学生失败！");
+				result.setMessage("Failed to import students！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("导入学生失败！");
+			result.setMessage("Failed to import students！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -56,15 +56,15 @@ public class QuestionServiceImpl implements QuestionService{
 			QuestionInfo questionInfo =  (QuestionInfo) StringUtils.parseJSON(object, QuestionInfo.class);
 			result = questionInfoSql.insertQuestionInfo(questionInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("添加题目成功!");
+				result.setMessage("Add topic successfully!");
 			}else {
-				result.setMessage("添加题目失败！");
+				result.setMessage("Failed to add topic！");
 			}
 			result.setRet(Constant.SUCCESS);
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("添加题目失败！");
+			result.setMessage("Failed to add topic！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -78,15 +78,15 @@ public class QuestionServiceImpl implements QuestionService{
 			List<QuestionInfo> questionInfos = (List<QuestionInfo>) JSONArray.toCollection(JSONArray.fromObject(object),QuestionInfo.class);
 			result = questionInfoSql.updateOrSaveStudents(questionInfos);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("添加题目成功!");
+				result.setMessage("Add topic successfully!");
 			}else {
-				result.setMessage("添加题目失败！");
+				result.setMessage("Failed to add topic！");
 			}
 			result.setRet(Constant.SUCCESS);
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("添加题目失败！");
+			result.setMessage("Failed to add topic！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -100,14 +100,14 @@ public class QuestionServiceImpl implements QuestionService{
 			QuestionInfo questionInfo =  (QuestionInfo) StringUtils.parseJSON(object, QuestionInfo.class);
 			result = questionInfoSql.selectQuestionInfo(questionInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("查询题目成功!");
+				result.setMessage("Select topic successfully!");
 			}else {
-				result.setMessage("查询题目失败！");
+				result.setMessage("Failed to select topic！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("查询题目失败！");
+			result.setMessage("Failed to select topic！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -124,14 +124,14 @@ public class QuestionServiceImpl implements QuestionService{
 			}
 			result = questionInfoSql.deleteQuestionInfoById(ids);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("删除题目成功!");
+				result.setMessage("Delete topic successfully!");
 			}else {
-				result.setMessage("删除题目失败！");
+				result.setMessage("Failed to delete topic！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("删除题目失败！");
+			result.setMessage("Failed to delete topic！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -160,16 +160,16 @@ public class QuestionServiceImpl implements QuestionService{
 			QuestionInfo questionInfo =  (QuestionInfo)  StringUtils.parseJSON(JSONObject.fromObject(object), QuestionInfo.class);
 			result = questionInfoSql.updateStudentById(questionInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("修改题目成功!");
+				result.setMessage("Modified topic successfully!");
 			}else {
-				result.setMessage("修改题目失败！");
+				result.setMessage("Topic modified failed！");
 			}
 			result.setRet(Constant.SUCCESS);
-			result.setMessage("修改题目成功!");
+			result.setMessage("Modified topic successfully!");
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("修改题目失败！");
+			result.setMessage("Topic modified failed！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;

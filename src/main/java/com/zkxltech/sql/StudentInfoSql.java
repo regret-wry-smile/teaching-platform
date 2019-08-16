@@ -66,15 +66,15 @@ public class StudentInfoSql {
 			String studentName = (String) rowList.get(i).get(1);
 			String iclickerId = (String) rowList.get(i).get(2);
             if (studentId.length() > 10) {
-            	  result.setMessage("第"+(i+2)+"行学生编号错误！");
+            	  result.setMessage("Line"+(i+2)+"student ID error！");
                   return result;
 			}    
             if (studentName.length() > 10) {
-          	  result.setMessage("第"+(i+2)+"行学生姓名错误！");
+          	  result.setMessage("Line"+(i+2)+"student name error！");
                 return result;
 			} 
             if (!verifyIclickerId(iclickerId)) {
-            	  result.setMessage("第"+(i+2)+"行答题器编号错误！");
+            	  result.setMessage("Line"+(i+2)+"keypad ID error！");
                   return result;
   			} 
             
@@ -83,11 +83,11 @@ public class StudentInfoSql {
 		}
 
 		if (studentIds.stream().distinct().collect(Collectors.toList()).size() != studentIds.size()) {
-			  result.setMessage("学号有重复！");
+			  result.setMessage("Student ID repeated！");
               return result;
 		};
 		if (iclickerIds.stream().distinct().collect(Collectors.toList()).size() != iclickerIds.size()) {
-			  result.setMessage("答题器编号有重复！");
+			  result.setMessage("Keypad ID repeated！");
            	  return result;
 		};
 		result.setRet(Constant.SUCCESS);
@@ -269,13 +269,13 @@ public class StudentInfoSql {
         if (StringUtils.isEmpty(status)) {
             Result r = new Result();
             r.setRet(Constant.ERROR);
-            r.setMessage("缺少参数 :绑定状态不能为空");
+            r.setMessage("Missing parameter: binding state cannot be empty");
             return r;
         }
         if (ListUtils.isEmpty(iclickerIds)) {
             Result r = new Result();
             r.setRet(Constant.ERROR);
-            r.setMessage("缺少参数 :卡的编号不能为空");
+            r.setMessage("Missing parameter: card ID cannot be empty");
             return r;
         }
         
@@ -297,7 +297,7 @@ public class StudentInfoSql {
         if (StringUtils.isEmpty(status)) {
             Result r = new Result();
             r.setRet(Constant.ERROR);
-            r.setMessage("缺少参数 :绑定状态不能为空");
+            r.setMessage("Missing parameter: binding state cannot be empty");
             return r;
         }
         String sb ="update student_info set status = "+status;
