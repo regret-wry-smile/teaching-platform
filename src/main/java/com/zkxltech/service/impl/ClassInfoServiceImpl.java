@@ -1,12 +1,5 @@
 package com.zkxltech.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ejet.cache.RedisMapBind;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
@@ -23,6 +16,13 @@ import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.CardInfoThread;
 import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ClassInfoServiceImpl implements ClassInfoService{
     private static final Logger log = LoggerFactory.getLogger(ClassInfoServiceImpl.class);
@@ -129,35 +129,35 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 	/**清除白名单*/
     @Override
     public Result clearWl(Object param) {
-        Result r = new Result();
-        r.setRet(Constant.ERROR);
-        
-        try {
-        	r = EquipmentServiceImpl.getInstance().clear_wl();
-            if (Constant.ERROR.equals(r.getRet())) {
-                r.setMessage("清除失败");
-                return r;
-            }
-            StudentInfoSql studentInfoSql = new StudentInfoSql();
-            r = studentInfoSql.updateStatus(Constant.BING_NO);
-            if (r.getRet().equals(Constant.ERROR)) {
-                return r;
-            }
-            if (Constant.SUCCESS == r.getRet()) {
+		Result r = new Result();
+		r.setRet(Constant.ERROR);
+
+		try {
+			r = EquipmentServiceImpl.getInstance().clear_wl();
+			if (Constant.ERROR.equals(r.getRet())) {
+				r.setMessage("Removal of failure!");
+				return r;
+			}
+			StudentInfoSql studentInfoSql = new StudentInfoSql();
+			r = studentInfoSql.updateStatus(Constant.BING_NO);
+			if (r.getRet().equals(Constant.ERROR)) {
+				return r;
+			}
+			if (Constant.SUCCESS == r.getRet()) {
 //                JSONObject jsono = JSONObject.fromObject(param);
 //                if (jsono.containsKey("classId")) {
 //                    BrowserManager.refreshStudent(jsono.getString("classId"));
 //                }
-                r.setRet(Constant.SUCCESS);
-                r.setMessage("清除成功");
-                return r;
-            }
-        } catch (Exception e) {
-            r.setDetail(IOUtils.getError(e));
-            log.error(IOUtils.getError(e));
-        }
-        r.setMessage("清除失败");
-        return r;
+				r.setRet(Constant.SUCCESS);
+				r.setMessage("Clear success!");
+				return r;
+			}
+		} catch (Exception e) {
+			r.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
+		}
+		r.setMessage("Removal of failure!");
+		return r;
     }
 
 	@Override
@@ -173,20 +173,26 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			/** 根据班级id查询学生信息 */
 			StudentInfoServiceImpl sis = new StudentInfoServiceImpl();
 			Result result = sis.selectStudentInfo(param);
-			List<StudentInfo> studentInfos = (List) result.getItem();
+			List<StudentInfo> studentInfos = (List) result.getItem();//查询所有的学生信息
 			if (result == null || ListUtils.isEmpty(studentInfos)) {
-				r.setMessage("您还未上传学生信息");
+				r.setMessage("You have not uploaded student information");
 				return r;
 			}
 			/** 将查出来的学生信息按学生编号进行分类,并存入静态map中 */
 			Map<String, StudentInfo> studentInfoMap = new HashMap<>();
 			/** 按绑定状态进行分类 */
 			int bind = 0, notBind = 0;
+			//未绑定的学生信息
+			List<StudentInfo> noStudentInfos = new ArrayList<>();
+			//已绑定的学生信息
+			List<StudentInfo> studentInfosl = new ArrayList<>();
 			for (StudentInfo studentInfo : studentInfos) {
 				if (studentInfo.getStatus().equals(Constant.BING_YES)) {
 					++bind;
+					studentInfosl.add(studentInfo);
 				} else {
 					++notBind;
+					noStudentInfos.add(studentInfo);
 				}
 				if (!StringUtils.isEmpty(studentInfo.getIclickerId())) {
 					studentInfoMap.put(studentInfo.getIclickerId(), studentInfo);
@@ -196,10 +202,11 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			int str = DeviceComm.wirelessBindStart(1, "");
 			if (str < 0) {
 				r.setRet(Constant.ERROR);
-				r.setMessage("指令发送失败");
+				r.setMessage("Instruction sending failed");
 				return r;
 			}
-
+			RedisMapBind.setNoStudentInfos(noStudentInfos);
+			RedisMapBind.setStudentInfosl(studentInfosl);
 			RedisMapBind.setStudentInfoMap(studentInfoMap);
 			BaseThread thread = new CardInfoThread();
 			thread.start();
@@ -208,7 +215,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 
 			Global.setModeMsg(Constant.BUSINESS_BIND);
 			r.setRet(Constant.SUCCESS);
-			r.setMessage("操作成功");
+			r.setMessage("operate successfully\n");
 
 			/** 存入静态map */
 			RedisMapBind.getBindMap().put("studentName", null);
@@ -218,7 +225,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 		} catch (Exception e) {
 			log.error(IOUtils.getError(e));
 			r.setRet(Constant.ERROR);
-			r.setMessage("指令发送失败");
+			r.setMessage("Send instruction failed");
 		}
 
 		return r;

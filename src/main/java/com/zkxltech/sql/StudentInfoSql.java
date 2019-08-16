@@ -1,5 +1,15 @@
 package com.zkxltech.sql;
 
+import com.ejet.core.util.comm.ListUtils;
+import com.ejet.core.util.constant.Constant;
+import com.zkxltech.config.ConfigConstant;
+import com.zkxltech.domain.ClassInfo;
+import com.zkxltech.domain.Result;
+import com.zkxltech.domain.StudentInfo;
+import com.zkxltech.jdbc.DBHelper;
+import com.zkxltech.jdbc.DBHelper2;
+import com.zkxltech.ui.util.StringUtils;
+
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,15 +18,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import com.ejet.core.util.comm.ListUtils;
-import com.ejet.core.util.constant.Constant;
-import com.zkxltech.domain.ClassInfo;
-import com.zkxltech.domain.Result;
-import com.zkxltech.domain.StudentInfo;
-import com.zkxltech.jdbc.DBHelper;
-import com.zkxltech.jdbc.DBHelper2;
-import com.zkxltech.ui.util.StringUtils;
 
 
 
@@ -38,9 +39,10 @@ public class StudentInfoSql {
 //		sqls.add("insert into class_info (class_id,class_name,atype) values('"+classId+"','"+
 //				className+"','0')"); //添加班级信息
 		sqls.add("delete from student_info where class_id = '" + classId+"'"); //删除原来的班级学生
-		for (int i = 0; i < (rowList.size()>120?120:rowList.size()); i++) {
-			sql = "insert into student_info (class_id,class_name,student_id,student_name,iclicker_id,status) values('"+classId+"','"+
-					className+"','"+rowList.get(i).get(0)+"','"+rowList.get(i).get(1)+"','"+rowList.get(i).get(2)+"','0')";
+		Integer members = Integer.valueOf(ConfigConstant.projectConf.getMembers());
+		for (int i = 0; i < (rowList.size()>members?members:rowList.size()); i++) {
+			sql = "insert into student_info (class_id,class_name,student_id,student_name,status) values('"+classId+"','"+
+					className+"','"+rowList.get(i).get(0)+"','"+rowList.get(i).get(1)+"','"+"0')";
 			sqls.add(sql);
 		}
 		result = dbHelper.onUpdateByGroup(sqls);
@@ -53,10 +55,9 @@ public class StudentInfoSql {
 		Result result = new Result();
 		result.setRet(Constant.ERROR);
 		int rows = rowList.size();
-		
-		
+
+
 		List<String> studentIds = new ArrayList<String>();
-		List<String> iclickerIds = new ArrayList<String>();
 		for (int i = 0; i < rowList.size(); i++) {
 //			if (rowList.get(i).size() != 3) {
 //				result.setMessage("第"+(i+1)+"行格式错误！");
@@ -64,32 +65,23 @@ public class StudentInfoSql {
 //			}
 			String studentId = (String) rowList.get(i).get(0);
 			String studentName = (String) rowList.get(i).get(1);
-			String iclickerId = (String) rowList.get(i).get(2);
-            if (studentId.length() > 10) {
-            	  result.setMessage("第"+(i+2)+"行学生编号错误！");
-                  return result;
-			}    
-            if (studentName.length() > 10) {
-          	  result.setMessage("第"+(i+2)+"行学生姓名错误！");
-                return result;
-			} 
-            if (!verifyIclickerId(iclickerId)) {
-            	  result.setMessage("第"+(i+2)+"行答题器编号错误！");
-                  return result;
-  			} 
-            
-            studentIds.add(studentId);
-            iclickerIds.add(iclickerId);
+			if (studentId.length() > 10) {
+				result.setMessage("第"+(i+2)+"行学生编号错误！");
+				return result;
+			}
+			if (studentName.length() > 10) {
+				result.setMessage("第"+(i+2)+"行学生姓名错误！");
+				return result;
+			}
+
+			studentIds.add(studentId);
 		}
 
 		if (studentIds.stream().distinct().collect(Collectors.toList()).size() != studentIds.size()) {
-			  result.setMessage("学号有重复！");
-              return result;
+			result.setMessage("学号有重复！");
+			return result;
 		};
-		if (iclickerIds.stream().distinct().collect(Collectors.toList()).size() != iclickerIds.size()) {
-			  result.setMessage("答题器编号有重复！");
-           	  return result;
-		};
+
 		result.setRet(Constant.SUCCESS);
 		return result;
 	}
@@ -294,13 +286,13 @@ public class StudentInfoSql {
     }
 
     public Result updateStatus(String status) {
-        if (StringUtils.isEmpty(status)) {
-            Result r = new Result();
-            r.setRet(Constant.ERROR);
-            r.setMessage("缺少参数 :绑定状态不能为空");
-            return r;
-        }
-        String sb ="update student_info set status = "+status;
-        return dbHelper.onUpdate(sb.toString(), null);
-    }
+		if (StringUtils.isEmpty(status)) {
+			Result r = new Result();
+			r.setRet(Constant.ERROR);
+			r.setMessage("缺少参数 :绑定状态不能为空");
+			return r;
+		}
+		String sb ="update student_info set status = "+status +", iclicker_id = NULL";
+		return dbHelper.onUpdate(sb.toString(), null);
+	}
 }

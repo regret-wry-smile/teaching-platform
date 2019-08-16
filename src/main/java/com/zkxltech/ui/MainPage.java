@@ -1,52 +1,30 @@
 package com.zkxltech.ui;
 
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ejet.cache.BrowserManager;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.service.impl.ClassHourServiceImpl;
-import com.zkxltech.service.impl.StudentInfoServiceImpl;
-import com.zkxltech.ui.functions.AnswerFunctionManage;
-import com.zkxltech.ui.functions.AttendanceFunctionManage;
-import com.zkxltech.ui.functions.PreemptiveFunctionManage;
-import com.zkxltech.ui.functions.RecordFunctionManage;
-import com.zkxltech.ui.functions.ScoreFunctionManage;
-import com.zkxltech.ui.functions.SetFunctionManage;
-import com.zkxltech.ui.functions.StudentFunctionManage;
-import com.zkxltech.ui.functions.TestPaperFunctionManage;
-import com.zkxltech.ui.functions.VoteFunctionManage;
+import com.zkxltech.ui.functions.*;
 import com.zkxltech.ui.util.PageConstant;
-import com.zkxltech.ui.util.StringConstant;
 import com.zkxltech.ui.util.SwtTools;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.wb.swt.SWTResourceManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
 
 public class MainPage{
 	private static final Logger log = LoggerFactory.getLogger(MainPage.class);
@@ -82,6 +60,11 @@ public class MainPage{
 		}
 		return result;
 	}
+
+	//最小化返回显示状态
+	public void returnWindow(){
+		shell.setVisible(true);
+	}
 	
 	private void initData(){
 		/*屏幕宽高*/
@@ -104,7 +87,7 @@ public class MainPage{
 
 	private void createContents() {
 		try {
-			shell = new Shell(display, SWT.NONE);
+			shell = new Shell(display, SWT.NO_TRIM|SWT.ON_TOP);
 			shell.addTraverseListener(new TraverseListener() {
 				public void keyTraversed(TraverseEvent e) {
 					// 屏蔽按下Esc按键
@@ -273,7 +256,8 @@ public class MainPage{
 
 				@Override
 				public void handleEvent(Event event) {
-					shell.setMinimized(true);
+					shell.setVisible(false);
+					mainStart.floatingWindow2();
 				}
 			});
 			changeMin.addMouseTrackListener(SwtTools.showHand(changeMin));

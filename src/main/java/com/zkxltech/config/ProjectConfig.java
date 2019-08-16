@@ -44,6 +44,10 @@ public class ProjectConfig {
 	 * 默认权限日期
 	 */
 	private String jurisdiction;
+	/**
+	 * 默认班级成员数
+	 */
+	private String members;
 
 	public String getApp_type() {
 		return app_type;
@@ -115,5 +119,12 @@ public class ProjectConfig {
 
 	public void setJurisdiction(String jurisdiction) {
 		this.jurisdiction = jurisdiction;
+	}
+	public String getMembers() {
+		return members;
+	}
+
+	public void setMembers(String members) {
+		this.members = members;
 	}
 }

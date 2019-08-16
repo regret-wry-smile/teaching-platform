@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,50 +28,59 @@ public class ImportExcelUtils {
      * @throws IOException  
      */  
     public static List<List<Object>> getBankListByExcel(InputStream in,String fileName) throws Exception{  
-        List<List<Object>> list = null;  
-          
-        //创建Excel工作薄  
-        Workbook work = getWorkbook(in,fileName);  
-        if(null == work){  
-            throw new Exception("创建Excel工作薄为空！");  
-        }  
-        Sheet sheet = null;  
-        Row row = null;  
-        Cell cell = null;  
-          
-        list = new ArrayList<List<Object>>();  
-        //遍历Excel中所有的sheet  
-        for (int i = 0; i < work.getNumberOfSheets(); i++) {  
-            sheet = work.getSheetAt(i);  
-            if(sheet==null){continue;}  
-              
-            //遍历当前sheet中的所有行 
+        List<List<Object>> list = null;
+
+        //创建Excel工作薄
+        Workbook work = getWorkbook(in,fileName);
+        if(null == work){
+            throw new Exception("创建Excel工作薄为空！");
+        }
+        Sheet sheet = null;
+        Row row = null;
+        Cell cell = null;
+
+        list = new ArrayList<List<Object>>();
+        //遍历Excel中所有的sheet
+        for (int i = 0; i < work.getNumberOfSheets(); i++) {
+            sheet = work.getSheetAt(i);
+            if(sheet==null){continue;}
+
+            //遍历当前sheet中的所有行
             int cols =  0; //第一行的列数
-            for (int j = sheet.getFirstRowNum(); j <= sheet.getLastRowNum(); j++) {  
+            for (int j = sheet.getFirstRowNum()+1; j <= sheet.getLastRowNum(); j++) {
                 row = sheet.getRow(j);
                 if (row == null) {
-                	continue;
-				}
-                if(row.getFirstCellNum()==j){
-                	cols = row.getLastCellNum();
-                	continue;
-                }  
-                //遍历所有的列  
-                List<Object> li = new ArrayList<Object>();  
-                for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {  
+                    continue;
+                }
+                if(row.getFirstCellNum()==j-1){
+                    cols = row.getLastCellNum();
+                    continue;
+                }
+                //遍历所有的列
+                List<Object> li = new ArrayList<Object>();
+                for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {
                     cell = row.getCell(y);
-                    
-                    li.add(getCellValue(cell));  
-                }  
+                    if(row.getFirstCellNum()==y){
+
+                        BigDecimal bd = new BigDecimal(Double.parseDouble(cell.toString()));
+//                        System.out.println(bd.toPlainString());
+                        if(bd.toPlainString().length()>4){
+                            List<List<Object>> list1 = null;
+                            return list1;
+                        }
+                    }
+                    li.add(getCellValue(cell));
+                }
+
                 if (li.size()==cols) {
-                	list.add(li);  
-				}
-            }  
-        }  
-        work.close();  
-        return list;  
-    }  
-    
+                    list.add(li);
+                }
+            }
+        }
+        work.close();
+        return list;
+    }
+
     /** 
      * 描述：获取IO流中的数据，组装成List<List<Object>>对象 
      * @param in,fileName 
