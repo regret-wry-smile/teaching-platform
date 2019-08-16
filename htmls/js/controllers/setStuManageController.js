@@ -428,7 +428,7 @@ var app=angular.module('app',['ui.bootstrap','toastr']);
 	}
 	//清除白名单
 	$scope.clearStu=function(){
-		var content="Clear Whitelist";
+		var content="Clear All Pairing";
 		var modalInstance = $modal.open({
 			templateUrl: 'sureModal.html',
 			controller: 'sureModalCtrl',
