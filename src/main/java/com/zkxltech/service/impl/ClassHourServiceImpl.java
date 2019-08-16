@@ -33,14 +33,14 @@ public class ClassHourServiceImpl implements ClassHourService{
 		try {
 			result = classHourSql.selectClassHour((String)classId, (String)subjectName);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("查询课程列表成功!");
+				result.setMessage("Successfully querying the course list!");
 			}else {
-				result.setMessage("查询课程列表失败！");
+				result.setMessage("Failed to query the course list！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("查询课程列表失败！");
+			result.setMessage("Failed to query the course list！");
 			result.setDetail(IOUtils.getError(e));
 			logger.error(IOUtils.getError(e));
 			return result;
@@ -56,14 +56,14 @@ public class ClassHourServiceImpl implements ClassHourService{
 			classHour.setStartTime(com.ejet.core.util.StringUtils.formatDateTime(new Date()));
 			result = classHourSql.insertClassHour(classHour);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("新增课程成功!");
+				result.setMessage("Add courses successful!");
 			}else {
-				result.setMessage("新增课程失败！");
+				result.setMessage("Add courses failed！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("新增课程失败！");
+			result.setMessage("Add courses failed！");
 			result.setDetail(IOUtils.getError(e));
 			logger.error(IOUtils.getError(e));
 			return result;
@@ -77,14 +77,14 @@ public class ClassHourServiceImpl implements ClassHourService{
 			ClassHour classHour =  (ClassHour) StringUtils.parseJSON(object, ClassHour.class);
 			result = classHourSql.deleteAnswerInfo(classHour);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("删除课程成功!");
+				result.setMessage("Delete course successful!");
 			}else {
-				result.setMessage("删除课程失败！");
+				result.setMessage("Delete course failed！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("删除课程失败！");
+			result.setMessage("Delete course failed！");
 			result.setDetail(IOUtils.getError(e));
 			logger.error(IOUtils.getError(e));
 			return result;
@@ -99,14 +99,14 @@ public class ClassHourServiceImpl implements ClassHourService{
 			classHour.setEndTime(com.ejet.core.util.StringUtils.formatDateTime(new Date()));
 			result = classHourSql.updateTestPaper(classHour);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("删除课程成功!");
+				result.setMessage("Delete course successful!");
 			}else {
-				result.setMessage("删除课程失败！");
+				result.setMessage("Delete course failed！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("删除课程失败！");
+			result.setMessage("Delete course failed！");
 			result.setDetail(IOUtils.getError(e));
 			logger.error(IOUtils.getError(e));
 			return result;
@@ -130,10 +130,10 @@ public class ClassHourServiceImpl implements ClassHourService{
 			}
 			
 			result.setRet(Constant.SUCCESS);
-			result.setMessage("开始上课！");
+			result.setMessage("Class begin！");
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("上课失败！");
+			result.setMessage("Class failed！");
 			logger.error(IOUtils.getError(e));
 		}
 		return result;
@@ -156,12 +156,12 @@ public class ClassHourServiceImpl implements ClassHourService{
 				if (classInfos != null && classInfos.size()>0) {
 					Global.setClassInfo(classInfos.get(0));
 				}else {
-					result.setMessage("未找到班级信息！");
+					result.setMessage("Class information not found！");
 					result.setRet(Constant.ERROR);
 					return result;
 				}
 			}else {
-				result.setMessage("查询班级信息失败！");
+				result.setMessage("Failed to query class information！");
 				result.setRet(Constant.ERROR);
 				return result;
 			}
@@ -171,7 +171,7 @@ public class ClassHourServiceImpl implements ClassHourService{
 			result = new StudentInfoServiceImpl().selectStudentInfo(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				if (StringUtils.isEmptyList(result.getItem())) {
-					result.setMessage("该班级没有学生！");
+					result.setMessage("No students in the class！");
 					result.setRet(Constant.ERROR);
 					return result;
 				}
@@ -190,7 +190,7 @@ public class ClassHourServiceImpl implements ClassHourService{
 				}
 				Global.setStudentInfos(bindStudentInfos);
 			}else {
-				result.setMessage("查询学生信息失败！");
+				result.setMessage("Failed to query student information！");
 				result.setRet(Constant.ERROR);
 				return result;
 			}
@@ -214,10 +214,10 @@ public class ClassHourServiceImpl implements ClassHourService{
 			Global.setStudentInfos(null);
 			
 			result.setRet(Constant.SUCCESS);
-			result.setMessage("下课！");
+			result.setMessage("Class end！");
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("下课失败！");
+			result.setMessage("Class failed！");
 			logger.error(IOUtils.getError(e));
 		}
 		return result;
@@ -230,10 +230,10 @@ public class ClassHourServiceImpl implements ClassHourService{
 		try {
 			result.setItem(Global.getClassInfo());
 			result.setRet(Constant.SUCCESS);
-			result.setMessage("获取当前班级信息成功！");
+			result.setMessage("Get the current class information successfully！");
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("获取当前班级信息失败！");
+			result.setMessage("Get the current class information failed！");
 			logger.error(IOUtils.getError(e));
 		}
 		return result;

@@ -1,5 +1,15 @@
 package com.zkxltech.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ejet.cache.BrowserManager;
 import com.ejet.cache.RedisMapAttendance;
 import com.ejet.cache.RedisMapQuick;
@@ -10,7 +20,6 @@ import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
-import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.domain.ClassInfo;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
@@ -20,17 +29,9 @@ import com.zkxltech.thread.AttendanceThread;
 import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.QuickThread;
 import com.zkxltech.thread.ThreadManager;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class StudentInfoServiceImpl implements StudentInfoService{
 	private static final Logger log = LoggerFactory.getLogger(StudentInfoServiceImpl.class);
@@ -75,14 +76,9 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 			ClassInfo classInfo =  (ClassInfo) StringUtils.parseToBean(JSONObject.fromObject(classInfoObj), ClassInfo.class);
 			List<List<Object>> list = ImportExcelUtils.getBankListByExcel(new FileInputStream(new File(fileName)), fileName);
 			result = studentInfoSql.importStudent(list,classInfo);
-
-			if (list.isEmpty()) {
-				result.setRet(Constant.ERROR);
-				result.setMessage("Student number should be less than 5");
-			}else if(Constant.SUCCESS.equals(result.getRet())){
-				result.setMessage("Successful introduction of students!");
-			}
-			else {
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				result.setMessage("导入成功!");
+			}else {
 				result.setMessage(result.getMessage());
 			}
 			return result;
@@ -147,48 +143,62 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	@Override
 	public Result insertStudentInfo(Object param) {
 		try {
-
+			
 			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseToBean(JSONObject.fromObject(param), StudentInfo.class);
-			StudentInfo studentId = new StudentInfo();
-			studentId.setStudentId(studentInfo.getStudentId());
-			studentId.setClassId(studentInfo.getClassId());
 			StudentInfo studentInfoParam = new StudentInfo();
 			studentInfoParam.setClassId(studentInfo.getClassId());
 			result = studentInfoSql.selectStudentInfo(studentInfoParam);
-			Integer members = Integer.valueOf(ConfigConstant.projectConf.getMembers());
 			if (Constant.ERROR.equals(result.getRet())) {
-				result.setMessage("Failed to check query class information！ ");
+				result.setMessage("校验查询该班学生信息失败!");
 				return result;
 			}else {
-				if (((List<StudentInfo>)result.getItem()).size()>=members) {
+				if (((List<StudentInfo>)result.getItem()).size()>=120) {
 					result.setRet(Constant.ERROR);
-					result.setMessage("No more than one class is allowed"+members+"students!");
+					result.setMessage("每个班学生不能超过120人!");
 					return result;
 				}
 			}
-			//检查成员编号是否重复
-			result = studentInfoSql.selectStudentInfo(studentId);
-			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("Student information was searched successfully!");
-				if (((List<StudentInfo>) result.getItem()).size()!=0){
-					result.setRet(Constant.ERROR);
-					result.setMessage("The member number already exists！");
-					return result;
-				}
-			}else {
-				result.setMessage("Failed to query student information!");
-			}
-			//添加成员信息
+//			/*判断该班中学生学号是否存在*/
+//			StudentInfo paramStudentInfo1 = new StudentInfo();
+//			paramStudentInfo1.setClassId(studentInfo.getClassId());
+//			paramStudentInfo1.setStudentId(studentInfo.getStudentId());
+//			result = studentInfoSql.selectStudentInfo(paramStudentInfo1);
+//			if(Constant.ERROR.equals(result.getRet())){
+//				result.setMessage("查询学生失败!");
+//				return result;
+//			}else {
+//				 if(!com.zkxltech.ui.util.StringUtils.isEmptyList(result.getItem())){
+//					 result.setMessage("该班该学号已经存在!");
+//					 result.setRet(Constant.ERROR);
+//					 return result;
+//				 }
+//			}
+//			
+//			/*判断该班中答题器编号是否存在*/
+//			StudentInfo paramStudentInfo2= new StudentInfo();
+//			paramStudentInfo2.setClassId(studentInfo.getClassId());
+//			paramStudentInfo2.setIclickerId(studentInfo.getIclickerId());
+//			result = studentInfoSql.selectStudentInfo(paramStudentInfo2);
+//			if(Constant.ERROR.equals(result.getRet())){
+//				result.setMessage("查询学生失败!");
+//				return result;
+//			}else {
+//				 if(!com.zkxltech.ui.util.StringUtils.isEmptyList(result.getItem())){
+//					 result.setMessage("该班该答题器编号已经存在!");
+//					 result.setRet(Constant.ERROR);
+//					 return result;
+//				 }
+//			}
 			result = studentInfoSql.insertStudentInfo(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("Add student information successfully!");
+				result.setMessage("新增学生信息成功!");
 			}else {
-				result.setMessage("Failed to add student information！");
+				result.setMessage("新增学生信息失败！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("Failed to add student information！");
+			result.setMessage("新增学生信息失败！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -223,9 +233,6 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 	public Result updateStudentById(Object param) {
 		try {
 			StudentInfo studentInfo =  (StudentInfo) StringUtils.parseToBean(JSONObject.fromObject(param), StudentInfo.class);
-			StudentInfo studentId = new StudentInfo();
-			studentId.setStudentId(studentInfo.getStudentId());
-			studentId.setClassId(studentInfo.getClassId());
 			String iclickerId = studentInfo.getIclickerId();
 			if (!StringUtils.isEmpty(iclickerId)) {
 			    //修改学生信息的时候,有可能改了卡号,但是这个卡号不一定是绑定的状态,所以要检查设备中是否绑定了
@@ -237,16 +244,14 @@ public class StudentInfoServiceImpl implements StudentInfoService{
                     bindStatus = Constant.BING_YES;
                 }
 			    StudentInfoSql sql = new StudentInfoSql();
+			    iclickerIds = new ArrayList<>();
+			    iclickerIds.add(iclickerId);
 			    result = sql.updateStatusByIclickerIds(iclickerIds, bindStatus);
 			    if (result.getRet().equals(Constant.ERROR)) {
 			        return result;
                 }
+			    
             }
-			if (studentInfo.getStudentId().length()>4){
-				result.setRet(Constant.ERROR);
-				result.setMessage("Student Numbers are up to 4 digits!");//学生编号最多为4位
-				return result;
-			}
 			result = studentInfoSql.updateStudentById(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
 				result.setMessage("修改学生信息成功!");
@@ -464,25 +469,6 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }
         return r;
     }
-
-	@Override
-	public Result updateStudent(StudentInfo studentInfo) {
-		result = new Result();
-		try {
-			result = studentInfoSql.updateStudentById(studentInfo);
-			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("Binding success!");
-			} else {
-				result.setMessage("Binding failure!");//未能修改学生信息!
-			}
-			return result;
-		} catch (Exception e) {
-			result.setRet(Constant.ERROR);
-			result.setMessage("Binding failure!");
-			result.setDetail(IOUtils.getError(e));
-			log.error(IOUtils.getError(e));
-			return result;
-		}
-	}
+    
 
 }

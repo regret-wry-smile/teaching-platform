@@ -33,11 +33,11 @@ public class RecordServiceImpl implements RecordService{
     public Result exportRecord(Object object) {
         result = new Result();
         try {
-            result.setMessage("导出成功!");
+            result.setMessage("Export success!");
             return result;
         } catch (Exception e) {
             result.setRet(Constant.ERROR);
-            result.setMessage("导入学生失败！");
+            result.setMessage("Failed import students！");
             result.setDetail(IOUtils.getError(e));
             return result;
         }
@@ -61,17 +61,17 @@ public class RecordServiceImpl implements RecordService{
     @Override
     public Result testExport(Object object) {
         Result r = new Result();
-        r.setMessage("正在导出,请稍后......");
+        r.setMessage("Export in progress, please hold on...");
         r.setRet(Constant.SUCCESS);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 //查询
                 String fileName = "";
-                String titleName = "课程名称为[";
-                String testName = "试卷名称："; 
-                String className = "班级名称:"; 
-                String studentSum = "学生人数:";
+                String titleName = "Course Title:[";
+                String testName = "Paper Name:";
+                String className = "Class Name:";
+                String studentSum = "Student Num:";
                 String dates = "";
                 Result r = new Result();
                 r.setRet(Constant.ERROR);
@@ -80,7 +80,7 @@ public class RecordServiceImpl implements RecordService{
                     Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
                     if (StringUtils.isBlank(record.getClassId())||StringUtils.isBlank(record.getSubject())
                             ||StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getTestId())) {
-                        BrowserManager.showMessage(false,"缺少参数,请检查班次id,科目,课程id,试卷id四个参数");
+                        BrowserManager.showMessage(false,"Missing parameters, please check the four parameters of shift ID, course ID, course ID and paper ID");
                         return;
                     }
                     //查询课程名称
@@ -90,11 +90,11 @@ public class RecordServiceImpl implements RecordService{
                     r = classHourSql.selectClassHour(classHour);
                     List<ClassHour> classHours = (List<ClassHour>) r.getItem();
                     if (ListUtils.isEmpty(classHours)) {
-                        BrowserManager.showMessage(false,"未查询到该课程");
+                        BrowserManager.showMessage(false,"The course is not available");
                         return ;
                     }
                     classHour = classHours.get(0);
-                    titleName+=classHour.getClassHourName()+"]的作答详情";
+                    titleName+=classHour.getClassHourName()+"] Response details";
                     //查询试卷名称
                     TestPaperSql testPaperSql = new TestPaperSql();
                     TestPaper testPaper = new TestPaper();
@@ -114,7 +114,7 @@ public class RecordServiceImpl implements RecordService{
                      String date = format.format(new Date());
                      fileName += classInfo.getClassName()+classHour.getSubjectName()+classHour.getClassHourName()+date+".xls";
                      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                     dates = "创建时间:"+date+"  作答时间:"+classHours.get(0).getStartTime();
+                     dates = "Create time:"+date+"  Response time:"+classHours.get(0).getStartTime();
                     //FIXEME 列数 = 6 + 该试卷的所有题目个数
                     QuestionInfoSql questionInfoSql = new QuestionInfoSql();
                     QuestionInfo questionInfo = new QuestionInfo();
@@ -123,7 +123,7 @@ public class RecordServiceImpl implements RecordService{
                     r = questionInfoSql.selectQuestionInfo(questionInfo);
                     List<QuestionInfo> questionInfos = (List<QuestionInfo>) r.getItem();
                     if (ListUtils.isEmpty(questionInfos)) {
-                        BrowserManager.showMessage(false,"该试卷下没有任何题目信息");
+                        BrowserManager.showMessage(false,"There is no question information under the paper");
                         return ;
                     }
                     int columnNumber = 6 + questionInfos.size();
@@ -136,10 +136,10 @@ public class RecordServiceImpl implements RecordService{
                         }
                     }
                     String[] columnName = new String[columnNumber];// 标题
-                    columnName[0] = "键盘";columnName[1] = "学号";columnName[2] = "姓名";
-                    columnName[3] = "得分";columnName[4] = "正确率";columnName[5] = "排名";
+                    columnName[0] = "Key";columnName[1] = "Student ID";columnName[2] = "Name";
+                    columnName[3] = "Score";columnName[4] = "Correct";columnName[5] = "Ranking";
                     for (int i = 6; i < columnName.length; i++) {
-                        columnName[i] = "题目"+(i-5);
+                        columnName[i] = "Topic"+(i-5);
                     }
                     List<List<Object>> lists = new ArrayList<List<Object>>();
                     //FIXME 获取所有学生信息
@@ -152,7 +152,7 @@ public class RecordServiceImpl implements RecordService{
                         r = studentInfoSql.selectStudentInfo(studentInfo);
                         studentInfos = (List<StudentInfo>) r.getItem();
                         if (ListUtils.isEmpty(studentInfos)) {
-                            BrowserManager.showMessage(false,"未查到该班级下的学生信息");
+                            BrowserManager.showMessage(false,"No student information for this class was found");
                            return;
                         }
                     }
@@ -244,7 +244,7 @@ public class RecordServiceImpl implements RecordService{
                         }
                     }
                     String flieUrl = System.getProperty("user.dir").replaceAll("\\\\", "/") + "/"+"excels/";
-                    SXSSFWorkbook wb = ExportExcel.ExportWithResponse("成绩明细表", titleName,testName ,dates,className, studentSum, testName, columnNumber, columnWidth, columnName , lists);   
+                    SXSSFWorkbook wb = ExportExcel.ExportWithResponse("Schedule Of Grades", titleName,testName ,dates,className, studentSum, testName, columnNumber, columnWidth, columnName , lists);
                     File file = new File(flieUrl);
                     if (!file.exists()) {
                         file.mkdirs();
@@ -252,13 +252,13 @@ public class RecordServiceImpl implements RecordService{
                     out = new FileOutputStream(new File(flieUrl,fileName));
                     wb.write(out);// 将数据写出去  
                     out.flush();// 将数据写出去
-                    BrowserManager.showMessage(true,"导出成功");
+                    BrowserManager.showMessage(true,"Export success");
                     openFile();
                 }catch (Exception e) {
                     log.error("", e);
-                    r.setMessage("导出失败");
+                    r.setMessage("Export failure");
                     r.setDetail(IOUtils.getError(e));
-                    BrowserManager.showMessage(false,"导出失败");
+                    BrowserManager.showMessage(false,"Export failure");
                 }finally {
                     BrowserManager.removeLoading();
                     if (out != null) {
@@ -289,7 +289,7 @@ public class RecordServiceImpl implements RecordService{
                 try {
                     Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
                     if (StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getTestId())) {
-                        r.setMessage("缺少参数:课程id和试卷id不能为空");
+                        r.setMessage("Missing parameter: course ID and paper ID cannot be empty");
                         BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
                         return ;
                     }
@@ -305,7 +305,7 @@ public class RecordServiceImpl implements RecordService{
                     List<ClassHour>  classHours = (List<ClassHour>) r.getItem();
                     classHour = classHours.get(0);
                     if (classHour == null) {
-                        r.setMessage("未查询到该课时信息");
+                        r.setMessage("The class information was not found");
                         BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
                         return;
                     }
@@ -321,7 +321,7 @@ public class RecordServiceImpl implements RecordService{
                     List<TestPaper> testPapers = (List<TestPaper>) r.getItem();
                     testPaper = testPapers.get(0);
                     if (testPaper == null) {
-                        r.setMessage("未查询到该试卷信息");
+                        r.setMessage("No information about this paper was found");
                         BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
                         return ;
                     }
@@ -337,7 +337,7 @@ public class RecordServiceImpl implements RecordService{
                     }
                     List<QuestionInfo> questInfos = (List<QuestionInfo>) r.getItem();
                     if (ListUtils.isEmpty(questInfos)) {
-                        r.setMessage("该试卷没有对应题目");
+                        r.setMessage("The paper has no corresponding questions");
                         BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
                         return ;
                     }
@@ -351,7 +351,7 @@ public class RecordServiceImpl implements RecordService{
                     //查询到所有学生的所有答题数据
                     List<Record> records = (List<Record>) r.getItem();
                     if (ListUtils.isEmpty(records)) {
-                        r.setMessage("未查询到该试卷任意答题记录");
+                        r.setMessage("Cannot inquire to this examination paper any answer record");
                         BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
                         return ;
                     }
@@ -394,7 +394,7 @@ public class RecordServiceImpl implements RecordService{
                     r.setRet(Constant.SUCCESS);
                     BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
                 } catch (Exception e) {
-                    r.setMessage("查询数据库失败");
+                    r.setMessage("Query database failed");
                     r.setDetail(IOUtils.getError(e));
                     log.error(IOUtils.getError(e));
                 }finally {
@@ -416,14 +416,14 @@ public class RecordServiceImpl implements RecordService{
             record.setClassHourId(Global.getClassHour().getClassHourId());
             result = recordSql.selectRecord(record);
             if (Constant.ERROR.equals(result.getRet())) {
-                result.setMessage("查询记录失败!");
+                result.setMessage("Query record failed!");
                 return result;
             }
-            result.setMessage("查询记录成功!");
+            result.setMessage("Record query successful!");
             return result;
         } catch (Exception e) {
             result.setRet(Constant.ERROR);
-            result.setMessage("查询记录失败！");
+            result.setMessage("Query record failed！");
             result.setDetail(IOUtils.getError(e));
             log.error(IOUtils.getError(e));
             return result;
@@ -440,7 +440,7 @@ public class RecordServiceImpl implements RecordService{
             record.setClassHourId(Global.getClassHour().getClassHourId());
             result = recordSql.selectRecord(record);
             if (Constant.ERROR.equals(result.getRet())) {
-                result.setMessage("查询记录失败!");
+                result.setMessage("Query record failed!");
                 return result;
             }
             List<Record> records = (List<Record>) result.getItem();
@@ -451,11 +451,11 @@ public class RecordServiceImpl implements RecordService{
                 }
             }
             result.setItem(retList);
-            result.setMessage("查询记录成功!");
+            result.setMessage("Record query successful!");
             return result;
         } catch (Exception e) {
             result.setRet(Constant.ERROR);
-            result.setMessage("查询记录失败！");
+            result.setMessage("Query record failed！");
             result.setDetail(IOUtils.getError(e));
             log.error(IOUtils.getError(e));
             return result;
@@ -469,7 +469,7 @@ public class RecordServiceImpl implements RecordService{
         try {
             Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
             if (StringUtils.isBlank(record.getTestId())||record.getStudentIds()== null || record.getStudentIds().size() < 1) {
-                r.setMessage("试卷id和学生id参数不能为空");
+                r.setMessage("The paper ID and student ID parameters cannot be empty");
                 return r;
             }
             RecordSql sql = new RecordSql();
@@ -478,12 +478,12 @@ public class RecordServiceImpl implements RecordService{
                 return r;
             }
         } catch (Exception e) {
-            r.setMessage("删除失败");
+            r.setMessage("Delete failed");
             r.setDetail(IOUtils.getError(e));
             log.error(IOUtils.getError(e));
         }
         r.setRet(Constant.SUCCESS);
-        r.setMessage("删除成功");
+        r.setMessage("Delete successful");
         return r;
     }
     public void openFile() throws IOException{
@@ -499,14 +499,14 @@ public class RecordServiceImpl implements RecordService{
             Record record = com.zkxltech.ui.util.StringUtils.parseJSON(object, Record.class);
             if (StringUtils.isBlank(record.getClassHourId())||StringUtils.isBlank(record.getClassId())||StringUtils.isBlank(record.getStudentId())
                     ||StringUtils.isBlank(record.getTestId())||StringUtils.isEmpty(record.getSubject())) {
-                r.setMessage("缺少参数,班级id,课程,课时id,试卷id,学生id均不能为空");
+                r.setMessage("Missing parameters, class ID, course ID, class ID,paper ID, student ID cannot be empty");
                 return r;
             }
             RecordSql recordSql = new RecordSql();
             r = recordSql.selectRecord(record);
         } catch (Exception e) {
             log.error(IOUtils.getError(e));
-            r.setMessage("查询失败");
+            r.setMessage("Query failed");
         }
         return r;
     }

@@ -248,7 +248,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 	//删除记录
 	$scope.deleteRcord = function() {
 		if($scope.onechecked.length > 0) {
-			var content = "删除选中记录";
+			var content = "Delete selected record";
 			var modalInstance = $modal.open({
 				templateUrl: 'sureModal.html',
 				controller: 'sureModalCtrl',
@@ -285,7 +285,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 				//$log.info('Modal dismissed at: ' + new Date());
 			});
 		} else {
-			toastr.warning("请选择记录");
+			toastr.warning("Please select record");
 		}
 
 	}
@@ -332,7 +332,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 				console.log(JSON.stringify($scope.result.message))*/
 			}
 		}else{
-			toastr.warning("缺少必要条件，不能导出");
+			toastr.warning("Cannot export without necessary condition");
 		}
 		
 	}
@@ -356,7 +356,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 	$scope.refreSelectRecord = function(){
 		var retDate = JSON.parse(result);
 		if(result.ret == 'error'){
-			toastr.error("查询失败！");
+			toastr.error("Query Failed！");
 		}else{
 			$scope.recordList=[];
 			$scope.recordList = retDate.item;
@@ -365,7 +365,7 @@ app.controller('answerRecordCtrl', function($scope, toastr,$modal) {
 })
 //确认弹出框
 app.controller('sureModalCtrl',function($scope,$modalInstance,toastr,content){
-	$scope.content='是否进行'+angular.copy(content)+'操作？';
+	$scope.content='Do you want to operate'+angular.copy(content)+'？';
 	$scope.ok = function() {
 		$modalInstance.close('success');
 	}
@@ -448,7 +448,7 @@ app.directive('select', function() {
 					$(element).multiselect({
 						width: "10rem",
 						multiple: false,
-						selectedHtmlValue: '请选择',
+						selectedHtmlValue: '-Select-',
 						defalutvalue: scope.defalutvalue,
 						change: function() {
 							$(element).val($(this).val());
@@ -491,7 +491,7 @@ app.directive('select1', function() {
 
 					$(element).multiselect({
 						multiple: false,
-						selectedHtmlValue: '请选择',
+						selectedHtmlValue: '-Select-',
 						defalutvalue: scope.defalutvalue,
 						change: function() {
 							$(element).val($(this).val());
@@ -531,7 +531,7 @@ app.directive('select2', function() {
 				}
 				$(element).multiselect({
 						multiple: false,
-						selectedHtmlValue: '请选择',
+						selectedHtmlValue: '-Select-',
 						defalutvalue: scope.defalutvalue,
 						change: function() {
 							$(element).val($(this).val());
@@ -556,27 +556,27 @@ app.filter('questionType', function() {
 		switch(questionType) {
 			case '2':
 				{
-					statename = '判断';
+					statename = 'Judge';
 					break;
 				}
 			case '0':
 				{
-					statename = '单选';
+					statename = 'Single';
 					break;
 				}
 			case '1':
 				{
-					statename = '多选';
+					statename = 'Multiple';
 					break;
 				}
 			case '3':
 				{
-					statename = '数字';
+					statename = 'Digital';
 					break;
 				}
 			case '4':
 				{
-					statename = '主观题';
+					statename = 'subjective';
 					break;
 				}
 		}

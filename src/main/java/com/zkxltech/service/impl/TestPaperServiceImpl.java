@@ -33,7 +33,7 @@ public class TestPaperServiceImpl implements TestPaperService{
 			//插入试卷
 			result = testPaperSql.insertTestPaper(testPaper);
 			if (Constant.ERROR.equals(result.getRet())) {
-				result.setMessage("插入试卷信息失败！");
+				result.setMessage("Failed to insert problem information！");
 				return result;
 			}
 			//将该试卷的状态改为启用状态
@@ -42,14 +42,14 @@ public class TestPaperServiceImpl implements TestPaperService{
 			questionInfo.setStatus("1");
 			result = questionInfoSql.updateStudent(questionInfo);
 			if (Constant.ERROR.equals(result.getRet())) {
-				result.setMessage("插入题目信息失败！");
+				result.setMessage("Failed to insert problem information！");
 				return result;
 			}
-			result.setMessage("添加试卷成功！");
+			result.setMessage("add paper successful！");
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("添加试卷失败！");
+			result.setMessage("add paper failed！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -64,11 +64,11 @@ public class TestPaperServiceImpl implements TestPaperService{
 			if (Constant.ERROR.equals(result.getRet())) {
 				return result;
 			}
-			result.setMessage("添加试卷成功！");
+			result.setMessage("add paper successful！");
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("添加试卷失败！");
+			result.setMessage("add paper failed！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -81,14 +81,14 @@ public class TestPaperServiceImpl implements TestPaperService{
 			TestPaper testPaper =  (TestPaper) StringUtils.parseJSON(object, TestPaper.class);
 			result = testPaperSql.selectTestPaper(testPaper);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("查询试卷成功!");
+				result.setMessage("select paper successful!");
 			}else {
-				result.setMessage("查询试卷失败！");
+				result.setMessage("select paper failed！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("查询试卷失败！");
+			result.setMessage("select paper failed！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -102,14 +102,14 @@ public class TestPaperServiceImpl implements TestPaperService{
             TestPaper testPaper =  (TestPaper) StringUtils.parseJSON(object, TestPaper.class);
             result = testPaperSql.selectTestPaperByClassHourId(testPaper);
             if (Constant.SUCCESS.equals(result.getRet())) {
-                result.setMessage("查询试卷成功!");
+                result.setMessage("select paper successful!");
             }else {
-                result.setMessage("查询试卷失败！");
+                result.setMessage("select paper failed！");
             }
             return result;
         } catch (Exception e) {
             result.setRet(Constant.ERROR);
-            result.setMessage("查询试卷失败！");
+            result.setMessage("select paper failed！");
             result.setDetail(IOUtils.getError(e));
             log.error(IOUtils.getError(e));
             return result;
@@ -122,14 +122,14 @@ public class TestPaperServiceImpl implements TestPaperService{
 			testPaper.setSubject(Global.getClassHour().getSubjectName());
 			result = testPaperSql.selectTestPaper(testPaper);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("查询试卷成功!");
+				result.setMessage("select paper successful!");
 			}else {
-				result.setMessage("查询试卷失败！");
+				result.setMessage("select paper failed！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("查询试卷失败！");
+			result.setMessage("select paper failed！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -146,19 +146,19 @@ public class TestPaperServiceImpl implements TestPaperService{
 			questionInfo.setTestId(testPaper.getTestId());
 			result = questionInfoSql.deleteQuestionInfo(questionInfo);
 			if(Constant.ERROR.equals(result.getRet())){
-				result.setMessage("删除题目失败!");
+				result.setMessage("Failed to delete question!");
 				return result;
 			}
 			result = testPaperSql.deleteTestPaper(testPaper);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("删除试卷成功!");
+				result.setMessage("Delete paper successful!");
 			}else {
-				result.setMessage("删除试卷失败！");
+				result.setMessage("Failed to delete paper！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("删除班级失败！");
+			result.setMessage("Failed to delete class！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -177,19 +177,19 @@ public class TestPaperServiceImpl implements TestPaperService{
 			questionInfo.setStatus("1");
 			Result result = questionInfoSql.updateStudent(questionInfo);
 			if (Constant.ERROR.equals(result.getRet())) {
-				result.setMessage("修改题目信息成功!");
+				result.setMessage("Modified the information successfully!");
 				return result;
 			}
 			result = testPaperSql.updateTestPaper(testPaper);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("修改成功!");
+				result.setMessage("Modify success!");
 			}else {
-				result.setMessage("修改失败！");
+				result.setMessage("Modify failed！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("修改失败！");
+			result.setMessage("Modify failed！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;

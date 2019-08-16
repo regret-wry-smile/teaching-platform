@@ -84,7 +84,7 @@ app.controller('setPaperManageCtrl', function($rootScope, $scope, $modal, toastr
 
 		//删除题目 
 		$scope.delPaper = function(item) {
-			var content = "删除题目";
+			var content = "Delete Question";
 			var modalInstance = $modal.open({
 				templateUrl: 'sureModal.html',
 				controller: 'sureModalCtrl',
@@ -297,7 +297,7 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
     //删除题目
     $scope.delSuject = function(item) {
         if($scope.onechecked.length > 0) {
-            var content = "删除题目";
+            var content = "Delete Question";
             var modalInstance = $modal.open({
                 templateUrl: 'sureModal.html',
                 controller: 'sureModalCtrl',
@@ -362,7 +362,7 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
                 //$log.info('Modal dismissed at: ' + new Date());
             });
         } else {
-            toastr.warning("请先勾选至少一个题目");
+            toastr.warning("Please check at least one topic first");
         }
     }
 		//添加题目
@@ -444,7 +444,7 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
                     toastr.error($scope.result.message);
                 }
             } else {
-                toastr.warning('该试卷没有题目，请先添加题目');
+                toastr.warning('There are no questions in this paper,Please add questions first');
             }
         }else{
             toastr.error(result1.message);
@@ -614,7 +614,7 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
 		//删除题目 
 	$scope.delSuject = function(item) {
 			if($scope.onechecked.length > 0) {
-				var content = "删除题目";
+				var content = "Delete Question";
 				var modalInstance = $modal.open({
 					templateUrl: 'sureModal.html',
 					controller: 'sureModalCtrl',
@@ -679,7 +679,7 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
 					//$log.info('Modal dismissed at: ' + new Date());
 				});
 			} else {
-				toastr.warning("请先勾选至少一个题目");
+				toastr.warning("Please check at least one topic first");
 			}
 		}
 		//修改试卷
@@ -706,7 +706,7 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
                     console.log(JSON.stringify($scope.result.detail))
                 }
             } else {
-                toastr.warning('该试卷没有题目，请先添加题目');
+                toastr.warning('There are no questions in this paper, Please add questions first');
             }
         }else{
             toastr.error(result1.message);
@@ -716,7 +716,7 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
 });
 //新增题目控制器
 app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scope, $modal, toastr, infos) {
-		$scope.title = "新增题目";
+		$scope.title = "Insert Topic";
 		$scope.testInfo = {
 			questionType: '2', //(0单选，1多选，2判断，3数字,-1字母)
 			selLetter: '0',//(0：单选，1：多选)
@@ -765,7 +765,7 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 					$scope.myForm.questionId.$invalid=true;
 					$scope.myForm.$invalid=true;
 					$scope.isTrue=false;
-					toastr.warning("该题号已存在，请重新输入",{preventOpenDuplicates:true});
+					toastr.warning("The question ID already exists. Please reenter it",{preventOpenDuplicates:true});
 				}else{
 					$scope.isTrue=true;
 				}
@@ -822,7 +822,7 @@ app.controller('addSubjectModalCtrl', function($rootScope, $modalInstance, $scop
 //批量新增题目控制器
 app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, $scope, $modal, toastr, infos,questionList) {
 	var questionList=questionList.length>0?questionList:[];
-	$scope.title = "新增题目";
+	$scope.title = "Insert Question";
     $scope.testInfo = {
         questionType: '2', //(0单选，1多选，2判断，3数字,-1字母)
         selLetter: '0',//(0：单选，1：多选)
@@ -908,7 +908,7 @@ app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, 
 	//编辑题目控制器
 app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $scope, $modal, toastr, infos,questionList) {
     var questionList=questionList.length>0?questionList:[];
-	$scope.title = "编辑题目";
+	$scope.title = "Edit Question";
 		if(infos) {
 			$scope.testInfo = angular.copy(infos);
 			/*if(typeof $scope.testInfo.questionId == 'string') {
@@ -958,7 +958,7 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 							$scope.myForm.questionId.$error.required=true;
 							$scope.myForm.questionId.$invalid=true;
 							$scope.myForm.$invalid=true;
-							toastr.warning("该题号已存在，请重新输入",{preventOpenDuplicates:true});
+							toastr.warning("The question ID already exists. Please reenter it",{preventOpenDuplicates:true});
 						}
 						
 					}else{
@@ -1028,7 +1028,7 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 	})
 	//确认弹出框
 app.controller('sureModalCtrl', function($scope, $modalInstance, toastr, content) {
-		$scope.content = '是否进行' + angular.copy(content) + '操作？';
+		$scope.content = 'Do you want to operate' + angular.copy(content) + '？';
 		$scope.ok = function() {
 			$modalInstance.close('success');
 		}
@@ -1107,7 +1107,7 @@ app.controller('uploadfileModalCtrl', function($rootScope, $scope, $modalInstanc
 					var extStart = $scope.filepath.lastIndexOf(".");
 					var ext = $scope.filepath.substring(extStart, $scope.filepath.length).toUpperCase();
 					if(ext != ".XLS" && ext != ".XLSX") {
-						toastr.warning("只能导入.XLSX、.XLS类型文件");
+						toastr.warning("Only .XLSX、.XLS files can be imported");
 						return;
 					} else {
 						$('#myModal').modal('show');
@@ -1129,7 +1129,7 @@ app.controller('uploadfileModalCtrl', function($rootScope, $scope, $modalInstanc
 						}, 500)
 					}
 				} else {
-					toastr.warning("请选择文件");
+					toastr.warning("Please select file");
 				}
 			} else {
 				$scope.result = JSON.parse(execute_testPaper("select_paper_server", $scope.selclass, $scope.selsubject));
@@ -1255,7 +1255,7 @@ app.directive('select', function() {
 				if(scope.defalutvalue) {
 					$(element).multiselect({
 						multiple: false,
-						selectedHtmlValue: '请选择',
+						selectedHtmlValue: 'select',
 						defalutvalue: scope.defalutvalue,
 						change: function() {
 							$(element).val($(this).val());
@@ -1295,7 +1295,7 @@ app.directive('select2', function() {
 
 					$(element).multiselect({
 						multiple: false,
-						selectedHtmlValue: '请选择',
+						selectedHtmlValue: 'select',
 						defalutvalue: scope.defalutvalue,
 						change: function() {
 							$(element).val($(this).val());
@@ -1359,27 +1359,27 @@ app.filter('questionType', function() {
 		switch(questionType) {
 			case '2':
 				{
-					statename = '判断';
+					statename = 'Judge';
 					break;
 				}
 			case '0':
 				{
-					statename = '单选';
+					statename = 'Single';
 					break;
 				}
 			case '1':
 				{
-					statename = '多选';
+					statename = 'Multiple';
 					break;
 				}
 			case '3':
 				{
-					statename = '数字';
+					statename = 'Digital';
 					break;
 				}
 			case '4':
 				{
-					statename = '主观题';
+					statename = 'subjective';
 					break;
 				}
 		}

@@ -66,7 +66,7 @@ public class ServerServiceImpl implements ServerService{
 					if ("0".equals(testInfo)) {
 //						result.setRet(Constant.ERROR);
 //						result.setMessage("从服务器中获取试卷失败！");
-						BrowserManager.showMessage(false, "从服务器中获取试卷失败！");
+						BrowserManager.showMessage(false, "Failed to retrieve test paper from server！");
 						return;
 					}else {
 						JSONArray jsonArray = JSONArray.parseArray(testInfo);
@@ -86,7 +86,7 @@ public class ServerServiceImpl implements ServerService{
 					BrowserManager.refreTestPaper(net.sf.json.JSONObject.fromObject(map).toString());
 					return;
 				} catch (Exception e) {
-					BrowserManager.showMessage(false, "从服务器中获取试卷失败！");
+					BrowserManager.showMessage(false, "Failed to retrieve test paper from server！");
 					logger.error(IOUtils.getError(e));
 					return;
 //					result.setRet(Constant.ERROR);
@@ -129,12 +129,12 @@ public class ServerServiceImpl implements ServerService{
 					}
 					String answersInfo =  (String) result.getItem();
 					if ("0".equals(answersInfo)) {
-						BrowserManager.showMessage(false, "从服务器中获取标准答案失败！");
+						BrowserManager.showMessage(false, "Failed to get standard answer from server！");
 						return;
 					}else {
 						result = testPaperSql.deleteTestPaper(testId,subjectName);//根据试卷id和科目删除原来的试卷
 						if (Constant.ERROR.equals(result.getRet())) {
-							BrowserManager.showMessage(false, "删除原来的试卷失败!");
+							BrowserManager.showMessage(false, "Deleting the original paper failed!");
 							return;
 						}
 						TestPaper testPaper = new TestPaper();
@@ -144,28 +144,28 @@ public class ServerServiceImpl implements ServerService{
 						testPaper.setTestName(responseTestPaper.getXm());
 						result = testPaperSql.insertTestPaper(testPaper);
 						if (Constant.ERROR.equals(result.getRet())) {
-							BrowserManager.showMessage(false, "插入试卷信息失败!");
+							BrowserManager.showMessage(false, "Failed to insert test information!");
 							return;
 						}
 						QuestionInfo questionInfo = new QuestionInfo();
 						questionInfo.setTestId(testId);
 						result = questionInfoSql.deleteQuestionInfo(questionInfo); //删除原来的题目
 						if (Constant.ERROR.equals(result.getRet())) {
-							BrowserManager.showMessage(false, "删除原来的题目失败!");
+							BrowserManager.showMessage(false, "Failed to delete the original title!");
 							return;
 						}
 						result = testPaperSql.saveTitlebyBatch(responseTestPaper.getXmid(), answersInfo);
 						if (Constant.ERROR.equals(result.getRet())) {
-							BrowserManager.showMessage(false, "保存服务器中的题目信息失败！");
+							BrowserManager.showMessage(false, "Failed to save the problem information in the server！");
 							return;
 						}
 					}
 					result.setRemak(testId);
-					BrowserManager.showMessage(true, "导入成功！");
+					BrowserManager.showMessage(true, "Import success！");
 					BrowserManager.refreTestPaper2();
 					return;
 				} catch (Exception e) {
-					BrowserManager.showMessage(false, "保存服务器中的题目信息失败！");
+					BrowserManager.showMessage(false, "Failed to save the problem information in the server！");
 					logger.error(IOUtils.getError(e));
 					return;
 				}finally {
@@ -242,10 +242,10 @@ public class ServerServiceImpl implements ServerService{
 						if (Constant.ERROR.equals(result.getRet())) {
 							//修改记录上传状态
 							if (Constant.ERROR.equals(recordSql.updateObjectiveRecord(records1).getRet())) {
-								BrowserManager.showMessage(false, "修改记录上传状态失败");
+								BrowserManager.showMessage(false, "Failed to modify record upload status");
 								return;
 							};
-							BrowserManager.showMessage(false, "上传客观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum));
+							BrowserManager.showMessage(false, "Upload the number of successful students:"+sucessSum+";The number of failures:"+(totalSum-sucessSum));
 							return;
 						};
 						sucessSum++;
@@ -261,10 +261,10 @@ public class ServerServiceImpl implements ServerService{
 					}
 					//修改记录上传状态
 					if (Constant.ERROR.equals(recordSql.updateObjectiveRecord(records1).getRet())) {
-						BrowserManager.showMessage(false, "修改记录上传状态失败");
+						BrowserManager.showMessage(false, "Failed to modify record upload status");
 						return;
 					};
-					message01 = "上传客观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum);
+					message01 = "Upload the number of successful students:"+sucessSum+";The number of failures:"+(totalSum-sucessSum);
 					
 					sucessSum = 0; //发送成功个数
 					totalSum = paramList2.keySet().size(); //总条数
@@ -275,10 +275,10 @@ public class ServerServiceImpl implements ServerService{
 						if (Constant.ERROR.equals(result.getRet())) {
 							//修改记录上传状态
 							if (Constant.ERROR.equals(recordSql.updateSubjectiveRecord(records2).getRet())) {
-								BrowserManager.showMessage(false, "修改记录上传状态失败");
+								BrowserManager.showMessage(false, "Failed to modify record upload status");
 								return;
 							};
-							BrowserManager.showMessage(true, message01+"上传主观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum));
+							BrowserManager.showMessage(true, message01+"Number of successful students uploading subjective questions:"+sucessSum+";The number of failures:"+(totalSum-sucessSum));
 							return;
 						};
 						sucessSum++;
@@ -295,14 +295,14 @@ public class ServerServiceImpl implements ServerService{
 					
 					//修改记录上传状态
 					if (Constant.ERROR.equals(recordSql.updateSubjectiveRecord(records2).getRet())) {
-						BrowserManager.showMessage(false, "修改记录上传状态失败");
+						BrowserManager.showMessage(false, "Failed to modify record upload status");
 						return;
 					};
-					message02 = "上传主观题成功学生人数:"+sucessSum+";失败人数:"+(totalSum-sucessSum);
+					message02 = "Number of successful students uploading subjective questions:"+sucessSum+";The number of failures:"+(totalSum-sucessSum);
 					BrowserManager.showMessage(true, message01+message02);
 					return;
 				} catch (Exception e) {
-					BrowserManager.showMessage(false, "上传失败！");
+					BrowserManager.showMessage(false, "Upload failed！");
 					logger.error(IOUtils.getError(e));
 					return;
 				}finally {
@@ -341,7 +341,7 @@ public class ServerServiceImpl implements ServerService{
 		recordParam.setClassId(BjID);
 		Result result = new RecordSql().selectRecord(recordParam);
 		if (Constant.ERROR.equals(result.getRet())) {
-			throw new BusinessException(Constant.ERROR, "查找做到记录失败！");
+			throw new BusinessException(Constant.ERROR, "Failed to find record！");
 		}
 		List<Record> list =(List<Record>) result.getItem();
 
@@ -466,7 +466,7 @@ public class ServerServiceImpl implements ServerService{
 			recordParam.setIsSubjectiveUpload(Constant.IS_LOAD_NO);
 			Result result = new RecordSql().selectRecord(recordParam);
 			if (Constant.ERROR.equals(result.getRet())) {
-				throw new BusinessException(Constant.ERROR, "查询作答记录失败!");
+				throw new BusinessException(Constant.ERROR, "Query response record failed!");
 			}
 
 			List<Record> list =(List<Record>) result.getItem();

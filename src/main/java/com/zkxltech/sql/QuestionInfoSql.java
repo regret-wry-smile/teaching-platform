@@ -71,14 +71,14 @@ public class QuestionInfoSql {
 					break;
 				default:
 					result.setRet(Constant.ERROR);
-					result.setMessage("第"+(i+1)+"行题目类型有误!");
+					result.setMessage("Line"+(i+1)+"topic type error!");
 					return result;
 				}
 				try {
 					Integer.valueOf(score);
 				}catch (Exception e){
 					result.setRet(Constant.ERROR);
-					result.setMessage("第"+(i+1)+"行分数类型有误!");
+					result.setMessage("Line"+(i+1)+"score error!");
 					return result;
 				}
 				//插入题目信息
@@ -96,7 +96,7 @@ public class QuestionInfoSql {
 		result.setRet(Constant.ERROR);
 		int rows = rowList.size();
 		if (rows < 2) {
-			result.setMessage("题目信息为空！");
+			result.setMessage("topic information empty！");
 			return result;
 		}
 		List<String> questionIds = new ArrayList<String>();
@@ -104,7 +104,7 @@ public class QuestionInfoSql {
 		for (int i = 0; i < rowList.size(); i++) {
 			if(i == 0){
 				if (rowList.get(i).size() != 4) {
-					result.setMessage("第"+(i+1)+"行试卷信息格式错误！");
+					result.setMessage("Line"+(i+1)+"paper information error！");
 					return result;
 				}
 			}else{
@@ -112,12 +112,12 @@ public class QuestionInfoSql {
 				//0单选；1多选；2判断；3数字；4主观题
 				List<Object> list = rowList.get(i);
 				if (list.size() < 4) {
-                    result.setMessage("第"+(i+1)+"行题目错误,请检查题目类型,正确答案,作答范围是否有误！");
+                    result.setMessage("Line"+(i+1)+"topic error,please check the question type, the correct answer, and the wrong scope！");
                     return result;
                 }
 				String questionId = (String) list.get(0);
 				if (!verifyCheckQuetionId(questionId)) {
-                     result.setMessage("第"+(i+1)+"行题号不正确！");
+                     result.setMessage("Line"+(i+1)+"topic ID error！");
                      return result;
                 }
 				questionIds.add(questionId);
@@ -126,75 +126,75 @@ public class QuestionInfoSql {
 				switch (type) {
 				case "单选":
 				    if (StringUtils.isEmpty(trueAnswer)) {
-                        result.setMessage("第"+(i+1)+"行正确答案不能是空的！");
+                        result.setMessage("Line"+(i+1)+"correct answer cannot be empty");
                         return result;
                     }
 				    if (trueAnswer.length() >1) {
-                        result.setMessage("第"+(i+1)+"行单选不能是多选答案！");
+                        result.setMessage("Line"+(i+1)+"single cannot be a multi-choice answer！");
                         return result;
                     }
                     if(StringUtils.isEmpty(rowList.get(i).get(4))){
-                    	result.setMessage("第"+(i+1)+"行缺少答题范围！");
+                    	result.setMessage("Line"+(i+1)+"lacks the range of questions！");
 					}
 					if(rowList.get(i).size() != 6){
-						result.setMessage("第"+(i+1)+"行缺少此题分数！");
+						result.setMessage("Line"+(i+1)+"missing the score！");
 						return result;
 					}
 					range = (String) rowList.get(i).get(4);
 					if (!verifySingleRange(range)) {
-						result.setMessage("第"+(i+1)+"行答案范围格式错误！");
+						result.setMessage("Line"+(i+1)+"answer range format error！");
 						return result;
 					}
 					if (!verifySingleAnswer(trueAnswer)) {
-						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
+						result.setMessage("Line"+(i+1)+"correct answer format error！");
 						return result;
 					}
 					break;
 				case "多选":
 					if(rowList.get(i).size() != 6){
-						result.setMessage("第"+(i+1)+"行列数格式错误！");
+						result.setMessage("Line"+(i+1)+"Column number format error！");
 						return result;
 					}
 					range = (String) rowList.get(i).get(4);
 					if (!verifyMultipleRange(range)) {
-						result.setMessage("第"+(i+1)+"行答案范围格式错误！");
+						result.setMessage("Line"+(i+1)+"answer range format error！");
 						return result;
 					}
 					if (!verifyMultipleAnswer(trueAnswer,range)) {
-						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
+						result.setMessage("Line"+(i+1)+"correct answer format error！");
 						return result;
 					}
 					break;
 				case "判断":
 					if(rowList.get(i).size() != 5){
-						result.setMessage("第"+(i+1)+"行列数格式错误！");
+						result.setMessage("Line"+(i+1)+"Column number format error！");
 						return result;
 					}
 					if (!verifyCheckAnswer(trueAnswer)) {
-						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
+						result.setMessage("Line"+(i+1)+"correct answer format error！");
 						return result;
 					}
 					break;
 				case "数字":
 					range = (String) rowList.get(i).get(4);
 					if (!verifyNumRange(range)) {
-						result.setMessage("第"+(i+1)+"行答案范围格式错误！");
+						result.setMessage("Line"+(i+1)+"answer range format error！");
 						return result;
 					}
 					if (!verifyNumAnswer(trueAnswer,range)) {
-						result.setMessage("第"+(i+1)+"行正确答案格式错误！");
+						result.setMessage("Line"+(i+1)+"correct answer format error！");
 						return result;
 					}
 					break;
 				default:
-					result.setMessage((i+1)+"行题目类型有误!");
+					result.setMessage((i+1)+"topic type error!");
 					return result;
 				}
 			}
 		}	
 		
 		if (questionIds.stream().distinct().collect(Collectors.toList()).size() != questionIds.size()) {
-			result.setMessage("题号有重复！");
+			result.setMessage("Topic ID repeated！");
 			return result;
 		}
 		result.setRet(Constant.SUCCESS);

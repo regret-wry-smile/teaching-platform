@@ -48,34 +48,34 @@
 				</div>				
 			</div>
 			<!--<div class="text-center">-->
-				<button class="btn circlefff" ng-click="stopClass()">下课</button>
+				<button class="btn circlefff" ng-click="stopClass()">End</button>
 		<!--	</div>-->
 		  	<div class="block">
 		  	<ul class="col-4">
 		  		<li>
 		  			<a href="../../page/answermoudle/answermoudle.html">
 		  				<img src="../../image/answer.png" />
-		  				<span>答题</span>
+		  				<span>Answering</span>
 		  			</a>
 		  		</li>
 		  		<li>
 		  			<!--<a href="../../page/answermoudle/stopAnswer.html" ng-click="quickAnswer()">-->
 	  				 <a href="javascript:;" ng-href={{objectUrl}} ng-click="quickAnswer()"> 
 		  				<img src="../../image/quickanswer.png" />
-		  				<span>抢答</span>
+		  				<span>Racing</span>
 		  			</a>
 		  		</li>
 		  		<li>
 		  			<a href="../../page/answermoudle/setMarkmoudle.html">
 	  				<!--<a href="javascript:;" ng-href={{MarkobjectUrl}} ng-click="skipMark()">-->
 		  				<img src="../../image/mark.png" />
-		  				<span>评分</span>
+		  				<span>Scoring</span>
 		  			</a>
 		  		</li>
 		  		<li>
 		  			<a href="../../page/answermoudle/setvotemoudle.html">
 		  				<img src="../../image/vote.png" />
-		  				<span>投票</span>
+		  				<span>Voting</span>
 		  			</a>
 		  		</li>
 		  	</ul>
@@ -86,10 +86,10 @@
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/menu.png" class="ml25 pt20" />
-					<span class="mr10">已签到 {{signList}}/{{studentAttendList.length}}人</span>
+					<span class="mr10">Participation Rate  {{signList}}/{{studentAttendList.length}}</span>
 				</div>
 				<div class="pull-right">
-					<a href="javascript:;" ng-click="returnPage()" title="返回">
+					<a href="javascript:;" ng-click="returnPage()" title="return">
 					<img src="../../image/return.png" class="rebtn" />
 					<!--<img src="../../image/return.png" ng-click="returnPage()"/>-->
 					</a>

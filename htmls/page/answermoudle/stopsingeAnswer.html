@@ -91,7 +91,7 @@
 	</style>
 	<body class="bg clearfix" ng-controller="stopSingeAnswerCtrl">
 		<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div id="loading" class="loading">加载中</div>
+			<div id="loading" class="loading">loading</div>
 		</div>
 		<div ng-cloak id="divload">
 		<!--柱状图start-->
@@ -108,7 +108,7 @@
 					<span>{{studentNum}}</span>
 				</label> 
 				<div class="operatebtn mt20 clearfix text-center">
-			  		<button class="btn savebtn" ng-click="stopAnswer()">停止答题</button>
+			  		<button class="btn savebtn" ng-click="stopAnswer()">Stop</button>
 			  	</div>
 			  	<div id="refresAnswerNum" ng-click="refresAnswerNum()" style="display:none"></div>
 			 </div>
@@ -118,12 +118,12 @@
 			  	<div class="header clearfix">
 					<div class="pull-left">
 						<img src="../../image/record.png" class="ml25 pt20" />
-						<span class="mr10">已作答{{studentNum}}/{{totalStudent}}</span>
-						<span class="mr10">正确率{{answerRate|number:1}}%</span>
-						<span class="view" ng-click="viewDetail()">查看详情</span>
+						<span class="mr10">Participation:{{studentNum}}/{{totalStudent}}</span>
+						<span class="mr10">Percentage:{{answerRate|number:1}}%</span>
+						<span class="view" ng-click="viewDetail()">Check the details</span>
 					</div>
 					<div class="pull-right">
-						<a href="javascript:history.go(-1);" title="返回">
+						<a href="javascript:history.go(-1);" title="return">
 						<img src="../../image/return.png" ng-click="returnPage()" class="rebtn"/>
 						</a>
 					</div>
@@ -135,10 +135,10 @@
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/menu.png" class="ml25 pt20" />
-					<span class="mr10">人员列表</span>
+					<span class="mr10">Personnel list</span>
 				</div>
 				<div class="pull-right">
-					<img src="../../image/return.png" ng-click="returnBar()" class="rebtn rebtn1" title="返回"/>
+					<img src="../../image/return.png" ng-click="returnBar()" class="rebtn rebtn1" title="return"/>
 				</div>
 			</div>
 			<div class="content content1 clearfix" style="margin: 0;padding: 0;overflow: auto; "  id="userAnswerlist">

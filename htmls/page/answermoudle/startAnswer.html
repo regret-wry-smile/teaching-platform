@@ -95,16 +95,16 @@
 					</div>
 					<div class="modal-body">						
 						<div class="form-group">
-					  	<label for="firstname" class="col-sm-3 control-label">课程</label>
+					  	<label for="firstname" class="col-sm-3 control-label">Course</label>
 					    <div class="col-sm-8">
-				    	<input type="text" autocomplete="off" name="classhour" id="" value=""  class="form-control" ng-model="classInfo.classHourName" required  maxlength="10" placeholder="请输入长度不能超过10位的字符" ng-blur="blurClassHour()"/>					
+				    	<input type="text" autocomplete="off" name="classhour" id="" value=""  class="form-control" ng-model="classInfo.classHourName" required  maxlength="10" placeholder="Please enter a length of no more than 10 digits" ng-blur="blurClassHour()"/>
 						</div>
 						<span ng-show="myForm.classhour.$invalid" class="warning">*</span>
 						</div>
 					</div>
 					<div class="modal-footer text-center">
-						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
-						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>		
+						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">Sure</button>
+						<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
 					</div>
 				</form>
 			</script>
@@ -113,22 +113,22 @@
 				<form name="myForm" novalidate="novalidate">
 					<div class="modal-header">
 						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-						<h4 class="modal-title">确认</h4>
+						<h4 class="modal-title">Delete Course</h4>
 					</div>
 					<div class="modal-body">
 						{{content}}
 					</div>
 					<div class="modal-footer text-center">
-						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">确定</button>
-						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>
-			
+						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">Sure</button>
+						<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+
 					</div>
 			</form>
 			</script>
 			<div class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/set.png" class="ml25" />
-					<span>课程设置</span>
+					<span>Setting</span>
 				</div>
 				<!--<div class="pull-right">
 					<img src="../../image/return.png" />
@@ -138,37 +138,37 @@
 				<form name="myForm" novalidate>
 				<div class="modboxs bgfff">
 					<p class="text clearfix">
-						<label class="labelwd pull-left">班级</label>
+						<label class="labelwd pull-left">Class</label>
 						<select class="single" select2 ng-model="setClass.classes" name="classes" defalutvalue='setClass.classes1' list="classList" ng-change="changeClass(setClass.classes)" required>
 				   			<option ng-repeat="classitem in classList track by $index" value="{{classitem}}">{{classitem.value}}</option>
 						</select>
 						<span ng-show="myForm.classes.$invalid" class="check warning">*</span>
 					</p>
 					<p class="text clearfix">
-						<label class="labelwd pull-left">科目</label>
+						<label class="labelwd pull-left">Subject</label>
 						<select class="single" select1 ng-model="setClass.subject" name="subject" defalutvalue='setClass.subject1' list="subjectlists" ng-change="changeSubject(setClass.subject)" required>
 				   			<option ng-repeat="subjectitem in subjectlists track by $index" value="{{subjectitem}}">{{subjectitem}}</option>
 						</select>
 						<span ng-show="myForm.subject.$invalid" class="check warning">*</span>
 					</p>
 					<p class="text clearfix">
-						<label class="labelwd pull-left">课程名</label>
+						<label class="labelwd pull-left">Course</label>
 						<select class="single" select2 ng-model="setClass.sujectName" name="sujectName" defalutvalue='setClass.sujectName1' list="classhourList" ng-change="changeClassHour(setClass.sujectName)" required>
 				   			<option ng-repeat="houritem in classhourList track by $index" value="{{houritem}}">{{houritem.value}}</option>
 						</select>	
 						<span ng-show="myForm.sujectName.$invalid" class="check warning">*</span>
 					</p>
 					<a href="javascript:;" ng-click="delClassHour()">
-					<img src="../../image/delbtn.png" class="delbtn" title="删除课程"/>
+					<img src="../../image/delbtn.png" class="delbtn" title="Delete Course"/>
 					</a>
 					<a href="javascript:;" ng-click="addClassHour()">
-					<img src="../../image/answer.png" class="editbtn" title="添加课程"/>
+					<img src="../../image/answer.png" class="editbtn" title="Add Course"/>
 					</a>
 				</div>			  	
 			   </form> 
 			</div>
 			<div class="operatebtn mt20 text-center clearfix">
-		  		<button class="btn savebtn mr5" ng-click="startClass()" style="z-index: 666;" ng-disabled="!myForm.$valid">开始上课</button>
+		  		<button class="btn savebtn mr5" ng-click="startClass()" style="z-index: 666;" ng-disabled="!myForm.$valid">Next</button>
 		  	</div>
 		
 	</body>

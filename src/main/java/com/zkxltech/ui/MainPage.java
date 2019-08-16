@@ -151,7 +151,7 @@ public class MainPage{
 			titleText.setLayoutData(fd_titleText);
 			titleText.setFont(SWTResourceManager.getFont("微软雅黑", 12, SWT.NORMAL));
 			titleText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			titleText.setText("互动课堂");
+			titleText.setText("Smart Classroom System");
 
 			CLabel closeLabel = new CLabel(composite_set, SWT.NONE);
 //			FormData fd_closeLabel = new FormData();
@@ -179,25 +179,25 @@ public class MainPage{
 						mainStart.floatingWindow();
 						return;
 					case Constant.BUSINESS_ANSWER:
-						message = "请先停止答题";
+						message = "Please stop answering questions first";
 						break;
 					case Constant.BUSINESS_SCORE:
-						message = "请先停止评分";
+						message = "Please stop grading first";
 						break;
 					case Constant.BUSINESS_VOTE:
-						message = "请先停止投票";
+						message = "Please stop voting first";
 						break;
 					case Constant.BUSINESS_ATTENDEN:
-						message = "请先停止签到";
+						message = "Please stop signing first";
 						break;
 					case Constant.BUSINESS_PREEMPTIVE:
-						message = "请先停止抢答";
+						message = "Please stop answering first";
 						break;
 					case Constant.BUSINESS_CLASSTEST:
-						message = "请先收取试卷";
+						message = "Please collect the test papers first";
 						break;
 					case Constant.BUSINESS_BIND:
-						message = "请先停止绑定";
+						message = "Please stop binding first";
 						break;
 					default:
 						return;
