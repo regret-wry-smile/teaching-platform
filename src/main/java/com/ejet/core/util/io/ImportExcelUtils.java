@@ -27,7 +27,7 @@ public class ImportExcelUtils {
      * @return 
      * @throws IOException  
      */  
-    public static List<List<Object>> getBankListByExcel(InputStream in,String fileName) throws Exception{  
+    public static List<List<Object>> getBankListByExcel(InputStream in,String fileName) throws Exception{
         List<List<Object>> list = null;
 
         //创建Excel工作薄
@@ -63,7 +63,7 @@ public class ImportExcelUtils {
                     if(row.getFirstCellNum()==y){
 
                         BigDecimal bd = new BigDecimal(Double.parseDouble(cell.toString()));
-//                        System.out.println(bd.toPlainString());
+                        System.out.println(bd.toPlainString());
                         if(bd.toPlainString().length()>4){
                             List<List<Object>> list1 = null;
                             return list1;
