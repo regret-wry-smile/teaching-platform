@@ -136,7 +136,7 @@ public class RecordServiceImpl implements RecordService{
                         }
                     }
                     String[] columnName = new String[columnNumber];// 标题
-                    columnName[0] = "Key";columnName[1] = "Student ID";columnName[2] = "Name";
+                    columnName[0] = "Keypad ID";columnName[1] = "Student ID";columnName[2] = "Name";
                     columnName[3] = "Score";columnName[4] = "Correct";columnName[5] = "Ranking";
                     for (int i = 6; i < columnName.length; i++) {
                         columnName[i] = "Topic"+(i-5);
