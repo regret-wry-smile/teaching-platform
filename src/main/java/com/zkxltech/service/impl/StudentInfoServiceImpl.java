@@ -1,15 +1,5 @@
 package com.zkxltech.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ejet.cache.BrowserManager;
 import com.ejet.cache.RedisMapAttendance;
 import com.ejet.cache.RedisMapQuick;
@@ -29,9 +19,17 @@ import com.zkxltech.thread.AttendanceThread;
 import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.QuickThread;
 import com.zkxltech.thread.ThreadManager;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StudentInfoServiceImpl implements StudentInfoService{
 	private static final Logger log = LoggerFactory.getLogger(StudentInfoServiceImpl.class);
@@ -469,6 +467,25 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }
         return r;
     }
-    
+
+	@Override
+	public Result updateStudent(StudentInfo studentInfo) {
+		result = new Result();
+		try {
+			result = studentInfoSql.updateStudentById(studentInfo);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				result.setMessage("Binding success!");
+			} else {
+				result.setMessage("Binding failure!");//未能修改学生信息!
+			}
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("Binding failure!");
+			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
+			return result;
+		}
+	}
 
 }

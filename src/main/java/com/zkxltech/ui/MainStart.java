@@ -1,21 +1,15 @@
 package com.zkxltech.ui;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
-import java.awt.Panel;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.event.MouseMotionAdapter;
-import java.text.SimpleDateFormat;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-
+import com.App;
+import com.ejet.core.util.io.IOUtils;
+import com.sun.awt.AWTUtilities;
+import com.zkxltech.config.ConfigConstant;
+import com.zkxltech.config.Global;
+import com.zkxltech.service.impl.ClassHourServiceImpl;
+import com.zkxltech.ui.util.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -23,17 +17,10 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.App;
-import com.ejet.core.util.io.IOUtils;
-import com.sun.awt.AWTUtilities;
-import com.zkxltech.config.ConfigConstant;
-import com.zkxltech.config.Global;
-import com.zkxltech.service.impl.ClassHourServiceImpl;
-import com.zkxltech.ui.util.Colors;
-import com.zkxltech.ui.util.PageConstant;
-import com.zkxltech.ui.util.StringConstant;
-import com.zkxltech.ui.util.StringUtils;
-import com.zkxltech.ui.util.SwtTools;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseMotionAdapter;
+import java.text.SimpleDateFormat;
 /*
  * 	页面回调指令
  * 	start_answer 开始作答
@@ -42,7 +29,7 @@ public class MainStart {
 	private static final Logger log = LoggerFactory.getLogger(MainStart.class);
 	protected Object result;
 	public static Shell shell;
-	
+
 	/*悬浮框对应参数--图标部分*/
 	public static JFrame frame;
 	private Panel panel;
@@ -59,19 +46,22 @@ public class MainStart {
 	private int shellMaxHeight;/* 窗口最大高度 */
 	private int shellMainX;/* 窗口x坐标 */
 	private int shellMainY;/* 窗口y坐标 */
-	private ImageIcon imageIcon, icon; 
-	
+	private ImageIcon imageIcon, icon;
+
 	private static MainStart mianStart;
 	private boolean isTest;
-	
+
 	private static boolean isShow = false;
 	private static boolean flag = false;
-	
-	
+	//判断是否是最小化
+	private static boolean flags = false;
+	private MainPage mainPage;
+
+
 	public MainStart(Shell parent) {
 		shell = parent;
 	}
-	
+
 	public static void main(String[] args) {
 		try {
 			//启动答题器通信等接口
@@ -81,22 +71,22 @@ public class MainStart {
 					App.startCommunication();
 				}
 			}).start();
-			
+
 			mianStart = new MainStart(new Shell());
 			mianStart.initialize();
 			mianStart.open();
 		} catch (Exception e) {
 			log.error(IOUtils.getError(e));
 		}
-		
+
 	}
-	
+
 	//悬浮框
 	public void initData(){
 		shellX = Window_Width/10*9;
 //		GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 //		Rectangle maximumWindowBounds = graphicsEnvironment.getMaximumWindowBounds();
-		shellY = Window_Height/10*7;;
+		shellY = Window_Height/10*7;
 		x1 =shellX;
 		y1 =shellY;
 	}
@@ -107,14 +97,22 @@ public class MainStart {
 		isShow = false;
 		flag = true;
 	}
-	
+	/**
+	 * 重置最小化变量值
+	 */
+	public void resetValues(){
+		isShow = false;
+		flag = true;
+		flags = true;
+	}
+
 	public void initImage() {
 		/*任务栏图片*/
 		imageIcon = new ImageIcon(this.getClass().getResource(PageConstant.image01));
 		/*默认背景图片*/
 		icon = new ImageIcon(this.getClass().getResource(PageConstant.image01));
 	}
-	
+
 	public void changeImage(){
 		if (flag) {
 			icon = new ImageIcon(this.getClass().getResource(PageConstant.image01));
@@ -125,7 +123,7 @@ public class MainStart {
 		frame.repaint();
 		flag = !flag;
 	}
-	
+
 	public void closeShell() {
 		shell.setVisible(false);
 		changeImage();
@@ -136,9 +134,9 @@ public class MainStart {
 		shell.setVisible(true);
 		changeImage();
 	}
-	
-	
-	//返回悬浮框状态
+
+
+	//关闭返回悬浮框状态
 	public void floatingWindow(){
 		resetValue();
 		frame.setVisible(true);
@@ -146,7 +144,16 @@ public class MainStart {
 		changeImage();
 		frame.repaint();
 	}
-	
+
+	//最小化返回悬浮框状态
+	public void floatingWindow2(){
+		resetValues();
+		frame.setVisible(true);
+		shell.setVisible(false);
+		changeImage();
+		frame.repaint();
+	}
+
 	/* 初始化配置 */
 	private void init() {
 //		shellMaxWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().width / 2.4);
@@ -157,10 +164,10 @@ public class MainStart {
 		GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Rectangle maximumWindowBounds = graphicsEnvironment.getMaximumWindowBounds();
 		shellMainY = maximumWindowBounds.height - shellMaxHeight - 6;
-		
+
 		isTest = Boolean.parseBoolean(ConfigConstant.projectConf.getApp_test());
 	}
-	
+
 	public Shell open() {
 		try {
 			init();
@@ -176,7 +183,7 @@ public class MainStart {
 		}
 		return shell;
 	}
-	
+
 	private void initialize() {
 		initImage();//初始化
 		initData();// 初始化窗口位置
@@ -190,7 +197,7 @@ public class MainStart {
 		/* 默认显示的圆形 */
 		panel = new Panel() {
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
@@ -205,54 +212,70 @@ public class MainStart {
 		panel.setBounds(0, 0, Frame_Width, Frame_Height);
 		/*鼠标拖拽事件*/
 		panel.addMouseListener(new java.awt.event.MouseAdapter(){
-         	@Override
-         	public void mousePressed(java.awt.event.MouseEvent e) {
-         		if (!isShow) {
-         			mouse_X =e.getXOnScreen();
-             		mouse_Y =e.getYOnScreen();
+			@Override
+			public void mousePressed(java.awt.event.MouseEvent e) {
+				if (!isShow) {
+					mouse_X =e.getXOnScreen();
+					mouse_Y =e.getYOnScreen();
 				}
-         	}
-        	@Override
-        	public void mouseReleased(java.awt.event.MouseEvent e) {
-        		if (!isShow) {
-            		x1 =shellX;
-            		y1 =shellY;
-            		Display.getDefault().syncExec(new Runnable() {
-					    public void run() {
+			}
+			@Override
+			public void mouseReleased(java.awt.event.MouseEvent e) {
+				if (!isShow) {
+					x1 =shellX;
+					y1 =shellY;
+					Display.getDefault().syncExec(new Runnable() {
+						public void run() {
 							flag = false;
-					    	showShell();
-					    	}
-					    });
-        		}
-        	}
-			
+							if (flags == false) {
+								showShell();
+							}
+						}
+					});
+				}
+			}
+
 			@Override
 			public void mouseEntered(java.awt.event.MouseEvent e) {
 				if(e.getX() >= 0 && e.getX() <= Frame_Width){
 					Display.getDefault().syncExec(new Runnable() {
-					    public void run() {
+						public void run() {
 							flag = false;
-					    	showShell();
-					    	}
-					    });
+							if (flags == false) {
+								showShell();
+							}
+						}
+					});
 				}
 			}
 			@Override
 			public void mouseExited(java.awt.event.MouseEvent e) {
 				if(e.getX() <= 0 || e.getX() >= Frame_Width || e.getY() >= Frame_Height){
 					Display.getDefault().syncExec(new Runnable() {
-					    public void run() {
+						public void run() {
 							flag = true;
-					    	closeShell();
-					    	}
-					    });
+							closeShell();
+						}
+					});
 				}
 			}
-			
-			
-        });
+
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				Display.getDefault().syncExec(new Runnable() {
+					public void run() {
+						if (flags == true){
+							frame.setVisible(false);
+							shell.setVisible(false);
+							mainPage.returnWindow();
+							flags = false;
+						}
+					}
+				});
+			}
+		});
 		panel.addMouseMotionListener(new MouseMotionAdapter() {
-			
+
 //			@Override
 //			public void mouseMoved(java.awt.event.MouseEvent e) {
 //				shellX=x1 + e.getXOnScreen()-mouse_X;
@@ -263,12 +286,12 @@ public class MainStart {
 			@Override
 			public void mouseDragged(java.awt.event.MouseEvent e) {
 				Display.getDefault().syncExec(new Runnable() {
-				    public void run() {
-				    	if(shell.isVisible()){
-					    	closeShell();
-					    	flag = false;
-				    	}
-				    }
+					public void run() {
+						if(shell.isVisible()){
+							closeShell();
+							flag = false;
+						}
+					}
 				});
 				if (!isShow) {
 					shellX=x1 + e.getXOnScreen()-mouse_X;
@@ -286,13 +309,13 @@ public class MainStart {
 
 		// //显示手状
 		panel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-		
+
 		frame.repaint();
-	
+
 	}
-	
-	
-	
+
+
+
 	private void createContents() {
 		try {
 			shell = new Shell(shell, SWT.NO_TRIM | SWT.ON_TOP);
@@ -307,11 +330,11 @@ public class MainStart {
 					}
 				}
 			});
-			
-			 
+
+
 			//关闭
 			CLabel cLabel01 = new CLabel(shell, SWT.NONE);
-			cLabel01.setToolTipText("关闭");
+			cLabel01.setToolTipText("Close");//关闭
 			cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
 			cLabel01.setBounds(0, 0, 60, 38);
 			cLabel01.addMouseListener(new MouseAdapter() {
@@ -319,20 +342,20 @@ public class MainStart {
 				public void mouseDown(MouseEvent e) {
 					if(e.button == 1){
 						MessageBox messageBox = new MessageBox(new Shell(),SWT.ICON_QUESTION|SWT.YES|SWT.NO);
-		        		messageBox.setMessage("确定要退出？");
-		        		if (messageBox.open() == SWT.YES) {
-		        			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						messageBox.setMessage("Are you sure you want to quit?");//确定要退出？
+						if (messageBox.open() == SWT.YES) {
+							SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //		        			 ClassHourSql classHourSql = new ClassHourSql();
 //		                     classHourSql.updateClassHourById(classHourSql.getId(ClassSelection. classHour), simpleDateFormat.format(new Date()));
-		                     System.exit(0); 
-						}; 
+							System.exit(0);
+						}
 					}
 				}
 			});
-			
+
 			//答题
 			CLabel cLabel02 = new CLabel(shell, SWT.NONE);
-			cLabel02.setToolTipText("答题");
+			cLabel02.setToolTipText("Answering");//答题
 			cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
 			cLabel02.setBounds(0, 38, 59, 38);
 			cLabel02.addMouseListener(new MouseAdapter() {
@@ -344,13 +367,14 @@ public class MainStart {
 						}
 						frame.setVisible(false);
 						shell.setVisible(false);
-						new MainPage(shell,mianStart,StringConstant.PAGE_ANSWER_TYPE).open();
+						mainPage = new MainPage(shell,mianStart,StringConstant.PAGE_ANSWER_TYPE);
+						mainPage.open();
 					}
 				}
 			});
 			//设置
 			CLabel cLabel03 = new CLabel(shell, SWT.NONE);
-			cLabel03.setToolTipText("设置");
+			cLabel03.setToolTipText("Setting");//设置
 			cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
 			cLabel03.setBounds(0, 76, 60, 40);
 			cLabel03.addMouseListener(new MouseAdapter() {
@@ -359,13 +383,14 @@ public class MainStart {
 					if(e.button == 1){
 						frame.setVisible(false);
 						shell.setVisible(false);
-						new MainPage(shell,mianStart,StringConstant.PAGE_SET_TYPE).open();
+						mainPage = new MainPage(shell,mianStart,StringConstant.PAGE_SET_TYPE);
+						mainPage.open();
 					}
 				}
 			});
 			//记录
 			CLabel cLabel04 = new CLabel(shell, SWT.NONE);
-			cLabel04.setToolTipText("记录");
+			cLabel04.setToolTipText("Records");//记录
 			cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
 			cLabel04.setBounds(0, 114, 60, 40);
 			cLabel04.addMouseListener(new MouseAdapter() {
@@ -374,12 +399,13 @@ public class MainStart {
 					if(e.button == 1){
 						frame.setVisible(false);
 						shell.setVisible(false);
-						new MainPage(shell,mianStart,StringConstant.PAGE_RECORD_TYPE).open();
+						mainPage = new MainPage(shell,mianStart,StringConstant.PAGE_RECORD_TYPE);
+						mainPage.open();
 					}
 				}
 			});
 			cLabel01.addMouseTrackListener(new MouseTrackAdapter() {
-			
+
 				@Override
 				public void mouseEnter(MouseEvent e) {
 					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close02));
@@ -392,23 +418,13 @@ public class MainStart {
 				public void mouseExit(MouseEvent e) {
 					if(e.x <= 0 || e.x >= Frame_Width || e.y <= 0){
 						Display.getDefault().syncExec(new Runnable() {
-						    public void run() {
+							public void run() {
 								flag = true;
-						    	closeShell();
-						    	}
-						    });
+								closeShell();
+							}
+						});
 						cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
 					}
-				}
-			});
-			cLabel01.addMouseMoveListener(new MouseMoveListener() {
-				@Override
-				public void mouseMove(MouseEvent mouseEvent) {
-					cLabel01.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
-					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close02));
-					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
-					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
-					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
 				}
 			});
 			cLabel02.addMouseTrackListener(new MouseTrackAdapter() {
@@ -425,23 +441,13 @@ public class MainStart {
 				public void mouseExit(MouseEvent e) {
 					if(e.x <= 0 || e.x >= Frame_Width){
 						Display.getDefault().syncExec(new Runnable() {
-						    public void run() {
+							public void run() {
 								flag = true;
-						    	closeShell();
-						    	}
-						    });
+								closeShell();
+							}
+						});
 						cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
 					}
-				}
-			});
-			cLabel02.addMouseMoveListener(new MouseMoveListener() {
-				@Override
-				public void mouseMove(MouseEvent mouseEvent) {
-					cLabel02.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
-					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
-					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer02));
-					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
-					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
 				}
 			});
 			cLabel03.addMouseTrackListener(new MouseTrackAdapter() {
@@ -456,23 +462,13 @@ public class MainStart {
 				public void mouseExit(MouseEvent e) {
 					if(e.x <= 0 || e.x >= Frame_Width){
 						Display.getDefault().syncExec(new Runnable() {
-						    public void run() {
+							public void run() {
 								flag = true;
-						    	closeShell();
-						    	}
-						    });
+								closeShell();
+							}
+						});
 						cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
 					}
-				}
-			});
-			cLabel03.addMouseMoveListener(new MouseMoveListener() {
-				@Override
-				public void mouseMove(MouseEvent mouseEvent) {
-					cLabel03.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
-					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
-					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
-					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set02));
-					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
 				}
 			});
 			cLabel04.addMouseTrackListener(new MouseTrackAdapter() {
@@ -487,25 +483,16 @@ public class MainStart {
 				public void mouseExit(MouseEvent e) {
 					if(e.x <= 0 || e.x >= Frame_Width){
 						Display.getDefault().syncExec(new Runnable() {
-						    public void run() {
+							public void run() {
 								flag = true;
-						    	closeShell();
-						    	}
-						    });
+								closeShell();
+							}
+						});
 						cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record));
 					}
 				}
 			});
-			cLabel04.addMouseMoveListener(new MouseMoveListener() {
-				@Override
-				public void mouseMove(MouseEvent mouseEvent) {
-					cLabel04.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
-					cLabel01.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_close));
-					cLabel02.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_answer));
-					cLabel03.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_set));
-					cLabel04.setBackground(SWTResourceManager.getImage(MainStart.class, PageConstant.select_record02));
-				}
-			});
+
 			cLabel01.addMouseTrackListener(SwtTools.showHand(cLabel01));
 			cLabel02.addMouseTrackListener(SwtTools.showHand(cLabel02));
 			cLabel03.addMouseTrackListener(SwtTools.showHand(cLabel03));
@@ -513,6 +500,6 @@ public class MainStart {
 		} catch (Exception e) {
 			log.error(IOUtils.getError(e));
 		}
-		
+
 	}
 }
