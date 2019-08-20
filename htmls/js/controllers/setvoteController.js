@@ -179,7 +179,7 @@ app.controller('quickVoteCountCtrl', function($rootScope,$scope,$modal,toastr) {
 		    xAxis : [
 		        {
 		            type : 'category',
-		            data : ['赞成', '反对', '弃权'],
+		            data : ['Agress', 'Disagree', 'Abstain'],
 		            axisTick: {
 		                alignWithLabel: true
 		            },
