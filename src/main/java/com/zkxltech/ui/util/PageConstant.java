@@ -39,16 +39,22 @@ public class PageConstant {
 	/**
 	 * 头部左上角图片
 	 */
-	public static String titleImg = imagePack + "/title.png";
-	
+//	public static String titleImg = imagePack + "/title.png";
+	public static String titleImg = imagePack + "/title_2.png";
+
+
 	/**
 	 * 悬浮框默认图片
 	 */
-	public static String image01 = imagePack + "/答题-悬浮控件_23.png";
+//	public static String image01 = imagePack + "/答题-悬浮控件_23.png";
+	public static String image01 = imagePack + "/答题-悬浮控件_24.png";
+
 	/**
 	 * 悬浮后图片
 	 */
-	public static String image02 = imagePack + "/答题-悬浮控件_13-23.png";
+//	public static String image02 = imagePack + "/答题-悬浮控件_13-23.png";
+	public static String image02 = imagePack + "/答题-悬浮控件_13-23_2.png";
+
 	/**
 	 * 关闭图片(未选中)
 	 */

@@ -136,7 +136,8 @@ public class MainPage{
 			CLabel titleImg = new CLabel(composite_top, SWT.NONE);
 			FormData fd_titleImg = new FormData();
 			fd_titleImg.bottom = new FormAttachment(0, 41);
-			fd_titleImg.right = new FormAttachment(0, 41);
+//			fd_titleImg.right = new FormAttachment(0, 41);
+			fd_titleImg.right = new FormAttachment(0, 74);
 			fd_titleImg.top = new FormAttachment(0, 15);
 			fd_titleImg.left = new FormAttachment(0, 15);
 			titleImg.setLayoutData(fd_titleImg);
@@ -147,7 +148,7 @@ public class MainPage{
 			FormData fd_titleText = new FormData();
 			fd_titleText.bottom = new FormAttachment(0, 57);
 			fd_titleText.top = new FormAttachment(0);
-			fd_titleText.left = new FormAttachment(0, 47);
+			fd_titleText.left = new FormAttachment(0, 80);
 			titleText.setLayoutData(fd_titleText);
 			titleText.setFont(SWTResourceManager.getFont("微软雅黑", 12, SWT.NORMAL));
 			titleText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
