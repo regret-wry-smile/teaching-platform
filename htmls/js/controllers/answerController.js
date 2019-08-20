@@ -539,7 +539,7 @@ app.controller('stopSingeAnswerCtrl', function($scope, $rootScope, toastr, $wind
 					if (datavalue == params.name) {
 						option.series[0].data[params.dataIndex].itemStyle.normal.color = '#5ed6be';
 						if ($scope.answerType == 'judge') {
-							if (datavalue == "对") {
+							if (datavalue == "TRUE") {
 								datavalue = "true";
 							} else {
 								datavalue = "false";
