@@ -44,12 +44,12 @@ public class VoteServiceImpl implements VoteService{
 			
 			//将评分主题相关信息保存到缓存
 			Global.setModeMsg(Constant.BUSINESS_VOTE);
-			result.setMessage("开始投票！");
+			result.setMessage("Began to vote！");
 			result.setRet(Constant.SUCCESS);
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("开始投票失败！");
+			result.setMessage("Start voting failed！");
 			result.setDetail(IOUtils.getError(e));
 			logger.error(IOUtils.getError(e));
 			return result;
@@ -62,11 +62,11 @@ public class VoteServiceImpl implements VoteService{
 		try {
 			result.setItem(RedisMapVote.getVoteInfoBar());
 			result.setRet(Constant.SUCCESS);
-			result.setMessage("获取投票数据成功！");
+			result.setMessage("The poll data was obtained successfully！");
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("获取投票数据失败！");
+			result.setMessage("Failed to obtain voting data！");
 			result.setDetail(IOUtils.getError(e));
 			logger.error(IOUtils.getError(e));
 			return result;
@@ -83,16 +83,16 @@ public class VoteServiceImpl implements VoteService{
         if (thread != null && thread instanceof VoteThread) {
             VoteThread c =  (VoteThread)thread;
             c.setFLAG(false);
-            logger.info("投票线程停止成功");
+            logger.info("The polling thread stopped successfully");
         }else{
-            logger.error("投票线程停止失败");
+            logger.error("The polling thread stopped failing");
         }
         r = EquipmentServiceImpl.getInstance().answer_stop();
         if (r.getRet().equals(Constant.ERROR)) {
             return r;
         }
         r.setRet(Constant.SUCCESS);
-        r.setMessage("停止成功");
+        r.setMessage("Stop success");
         return r;
     }
 
@@ -130,7 +130,7 @@ public class VoteServiceImpl implements VoteService{
 			int ret = DeviceComm.answerStart(strBuilder.toString());
 			if (ret != 0) {
 				r.setRet(Constant.ERROR);
-				r.setMessage("指令发送失败");
+				r.setMessage("Instruction sending failure");
 				return r;
 			}
 
@@ -139,12 +139,12 @@ public class VoteServiceImpl implements VoteService{
 			/* 添加到线程管理 */
 			ThreadManager.getInstance().addThread(thread);
 			r.setRet(Constant.SUCCESS);
-			r.setMessage("发送成功");
+			r.setMessage("send successfully");
 			return r;
 		} catch (Exception e) {
 			logger.error(IOUtils.getError(e));
 			r.setRet(Constant.ERROR);
-			r.setMessage("指令发送失败");
+			r.setMessage("Instruction sending failure");
 			return r;
 		}
 
@@ -156,11 +156,11 @@ public class VoteServiceImpl implements VoteService{
 		try {
 			result.setItem(RedisMapVote.getVoteInfo()); //保存评分主题信息
 			result.setRet(Constant.SUCCESS);
-			result.setMessage("获取投票主题成功！");
+			result.setMessage("Get the voting theme successfully！");
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("获取投票主题失败！");
+			result.setMessage("Failed to get the voting topic！");
 			result.setDetail(IOUtils.getError(e));
 			logger.error(IOUtils.getError(e));
 			return result;

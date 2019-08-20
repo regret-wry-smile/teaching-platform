@@ -40,14 +40,14 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			}
 			result = classInfoSql.insertClassInfo(classInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("新增班级成功!");
+				result.setMessage("Add class successfully!");
 			}else {
-				result.setMessage("新增班级失败！");
+				result.setMessage("Failed to add classes！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("新增班级失败！");
+			result.setMessage("Failed to add classes！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -61,14 +61,14 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			ClassInfo classInfo =  (ClassInfo) StringUtils.parseJSON(object, ClassInfo.class);
 			result = classInfoSql.selectClassInfo(classInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("查询班级成功!");
+				result.setMessage("Query class success!");
 			}else {
-				result.setMessage("查询班级失败！");
+				result.setMessage("Failed to query class！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("查询班级失败！");
+			result.setMessage("Failed to query class！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -82,23 +82,23 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			ClassInfo classInfo =  (ClassInfo) StringUtils.parseJSON(object, ClassInfo.class);
 			result = classInfoSql.deleteClassInfo(classInfo); //删除班级
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("删除班级成功!");
+				result.setMessage("Class deletion successful!");
 			}else {
-				result.setMessage("删除班级失败！");
+				result.setMessage("Failed to delete class！");
 				return result;
 			}
 			StudentInfo studentInfo = new StudentInfo();
 			studentInfo.setClassId(classInfo.getClassId());  //删除学生
 			studentInfoSql.deleteStudent(studentInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("删除班级成功!");
+				result.setMessage("Class deletion successful!");
 			}else {
-				result.setMessage("删除班级失败！");
+				result.setMessage("Failed to delete class！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("删除班级失败！");
+			result.setMessage("Failed to delete class！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -112,14 +112,14 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 			ClassInfo classInfo =  (ClassInfo) StringUtils.parseJSON(object, ClassInfo.class);
 			result = classInfoSql.updateClassInfo(classInfo);
 			if (Constant.SUCCESS.equals(result.getRet())) {
-				result.setMessage("修改班级成功!");
+				result.setMessage("Successfully modified the class!");
 			}else {
-				result.setMessage("修改班级失败！");
+				result.setMessage("Failed to modify the class！");
 			}
 			return result;
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
-			result.setMessage("修改班级失败！");
+			result.setMessage("Failed to modify the class！");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;
@@ -135,7 +135,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
         try {
         	r = EquipmentServiceImpl.getInstance().clear_wl();
             if (Constant.ERROR.equals(r.getRet())) {
-                r.setMessage("清除失败");
+                r.setMessage("Clear failure");
                 return r;
             }
             StudentInfoSql studentInfoSql = new StudentInfoSql();
@@ -149,14 +149,14 @@ public class ClassInfoServiceImpl implements ClassInfoService{
 //                    BrowserManager.refreshStudent(jsono.getString("classId"));
 //                }
                 r.setRet(Constant.SUCCESS);
-                r.setMessage("清除成功");
+                r.setMessage("Clear success");
                 return r;
             }
         } catch (Exception e) {
             r.setDetail(IOUtils.getError(e));
             log.error(IOUtils.getError(e));
         }
-        r.setMessage("清除失败");
+        r.setMessage("Clear failure");
         return r;
     }
 
@@ -242,7 +242,7 @@ public class ClassInfoServiceImpl implements ClassInfoService{
           r = EquipmentServiceImpl.getInstance().bind_stop();
         }catch (Exception e) {
             log.error("", e);
-            r.setMessage("系统异常");
+            r.setMessage("System Exception");
             r.setDetail(IOUtils.getError(e));
         }
         return r;
