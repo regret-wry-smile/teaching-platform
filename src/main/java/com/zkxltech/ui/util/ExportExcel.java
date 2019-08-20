@@ -1,24 +1,18 @@
 package com.zkxltech.ui.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
+import com.ejet.core.util.constant.Constant;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.ejet.core.util.constant.Constant;
-import com.sun.javafx.collections.MappingChange.Map;
-import com.sun.org.apache.bcel.internal.generic.NEW;
+import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class ExportExcel {
@@ -26,12 +20,17 @@ public class ExportExcel {
     public static SXSSFWorkbook ExportWithResponse(String sheetName, String titleName,String manageName,String dates,String className,String studentSum, String fileName,
     		int columnNumber, int[] columnWidth,String[] columnName, List<List<Object>> dataList) throws Exception { 
         
-    	SXSSFWorkbook wb = new SXSSFWorkbook(); 
-        if (columnNumber == columnWidth.length&& columnWidth.length == columnName.length) {  
+//    	SXSSFWorkbook wb = new SXSSFWorkbook();
+        FileInputStream inputStream = new FileInputStream("htmls/test.xlsx");
+        XSSFWorkbook wb = new XSSFWorkbook(inputStream);
+        XSSFSheet sheet = wb.getSheetAt(0);
+        inputStream.close();
+
+        if (columnNumber == columnWidth.length&& columnWidth.length == columnName.length) {
             // 第一步，创建一个webbook，对应一个Excel文件  
             
             // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet  
-            Sheet sheet = wb.createSheet(sheetName);  
+//            Sheet sheet = wb.createSheet(sheetName);
             // sheet.setDefaultColumnWidth(15); //统一设置列宽  
             for (int i = 0; i < columnNumber; i++)   
             {  
@@ -39,12 +38,12 @@ public class ExportExcel {
                 {  
                     if (i == j)   
                     {  
-                        sheet.setColumnWidth(i, columnWidth[j] * 256); // 单独设置每列的宽  
+                        sheet.setColumnWidth(i, columnWidth[j] * 256); // 单独设置每列的宽
                     }  
                 }  
             }  
             // 创建第0行 也就是标题  
-            Row row1 = sheet.createRow((int) 0);  
+            Row row1 = sheet.createRow((int) 1);
             row1.setHeightInPoints(20);// 设备标题的高度  
             // 第三步创建标题的单元格样式style2以及字体样式headerFont1  
             CellStyle style2 = wb.createCellStyle();  
@@ -52,36 +51,36 @@ public class ExportExcel {
             style2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);  
   
             Cell cell1 = row1.createCell(0);// 创建标题第一列  
-            sheet.addMergedRegion(new CellRangeAddress(0, 0, 0,15)); // 合并列标题  
+            sheet.addMergedRegion(new CellRangeAddress(1, 1, 0,15)); // 合并列标题
             cell1.setCellValue(titleName); // 设置值标题  
             cell1.setCellStyle(style2); // 设置标题样式  
             
             //创建试卷名称列
-            Row row2 = sheet.createRow((int) 1);  
+            Row row2 = sheet.createRow((int) 2);
             row2.setHeightInPoints(12);// 设备标题的高度  
             Cell cell2 = row2.createCell(0);// 创建标题第一列  
-            sheet.addMergedRegion(new CellRangeAddress(1, 1, 0,15)); // 合并列
+            sheet.addMergedRegion(new CellRangeAddress(2, 2, 0,15)); // 合并列
             cell2.setCellValue(manageName); 
             
             //创建时间行
-            Row row3 = sheet.createRow((int) 2);  
+            Row row3 = sheet.createRow((int) 3);
             row3.setHeightInPoints(12);// 设备标题的高度 
             Cell cell3 = row3.createCell(0);// 创建标题第一列  
-            sheet.addMergedRegion(new CellRangeAddress(2, 2, 0,15)); // 合并列 
+            sheet.addMergedRegion(new CellRangeAddress(3, 3, 0,15)); // 合并列
             cell3.setCellValue(dates); // 设置创建时间
             
             //班级名称和学生人数行
-            Row row4 = sheet.createRow((int) 3);  
+            Row row4 = sheet.createRow((int) 4);
             row4.setHeightInPoints(12);// 设备标题的高度 
             Cell cell4 = row4.createCell(0);// 创建标题第一列  
             Cell cell5 = row4.createCell(4);// 创建标题第二列  
-            sheet.addMergedRegion(new CellRangeAddress(3, 3, 0,3)); // 合并列
-            sheet.addMergedRegion(new CellRangeAddress(3, 3, 4,7)); // 合并列  
+            sheet.addMergedRegion(new CellRangeAddress(4, 4, 0,3)); // 合并列
+            sheet.addMergedRegion(new CellRangeAddress(4, 4, 4,7)); // 合并列
             cell4.setCellValue(className); // 设置班级名称
             cell5.setCellValue(studentSum);	//设置学生人数
             
             // 创建第1行 也就是表头  
-            Row row = sheet.createRow((int) 4);  
+            Row row = sheet.createRow((int) 5);
             row.setHeightInPoints(12);// 设置表头高度  
   
             // 第四步，创建表头单元格样式 以及表头的字体样式  
@@ -137,7 +136,7 @@ public class ExportExcel {
             }  
   
             // 第五步，创建单元格，并设置值  
-            for (int i = 0; i < dataList.size(); i++)   
+            for (int i = 0; i < dataList.size(); i++)
             {  
                 row = sheet.createRow((int) i + 5);  
                 // 为数据内容设置特点新单元格样式1 自动换行 上下居中  
@@ -199,7 +198,8 @@ public class ExportExcel {
             // 第六步，将文件存到浏览器设置的下载位置  
            // String filename = fileName + ".xls";  
           
-        } 
-        return wb;
+        }
+        SXSSFWorkbook wb1 = new SXSSFWorkbook(wb);
+        return wb1;
     }
 }
