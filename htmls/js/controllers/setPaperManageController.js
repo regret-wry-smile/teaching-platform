@@ -1028,7 +1028,7 @@ app.controller('editSubjectModalCtrl', function($rootScope, $modalInstance, $sco
 	})
 	//确认弹出框
 app.controller('sureModalCtrl', function($scope, $modalInstance, toastr, content) {
-		$scope.content = 'Do you want to operate' + angular.copy(content) + '？';
+		$scope.content = 'Do you want to operate ' + angular.copy(content) + '？';
 		$scope.ok = function() {
 			$modalInstance.close('success');
 		}

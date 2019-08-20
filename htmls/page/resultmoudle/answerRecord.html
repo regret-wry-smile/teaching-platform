@@ -121,28 +121,35 @@
 			</div>
 			<div ng-cloak class="content content1 bgf5 clearfix" style="top: 1.2rem;">		
 				<div class="searchbar clearfix">
-				    <label >Class</label>
-			    	<select class="single" select2 ng-model="setClass.classes" defalutvalue='setClass.classes1' ng-change="changeClass(setClass.classes)" list='classList'>
-						<!--<option ng-repeat="item in classList track by $index" value="{{item}}">{{item.value}}</option>-->
-					</select>
-					<label >Subject</label>
-					<select class="single" select1 ng-model="setClass.subject" defalutvalue='setClass.subject1' list="subjectlists" ng-change="changeSubject(setClass.subject)">
-				   			<option ng-repeat="subjectitem in subjectlists track by $index" value="{{subjectitem}}">{{subjectitem}}</option>
-					</select>
-					<label>Course</label>
-				   <select class="single" select2 ng-model="setClass.sujectHour" defalutvalue='setClass.sujectHour1'  ng-change="changeClassHour(setClass.sujectHour)" list="classhourList" >
-			   			<!--<option ng-repeat="houritem in classhourList track by $index" value="{{houritem}}">{{houritem.value}}</option>-->
-					</select>		
-					<!--<select class="single" select2 ng-model="setClass.sujectHour" defalutvalue='setClass.sujectHour1' list='classhourList' ng-change="changeClassHour(setClass.sujectHour)" >
-						</select>-->
-					<label >Paper</label>
-			    	<select class="single" select2 ng-model="setClass.paper" defalutvalue='setClass.paper1'  ng-change="changePaper(setClass.paper)" list='paperList'>
-						<!--<option ng-repeat="paperitem in paperList track by $index" value="{{paperitem}}">{{paperitem.value}}</option>-->
-					</select>
-					<a href="javascript:;" class="del ml20 mr10" ng-click="deleteRcord()">Delete</a>
-					<a href="javascript:;" class="edit" ng-click="exportRecord()">Export</a>
+					<div class="pull-left mb10">
+						<label >Class</label>
+						<select class="single" select2 ng-model="setClass.classes" defalutvalue='setClass.classes1' ng-change="changeClass(setClass.classes)" list='classList'>
+							<!--<option ng-repeat="item in classList track by $index" value="{{item}}">{{item.value}}</option>-->
+						</select>
+						<label >Subject</label>
+						<select class="single" select1 ng-model="setClass.subject" defalutvalue='setClass.subject1' list="subjectlists" ng-change="changeSubject(setClass.subject)">
+							<option ng-repeat="subjectitem in subjectlists track by $index" value="{{subjectitem}}">{{subjectitem}}</option>
+						</select>
+						<label>Course</label>
+						<select class="single" select2 ng-model="setClass.sujectHour" defalutvalue='setClass.sujectHour1'  ng-change="changeClassHour(setClass.sujectHour)" list="classhourList" >
+							<!--<option ng-repeat="houritem in classhourList track by $index" value="{{houritem}}">{{houritem.value}}</option>-->
+						</select>
+						<!--<select class="single" select2 ng-model="setClass.sujectHour" defalutvalue='setClass.sujectHour1' list='classhourList' ng-change="changeClassHour(setClass.sujectHour)" >
+                            </select>-->
+						<label >Paper</label>
+						<select class="single" select2 ng-model="setClass.paper" defalutvalue='setClass.paper1'  ng-change="changePaper(setClass.paper)" list='paperList'>
+							<!--<option ng-repeat="paperitem in paperList track by $index" value="{{paperitem}}">{{paperitem.value}}</option>-->
+						</select>
+					</div>
+
+					<div class="pull-right mb10">
+						<a href="javascript:;" class="del ml20 mr10" ng-click="deleteRcord()">Delete</a>
+						<a href="javascript:;" class="edit mr30" ng-click="exportRecord()">Export</a>
+					</div>
+
+
 				</div>
-				<div class="col-main" style="position: absolute;top: 0.8rem;left: 0;right: 0;bottom: .25rem;overflow-x: hidden;overflow-y: auto; width:100%;padding:0 0.25rem;">
+				<div class="col-main" style="position: absolute;top: 0.9rem;left: 0;right: 0;bottom: .25rem;overflow-x: hidden;overflow-y: auto; width:100%;padding:0 0.25rem;">
 					<table class="table table-stripe subject">
 						<thead>
 							<tr >

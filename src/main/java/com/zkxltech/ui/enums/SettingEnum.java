@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum SettingEnum {
-	ONE("第一组",1,51),
-	TWO("第二组",2,52),
-	THREEN("第三组",3,53),
-	FOUR("第四组",3,53),
-	FIVE("第五组",3,53),
-	SIX("第六组",90,110),
-	SEVEN("第七组",92,112),
-	EIGHT("第八组",94,114),
-	NINE("第九组",96,116),
-	TEN("第十组",98,118);
+	ONE("Chain 1",1,51),
+	TWO("Chain 2",2,52),
+	THREEN("Chain 3",3,53),
+	FOUR("Chain 4",3,53),
+	FIVE("Chain 5",3,53),
+	SIX("Chain 6",90,110),
+	SEVEN("Chain 7",92,112),
+	EIGHT("Chain 8",94,114),
+	NINE("Chain 9",96,116),
+	TEN("Chain 10",98,118);
 	private String name;  //组名
 	private Integer tx_ch;  //发送信道
 	private Integer rx_ch; //接收信道

@@ -646,7 +646,7 @@ app.controller('classCheckCtrl', function($scope, $rootScope, toastr, $window) {
 				toastr.error($scope.result.message);
 			}
 		} else {
-			toastr.warning("请选择试卷");
+			toastr.warning("Please select papers");
 		}
 	}
 	//开始主观答题
@@ -661,7 +661,7 @@ app.controller('classCheckCtrl', function($scope, $rootScope, toastr, $window) {
 				toastr.error($scope.result.message);
 			}
 		} else {
-			toastr.warning("请选择试卷");
+			toastr.warning("Please select papers");
 		}
 
 	}
@@ -681,7 +681,7 @@ app.controller('classCheckCtrl', function($scope, $rootScope, toastr, $window) {
 			//			}
 			//		},500)	
 		} else {
-			toastr.warning("请选择试卷");
+			toastr.warning("Please select papers");
 		}
 	}
 	//移除loading
