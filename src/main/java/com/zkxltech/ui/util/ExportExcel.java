@@ -138,7 +138,7 @@ public class ExportExcel {
             // 第五步，创建单元格，并设置值  
             for (int i = 0; i < dataList.size(); i++)
             {  
-                row = sheet.createRow((int) i + 5);  
+                row = sheet.createRow((int) i + 6);
                 // 为数据内容设置特点新单元格样式1 自动换行 上下居中  
                 CellStyle zidonghuanhang = wb.createCellStyle();  
                 zidonghuanhang.setWrapText(true);// 设置自动换行  

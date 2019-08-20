@@ -3,7 +3,7 @@
 ;(function($){
 	$.fn.multiselect=function(options){
 		var defaults = {
-			selectedHtmlValue: '请选择',
+			selectedHtmlValue: '--select--',
 			titleEventType: 'click',
 			optionEventType: 'click',
 			selectedIcon: '<i class="fa fa-check arrow"></i>',

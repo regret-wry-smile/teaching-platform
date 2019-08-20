@@ -539,7 +539,7 @@ app.controller('stopSingeAnswerCtrl', function($scope, $rootScope, toastr, $wind
 					if (datavalue == params.name) {
 						option.series[0].data[params.dataIndex].itemStyle.normal.color = '#5ed6be';
 						if ($scope.answerType == 'judge') {
-							if (datavalue == "对") {
+							if (datavalue == "TRUE") {
 								datavalue = "true";
 							} else {
 								datavalue = "false";
@@ -877,7 +877,7 @@ app.directive('select', function() {
 					$(element).multiselect({
 						width: "10rem",
 						multiple: false,
-						selectedHtmlValue: '请选择',
+						selectedHtmlValue: '--select--',
 						defalutvalue: scope.defalutvalue,
 						change: function() {
 							$(element).val($(this).val());
@@ -933,7 +933,7 @@ app.directive('select1', function() {
 				}
 				$(element).multiselect({
 					multiple: false,
-					selectedHtmlValue: '请选择',
+					selectedHtmlValue: '--select--',
 					defalutvalue: scope.defalutvalue,
 					change: function() {
 						$(element).val($(this).val());
@@ -972,7 +972,7 @@ app.directive('select2', function() {
 				}
 				$(element).multiselect({
 					multiple: false,
-					selectedHtmlValue: '请选择',
+					selectedHtmlValue: '--select--',
 					defalutvalue: scope.defalutvalue,
 					change: function() {
 						$(element).val($(this).val());
