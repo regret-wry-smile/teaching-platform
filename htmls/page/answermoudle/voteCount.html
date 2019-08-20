@@ -51,10 +51,10 @@
 			<div ng-cloak class="header clearfix">
 				<div class="pull-left">
 					<img src="../../image/stars.png" class="ml25 pt20" />
-					<span>投票统计</span>
+					<span>Voting Result</span>
 				</div>
 				<div class="pull-right">
-					<a href="javascript:;" ng-href="{{objectUrl}}" title="返回">
+					<a href="javascript:;" ng-href="{{objectUrl}}" title="return">
 					<img src="../../image/return.png" ng-click="returnPage()" class="rebtn"/>
 					</a>
 				</div>
@@ -63,13 +63,13 @@
 				<div class="pannel clearfix" style="position: absolute; top: 0.7rem;bottom: 0;left: 0;right:0">
 				<div class="col-sub pull-left" style="position: absolute;top: 0.5rem;width: 40%;left: 0.40rem;right: 0rem;">
 					<div class="text clearfix vote">
-						<label class="pull-left">投票主题:</label>
+						<label class="pull-left">Theme:</label>
 						<div class="pull-left" style="width: 80%; vertical-align: middle;margin-top: 0.07rem;">
 							<p class="con">{{voteInfo.title}}</p>
 						</div>
 					</div>
 					<div class="text clearfix vote">
-						<label class="pull-left">投票内容:</label>
+						<label class="pull-left">Content:</label>
 						<div class="pull-left" style="width: 80%; vertical-align: middle;margin-top: 0.07rem;">
 							<p class="con">{{voteInfo.describe}}</p>
 						</div>
@@ -81,7 +81,7 @@
 				</div>
 			</div>
 			<div class="operatebtn text-center pt20">
-				<button class="btn savebtn" ng-click="stopVoteCount()" ng-disabled="isStop">停止投票</button>
+				<button class="btn savebtn" ng-click="stopVoteCount()" ng-disabled="isStop">Stop Voting</button>
 			</div>
 			<div id="refresVote" ng-click="refresVote()" style="display:none"></div>
 			
