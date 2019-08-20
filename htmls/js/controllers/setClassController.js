@@ -429,7 +429,7 @@ app.directive('select', function() {
 				$(element).multiselect({
 				width: "10rem",
 				multiple: false,
-				selectedHtmlValue: '请选择',
+				selectedHtmlValue: '--select--',
 				defalutvalue:scope.defalutvalue,
 				change: function() {
 					$(element).val($(this).val());
@@ -471,7 +471,7 @@ app.directive('select1', function() {
 			}
 			$(element).multiselect({
 				multiple: false,
-				selectedHtmlValue: '请选择',
+				selectedHtmlValue: '--select--',
 				defalutvalue:scope.defalutvalue,
 				change: function() {
 					$(element).val($(this).val());
@@ -509,7 +509,7 @@ app.directive('select2', function() {
 			}
 			$(element).multiselect({
 				multiple: false,
-				selectedHtmlValue: '请选择',
+				selectedHtmlValue: '--select--',
 				defalutvalue:scope.defalutvalue,
 				change: function() {
 					$(element).val($(this).val());
