@@ -212,7 +212,28 @@
 		</div>
 	</form>
 </script>
-
+<!--批量修改分数-->
+<script type="text/ng-template" id="addSubjectScore.html">
+	<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
+			<h4 class="modal-title">Score Changes</h4>
+		</div>
+		<div class="modal-body">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">score</label>
+				<div class="col-sm-7">
+					<input type="text" autocomplete="off" name="score" id="" value="" class="form-control" ng-model="score" required="required" ng-pattern="/^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/"/>
+				</div>
+				<span ng-show="myForm.score.$invalid" class="warning">*</span>
+			</div>
+			<div class="modal-footer text-center">
+				<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid">sure</button>
+				<button type="button" class="btn btn-default" ng-click="cancel()">cancel</button>
+			</div>
+		</div>
+	</form>
+</script>
 <!--编辑题目start-->
 <script type="text/ng-template" id="editSubjectModal.html">
 	<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
@@ -382,6 +403,7 @@
 			<!--<a href="javascript:;" ng-click="addSubject()" >新增题目</a>-->
 			<a href="javascript:;" ng-click="addBatchSubject()" style="width: auto;" class="pr10">Insert Question</a>
 			<a href="javascript:;" ng-click="delSuject()" style="width: auto;">Delete Question</a>
+			<a href="javascript:;" ng-click="editSujectScore()" style="width: auto;">Bulk changes</a>
 		</div>
 		<div class="operatebtn pt10 clearfix">
 			<button class="btn btn-primary btn-lg" ng-click="savePaper()" ng-disabled="!myForm.$valid">Save</button>

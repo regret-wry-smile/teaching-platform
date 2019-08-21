@@ -294,6 +294,35 @@ app.controller('addPaperManageCtrl', function($rootScope, $scope, $modal, toastr
             //$log.info('Modal dismissed at: ' + new Date());
         });
     }
+
+    //编辑题目分数
+    $scope.editSujectScore = function(item) {
+        if($scope.onechecked.length > 0) {
+            var content = "Score Changes";
+            var modalInstance = $modal.open({
+                templateUrl: 'addSubjectScore.html',
+                controller: 'sureModalCtrl',
+                size: 'sm',
+                backdrop: false,
+                resolve: {
+                    content: function() {
+                        return content;
+                    }
+                }
+            });
+            modalInstance.result.then(function(info) {
+                for(var i=0;i<$scope.subjectList.length;i++){
+                    if($scope.subjectList[i].checked){
+                        $scope.subjectList[i].score=info;
+                    }
+                }
+            }, function() {
+
+            });
+        } else {
+            toastr.warning("Please check at least one topic first !");
+        }
+    }
     //删除题目
     $scope.delSuject = function(item) {
         if($scope.onechecked.length > 0) {
@@ -627,33 +656,10 @@ app.controller('editPaperManageCtrl', function($rootScope, $scope, $modal, $loca
                 }
             });
             modalInstance.result.then(function(info) {
-                var hascheckedId=[];
-                var hasnocheckedId=[];
-                var score = parseInt(info);
-                hascheckedId.push(score);
 
-                $scope.onechecked.forEach(function(item){
-                    if(item.id){
-                        hascheckedId.push(item.id)
-                    }else{
-                        hasnocheckedId.push(item)
-                    }
-                })
-
-                console.log(JSON.stringify(hascheckedId))
-                if(hascheckedId&&hascheckedId.length>0){
-                    var param = hascheckedId;
-                    console.log("参数"+JSON.stringify(param));
-                    $scope.result = JSON.parse(execute_testPaper("update_question_score", JSON.stringify(param)));
-                    if($scope.result.ret == 'success') {
-                        for(var i=0;i<$scope.subjectList.length;i++){
-                            if($scope.subjectList[i].checked){
-                                $scope.subjectList[i].score=score;
-                            }
-                        }
-                    } else {
-                        toastr.error($scope.result.message);
-                        console.log(JSON.stringify($scope.result.detail))
+                for(var i=0;i<$scope.subjectList.length;i++){
+                    if($scope.subjectList[i].checked){
+                        $scope.subjectList[i].score=info;
                     }
                 }
             }, function() {
