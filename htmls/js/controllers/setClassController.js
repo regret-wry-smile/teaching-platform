@@ -173,7 +173,7 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
 			$scope.setClass.sujectName=$scope.classhourList[$scope.classhourList.length-1].key;
 			$scope.sujectNameobject=$scope.classhourList[$scope.classhourList.length-1];
 			$scope.setClass.sujectName1=angular.copy($scope.setClass.sujectName);
-			$scope.startClass();
+			/*$scope.startClass();*/
 		}, function() {
 			//$log.info('Modal dismissed at: ' + new Date());
 		});

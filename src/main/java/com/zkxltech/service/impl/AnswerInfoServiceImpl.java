@@ -152,6 +152,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 					recordParam.setClassId(Global.getClassId());
 					recordParam.setSubject(Global.getClassHour().getSubjectName());
 					recordParam.setTestId((String)testId);
+					recordParam.setClassHourId(Global.getClassHour().getClassHourId());
 					recordSql.deleteRecord(recordParam);
 					
 					result =recordSql.insertRecords(records); //将缓存中数据保存到数据库

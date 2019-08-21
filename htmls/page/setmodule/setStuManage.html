@@ -30,6 +30,40 @@
 		<!--[if IE 8]>
         <script src="js/es5-shim.min.js"></script>        
     	<![endif]-->
+		<style type="text/css">
+			.upload-btn {
+				height: 34px;
+				width: 80px;
+				border: 1px solid #dcdcdc;
+				/*border-radius: 5px;*/
+				border-top-right-radius:5px;
+				border-bottom-right-radius:5px;
+				overflow: hidden;
+				position: relative;
+				color: #626262;
+				text-align: center;
+				line-height: 34px;
+				background: #f1f1f1;
+				color: #939393;
+			}
+			.upload-btn input[type=file] {
+				position: absolute;
+				top: 0;
+				right: 0;
+				opacity: 0;
+				filter: alpha(opacity=0);
+				cursor: pointer;
+			}
+			.upload-btn span:after {
+				content: '';
+				display: inline-block;
+				height: 5px;
+				width: 8px;
+				background: url("../../image/arrow.png") no-repeat center center;
+				margin-left: 10px;
+				margin-top: -3px;
+			}
+		</style>
 	</head>
 
 	<body class="bg" ng-controller="setStuManageCtrl" >
@@ -45,7 +79,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="form-group" ng-show="(title!='Edit Class')">
-						<label for="firstname" class="col-sm-3 control-label">Selecte state</label>
+						<label for="firstname" class="col-sm-3 control-label">Select State</label>
 						<div class="col-sm-8">
 							<select class="single" select ng-model="classInfo.atype" name="atype" defalutvalue='classInfo.atype1' required>
 								<option value="0">local</option>
@@ -97,9 +131,14 @@
 					</div>-->
 					<p ng-show="isfileType==true" class="pt10 pb20">&nbsp;&nbsp;Make sure to import students into 【{{className}}】?</p>
 					<div class="form-group" ng-show="fileType=='0'">
-						<label for="firstname" class="col-sm-3 control-label">Select File</label>
-						<div class="col-sm-8">
-							<input type="file" class="form-control" name="file" id="uploadFile" value="" validFile ng-model="filepath" onchange='angular.element(this).scope().fileChanged(this)' />
+						<label for="firstname" class="col-sm-3 control-label">File</label>
+						<div class="col-sm-8" style="position:relative;">
+							<input type="text" readonly="readonly" class="form-control" id="filename" style="overflow: hidden;text-overflow: ellipsis;"/>
+							<div class="upload-btn" style="position:absolute;right:14px;top:0px;">
+								<span>Import</span>
+								<input type="file" name=""  id="uploadFile" value=""  validFile onchange="angular.element(this).scope().fileChanged(event)" />
+
+							</div>
 						</div>
 						<span ng-show="myForm.file.$invalid" class="warning">*</span>
 					</div>

@@ -532,12 +532,15 @@ app.controller('uploadfileModalCtrl', function($scope,$modalInstance,toastr,info
 	$scope.changefileType=function(fileType){
 		$scope.fileType=fileType;
 	}*/
-	$scope.filepath='';	
-	$scope.fileChanged=function(){
-		if(document.querySelector('#uploadFile').value){
-			$scope.filepath= document.querySelector('#uploadFile').value;			
-		}
-	}
+    $scope.filepath='';
+    $scope.fileChanged=function(evt){
+        var files = evt.currentTarget.files[0];
+        var filepath = evt.currentTarget.value;
+        var form = new FormData();
+        form.append('file', files);
+        $scope.filepath=filepath;
+        $("#filename").val(filepath);
+    }
 	$scope.ok = function() {
 		//$('#myModal').modal('hide');
 		if($scope.fileType=='0'){
