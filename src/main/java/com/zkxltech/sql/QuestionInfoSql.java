@@ -3,6 +3,7 @@ package com.zkxltech.sql;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class QuestionInfoSql {
 		for (int i = 0; i < rowList.size(); i++) {
 			if(i == 0){
 				subject = (String) rowList.get(i).get(0);
-				testId = (String) rowList.get(i).get(1);
+				testId = (String) rowList.get(i).get(1)+new Random().nextInt(100);
 				sqls.add("delete from test_paper where test_id = '"+ rowList.get(i).get(1)+"'"); //删除原来的试卷
 				sqls.add("delete from question_info where test_id = '"+ rowList.get(i).get(1)+"'"); //删除原来的题目
 				sqls.add("insert into test_paper (subject,test_id,test_name,describe,atype) values('"+subject+"','"+
