@@ -1,27 +1,19 @@
 package com.zkxltech.ui.functions;
 
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.browser.BrowserFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.ejet.cache.RedisMapMultipleAnswer;
-import com.ejet.cache.RedisMapPaper;
 import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Result;
 import com.zkxltech.service.QuestionService;
 import com.zkxltech.service.ServerService;
-import com.zkxltech.service.StudentInfoService;
 import com.zkxltech.service.TestPaperService;
 import com.zkxltech.service.impl.QuestionServiceImpl;
 import com.zkxltech.service.impl.ServerServiceImpl;
-import com.zkxltech.service.impl.StudentInfoServiceImpl;
 import com.zkxltech.service.impl.TestPaperServiceImpl;
 import com.zkxltech.ui.util.StringConstant;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.BrowserFunction;
 
 /**
  * 【试卷模块页面调用方法】
@@ -121,6 +113,9 @@ public class TestPaperFunctionManage extends BrowserFunction{
 				break;
 			case "update_question":
 				result = questionService.updateQuestion(params[1]);
+				break;
+			case "update_question_score":
+				result = questionService.updateQuestionScore(params[1]);
 				break;
 //			case "clear_question_redis":
 //				/*清空题目缓存*/

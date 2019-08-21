@@ -1,391 +1,414 @@
 <!DOCTYPE html>
 <html ng-app="app">
 
-	<head>
-		<meta charset="utf-8" />
-		<title>答题页面</title>
-		<meta name="format-detection" content="telephone=no" />
-		<meta name="viewport" content="user-scalable=no,width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
-		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-		<link rel="stylesheet" href="../../css/bootstrap.css" />
-		<link rel="stylesheet" href="../../css/common.css" />
-		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
-		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
-		<script src="../../js/angular-toastr/angular-toastr.min.js"></script>
-		<script src="../../js/angular-toastr/angular-toastr.tpls.min.js"></script>
-		<script src="../../js/jquery-1.11.1.min.js"></script>
-		<link rel="stylesheet" href="../../js/select/style.css" />
-		<link href="../../js/select/font-awesome.min.css" />
-		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
-		<script src="../../js/common.js"></script>
-		<!--<script src="../../js/vconsole.min.js"></script>-->
-		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
-		<script src="../../js/controllers/setPaperManageController.js"></script>
-		  <!--[if IE 8]>
-        <script src="js/es5-shim.min.js"></script>        
-    	<![endif]-->
-	</head>
-	<style>
-		.newSelect{
-			width: 1.2rem !important;
-		}
-		.newOptions{
-			width: 1.2rem !important;
-		}
-		.content1 .operatebtn{
-			position: absolute;
-			bottom: 0.25rem;
-		}
-		.content1 .opbtn{
-			position: absolute;
-			bottom: 0.85rem;
-		}
-	</style>
-	<body class="bg" ng-controller="editPaperManageCtrl">
-	<!--批量添加题目start-->
-	<script type="text/ng-template" id="addBatchSubjectModal.html">
-		<form class="form-horizontal clearfix" role="form" name="mysubjectForm" novalidate="novalidate">
-			<div class="modal-header">
-				<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
-				<h4 class="modal-title">{{title}}</h4>
+<head>
+	<meta charset="utf-8" />
+	<title>答题页面</title>
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="viewport" content="user-scalable=no,width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel="stylesheet" href="../../css/bootstrap.css" />
+	<link rel="stylesheet" href="../../css/common.css" />
+	<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+	<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
+	<script src="../../js/angular-toastr/angular-toastr.min.js"></script>
+	<script src="../../js/angular-toastr/angular-toastr.tpls.min.js"></script>
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<link rel="stylesheet" href="../../js/select/style.css" />
+	<link href="../../js/select/font-awesome.min.css" />
+	<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
+	<script src="../../js/common.js"></script>
+	<!--<script src="../../js/vconsole.min.js"></script>-->
+	<script type="text/javascript" src="../../js/bootstrap.js" ></script>
+	<script src="../../js/controllers/setPaperManageController.js"></script>
+	<!--[if IE 8]>
+	<script src="js/es5-shim.min.js"></script>
+	<![endif]-->
+</head>
+<style>
+	.newSelect{
+		width: 1.2rem !important;
+	}
+	.newOptions{
+		width: 1.2rem !important;
+	}
+	.content1 .operatebtn{
+		position: absolute;
+		bottom: 0.25rem;
+	}
+	.content1 .opbtn{
+		position: absolute;
+		bottom: 0.85rem;
+	}
+</style>
+<body class="bg" ng-controller="editPaperManageCtrl">
+<!--批量添加题目start-->
+<script type="text/ng-template" id="addBatchSubjectModal.html">
+	<form class="form-horizontal clearfix" role="form" name="mysubjectForm" novalidate="novalidate">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
+			<h4 class="modal-title">{{title}}</h4>
+		</div>
+		<div class="modal-body">
+			<div class="form-group">
+				<label for="firstname" class="col-sm-3 control-label">Question Sum</label>
+				<div class="col-sm-8">
+					<input type="text" autocomplete="off" name="questionNum" id="" value="" class="form-control" ng-model="testInfo.questionNum" required ng-pattern="/^[1-9]\d?$|^1[01]\d$|^120$/" maxlength="3" placeholder="Please enter a number not exceeding 120" />
+				</div>
+				<span ng-show="mysubjectForm.questionNum.$invalid" class="warning">*</span>
 			</div>
-			<div class="modal-body">
-				<div class="form-group">
-					<label for="firstname" class="col-sm-3 control-label">Question Sum</label>
-					<div class="col-sm-8">
-						<input type="text" autocomplete="off" name="questionNum" id="" value="" class="form-control" ng-model="testInfo.questionNum" required ng-pattern="/^[1-9]\d?$|^1[01]\d$|^120$/" maxlength="3" placeholder="Please enter a number not exceeding 120" />
-					</div>
-					<span ng-show="mysubjectForm.questionNum.$invalid" class="warning">*</span>
+			<div class="form-group">
+				<label for="firstname" class="col-sm-3 control-label">Answer Type</label>
+				<div class="col-sm-8">
+					<select class="single" select ng-model="testInfo.questionType" defalutvalue='testInfo.questionType1' ng-change="changequesType(testInfo.questionType)">
+						<option value="2">Judge</option>
+						<option value="-1">Letter</option>
+						<option value="3">Digital</option>
+					</select>
+					<select class="single" select ng-model="testInfo.selLetter" defalutvalue='testInfo.selLetter1' ng-if="testInfo.questionType=='-1'" ng-change="changeselType(testInfo.selLetter)">
+						<option value="0">Single</option>
+						<option value="1">Multiple</option>
+					</select>
+					<select class="single" select ng-model="testInfo.range" defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'" ng-change="changeRange(testInfo.range)">
+						<option value="A-D">A-D</option>
+						<option value="A-F">A-F</option>
+					</select>
 				</div>
-				<div class="form-group">
-					<label for="firstname" class="col-sm-3 control-label">Answer Type</label>
-					<div class="col-sm-8">
-						<select class="single" select ng-model="testInfo.questionType" defalutvalue='testInfo.questionType1' ng-change="changequesType(testInfo.questionType)">
-							<option value="2">Judge</option>
-							<option value="-1">Letter</option>
-							<option value="3">Digital</option>
-						</select>
-						<select class="single" select ng-model="testInfo.selLetter" defalutvalue='testInfo.selLetter1' ng-if="testInfo.questionType=='-1'" ng-change="changeselType(testInfo.selLetter)">
-							<option value="0">Single</option>
-							<option value="1">Multiple</option>
-						</select>
-						<select class="single" select ng-model="testInfo.range" defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'" ng-change="changeRange(testInfo.range)">
-							<option value="A-D">A-D</option>
-							<option value="A-F">A-F</option>
-						</select>
-					</div>
+			</div>
+			<div class="form-group" ng-if="testInfo.questionType=='2'">
+				<label for="firstname" class="col-sm-3 control-label">Answer</label>
+				<div class="col-sm-8">
+					<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="true" ng-checked="true" required/>√</label>
+					<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="false" required/>×</label>
 				</div>
-				<div class="form-group" ng-if="testInfo.questionType=='2'">
-					<label for="firstname" class="col-sm-3 control-label">Answer</label>
-					<div class="col-sm-8">
-						<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="true" ng-checked="true" required/>√</label>
-						<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="false" required/>×</label>
-					</div>
-					<span ng-show="mysubjectForm.trueAnswer.$invalid" class="warning">(T/F)*</span>
+				<span ng-show="mysubjectForm.trueAnswer.$invalid" class="warning">(T/F)*</span>
+			</div>
+			<div class="form-group" ng-if="testInfo.questionType=='3'">
+				<label for="firstname" class="col-sm-3 control-label">Answer</label>
+				<div class="col-sm-7">
+					<input type="text" autocomplete="off" name="trueAnswer" id="" value="" class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[0-9]$/" required />
 				</div>
-				<div class="form-group" ng-if="testInfo.questionType=='3'">
-					<label for="firstname" class="col-sm-3 control-label">Answer</label>
-					<div class="col-sm-7">
-						<input type="text" autocomplete="off" name="trueAnswer" id="" value="" class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[0-9]$/" required />
-					</div>
-					<span ng-show="mysubjectForm.trueAnswer.$invalid" class="warning">(0-9)*</span>
+				<span ng-show="mysubjectForm.trueAnswer.$invalid" class="warning">(0-9)*</span>
+			</div>
+			<div class="form-group" ng-if="testInfo.questionType=='-1'">
+				<label for="firstname" class="col-sm-3 control-label">Answer</label>
+				<div class="col-sm-7" ng-if="testInfo.selLetter=='1'">
+					<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required maxlength="4"/>
+					<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required maxlength="6" />
 				</div>
-				<div class="form-group" ng-if="testInfo.questionType=='-1'">
-					<label for="firstname" class="col-sm-3 control-label">Answer</label>
-					<div class="col-sm-7" ng-if="testInfo.selLetter=='1'">
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required maxlength="4"/>
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required maxlength="6" />
-					</div>
-					<div class="col-sm-7" ng-if="testInfo.selLetter=='0'">
-						<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required maxlength="1"/>
-						<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required  maxlength="1"/>
-					</div>
-					<span ng-show="mysubjectForm.singleLetter.$invalid" ng-if="testInfo.selLetter=='0'" class="warning">Single*</span>
-					<span ng-show="mysubjectForm.mutilLetter.$invalid" ng-if="testInfo.selLetter=='1'" class="warning">Multiple*</span>
+				<div class="col-sm-7" ng-if="testInfo.selLetter=='0'">
+					<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required maxlength="1"/>
+					<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required  maxlength="1"/>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-3 control-label">score</label>
-					<div class="col-sm-7">
-						<input type="text" autocomplete="off" name="score" id="" value="" class="form-control" ng-model="testInfo.score" required="required" ng-pattern="/^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/"/>
-					</div>
-					<span ng-show="mysubjectForm.score.$invalid" class="warning">*</span>
+				<span ng-show="mysubjectForm.singleLetter.$invalid" ng-if="testInfo.selLetter=='0'" class="warning">Single*</span>
+				<span ng-show="mysubjectForm.mutilLetter.$invalid" ng-if="testInfo.selLetter=='1'" class="warning">Multiple*</span>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">score</label>
+				<div class="col-sm-7">
+					<input type="text" autocomplete="off" name="score" id="" value="" class="form-control" ng-model="testInfo.score" required="required" ng-pattern="/^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/"/>
 				</div>
+				<span ng-show="mysubjectForm.score.$invalid" class="warning">*</span>
+			</div>
 
+		</div>
+		<div class="modal-footer text-center">
+			<!--<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="mysubjectForm.$invalid||!isTrue">确定</button>-->
+			<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="mysubjectForm.$invalid">OK</button>
+			<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+		</div>
+	</form>
+</script>
+<!--添加题目start-->
+<script type="text/ng-template" id="addSubjectModal.html">
+	<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+			<h4 class="modal-title">{{title}}</h4>
+		</div>
+		<div class="modal-body">
+			<div class="form-group">
+				<label for="firstname" class="col-sm-3 control-label">Question ID</label>
+				<div class="col-sm-8">
+					<input type="text" autocomplete="off" name="questionId" id="" value="" class="form-control" ng-model="testInfo.questionId" required ng-pattern="/^[0-9]\d*$/" maxlength="10" placeholder="Please enter a number no longer than 10 digits" ng-change="changetitle()" />
+				</div>
+				<span ng-show="myForm.questionId.$invalid" class="warning">*</span>
+			</div>
+			<div class="form-group">
+				<label for="firstname" class="col-sm-3 control-label">Subject Content</label>
+				<div class="col-sm-8">
+					<textarea class="form-control" cols="3" placeholder="Please enter no more than 200 characters" ng-model="testInfo.question" maxlength="100"></textarea>
+				</div>
+				<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>
+			</div>
+			<div class="form-group">
+				<label for="firstname" class="col-sm-3 control-label">Answer Type</label>
+				<div class="col-sm-8">
+					<select class="single" select ng-model="testInfo.questionType" defalutvalue='testInfo.questionType1' ng-change="changequesType(testInfo.questionType)">
+						<option value="2">Judge</option>
+						<option value="-1">Letter</option>
+						<option value="3">Digital</option>
+					</select>
+					<select class="single" select ng-model="testInfo.selLetter" defalutvalue='testInfo.selLetter1' ng-if="testInfo.questionType=='-1'" ng-change="changeselType(testInfo.selLetter)">
+						<option value="0">Single</option>
+						<option value="1">Multiple</option>
+					</select>
+					<select class="single" select ng-model="testInfo.range" defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'" ng-change="changeRange(testInfo.range)">
+						<option value="A-D">A-D</option>
+						<option value="A-F">A-F</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group" ng-if="testInfo.questionType=='2'">
+				<label for="firstname" class="col-sm-3 control-label">Answer</label>
+				<div class="col-sm-8">
+					<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="true" ng-checked="true" required/>√</label>
+					<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="false" required/>×</label>
+				</div>
+				<span ng-show="myForm.trueAnswer.$invalid" class="warning">(T/F)*</span>
+			</div>
+			<div class="form-group" ng-if="testInfo.questionType=='3'">
+				<label for="firstname" class="col-sm-3 control-label">Answer</label>
+				<div class="col-sm-8">
+					<input type="text" autocomplete="off" name="trueAnswer" id="" value="" class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[0-9]$/" required />
+				</div>
+				<span ng-show="myForm.trueAnswer.$invalid" class="warning">(0-9)*</span>
+			</div>
+			<div class="form-group" ng-if="testInfo.questionType=='-1'">
+				<label for="firstname" class="col-sm-3 control-label">Answer</label>
+				<div class="col-sm-7" ng-if="testInfo.selLetter=='1'">
+					<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required  maxlength="4"/>
+					<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required  maxlength="6"/>
+				</div>
+				<div class="col-sm-7" ng-if="testInfo.selLetter=='0'">
+					<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required maxlength="1"/>
+					<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required maxlength="1"/>
+				</div>
+				<span ng-show="myForm.singleLetter.$invalid" ng-if="testInfo.selLetter=='0'" class="warning">Single*</span>
+				<span ng-show="myForm.mutilLetter.$invalid" ng-if="testInfo.selLetter=='1'" class="warning">Multiple*</span>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">score</label>
+				<div class="col-sm-7">
+					<input type="text" autocomplete="off" name="score" id="" value="" class="form-control" ng-model="testInfo.score"  required="required" ng-pattern="/^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/"/>
+				</div>
+				<span ng-show="myForm.score.$invalid" class="warning">*</span>
+			</div>
+
+		</div>
+		<div class="modal-footer text-center">
+			<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid||!isTrue">sure</button>
+			<button type="button" class="btn btn-default" ng-click="cancel()">cancel</button>
+		</div>
+	</form>
+</script>
+<!--批量修改分数-->
+<script type="text/ng-template" id="editSubjectScore.html">
+	<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
+			<h4 class="modal-title">Score Changes</h4>
+		</div>
+		<div class="modal-body">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">score</label>
+				<div class="col-sm-7">
+					<input type="text" autocomplete="off" name="score" id="" value="" class="form-control" ng-model="score" required="required" ng-pattern="/^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/"/>
+				</div>
+				<span ng-show="myForm.score.$invalid" class="warning">*</span>
 			</div>
 			<div class="modal-footer text-center">
-				<!--<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="mysubjectForm.$invalid||!isTrue">确定</button>-->
-				<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="mysubjectForm.$invalid">OK</button>
-				<button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+				<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid">sure</button>
+				<button type="button" class="btn btn-default" ng-click="cancel()">cancel</button>
 			</div>
-		</form>
-	</script>
-		<!--添加题目start-->
-			<script type="text/ng-template" id="addSubjectModal.html">
-			<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
-				<div class="modal-header">
-					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title">{{title}}</h4>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="firstname" class="col-sm-3 control-label">Question ID</label>
-						<div class="col-sm-8">
-							<input type="text" autocomplete="off" name="questionId" id="" value="" class="form-control" ng-model="testInfo.questionId" required ng-pattern="/^[0-9]\d*$/" maxlength="10" placeholder="Please enter a number no longer than 10 digits" ng-change="changetitle()" />
-						</div>
-						<span ng-show="myForm.questionId.$invalid" class="warning">*</span>
-					</div>
-					<div class="form-group">
-						<label for="firstname" class="col-sm-3 control-label">Subject Content</label>
-						<div class="col-sm-8">
-							<textarea class="form-control" cols="3" placeholder="Please enter no more than 200 characters" ng-model="testInfo.question" maxlength="100"></textarea>
-						</div>
-						<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>
-					</div>
-					<div class="form-group">
-						<label for="firstname" class="col-sm-3 control-label">Answer Type</label>
-						<div class="col-sm-8">
-							<select class="single" select ng-model="testInfo.questionType" defalutvalue='testInfo.questionType1' ng-change="changequesType(testInfo.questionType)">
-								<option value="2">Judge</option>
-								<option value="-1">Letter</option>
-								<option value="3">Digital</option>
-							</select>
-							<select class="single" select ng-model="testInfo.selLetter" defalutvalue='testInfo.selLetter1' ng-if="testInfo.questionType=='-1'" ng-change="changeselType(testInfo.selLetter)">
-								<option value="0">Single</option>
-								<option value="1">Multiple</option>
-							</select>
-							<select class="single" select ng-model="testInfo.range" defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'" ng-change="changeRange(testInfo.range)">
-								<option value="A-D">A-D</option>
-								<option value="A-F">A-F</option>
-							</select>
-						</div>
-					</div>
-					<div class="form-group" ng-if="testInfo.questionType=='2'">
-						<label for="firstname" class="col-sm-3 control-label">Answer</label>
-						<div class="col-sm-8">
-							<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="true" ng-checked="true" required/>√</label>
-							<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="false" required/>×</label>
-						</div>
-						<span ng-show="myForm.trueAnswer.$invalid" class="warning">(T/F)*</span>
-					</div>
-					<div class="form-group" ng-if="testInfo.questionType=='3'">
-						<label for="firstname" class="col-sm-3 control-label">Answer</label>
-						<div class="col-sm-8">
-							<input type="text" autocomplete="off" name="trueAnswer" id="" value="" class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[0-9]$/" required />
-						</div>
-						<span ng-show="myForm.trueAnswer.$invalid" class="warning">(0-9)*</span>
-					</div>
-					<div class="form-group" ng-if="testInfo.questionType=='-1'">
-						<label for="firstname" class="col-sm-3 control-label">Answer</label>
-						<div class="col-sm-7" ng-if="testInfo.selLetter=='1'">
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required  maxlength="4"/>
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required  maxlength="6"/>
-						</div>
-						<div class="col-sm-7" ng-if="testInfo.selLetter=='0'">
-				    	<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required maxlength="1"/>
-						<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required maxlength="1"/>						
-						</div>
-						<span ng-show="myForm.singleLetter.$invalid" ng-if="testInfo.selLetter=='0'" class="warning">Single*</span>
-						<span ng-show="myForm.mutilLetter.$invalid" ng-if="testInfo.selLetter=='1'" class="warning">Multiple*</span>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-3 control-label">score</label>
-						<div class="col-sm-7">
-							<input type="text" autocomplete="off" name="score" id="" value="" class="form-control" ng-model="testInfo.score"  required="required" ng-pattern="/^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/"/>
-						</div>
-						<span ng-show="myForm.score.$invalid" class="warning">*</span>
-					</div>
+		</div>
+	</form>
+</script>
 
+<!--编辑题目start-->
+<script type="text/ng-template" id="editSubjectModal.html">
+	<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
+			<h4 class="modal-title">{{title}}</h4>
+		</div>
+		<div class="modal-body">
+			<div class="form-group">
+				<label for="firstname" class="col-sm-3 control-label">Question ID</label>
+				<div class="col-sm-8">
+					<input type="text" autocomplete="off" name="questionId" id="" value="" class="form-control" ng-model="testInfo.questionId" required ng-pattern="/^[0-9]\d*$/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-change="changetitle()" disabled/>
 				</div>
-				<div class="modal-footer text-center">
-					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid||!isTrue">sure</button>
-					<button type="button" class="btn btn-default" ng-click="cancel()">cancel</button>
+				<span ng-show="myForm.questionId.$invalid" class="warning">*</span>
+			</div>
+			<div class="form-group">
+				<label for="firstname" class="col-sm-3 control-label">Subject Content</label>
+				<div class="col-sm-8">
+					<textarea class="form-control" cols="3" placeholder="Please enter no more than 200 characters" ng-model="testInfo.question" maxlength="100"></textarea>
 				</div>
-			</form>
-		</script>
-		
-		<!--编辑题目start-->
-			<script type="text/ng-template" id="editSubjectModal.html">
-			<form class="form-horizontal clearfix" role="form" name="myForm" novalidate="novalidate">
-				<div class="modal-header">
-					<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
-					<h4 class="modal-title">{{title}}</h4>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="firstname" class="col-sm-3 control-label">Question ID</label>
-						<div class="col-sm-8">
-							<input type="text" autocomplete="off" name="questionId" id="" value="" class="form-control" ng-model="testInfo.questionId" required ng-pattern="/^[0-9]\d*$/" maxlength="10" placeholder="请输入长度不能超过10位的数字" ng-change="changetitle()" disabled/>
-						</div>
-						<span ng-show="myForm.questionId.$invalid" class="warning">*</span>
-					</div>
-					<div class="form-group">
-						<label for="firstname" class="col-sm-3 control-label">Subject Content</label>
-						<div class="col-sm-8">
-							<textarea class="form-control" cols="3" placeholder="Please enter no more than 200 characters" ng-model="testInfo.question" maxlength="100"></textarea>
-						</div>
-						<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>
-					</div>
-					<div class="form-group">
-						<label for="firstname" class="col-sm-3 control-label">Answer Type</label>
-						<div class="col-sm-8">
-							<select class="single" select ng-model="testInfo.questionType" defalutvalue='testInfo.questionType1' ng-change="changequesType(testInfo.questionType)">
-								<option value="2">Judge</option>
-								<option value="-1">Letter</option>
-								<option value="3">Digital</option>
-							</select>
-							<select class="single" select ng-model="testInfo.selLetter" defalutvalue='testInfo.selLetter1' ng-if="testInfo.questionType=='-1'" ng-change="changeselType(testInfo.selLetter)">
-								<option value="0">Single</option>
-								<option value="1">Multiple</option>
-							</select>
-							<select class="single" select ng-model="testInfo.range" defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'" ng-change="changeRange(testInfo.range)">
-								<option value="A-D">A-D</option>
-								<option value="A-F">A-F</option>
-							</select>
-						</div>
-					</div>
-					<div class="form-group" ng-if="testInfo.questionType=='2'">
-						<label for="firstname" class="col-sm-3 control-label">Answer</label>
-						<div class="col-sm-8">
-							<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="true" ng-checked="true" required/>√</label>
-							<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="false" required/>×</label>
-						</div>
-						<span ng-show="myForm.trueAnswer.$invalid" class="warning">(T/F)*</span>
-					</div>
-					<div class="form-group" ng-if="testInfo.questionType=='3'">
-						<label for="firstname" class="col-sm-3 control-label">Answer</label>
-						<div class="col-sm-7">
-							<input type="text" autocomplete="off" name="trueAnswer" id="" value="" class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[0-9]$/" required />
-						</div>
-						<span ng-show="myForm.trueAnswer.$invalid" class="warning">(0-9)*</span>
-					</div>
-					<div class="form-group" ng-if="testInfo.questionType=='-1'">
-						<label for="firstname" class="col-sm-3 control-label">Answer</label>
-						<div class="col-sm-7" ng-if="testInfo.selLetter=='1'">
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required maxlength="4"/>
-						<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required maxlength="6"/>
-						</div>
-						<div class="col-sm-7" ng-if="testInfo.selLetter=='0'">
-				    	<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required maxlength="1"/>
-						<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required maxlength="1"/>						
-						</div>
-						<span ng-show="myForm.singleLetter.$invalid" ng-if="testInfo.selLetter=='0'" class="warning">Single*</span>
-						<span ng-show="myForm.mutilLetter.$invalid" ng-if="testInfo.selLetter=='1'" class="warning">Multiple*</span>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-3 control-label">score</label>
-						<div class="col-sm-7">
-							<input type="text" autocomplete="off" name="score" id="" value="" class="form-control" ng-model="testInfo.score" required="required" ng-pattern="/^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/"/>
-						</div>
-						<span ng-show="myForm.score.$invalid" class="warning">*</span>
-					</div>
-
-				</div>
-				<div class="modal-footer text-center">
-					<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid">sure</button>
-					<button type="button" class="btn btn-default" ng-click="cancel()">cancel</button>
-				</div>
-			</form>
-		</script>
-			<!--确认弹框-->
-			<script type="text/ng-template" id="sureModal.html">
-				<form name="myForm" novalidate="novalidate">
-					<div class="modal-header">
-						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
-						<h4 class="modal-title">Confirm</h4>
-					</div>
-					<div class="modal-body">
-						{{content}}
-					</div>
-					<div class="modal-footer text-center">
-						<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">sure</button>
-						<button type="button" class="btn btn-default" ng-click="cancel()">cancel</button>
-			
-					</div>
-			</form>
-			</script>
-			<div ng-cloak class="header clearfix">
-				<div class="pull-left">
-					<img src="../../image/set.png" class="ml25" />
-					<span>Edit Paper</span>
-				</div>
-				<div class="pull-right">
-					<a href="javascript:history.go(-1);" title="Go Back">
-					<img src="../../image/return.png" class="rebtn"/>
-					</a>
+				<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>
+			</div>
+			<div class="form-group">
+				<label for="firstname" class="col-sm-3 control-label">Answer Type</label>
+				<div class="col-sm-8">
+					<select class="single" select ng-model="testInfo.questionType" defalutvalue='testInfo.questionType1' ng-change="changequesType(testInfo.questionType)">
+						<option value="2">Judge</option>
+						<option value="-1">Letter</option>
+						<option value="3">Digital</option>
+					</select>
+					<select class="single" select ng-model="testInfo.selLetter" defalutvalue='testInfo.selLetter1' ng-if="testInfo.questionType=='-1'" ng-change="changeselType(testInfo.selLetter)">
+						<option value="0">Single</option>
+						<option value="1">Multiple</option>
+					</select>
+					<select class="single" select ng-model="testInfo.range" defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'" ng-change="changeRange(testInfo.range)">
+						<option value="A-D">A-D</option>
+						<option value="A-F">A-F</option>
+					</select>
 				</div>
 			</div>
-			<div ng-cloak class="content content1 bgf5 clearfix">		
-				<form class="form-horizontal clearfix" name="myForm" novalidate>
-		  			<div class="form-group">
-				  	<label for="firstname" class="col-sm-3 control-label">Paper Name</label>
-				  	<div class="col-sm-8">
-			    	<input type="text" autocomplete="off" name="testName" id="" value=""  class="form-control" ng-model="paperInfo.testName" required maxlength="20"/>										
-				    </div>
-				    <span ng-show="myForm.testName.$invalid" class="warning">*</span>
-					</div>
-					<div class="form-group">
-				  	<label for="firstname" class="col-sm-3 control-label">Paper Describes</label>
-				    <div class="col-sm-8">
-				    	<textarea  class="form-control" rows="3" ng-model="paperInfo.describe" maxlength="200"></textarea>
-					</div>
-					</div>
-			  		<div class="col-main" style="position: absolute;top: 1.63rem;left: 0;right: 0;bottom: .25rem;overflow-x: hidden;overflow-y: auto; width:100%;padding:0 0.25rem;">
-					<table class="table table-stripe subject" >
-						<thead>
-							<tr>
-								<th style="width: 5%;">NO.</th>
-								<th style="width: 10%;">Question ID</th>
-								<th style="width: 15%;">Question Content</th>
-								<th style="width: 15%;">Answer Type</th>
-								<th style="width: 10%;">Answer</th>
-								<th style="width: 10%;">Score</th>
-								<th style="width: 10%;">operation</th>
-								<th style="width: 10%;"class="pr1">Select All
-								<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>						
-							</tr>
-						</thead>
-					</table>
-					<div style="overflow-x: hidden;position: absolute; top: 0.36rem; left: 0.25rem; right: 0.25rem; bottom: 0.85rem; overflow-y: auto;" id="testlist1">
-						<table class="table table-stripe subject text-left">		
-						<tbody>
-							<tr ng-repeat="quesitem in subjectList track by $index" ng-click="$event.stopPropagation();">
-								<td style="width: 5%;">{{$index+1}}</td>
-								<td style="width: 10%;">{{quesitem.questionId}}</td>
-								<td style="width: 15%;">{{quesitem.question}}</td>
-								<td style="width: 15%;">{{quesitem.questionType|questionType}}</td>
-								<td style="width: 10%;">{{quesitem.trueAnswer|AnswerType}}</td>	
-								<td style="width: 10%;">{{quesitem.score}}</td>						
-								<td style="width: 10%;">
-									<a href="javascript:;" class="edit mr5" ng-click="editSuject(quesitem)" ng-show="quesitem.questionType!='4'">edit</a>
-									<!--<a href="javascript:;" class="del" ng-click="delSuject(quesitem)">删除</a>-->
-								</td>
-								<td  style="width: 10%;" class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="quesitem.checked" class="ml32" name="check" ng-change="selectOne()" ng-click="$event.stopPropagation();"></td>
-							</tr>
-						</tbody>
-					</table>
-					</div>
-			  	</div>
-			  	<div class="opbtn clearfix pt10">
-				  	<!--<a href="javascript:;"  ng-click="addSubject()">新增题目</a>-->
-					<a href="javascript:;" ng-click="addBatchSubject()" style="width: auto;" class="pr10">Insert Question</a>
-				  	<!--<a href="javascript:;" ng-click="importSubject()">导入</a>-->
-				  	<a href="javascript:;" ng-click="delSuject()" style="width: auto;">Delete Question</a>
-			  	</div>
-			  	<div class="operatebtn pt10 clearfix">
-			  		<button class="btn btn-primary btn-lg" ng-click="savePaper()" ng-disabled="!myForm.$valid">Save</button>
-			  	</div>
-	  		</form>
-		  </div>
-	</body>
+			<div class="form-group" ng-if="testInfo.questionType=='2'">
+				<label for="firstname" class="col-sm-3 control-label">Answer</label>
+				<div class="col-sm-8">
+					<label class="selradio mr30"><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="true" ng-checked="true" required/>√</label>
+					<label class="selradio "><input type="radio" ng-model="testInfo.trueAnswer" name="trueAnswer" value="false" required/>×</label>
+				</div>
+				<span ng-show="myForm.trueAnswer.$invalid" class="warning">(T/F)*</span>
+			</div>
+			<div class="form-group" ng-if="testInfo.questionType=='3'">
+				<label for="firstname" class="col-sm-3 control-label">Answer</label>
+				<div class="col-sm-7">
+					<input type="text" autocomplete="off" name="trueAnswer" id="" value="" class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[0-9]$/" required />
+				</div>
+				<span ng-show="myForm.trueAnswer.$invalid" class="warning">(0-9)*</span>
+			</div>
+			<div class="form-group" ng-if="testInfo.questionType=='-1'">
+				<label for="firstname" class="col-sm-3 control-label">Answer</label>
+				<div class="col-sm-7" ng-if="testInfo.selLetter=='1'">
+					<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-D]).*\1)[A-D]{1,4}$/" required maxlength="4"/>
+					<input type="text" autocomplete="off" name="mutilLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^(?!.*([A-F]).*\1)[A-F]{1,6}$/" required maxlength="6"/>
+				</div>
+				<div class="col-sm-7" ng-if="testInfo.selLetter=='0'">
+					<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-D'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-D]$/" required maxlength="1"/>
+					<input type="text" autocomplete="off" name="singleLetter" ng-if="testInfo.range=='A-F'" id="" value=""  class="form-control" ng-model="testInfo.trueAnswer" ng-pattern="/^[A-F]$/" required maxlength="1"/>
+				</div>
+				<span ng-show="myForm.singleLetter.$invalid" ng-if="testInfo.selLetter=='0'" class="warning">Single*</span>
+				<span ng-show="myForm.mutilLetter.$invalid" ng-if="testInfo.selLetter=='1'" class="warning">Multiple*</span>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">score</label>
+				<div class="col-sm-7">
+					<input type="text" autocomplete="off" name="score" id="" value="" class="form-control" ng-model="testInfo.score" required="required" ng-pattern="/^(([0-9]|([1-9][0-9]{0,9}))((\.[0-9]{1,2})?))$/"/>
+				</div>
+				<span ng-show="myForm.score.$invalid" class="warning">*</span>
+			</div>
+
+		</div>
+		<div class="modal-footer text-center">
+			<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="myForm.$invalid">sure</button>
+			<button type="button" class="btn btn-default" ng-click="cancel()">cancel</button>
+		</div>
+	</form>
+</script>
+<!--确认弹框-->
+<script type="text/ng-template" id="sureModal.html">
+	<form name="myForm" novalidate="novalidate">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">close</span></button>
+			<h4 class="modal-title">Confirm</h4>
+		</div>
+		<div class="modal-body">
+			{{content}}
+		</div>
+		<div class="modal-footer text-center">
+			<button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="!myForm.$valid">sure</button>
+			<button type="button" class="btn btn-default" ng-click="cancel()">cancel</button>
+
+		</div>
+	</form>
+</script>
+<div ng-cloak class="header clearfix">
+	<div class="pull-left">
+		<img src="../../image/set.png" class="ml25" />
+		<span>Edit Paper</span>
+	</div>
+	<div class="pull-right">
+		<a href="javascript:history.go(-1);" title="Go Back">
+			<img src="../../image/return.png" class="rebtn"/>
+		</a>
+	</div>
+</div>
+<div ng-cloak class="content content1 bgf5 clearfix">
+	<form class="form-horizontal clearfix" name="myForm" novalidate>
+		<div class="form-group">
+			<label for="firstname" class="col-sm-3 control-label">Paper Name</label>
+			<div class="col-sm-8">
+				<input type="text" autocomplete="off" name="testName" id="" value=""  class="form-control" ng-model="paperInfo.testName" required maxlength="20"/>
+			</div>
+			<span ng-show="myForm.testName.$invalid" class="warning">*</span>
+		</div>
+		<div class="form-group">
+			<label for="firstname" class="col-sm-3 control-label">Paper Describes</label>
+			<div class="col-sm-8">
+				<textarea  class="form-control" rows="3" ng-model="paperInfo.describe" maxlength="200"></textarea>
+			</div>
+		</div>
+		<div class="col-main" style="position: absolute;top: 1.63rem;left: 0;right: 0;bottom: .25rem;overflow-x: hidden;overflow-y: auto; width:100%;padding:0 0.25rem;">
+			<table class="table table-stripe subject" >
+				<thead>
+				<tr>
+					<th style="width: 5%;">NO.</th>
+					<th style="width: 10%;">Question ID</th>
+					<th style="width: 15%;">Question Content</th>
+					<th style="width: 15%;">Answer Type</th>
+					<th style="width: 10%;">Answer</th>
+					<th style="width: 10%;">Score</th>
+					<th style="width: 10%;">operation</th>
+					<th style="width: 10%;"class="pr1">Select All
+						<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>
+				</tr>
+				</thead>
+			</table>
+			<div style="overflow-x: hidden;position: absolute; top: 0.36rem; left: 0.25rem; right: 0.25rem; bottom: 0.85rem; overflow-y: auto;" id="testlist1">
+				<table class="table table-stripe subject text-left">
+					<tbody>
+					<tr ng-repeat="quesitem in subjectList track by $index" ng-click="$event.stopPropagation();">
+						<td style="width: 5%;">{{$index+1}}</td>
+						<td style="width: 10%;">{{quesitem.questionId}}</td>
+						<td style="width: 15%;">{{quesitem.question}}</td>
+						<td style="width: 15%;">{{quesitem.questionType|questionType}}</td>
+						<td style="width: 10%;">{{quesitem.trueAnswer|AnswerType}}</td>
+						<td style="width: 10%;">{{quesitem.score}}</td>
+						<td style="width: 10%;">
+							<a href="javascript:;" class="edit mr5" ng-click="editSuject(quesitem)" ng-show="quesitem.questionType!='4'">edit</a>
+							<!--<a href="javascript:;" class="del" ng-click="delSuject(quesitem)">删除</a>-->
+						</td>
+						<td  style="width: 10%;" class="ml5"><input type="checkbox" style="margin-left: 0.32rem;" ng-model="quesitem.checked" class="ml32" name="check" ng-change="selectOne(item,$index)" ng-click="$event.stopPropagation();"></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="opbtn clearfix pt10">
+			<!--<a href="javascript:;"  ng-click="addSubject()">新增题目</a>-->
+			<a href="javascript:;" ng-click="addBatchSubject()" style="width: auto;" class="pr10">Insert Question</a>
+			<!--<a href="javascript:;" ng-click="importSubject()">导入</a>-->
+			<a href="javascript:;" ng-click="delSuject()" style="width: auto;">Delete Question</a>
+			<a href="javascript:;" ng-click="editSujectScore()" style="width: auto;">Bulk changes</a>
+		</div>
+		<div class="operatebtn pt10 clearfix">
+			<button class="btn btn-primary btn-lg" ng-click="savePaper()" ng-disabled="!myForm.$valid">Save</button>
+		</div>
+	</form>
+</div>
+</body>
 </html>
 <script src="../../js/jquery.nicescroll.min.js"></script>
 <script>
-	 $(document).ready(function() { 
-	var nice = $("html").niceScroll();  // The document page (body)
-	 $("#testlist1").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable 	
-  });
+    $(document).ready(function() {
+        var nice = $("html").niceScroll();  // The document page (body)
+        $("#testlist1").niceScroll({cursorborder:"",cursorcolor:"#d9d9d9",boxzoom:true}); // First scrollable
+    });
 </script>

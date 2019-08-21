@@ -411,6 +411,21 @@ public class QuestionInfoSql {
 		}
 		return DBHelper.onUpdateByGroup(sqls);
 	}
+
+	/**
+	 * 主键批量修改题目分数
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public Result updateQuestionInfoById(List<Integer> ids) throws IllegalArgumentException, IllegalAccessException{
+		List<String> sqls = new ArrayList<String>();
+		String score = String.valueOf(ids.get(0));
+		for (int i = 1; i < ids.size(); i++) {
+			sqls.add("update question_info set score = "+ score +" where id = "+ids.get(i));
+		}
+		return DBHelper.onUpdateByGroup(sqls);
+	}
 	
 	/**
 	 * 删除题目

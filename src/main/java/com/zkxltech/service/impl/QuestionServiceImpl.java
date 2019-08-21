@@ -1,28 +1,22 @@
 package com.zkxltech.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.ejet.cache.BrowserManager;
-import com.ejet.cache.RedisMapPaper;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.ejet.core.util.io.ImportExcelUtils;
 import com.zkxltech.domain.QuestionInfo;
 import com.zkxltech.domain.Result;
-import com.zkxltech.domain.StudentInfo;
-import com.zkxltech.domain.TestPaper;
 import com.zkxltech.service.QuestionService;
 import com.zkxltech.sql.QuestionInfoSql;
 import com.zkxltech.ui.util.StringUtils;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuestionServiceImpl implements QuestionService{
 	private static final Logger log = LoggerFactory.getLogger(QuestionServiceImpl.class);
@@ -170,6 +164,31 @@ public class QuestionServiceImpl implements QuestionService{
 		} catch (Exception e) {
 			result.setRet(Constant.ERROR);
 			result.setMessage("Topic modified failed！");
+			result.setDetail(IOUtils.getError(e));
+			log.error(IOUtils.getError(e));
+			return result;
+		}
+	}
+
+	@Override
+	public Result updateQuestionScore(Object object) {
+		try {
+			JSONArray jsonArray = JSONArray.fromObject(object);
+			List<Integer> ids = new ArrayList<Integer>();
+//			Integer score = jsonArray.getInt(1);
+			for (int i = 0; i < jsonArray.size(); i++) {
+				ids.add(jsonArray.getInt(i));
+			}
+			result = questionInfoSql.updateQuestionInfoById(ids);
+			if (Constant.SUCCESS.equals(result.getRet())) {
+				result.setMessage("Modified score successfully!");
+			}else {
+				result.setMessage("Failure to modify score！");
+			}
+			return result;
+		} catch (Exception e) {
+			result.setRet(Constant.ERROR);
+			result.setMessage("Failure to modify score");
 			result.setDetail(IOUtils.getError(e));
 			log.error(IOUtils.getError(e));
 			return result;

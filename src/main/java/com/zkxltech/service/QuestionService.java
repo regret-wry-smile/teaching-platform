@@ -36,4 +36,6 @@ public interface QuestionService {
 	 * @return
 	 */
 	Result updateQuestion(Object object);
+
+    Result updateQuestionScore(Object object);
 }
