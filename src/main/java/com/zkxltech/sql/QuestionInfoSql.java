@@ -49,24 +49,24 @@ public class QuestionInfoSql {
 				String score = "";
 				trueAnswer = (String) rowList.get(i).get(3);
 				switch (type) {
-				case "单选":
+				case "single":
 					type = "0";
 					score = (String) rowList.get(i).get(5);
 					break;
-				case "多选":
+				case "multiple":
 					type = "1";
 					score = (String) rowList.get(i).get(5);
 					break;
-				case "判断":
+				case "judge":
 					type = "2";
-					if ("对".equals(trueAnswer)) {
+					if ("√".equals(trueAnswer)) {
 						trueAnswer = "true";
-					}else if("错".equals(trueAnswer)){
+					}else if("×".equals(trueAnswer)){
 						trueAnswer = "false";
 					}
 					score = (String) rowList.get(i).get(4);
 					break;
-				case "数字":
+				case "digital":
 					type = "3";
 					score = (String) rowList.get(i).get(5);
 					break;
@@ -125,7 +125,7 @@ public class QuestionInfoSql {
 				String type = (String) list.get(2);
 				String trueAnswer = (String) list.get(3);
 				switch (type) {
-				case "单选":
+				case "single":
 				    if (StringUtils.isEmpty(trueAnswer)) {
                         result.setMessage("Line"+(i+1)+"correct answer cannot be empty");
                         return result;
@@ -151,7 +151,7 @@ public class QuestionInfoSql {
 						return result;
 					}
 					break;
-				case "多选":
+				case "multiple":
 					if(rowList.get(i).size() != 6){
 						result.setMessage("Line"+(i+1)+"Column number format error！");
 						return result;
@@ -166,7 +166,7 @@ public class QuestionInfoSql {
 						return result;
 					}
 					break;
-				case "判断":
+				case "judge":
 					if(rowList.get(i).size() != 5){
 						result.setMessage("Line"+(i+1)+"Column number format error！");
 						return result;
@@ -176,7 +176,7 @@ public class QuestionInfoSql {
 						return result;
 					}
 					break;
-				case "数字":
+				case "digital":
 					range = (String) rowList.get(i).get(4);
 					if (!verifyNumRange(range)) {
 						result.setMessage("Line"+(i+1)+"answer range format error！");
@@ -291,7 +291,7 @@ public class QuestionInfoSql {
 		if (StringUtils.isEmpty(answer)) {
 			return false;
 		}
-		return "对".equals(answer) || "错".equals(answer);
+		return "√".equals(answer) || "×".equals(answer);
 	}
 	
 	/**
