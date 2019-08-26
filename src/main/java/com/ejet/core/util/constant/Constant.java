@@ -49,6 +49,8 @@ public class Constant {
     public static final String ANSWER_NUMBER_TYPE = "number";
     /* 判断答案*/
     public static final String ANSWER_JUDGE_TYPE = "judge";
+    /* 投票答案*/
+    public static final String ANSWER_VOTE_TYPE = "vote";
     /* 多选答案*/
     public static final String ANSWER_MULTIPLE_TYPE = "multiple";
     /* 随堂检测客观题*/
@@ -63,6 +65,8 @@ public class Constant {
     public static final String SINGLE_ANSWER_JUDGE = "[{'type':'j','id':'1','range':''}]";
     /* 多选题*/
     private static String multiple_answer_char  = "[{'type':'m','id':'1','range':''}]";
+    /* 投票题*/
+    public static final String SINGLE_ANSWER_VOTE = "[{'type':'v','id':'1','range':''}]";
     /**
      * 多选题
      * @param range 范围

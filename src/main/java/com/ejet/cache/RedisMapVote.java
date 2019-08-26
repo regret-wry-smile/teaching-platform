@@ -1,26 +1,19 @@
 package com.ejet.cache;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ejet.core.util.RedisMapUtil;
 import com.ejet.core.util.StringUtils;
+import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.zkxltech.domain.Answer;
-import com.zkxltech.domain.Score;
-import com.zkxltech.domain.ScoreVO;
 import com.zkxltech.domain.StudentInfo;
 import com.zkxltech.domain.Vote;
 import com.zkxltech.domain.VoteVO;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 /**
  *评分相关缓存
  * @author zkxl
@@ -52,6 +45,18 @@ public class RedisMapVote {
 	private static String[] keyVoteDetailInfoMap = {"uuid","questionId","iclicker"};
 	
 	private static String[] keyBarMap = {"questionId"};
+
+	/**字母对应的人数*/
+	private static Map<String,Integer> singleAnswerNumMap = Collections.synchronizedMap(new HashMap<>());
+	/**字母对应的学生名称*/
+	private static Map<String,List<String>> singleAnswerStudentNameMap = Collections.synchronizedMap(new HashMap<>());
+	/**本班卡号对应学生信息*/
+	private static Map<String,StudentInfo> studentInfoMap = new HashMap<>();
+	/**记录提交的卡id*/
+	//private static Set<String> iclickerIdsSet = new HashSet<>();
+	private static Map<String,String> iclickerAnswerMap = new HashMap<>();
+
+	private static Answer answer;
 	
 	/**
 	 * 清空缓存
@@ -119,30 +124,41 @@ public class RedisMapVote {
 	 */
 	public static void addVoteDetailInfo(String jsonData){
 		logger.info("【投票接收到的数据】"+jsonData);
-		keyVoteDetailInfoMap[0] = voteInfoId; //主题编号
-		JSONArray jsonArray = JSONArray.fromObject(jsonData); 
-        for (int  i= 0; i < jsonArray.size(); i++) {
-        	JSONObject jsonObject = jsonArray.getJSONObject(i); //，每个学生的作答信息
-        	if (!jsonObject.containsKey("result")) {
-        		String carId = jsonObject.getString("card_id"); //答题器编号
-            	if (verifyCardId(carId)) {
-            		JSONArray answers =  JSONArray.fromObject(jsonObject.get("answers"));
-            		for (int j = 0; j < answers.size(); j++) {
-            			JSONObject answeJSONObject = answers.getJSONObject(j);
-            			String num = answeJSONObject.getString("id");//节目编号(题目编号)
-//            			String answer = answeJSONObject.getString("answer");//答案
-            			keyVoteDetailInfoMap[1] = num;
-            			keyVoteDetailInfoMap[2] = carId;
-            			Answer answer = (Answer) JSONObject.toBean((JSONObject) RedisMapUtil.getRedisMap(voteDetailInfoMap, keyVoteDetailInfoMap, 0), Answer.class);
-            			if (answer != null && !StringUtils.isEmpty(answer.getAnswer())) {
-            				continue;
-    					}
-            			RedisMapUtil.setRedisMap(voteDetailInfoMap, keyVoteDetailInfoMap, 0, answeJSONObject);
-    				}
-    			}
-        	}
-        }
-        BrowserManager.refresVote();
+		JSONArray jsonArray= JSONArray.fromObject(jsonData);
+		for (Object object : jsonArray) {
+			JSONObject jsonObject = JSONObject.fromObject(object);
+			if (!jsonObject.containsKey("result")) {
+				String card_id = jsonObject.getString("card_id");
+				StudentInfo studentInfo = studentInfoMap.get(card_id);
+				if (studentInfo == null) { //如果根据卡号未找到学生,表示不是本班的
+					continue;
+				}
+				JSONArray answers =  JSONArray.fromObject(jsonObject.get("answers"));
+				for (Object answerOb : answers) {
+					JSONObject answerJO = JSONObject.fromObject(answerOb);
+					String result = answerJO.getString("answer");
+					if (StringUtils.isEmpty(result)) {
+						continue;
+					}
+					if (iclickerAnswerMap.containsKey(card_id)) { //已经提交过,将以前提交的答题总数减一,并将以前该答题对象的学生名称去掉,将新值重新添加
+						String lastAnswer = iclickerAnswerMap.get(card_id);
+						Integer countNum = singleAnswerNumMap.get(lastAnswer);
+						singleAnswerNumMap.put(lastAnswer, --countNum);
+						List<String> list = singleAnswerStudentNameMap.get(lastAnswer);
+						list.remove(studentInfo.getStudentName());
+					}
+					iclickerAnswerMap.put(card_id, result);
+
+					List<String> list = singleAnswerStudentNameMap.get(result);
+					if (list == null) {
+						list = new ArrayList<>();
+						singleAnswerStudentNameMap.put(result, list);
+					}
+					list.add(studentInfo.getStudentName());
+				}
+			}
+		}
+		BrowserManager.refresAnswerNum();
     }
 	
 	

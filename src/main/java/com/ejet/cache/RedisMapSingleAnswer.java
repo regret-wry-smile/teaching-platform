@@ -1,24 +1,16 @@
 package com.ejet.cache;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ejet.core.util.StringUtils;
 import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
 import com.zkxltech.domain.Answer;
 import com.zkxltech.domain.StudentInfo;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * 多选
@@ -41,7 +33,8 @@ public class RedisMapSingleAnswer {
     public static final String  CHAR_A = "A",CHAR_B = "B",CHAR_C = "C",CHAR_D = "D",
                                 NUMBER_1 = "1", NUMBER_2 = "2",NUMBER_3 = "3",NUMBER_4 = "4",NUMBER_5 = "5",
                                 NUMBER_6 = "6",NUMBER_7 = "7",NUMBER_8 = "8",NUMBER_9 = "9",
-                                JUDGE_TRUE = "true",JUDGE_FALSE = "false";
+                                JUDGE_TRUE = "true",JUDGE_FALSE = "false",
+                                VOTE_APPROVE="approve",VOTE_OPPOSE="oppose", VOTE_ABANDON="abandon";
     
     public static void addAnswer(String jsonData){
     	logger.info("【单选接收到的数据】"+jsonData);
@@ -79,6 +72,9 @@ public class RedisMapSingleAnswer {
                           case Constant.ANSWER_JUDGE_TYPE:
                               setJudgeCount(result);
                               break;
+                          case Constant.ANSWER_VOTE_TYPE:
+                              setVoteCount(result);
+                              break;
                       }
                      List<String> list = singleAnswerStudentNameMap.get(result);
                      if (list == null) {
@@ -91,7 +87,21 @@ public class RedisMapSingleAnswer {
         }
         BrowserManager.refresAnswerNum();
     }
-    
+
+    private static void setVoteCount(String result) {
+        switch (result) {
+            case VOTE_APPROVE:
+                singleAnswerNumMap.put(VOTE_APPROVE, singleAnswerNumMap.get(VOTE_APPROVE)+1);
+                break;
+            case VOTE_OPPOSE:
+                singleAnswerNumMap.put(VOTE_OPPOSE, singleAnswerNumMap.get(VOTE_OPPOSE)+1);
+                break;
+            case VOTE_ABANDON:
+                singleAnswerNumMap.put(VOTE_ABANDON, singleAnswerNumMap.get(VOTE_ABANDON)+1);
+                break;
+        }
+    }
+
     private static void setJudgeCount(String result) {
         switch (result) {
             case JUDGE_TRUE:

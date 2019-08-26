@@ -1,13 +1,5 @@
 package com.zkxltech.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ejet.cache.BrowserManager;
 import com.ejet.cache.RedisMapClassTestAnswer;
 import com.ejet.cache.RedisMapMultipleAnswer;
@@ -16,12 +8,7 @@ import com.ejet.core.util.comm.ListUtils;
 import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
-import com.zkxltech.domain.Answer;
-import com.zkxltech.domain.QuestionInfo;
-import com.zkxltech.domain.Record;
-import com.zkxltech.domain.RequestVo;
-import com.zkxltech.domain.Result;
-import com.zkxltech.domain.StudentInfo;
+import com.zkxltech.domain.*;
 import com.zkxltech.service.AnswerInfoService;
 import com.zkxltech.sql.RecordSql;
 import com.zkxltech.thread.BaseThread;
@@ -29,6 +16,13 @@ import com.zkxltech.thread.EquipmentStatusThread;
 import com.zkxltech.thread.SingleAnswerThread;
 import com.zkxltech.thread.ThreadManager;
 import com.zkxltech.ui.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AnswerInfoServiceImpl implements AnswerInfoService{
     private static final Logger log = LoggerFactory.getLogger(AnswerInfoServiceImpl.class);
@@ -278,6 +272,12 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_TRUE, 0);
                     RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.JUDGE_FALSE, 0);
                     break;
+				case Constant.ANSWER_VOTE_TYPE:
+					r = EquipmentServiceImpl.getInstance().answer_start(0, Constant.SINGLE_ANSWER_VOTE);
+					RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.VOTE_APPROVE, 0);
+					RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.VOTE_OPPOSE, 0);
+					RedisMapSingleAnswer.getSingleAnswerNumMap().put(RedisMapSingleAnswer.VOTE_ABANDON, 0);
+					break;
                 default:
                     r.setMessage("Parameter error");
                     return r;

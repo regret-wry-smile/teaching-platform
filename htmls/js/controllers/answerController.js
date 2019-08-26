@@ -351,7 +351,8 @@ app.controller('stopSingeAnswerCtrl', function($scope, $rootScope, toastr, $wind
 	var searchURL = window.location.search;
 	if (searchURL) {
 		$scope.answerType = getQueryString('answerType') //单选类型(数字,字母,判断)
-	}
+        console.log($scope.answerType)
+    }
 
 	$rootScope.userdetailshow = false; //默认答题详情页面隐藏
 	$rootScope.isStopAswer = false; //默认在停止答题页面
@@ -387,7 +388,7 @@ app.controller('stopSingeAnswerCtrl', function($scope, $rootScope, toastr, $wind
 		if ($scope.result.ret == 'success') {
 			$rootScope.isStopAswer = true;
 			$scope.resultmap = JSON.parse(execute_answer("get_single_answer"));
-			console.log("data" + JSON.stringify($scope.resultmap));
+            console.log("data" + JSON.stringify($scope.resultmap));
 			if ($scope.answerType == 'char') {
 				rangeList = ["A", "B", "C", "D"];
 			} else if ($scope.answerType == 'number') {
@@ -398,6 +399,13 @@ app.controller('stopSingeAnswerCtrl', function($scope, $rootScope, toastr, $wind
 					"TRUE": $scope.resultmap["true"],
 					"FALSE": $scope.resultmap["false"]
 				}
+			} else if ($scope.answerType == 'vote'){
+                rangeList = ["Agree", "Disagree","Abstain"];
+                $scope.resultmap = {
+                    "Agree": $scope.resultmap["approve"],
+                    "Disagree": $scope.resultmap["oppose"],
+                    "Abstain": $scope.resultmap["abandon"]
+                }
 			}
 			//$scope.rangeList=["A","B","C","D","E"];
 			console.log("答题范围" + JSON.stringify(rangeList))
@@ -544,7 +552,15 @@ app.controller('stopSingeAnswerCtrl', function($scope, $rootScope, toastr, $wind
 							} else {
 								datavalue = "false";
 							}
-						}
+						}else if ($scope.answerType == 'vote') {
+                            if (datavalue == "Agree") {
+                                datavalue = "approve";
+                            } else if (datavalue == "Disagree") {
+                                datavalue = "oppose";
+                            } else if (datavalue == "Abstain") {
+                                datavalue = "abandon";
+                            }
+                        }
 						var dataparam = {
 							answer: datavalue
 						}
