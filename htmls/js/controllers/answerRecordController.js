@@ -556,7 +556,7 @@ app.filter('questionType', function() {
 		switch(questionType) {
 			case '2':
 				{
-					statename = 'Judge';
+					statename = 'T/F';
 					break;
 				}
 			case '0':

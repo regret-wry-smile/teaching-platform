@@ -70,10 +70,10 @@
 				<div class="tab-pane" ng-show="tabpane=='s'" ng-controller="answerCtrl">
 				<div class="content clearfix">
 				<ul class="modbox" style="margin-top: 8%; margin-bottom: 8%;">
-					<li class="active">
+					<li class="active" style="padding: 0px 150px">
 						<a href="javascript:;" ng-click="selAnswerType('char')">
-							<img src="../../image/letter.png"/>
-							<span class="title">Letter</span>
+							<img src="../../image/Single.png"/>
+							<!--<span class="title">Letter</span>-->
 						</a>
 						</label>
 					</li>
@@ -83,10 +83,10 @@
 							<span class="title">数字</span>
 						</a>
 					</li>-->
-					<li style="float: right">
+					<li  style="padding-left: 150px">
 						<a href="javascript:;" ng-click="selAnswerType('judge')">
-							<img src="../../image/gou.png"/>
-							<span class="title">Judge</span>
+							<img src="../../image/judge.png"/>
+							<!--<span class="title">Judge</span>-->
 						</a>
 					</li>
 				</ul>	  
@@ -102,8 +102,8 @@
 				<div class="content clearfix letter text-center v-center40">
 					<div class="modbox" >
 					<label class="lettercon">
-						<img src="../../image/letter.png"/>
-						<span class="title">Letter</span>
+						<img src="../../image/multipe.jpg"/>
+						<!--<span class="title">Letter</span>-->
 					</label>
 					<a href="javascript:;" class="letters">A</a>
 					<select class="single" select1 ng-model="range" defalutvalue='range1' ng-change="changeRange(range)" list='rangeList'>
