@@ -63,6 +63,8 @@ public class Constant {
     public static final String SINGLE_ANSWER_JUDGE = "[{'type':'j','id':'1','range':''}]";
     /* 多选题*/
     private static String multiple_answer_char  = "[{'type':'m','id':'1','range':''}]";
+    /* 投票题*/
+    public static final String SINGLE_ANSWER_VOTE = "[{'type':'v','id':'1','range':''}]";
     /**
      * 多选题
      * @param range 范围
