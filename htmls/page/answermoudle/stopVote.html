@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html ng-app="app">
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>		
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="viewport" content="user-scalable=no,width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<!--<base href="<%=basePath%>" />-->
+		<link rel="stylesheet" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../css/page.css" />
+		<script src="../../js/angular.js" type="text/javascript" charset="utf-8"></script>			
+		<script src="../../js/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+		<link rel="stylesheet" href="../../js/angular-toastr/angular-toastr.min.css" />
+		<script src="../../js/angular-toastr/angular-toastr.min.js"></script>
+		<script src="../../js/angular-toastr/angular-toastr.tpls.min.js"></script>		
+		<script src="../../js/jquery-1.11.1.min.js"></script>
+		<link rel="stylesheet" href="../../js/select/style.css" />
+		<link href="../../js/select/font-awesome.min.css" />
+		<script type="text/javascript" src="../../js/select/select.jquery.js" ></script>
+		<script type="text/javascript" src="../../js/jquery.nicescroll.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<!--<script type="text/javascript" src="../../js/vconsole.min.js"></script>-->
+		<script type="text/javascript" src="../../js/bootstrap.js" ></script>
+		<script type="text/javascript" src="../../js/controllers/answerController.js"></script>
+		
+		
+	</head>
+	<style type="text/css">
+		body {
+			position: relative;
+		}
+		
+		.operatebtn {
+			position: absolute;
+			bottom: 0.50rem;
+			left: 0;
+			right: 0;
+		}
+		
+		.circle {
+			position: absolute;
+			left: 50%;
+			top: 35%;
+			transform: translate(-50%, -35%);
+		}
+		
+		.tab-content .tab-pane {
+			/*display:none;
+			visibility: visible; */
+			display: block;
+			visibility: visible;
+		}
+		
+		.op {
+			opacity: 1 !important;
+		}
+		img.rebtn1:hover,img.rebtn1:active{
+			opacity: 0.8;
+			cursor: pointer;
+		}
+		.modboxs1{
+			margin: 0;
+			padding: 0;
+		}
+		.modboxs .box{
+			float: left;
+			width: 7%;
+			background: #fff;
+			font-size: 0.18rem;
+			text-align: center;
+			color: #90a4cc;
+			padding: 0.02rem;	
+			margin: 0.05rem;
+			overflow: hidden;
+			text-overflow:ellipsis;
+			white-space: nowrap;
+		}
+		.modboxs .box.green{
+			color: #fff;
+		}
+		#divload{
+			display: none;
+		}
+		
+	</style>
+	<body class="bg clearfix" ng-controller="stopSingeAnswerCtrl">
+		<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div id="loading" class="loading">loading</div>
+		</div>
+		<div ng-cloak id="divload">
+		<!--柱状图start-->
+		<div class="content content1 clearfix" style="margin: 0; padding: 0;  opacity: 0; " ng-class="{'op':isStopAswer&&!userdetailshow}">
+			<div class="modbox text-center clearfix" style="width:100%;height:100%;position: absolute;top:0rem;left:0;right: 0;bottom:0rem;margin: 0;">
+				<div id="recordbar" class="clearfix" style="position: absolute;left:0;height:100%; right:0; top:0;bottom:300px;padding:0 0.25rem 0.45rem ; "></div>
+			</div>
+		</div>
+		<!--柱状图end-->
+		<div class="tab-content" ng-show="!userdetailshow">
+			<!--停止答题start-->
+			<div class="tab-pane" ng-show="!isStopAswer">
+				<label class="circle">
+					<span>{{studentNum}}</span>
+				</label> 
+				<div class="operatebtn mt20 clearfix text-center">
+			  		<button class="btn savebtn" ng-click="stopAnswer()">Stop</button>
+			  	</div>
+			  	<div id="refresAnswerNum" ng-click="refresAnswerNum()" style="display:none"></div>
+			 </div>
+			 <!--停止答题end-->
+			<!--正确率start-->
+			 <div class="tab-pane" ng-show="isStopAswer">
+			  	<div class="header clearfix">
+					<div class="pull-left">
+						<img src="../../image/record.png" class="ml25 pt20" />
+						<span class="mr10">Participation:{{studentNum}}/{{totalStudent}}</span>
+						<span class="mr10">Percentage:{{answerRate|number:1}}%</span>
+						<span class="view" ng-click="viewDetail()">Click for details</span>
+					</div>
+					<div class="pull-right">
+						<a href="javascript:history.go(-1);" title="return">
+						<img src="../../image/return.png" ng-click="returnPage()" class="rebtn"/>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--答题人员列表start-->
+		<div ng-show="userdetailshow">
+			<div class="header clearfix">
+				<div class="pull-left">
+					<img src="../../image/menu.png" class="ml25 pt20" />
+					<span class="mr10">Personnel list</span>
+				</div>
+				<div class="pull-right">
+					<img src="../../image/return.png" ng-click="returnBar()" class="rebtn rebtn1" title="return"/>
+				</div>
+			</div>
+			<div class="content content1 clearfix" style="margin: 0;padding: 0;overflow: auto; "  id="userAnswerlist">
+				<div class="modboxs modboxs1 clearfix " style="margin: 0; padding: 0;">
+					<div class="box green" ng-repeat="useritem in answerResult track by $index" title="{{useritem}}">
+						{{useritem}}
+					</div>
+				</div>
+
+			</div>
+		</div>
+		</div>
+	</body>
+
+</html>
+<!--<script src="../../js/echarts.simple.min.js"></script>-->
+<script type="text/javascript" src="../../js/echarts.js" ></script>
+<script type="text/javascript">
+	$(document).ready(function() {	
+	var nice = $("html").niceScroll(); // The document page (body)
+	$("#userAnswerlist").niceScroll({
+		cursorborder: "",
+		cursorcolor: "#d9d9d9",
+		boxzoom: false
+	});
+	})
+	//判断js是否加载完成
+	function dynamicLoad(){ 
+		var divload = document.getElementById("divload");
+		var _doc=document.getElementsByTagName('head')[0]; 
+		var script=document.createElement('script'); 
+		script.setAttribute('type','text/javascript');
+		script.setAttribute('src','../../js/controllers/answerController.js');
+		_doc.appendChild(script); 
+		script.onload=script.onreadystatechange=function(){
+			if(!this.readyState||this.readyState=='loaded'||this.readyState=='complete'){
+				divload.style.display = "block";
+			}else{
+				
+			}
+			script.onload=script.onreadystatechange=null; 
+		}
+		}
+	dynamicLoad();
+
+</script>

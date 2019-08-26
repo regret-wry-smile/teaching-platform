@@ -57,11 +57,11 @@ public class QuestionInfoSql {
 					type = "1";
 					score = (String) rowList.get(i).get(5);
 					break;
-				case "judge":
+				case "T/F":
 					type = "2";
-					if ("√".equals(trueAnswer)) {
+					if ("T".equals(trueAnswer)) {
 						trueAnswer = "true";
-					}else if("×".equals(trueAnswer)){
+					}else if("F".equals(trueAnswer)){
 						trueAnswer = "false";
 					}
 					score = (String) rowList.get(i).get(4);
@@ -166,7 +166,7 @@ public class QuestionInfoSql {
 						return result;
 					}
 					break;
-				case "judge":
+				case "T/F":
 					if(rowList.get(i).size() != 5){
 						result.setMessage("Line"+(i+1)+"Column number format error！");
 						return result;
@@ -291,7 +291,7 @@ public class QuestionInfoSql {
 		if (StringUtils.isEmpty(answer)) {
 			return false;
 		}
-		return "√".equals(answer) || "×".equals(answer);
+		return "T".equals(answer) || "F".equals(answer);
 	}
 	
 	/**
