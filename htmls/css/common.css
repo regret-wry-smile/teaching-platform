@@ -207,6 +207,11 @@ ul.modbox li span.title{
 ul.modbox li.active a{	
 	/*background: rgb(146,182,255);*/
 	background: #99ccff;
+	width: 200px;
+	height: 100%;
+	border-radius: 100%;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
 	/*opacity: 0.5;*/
 	
 }
