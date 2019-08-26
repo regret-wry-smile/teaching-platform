@@ -68,9 +68,9 @@
 						<span ng-show="myForm.title.$invalid" class="warning">*</span>
 						</div>
 						<div class="form-group">
-					  	<label for="firstname" class="col-sm-2 control-label text-right">Descriptions</label>
+					  	<label for="firstname" class="col-sm-2 control-label text-right" >Descriptions</label>
 					    <div class="col-sm-9">
-					    	<textarea  class="form-control" rows="3" ng-model="markInfo.describe" maxlength="100"></textarea>
+					    	<textarea  class="form-control" rows="3" ng-model="markInfo.describe" maxlength="100" placeholder="1 for very dissatisfied. 9 for very satisfied"></textarea>
 						</div>
 						</div>
 	  					<div class="form-group ">
@@ -84,8 +84,10 @@
 						<p class="text-center mb10">
 					  	<a href="javascript:;" class="mr10" ng-click="additem()">+Add</a><a href="javascript:;" ng-click="delObject()" class="del">-Delete</a>
 						</p>
-						<p class="text-center warning">Instuction：The score ranges from 0 to 9 points. Title is limited to 20 words. Description is limited to 100 words. The socring object is limited to 5 words.</p>
-						 <div class="operatebtn pt10 clearfix text-center">
+						<p class="text-left warning " >Note：* The score range is from 0 to 9.</p>
+						<p class="text-left warning" style="text-indent: 43px">* Each object is limited up to 10 characters 5 objects in maximum.</p>
+						<p class="text-left warning" style="text-indent: 43px">* Subject is limited up to 100 characters.</p>
+					<div class="operatebtn pt10 clearfix text-center">
 					  		<button class="btn savebtn" ng-click="startMark()" ng-disabled="myForm.$invalid">Start</button>
 					  	</div>
 			  	</form>
