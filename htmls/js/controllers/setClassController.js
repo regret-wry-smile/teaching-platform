@@ -266,13 +266,14 @@ app.controller('setClassCtrl', function($rootScope,$scope, toastr,$modal,$window
     //投票
     $scope.voteAnswer=function(){
         var param={
-            classId:$scope.classesobject.key
+            type:'vote'
         }
-        $scope.result=JSON.parse(execute_vote("start_vote",JSON.stringify(param)));
+        $scope.result=JSON.parse(execute_answer("single_answer",JSON.stringify(param)));
         console.log("投票"+JSON.stringify($scope.result))
         if($scope.result.ret=='success'){
             // toastr.success($scope.result.message);
-            $scope.objectUrl = '../../page/answermoudle/stopVote.html';
+            $scope.param = "answerType=" + "vote";
+            $scope.objectUrl = '../../page/answermoudle/stopVote.html' + '?' + $scope.param;
             $window.location.href =$scope.objectUrl;
         }else{
             toastr.error($scope.result.message);

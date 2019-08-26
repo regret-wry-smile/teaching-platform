@@ -49,6 +49,8 @@ public class Constant {
     public static final String ANSWER_NUMBER_TYPE = "number";
     /* 判断答案*/
     public static final String ANSWER_JUDGE_TYPE = "judge";
+    /* 投票答案*/
+    public static final String ANSWER_VOTE_TYPE = "vote";
     /* 多选答案*/
     public static final String ANSWER_MULTIPLE_TYPE = "multiple";
     /* 随堂检测客观题*/
