@@ -26,7 +26,7 @@ app.controller('LoginCtrl', function($scope, toastr) {
 	}
 })
 app.controller('setmoduleCtrl', function($scope, toastr) {
-		$scope.infoAllNameList = ["Chain 1", "Chain 2", "Chain 3", "Chain 4", "Chain 5", "Chain 6", "Chain 7", "Chain 8", "Chain 9", "Chain 10"]; //信道设置数组
+		$scope.infoAllNameList = ["Channel 1", "Channel 2", "Channel 3", "Channel 4", "Channel 5", "Channel 6", "Channel 7", "Channel 8", "Channel 9", "Channel 10"]; //信道设置数组
 		$scope.attendstatus = '1';
 		$scope.sendpower = '1';
 		$scope.sendpower1 = angular.copy($scope.sendpower);
