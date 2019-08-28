@@ -44,22 +44,22 @@
 			<script type="text/ng-template" id="oneAnswerDetailModal.html">
 					<div class="modal-header">
 						<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
-						<h4 class="modal-title">答题详情</h4>
+						<h4 class="modal-title">Answer the questions on the details</h4>
 					</div>
 					<div class="modal-body" id="oneanswer" style="max-height: 3.0rem;overflow: auto;" >
 						<table class="table">
 							<thead>
 								<tr>
 									<!--客观题-->
-									<th>题号</th>
-									<th>题目</th>
-									<th>题目类型</th>
-									<th ng-show="answerType=='1'">正确答案</th>
-									<th ng-show="answerType=='1'">作答答案</th>									
-									<th ng-show="answerType=='1'">作答结果</th>
+									<th>NO.</th>
+									<th>Name</th>
+									<th>Type</th>
+									<th ng-show="answerType=='1'">Correct</th>
+									<th ng-show="answerType=='1'">Answer</th>
+									<th ng-show="answerType=='1'">Result</th>
 									<!--主观题-->
-									<th ng-show="answerType=='0'">最高分</th>
-									<th ng-show="answerType=='0'">得分</th>									
+									<th ng-show="answerType=='0'">HighestScore</th>
+									<th ng-show="answerType=='0'">Score</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -69,7 +69,7 @@
 									<td>{{item.questionType|questionType}}</td>
 									<td ng-show="answerType=='1'">{{item.trueAnswer|AnswerType}}</td>
 									<td ng-show="answerType=='1'">{{item.answer|AnswerType}}</td>
-									<td ng-show="answerType=='1'" ng-class="{'1':'clgreen','2':'clwarning' }[item.result]">{{item.result==1?"正确":"错误"}}</td>
+									<td ng-show="answerType=='1'" ng-class="{'1':'clgreen','2':'clwarning' }[item.result]">{{item.result==1?"TRUE":"FALSE"}}</td>
 									<td ng-show="answerType=='0'" >{{item.score}}</td>									
 									<td ng-show="answerType=='0'">{{item.answer}}</td>
 								</tr>
@@ -79,7 +79,7 @@
 						
 					</div>
 					<div class="modal-footer text-center">
-						<button type="button" class="btn btn-default" ng-click="cancel()">取消</button>			
+						<button type="button" class="btn btn-default" ng-click="cancel()">cancel</button>
 					</div>
 			</script>
 		

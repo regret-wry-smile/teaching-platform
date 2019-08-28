@@ -1011,31 +1011,31 @@ app.filter('questionType', function() {
 	return function(questionType) {
 		var statename = '';
 		switch (questionType) {
-			case '2':
-				{
-					statename = '判断';
-					break;
-				}
-			case '0':
-				{
-					statename = '单选';
-					break;
-				}
-			case '1':
-				{
-					statename = '多选';
-					break;
-				}
-			case '3':
-				{
-					statename = '数字';
-					break;
-				}
-			case '4':
-				{
-					statename = '主观题';
-					break;
-				}
+            case '2':
+            {
+                statename = 'T/F';
+                break;
+            }
+            case '0':
+            {
+                statename = 'Single';
+                break;
+            }
+            case '1':
+            {
+                statename = 'Multiple';
+                break;
+            }
+            case '3':
+            {
+                statename = 'Digital';
+                break;
+            }
+            case '4':
+            {
+                statename = 'subjective';
+                break;
+            }
 		}
 		return statename;
 	}
