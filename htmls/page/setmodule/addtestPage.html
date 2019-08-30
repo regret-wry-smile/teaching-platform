@@ -79,9 +79,12 @@
 						<option value="0">Single</option>
 						<option value="1">Multiple</option>
 					</select>
-					<select class="single" select ng-model="testInfo.range" defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'" ng-change="changeRange(testInfo.range)">
+					<select class="single" select ng-model="testInfo.range" defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'&&testInfo.selLetter==1" ng-change="changeRange(testInfo.range)">
 						<option value="A-D">A-D</option>
 						<option value="A-F">A-F</option>
+						</select>
+					<select class="single" select ng-model="testInfo.range" defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'&&testInfo.selLetter==0" ng-change="changeRange(testInfo.range)">
+						<option value="A-D">A-D</option>
 					</select>
 				</div>
 			</div>

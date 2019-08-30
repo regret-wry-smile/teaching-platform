@@ -77,7 +77,7 @@
 					  	<label for="firstname pull-left" class="col-sm-2 control-label text-right">Object</label>
 						<div class="col-sm-2 object" ng-repeat="item in obejctList track by $index">
 							<input type="checkbox" ng-model="item.isChecked" style="display: none;"/>
-					  		<input type="text" autocomplete="off" name="object"  id="" value=""  class="form-control" ng-class="{'select':item.isChecked==true}"  ng-model="item.txt" maxlength="5" required ng-click="seldelObject($index,item)" />						    	
+					  		<input type="text" autocomplete="off" name="object"  id="" value=""  class="form-control" ng-class="{'select':item.isChecked==true}"  ng-model="item.txt" maxlength="20" required ng-click="seldelObject($index,item)" />
 					  	</div>
 					  	<span ng-show="myForm.object.$invalid" class="warning">*</span>
 					  	</div>

@@ -922,7 +922,7 @@ app.controller('addBatchSubjectModalCtrl', function($rootScope, $modalInstance, 
 
     $scope.changeselType = function(selLetter) {
         $scope.testInfo.selLetter = selLetter;
-    }
+        }
     //切换字母范围
     $scope.changeRange=function(range){
         //  $scope.testInfo.range = range;

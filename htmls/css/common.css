@@ -316,7 +316,7 @@ button.btnfff,a.btnfff,a.hover{
 	border-radius: 0.10rem;
 	color: #90a4cc;
 	font-size: 0.18rem;
-	width: 2.0rem;
+	width: 3.5rem;
 	height: 0.48rem;
 	/*position: relative;*/
 }
@@ -733,7 +733,7 @@ label.circle{
 }
 .modboxs .box{
 	float: left;
-	width: 7%;
+	width: 18%;
 	background: #fff;
 	font-size: 0.18rem;
 	text-align: center;
