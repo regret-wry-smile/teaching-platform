@@ -30,14 +30,16 @@ public class QuestionInfoSql {
 		String sql = "";
 		String testId = "";
 		String subject = "";
-		for (int i = 0; i < rowList.size(); i++) {
-			if(i == 0){
-				subject = (String) rowList.get(i).get(0);
-				testId = (String) rowList.get(i).get(1)+new Random().nextInt(100);
+		for (int i = 2; i < rowList.size(); i++) {
+			if(i < 3){
+				subject = (String) rowList.get(0).get(1);
+				String testName = (String)rowList.get(1).get(1);
+				String describes = (String)rowList.get(2).get(1);
+				testId =  com.ejet.core.util.StringUtils.getUUID();
 				sqls.add("delete from test_paper where test_id = '"+ rowList.get(i).get(1)+"'"); //删除原来的试卷
 				sqls.add("delete from question_info where test_id = '"+ rowList.get(i).get(1)+"'"); //删除原来的题目
 				sqls.add("insert into test_paper (subject,test_id,test_name,describe,atype) values('"+subject+"','"+
-						testId+"','"+rowList.get(i).get(2)+"','"+rowList.get(i).get(3)+"','0')"); //新增试卷信息
+						testId+"','"+testName+"','"+describes+"','0')"); //新增试卷信息
 			}else{
 				String range = " ";
 				if(rowList.get(i).size() == 6){
@@ -103,8 +105,8 @@ public class QuestionInfoSql {
 		List<String> questionIds = new ArrayList<String>();
 		
 		for (int i = 0; i < rowList.size(); i++) {
-			if(i == 0){
-				if (rowList.get(i).size() != 4) {
+			if(i <3 ){
+				if (rowList.get(i).size()!=2) {
 					result.setMessage("Line"+(i+1)+"paper information error！");
 					return result;
 				}
@@ -113,12 +115,12 @@ public class QuestionInfoSql {
 				//0单选；1多选；2判断；3数字；4主观题
 				List<Object> list = rowList.get(i);
 				if (list.size() < 4) {
-                    result.setMessage("Line"+(i+1)+"topic error,please check the question type, the correct answer, and the wrong scope！");
+                    result.setMessage("Line"+(i+3)+"topic error,please check the question type, the correct answer, and the wrong scope！");
                     return result;
                 }
 				String questionId = (String) list.get(0);
 				if (!verifyCheckQuetionId(questionId)) {
-                     result.setMessage("Line"+(i+1)+"topic ID error！");
+                     result.setMessage("Line"+(i+3)+"topic ID error！");
                      return result;
                 }
 				questionIds.add(questionId);
@@ -127,68 +129,68 @@ public class QuestionInfoSql {
 				switch (type) {
 				case "single":
 				    if (StringUtils.isEmpty(trueAnswer)) {
-                        result.setMessage("Line"+(i+1)+"correct answer cannot be empty");
+                        result.setMessage("Line"+(i+3)+"correct answer cannot be empty");
                         return result;
                     }
 				    if (trueAnswer.length() >1) {
-                        result.setMessage("Line"+(i+1)+"single cannot be a multi-choice answer！");
+                        result.setMessage("Line"+(i+3)+"single cannot be a multi-choice answer！");
                         return result;
                     }
                     if(StringUtils.isEmpty(rowList.get(i).get(4))){
-                    	result.setMessage("Line"+(i+1)+"lacks the range of questions！");
+                    	result.setMessage("Line"+(i+3)+"lacks the range of questions！");
 					}
 					if(rowList.get(i).size() != 6){
-						result.setMessage("Line"+(i+1)+"missing the score！");
+						result.setMessage("Line"+(i+3)+"missing the score！");
 						return result;
 					}
 					range = (String) rowList.get(i).get(4);
 					if (!verifySingleRange(range)) {
-						result.setMessage("Line"+(i+1)+"answer range format error！");
+						result.setMessage("Line"+(i+3)+"answer range format error！");
 						return result;
 					}
 					if (!verifySingleAnswer(trueAnswer)) {
-						result.setMessage("Line"+(i+1)+"correct answer format error！");
+						result.setMessage("Line"+(i+3)+"correct answer format error！");
 						return result;
 					}
 					break;
 				case "multiple":
 					if(rowList.get(i).size() != 6){
-						result.setMessage("Line"+(i+1)+"Column number format error！");
+						result.setMessage("Line"+(i+3)+"Column number format error！");
 						return result;
 					}
 					range = (String) rowList.get(i).get(4);
 					if (!verifyMultipleRange(range)) {
-						result.setMessage("Line"+(i+1)+"answer range format error！");
+						result.setMessage("Line"+(i+3)+"answer range format error！");
 						return result;
 					}
 					if (!verifyMultipleAnswer(trueAnswer,range)) {
-						result.setMessage("Line"+(i+1)+"correct answer format error！");
+						result.setMessage("Line"+(i+3)+"correct answer format error！");
 						return result;
 					}
 					break;
 				case "T/F":
 					if(rowList.get(i).size() != 5){
-						result.setMessage("Line"+(i+1)+"Column number format error！");
+						result.setMessage("Line"+(i+3)+"Column number format error！");
 						return result;
 					}
 					if (!verifyCheckAnswer(trueAnswer)) {
-						result.setMessage("Line"+(i+1)+"correct answer format error！");
+						result.setMessage("Line"+(i+3)+"correct answer format error！");
 						return result;
 					}
 					break;
 				case "digital":
 					range = (String) rowList.get(i).get(4);
 					if (!verifyNumRange(range)) {
-						result.setMessage("Line"+(i+1)+"answer range format error！");
+						result.setMessage("Line"+(i+3)+"answer range format error！");
 						return result;
 					}
 					if (!verifyNumAnswer(trueAnswer,range)) {
-						result.setMessage("Line"+(i+1)+"correct answer format error！");
+						result.setMessage("Line"+(i+3)+"correct answer format error！");
 						return result;
 					}
 					break;
 				default:
-					result.setMessage((i+1)+"topic type error!");
+					result.setMessage((i+3)+"topic type error!");
 					return result;
 				}
 			}
