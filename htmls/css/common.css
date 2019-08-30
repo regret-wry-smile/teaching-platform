@@ -923,12 +923,12 @@ img.rebtn:active,img.rebtn:hover{
 		padding: 0.10rem 0.12rem;	
 	}
 	.progresscon{
-		width: 0.8rem;
+		width: 1.4rem;
 		padding: 0.04rem 0.08rem;
 	}
 	.progresscon p span{
 		font-size: 0.14rem;
-		width: 0.6rem;
+		width: 1.2rem;
 		overflow: hidden;
 		text-overflow:ellipsis;
 		white-space: nowrap;
