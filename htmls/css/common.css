@@ -358,7 +358,7 @@ button.btnfff,a.btnfff,a.hover{
 	border-radius: 0.10rem;
 	color: #90a4cc;
 	font-size: 0.18rem;
-	width: 2.0rem;
+	width: 3.8rem;
 	height: 0.48rem;
 	/*position: relative;*/
 }
@@ -776,7 +776,7 @@ label.circle span{
 }
 .modboxs .box{
 	float: left;
-	width: 5%;
+	width: 18%;
 	/*min-width: 7%;*/
 	background: #fff;
 	font-size: 0.18rem;
@@ -986,12 +986,12 @@ img.rebtn:active,img.rebtn:hover{
 		padding: 0.10rem 0.12rem;
 	}
 	.progresscon{
-		width: 0.8rem;
+		width: 1.4rem;
 		padding: 0.04rem 0.08rem;
 	}
 	.progresscon p span{
 		font-size: 0.14rem;
-		width: 0.6rem;
+		width: 1.2rem;
 		overflow: hidden;
 		text-overflow:ellipsis;
 		white-space: nowrap;
