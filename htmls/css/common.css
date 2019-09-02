@@ -57,7 +57,21 @@ textarea {
 p {
 	margin: 0;
 }
-
+#bg {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	z-index:-1;
+}
+#bg canvas {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+}
 .text-center{
 	text-align: center !important;
 }
@@ -90,6 +104,7 @@ p {
 .bg{
 	background: url(../image/bg.png) no-repeat center ;
 	background-size: 100% 100%;
+	background-attachment: fixed;
 }
 .bgfff{
 	background-color: #fff;
@@ -100,44 +115,44 @@ p {
 
 .bggreen{
 	background-color:#5ed6be;
-}	
+}
 .clgreen{
 	color:#5ed6be;
 }
 .header {
-   /* height: 1.10rem;*/
-    line-height: 1.10rem;
-    vertical-align: middle;
-    padding:0.0rem  0.15rem;
-} 
+	/* height: 1.10rem;*/
+	line-height: 1.10rem;
+	vertical-align: middle;
+	padding:0.0rem  0.15rem;
+}
 .head{
 	border-bottom: 1px solid #d3d7db;
 	margin:0 0.25rem;
 }
- .header img{
-    display: inline-block;
-    width:auto ;
-    margin-right: 0.25rem;
+.header img{
+	display: inline-block;
+	width:auto ;
+	margin-right: 0.25rem;
 }
 .header span{
-    font-size: 0.27rem;
-    color: #fff;
-    display: inline-block;
-    vertical-align: middle;
+	font-size: 0.27rem;
+	color: #fff;
+	display: inline-block;
+	vertical-align: middle;
 }
 .head ul li{
 	float: left;
 	width: 33.33%;
 	text-align: center;
-	font-size: 0.16rem;	
-	
+	font-size: 0.16rem;
+
 }
 .head ul li a{
 	display: inline-block;
-	text-align: center;	
+	text-align: center;
 	color: #fff;
 	font-weight: bold;
-	padding: 0.23rem 0.12rem;	
+	padding: 0.23rem 0.12rem;
 	font-family: "微软雅黑";
 }
 
@@ -148,13 +163,13 @@ p {
 
 .content{
 	margin:0 0.15rem 0.15rem;
-	padding: 0.25rem;	
+	padding: 0.25rem;
 	color: #3e3e3e;
-	
-} 
+
+}
 .content1{
 	/*margin:0 0.15rem 0.15rem;*/
-	padding: 0.25rem;	
+	padding: 0.25rem;
 	color: #3e3e3e;
 	position: absolute;
 	top: 1.10rem;
@@ -162,7 +177,7 @@ p {
 	left: 0.15rem;
 	right:  0.15rem;
 	margin: 0;
-} 
+}
 span.hidename{
 	white-space: nowrap;/*强制文本在一行内显示*/
 	overflow: hidden;/*隐藏超出内容*/
@@ -188,6 +203,7 @@ ul.modbox li a{
 ul.modbox li a img{
 	display: inline-block;
 	width: 1.22rem;
+	z-index: 99999;
 }
 ul.modbox li a label.checked{
 	position: absolute;
@@ -199,29 +215,41 @@ ul.modbox li.active label.checked{
 	visibility: visible;
 }
 
+
 ul.modbox li span.title{
 	color: #fff;
 	font-size: 0.26rem;
 	/*margin-left: 0.12rem;*/
 }
-ul.modbox li.active a{	
-	/*background: rgb(146,182,255);*/
-	background: #99ccff;
-	width: 200px;
-	height: 100%;
-	border-radius: 100%;
-	-moz-border-radius: 50%;
-	-webkit-border-radius: 50%;
-	/*opacity: 0.5;*/
-	
+ul.modbox li.active a{
+	background: rgba(146,182,255,.5);
+
+
 }
 ul.modbox li.active span.title{
-	color: #206bb0;	
+	color: #206bb0;
 }
 .form-group label{
 	font-size: 0.16rem;
 	text-align: left !important;
 }
+
+
+ul.modbox li a .circlebg{
+	display: block;
+	background: url('../image/circlebg.png') no-repeat center;
+	background-size: 100% 100%;
+	text-align: center;
+	/*background: #fff;*/
+	/*border:5px solid rgba(0,0,0,0.2);*/
+	/*-webkit-border-radius: 100%;*/
+	/*-moz-border-radius: 100%;*/
+	/*border-radius: 100%;*/
+	width: 1.5rem;
+	height: 1.5rem;
+	line-height: 1.5rem;
+}
+
 .ro-switch {
 	display: inline-block;
 	cursor: pointer;
@@ -269,6 +297,20 @@ ul.modbox li.active span.title{
 .warning,.clwarning{
 	color: #ca4d4d;
 }
+.opbtn a{
+	width: auto;
+	min-width: 100px;
+	background: #04BE02;
+	padding: 5px;
+	color: #fff;
+	text-align: center;
+	border-radius: 4px;
+	opacity: 0.6;
+}
+.opbtn a.warning{
+	background:red;
+	color: #fff;
+}
 span.warning{
 	color: #ca4d4d;
 	font-weight: bold;
@@ -288,7 +330,7 @@ button{
 	border-radius: 10px;
 }
 button:hover{
-	background: #297fe4;	
+	background: #297fe4;
 }
 button.savebtn{
 	background: #31d884;
@@ -316,9 +358,13 @@ button.btnfff,a.btnfff,a.hover{
 	border-radius: 0.10rem;
 	color: #90a4cc;
 	font-size: 0.18rem;
-	width: 3.5rem;
+	width: 2.0rem;
 	height: 0.48rem;
 	/*position: relative;*/
+}
+span.bgtitle{
+	color: #fff;
+	font-size: 0.18rem;
 }
 a.btnfff,a.btnfff:active{
 	cursor: default;
@@ -423,8 +469,8 @@ label.area a.active{
 }
 .editbtn{
 	position: absolute;
-	bottom: 0.10rem;
-	right: 0.40rem;
+	bottom: 0.08rem;
+	right: 0.42rem;
 	width:0.20rem ;
 	height: auto;
 	cursor: pointer;
@@ -440,8 +486,8 @@ label.area a.active{
 }
 .delbtn{
 	position: absolute;
-	bottom: 0.10rem;
-	right: 0.10rem;
+	bottom: 0.08rem;
+	right: 0.14rem;
 	width:0.20rem ;
 	height: auto;
 	cursor: pointer;
@@ -613,13 +659,13 @@ table.userlist tbody tr:hover{
 }
 table.userlistchild tbody tr{
 	height: 0.40rem;
-    line-height: 0.40rem;
-    vertical-align: middle;
+	line-height: 0.40rem;
+	vertical-align: middle;
 }
 
 table.userlistchild tbody tr:first-child,
 table.classlist tbody tr:first-child{
-	border-top: none !important;
+	border-top: none;
 }
 table tbody tr td a.del,
 table tbody tr td a.edit {
@@ -632,12 +678,12 @@ table  tbody tr:hover td a.del,table  tbody tr:hover td a.edit{
 
 table.classlist thead tr th,table.userlist thead tr th{
 	height: 0.20rem;
-    line-height: 0.20rem;
-    padding: 0.08rem;
-    vertical-align: middle;
-   /* border: none;*/
+	line-height: 0.20rem;
+	padding: 0.08rem;
+	vertical-align: middle;
+	/* border: none;*/
 	/*border-bottom: 1px solid #f5f5f5 !important;*/
-	
+
 }
 table.classlist tbody tr:first-child td,table.userlistchild tbody tr:first-child td{
 	border-top: none;
@@ -647,10 +693,7 @@ table.userlist thead tr {
 }
 
 table.papertable{
-	background: #fff ;
-}
-table.papertable tr{
-	background: #fff !important;
+	background: #fff;
 }
 span.sub{
 	display: inline-block;
@@ -659,7 +702,7 @@ span.sub{
 	line-height: 0.05rem;
 	margin-top: -0.03rem;
 	vertical-align: middle;
-	margin-right: 0.02rem;	
+	margin-right: 0.02rem;
 	border-radius: 100%;
 }
 .green{
@@ -670,7 +713,7 @@ span.sub{
 }
 .grey{
 	background:#abacac !important;
-} 
+}
 table.classlist tbody tr{
 	cursor: pointer;
 }
@@ -692,7 +735,7 @@ table.subject tbody tr{
 	border-bottom: 2px solid #f5f5f5;
 }
 table.subject tbody tr td{
-	border-top:none;	
+	border-top:none;
 }
 table.answer{
 	color: #fff;
@@ -705,8 +748,8 @@ table.answer{
 }
 .modal-body .form-group div.warning{
 	border-color: #a94442;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
 /*璇剧▼璁剧疆*/
 .modboxs{
@@ -723,9 +766,9 @@ label.circle{
 	border-radius: 100%;
 	text-align: center;
 }
- label.circle span{
+label.circle span{
 	font-size: 1.33rem;
-	color: #fff;	
+	color: #fff;
 }
 .modboxs1{
 	margin: 0;
@@ -733,12 +776,13 @@ label.circle{
 }
 .modboxs .box{
 	float: left;
-	width: 18%;
+	width: 5%;
+	/*min-width: 7%;*/
 	background: #fff;
 	font-size: 0.18rem;
 	text-align: center;
 	color: #90a4cc;
-	padding: 0.02rem;	
+	padding: 0.02rem;
 	margin: 0.05rem;
 	overflow: hidden;
 	text-overflow:ellipsis;
@@ -750,13 +794,13 @@ label.circle{
 
 /*表格固定标题头样式*/
 table{
-	table-layout: fixed;  
+	table-layout: fixed;
 }
 table tr td{
-	text-overflow: ellipsis; /* for IE */  
-    -moz-text-overflow: ellipsis; /* for Firefox,mozilla */  
-    overflow: hidden;  
-    white-space: nowrap;  
+	text-overflow: ellipsis; /* for IE */
+	-moz-text-overflow: ellipsis; /* for Firefox,mozilla */
+	overflow: hidden;
+	white-space: nowrap;
 }
 /*进度条样式*/
 .progresscon{
@@ -783,44 +827,47 @@ table tr td{
 	color: #90a4cc;
 }
 .progress {
- height: auto;
-  background: rgba(0, 0, 0, 0.30);
-  border-radius: 0.03rem;
-  margin-bottom: 0;
+	height: auto;
+	background: rgba(0, 0, 0, 0.30);
+	border-radius: 0.03rem;
+	margin-bottom: 0;
 }
 
 .progress-bar {
-  position: relative;
-  height: 0.12rem;
-  line-height: 0.12rem;
-  border-radius: 0.03rem;
-  -webkit-transition: 0.4s linear;
-  -moz-transition: 0.4s linear;
-  -o-transition: 0.4s linear;
-  transition: 0.4s linear;
-  -webkit-transition-property: width, background-color;
-  -moz-transition-property: width, background-color;
-  -o-transition-property: width, background-color;
-  transition-property: width, background-color;
+	position: relative;
+	height: 0.12rem;
+	line-height: 0.12rem;
+	border-radius: 0.03rem;
+	-webkit-transition: 0.4s linear;
+	-moz-transition: 0.4s linear;
+	-o-transition: 0.4s linear;
+	transition: 0.4s linear;
+	-webkit-transition-property: width, background-color;
+	-moz-transition-property: width, background-color;
+	-o-transition-property: width, background-color;
+	transition-property: width, background-color;
 }
 .progress-bar:before, .progress-bar:after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
 }
 .progress-bar:before {
-  bottom: 0;
-  border-radius: 3px 3px 0 0;
+	bottom: 0;
+	border-radius: 3px 3px 0 0;
 }
 .progress-bar:after {
-  z-index: 2;
-  bottom: 45%;
-  border-radius: 3px;
+	z-index: 2;
+	bottom: 45%;
+	border-radius: 3px;
 }
 .form-group label.control-label{
 	text-align: right !important;
+	vertical-align: middle;
+	display: inline-block;
+	margin-top: -3px;
 }
 .form-group label.selradio{
 	display: inline-block;
@@ -868,7 +915,7 @@ a.letters:hover{
 	height: 0.45rem;
 	line-height: 0.45rem;
 	vertical-align: middle;
-	
+
 }
 .letter .newSelect .arrow{
 	margin-top: 0.18rem;
@@ -881,31 +928,47 @@ div.block{
 	position: absolute;
 	bottom: 0.25rem;
 	left: 0;
-	right: 0;	
-	/*margin:0 0.25rem;	*/	
+	right: 0;
+	/*margin:0 0.25rem;	*/
 }
 ul.col-4 li{
 	float: left;
 	width: 25%;
-	text-align: center;	
+	text-align: center;
 	cursor: pointer;
 }
-ul.col-4 li:hover a{
+ul.col-4 li:hover a,ul.col-3 li :hover a{
 	opacity: 0.8;
 }
 ul.col-4 li a{
 	width: 2.0rem;
 	display: inline-block;
-	padding: 0.24rem 0;		
+	padding: 0.24rem 0;
 	background: #fff;
 	border-radius: 0.10rem;
-	
+
 }
-ul.col-4 li a img{
+ul.col-3{
+	display: flex;
+}
+ul.col-3 li{
+	flex: 1;
+	text-align: center;
+	cursor: pointer;
+}
+ul.col-3 li a{
+	width: 2.8rem;
+	display: inline-block;
+	padding: 0.24rem 0;
+	background: #fff;
+	border-radius: 0.10rem;
+
+}
+ul.col-4 li a img,ul.col-3 li a img{
 	margin-top: -0.03rem;
 	vertical-align: middle;
 }
-ul.col-4 li a span{
+ul.col-4 li a span,ul.col-3 li a span{
 	margin-left: 0.08rem;
 	color: #90a4cc;
 	font-size: 0.32rem;
@@ -916,19 +979,19 @@ img.rebtn:active,img.rebtn:hover{
 	cursor: pointer;
 }
 @media screen and (max-width: 920px) {
-    .head ul li a{
+	.head ul li a{
 		display: inline-block;
-		text-align: center;	
+		text-align: center;
 		color: #fff;
-		padding: 0.10rem 0.12rem;	
+		padding: 0.10rem 0.12rem;
 	}
 	.progresscon{
-		width: 1.4rem;
+		width: 0.8rem;
 		padding: 0.04rem 0.08rem;
 	}
 	.progresscon p span{
 		font-size: 0.14rem;
-		width: 1.2rem;
+		width: 0.6rem;
 		overflow: hidden;
 		text-overflow:ellipsis;
 		white-space: nowrap;
@@ -938,13 +1001,20 @@ img.rebtn:active,img.rebtn:hover{
 		max-height: 3.5rem;
 		overflow-y: auto;
 	}
+	.tab-pane .header span{
+		font-size: 20px;
+	}
+
+}
+.tab-pane .header span.view:hover{
+	color: #31D884 !important;
 }
 @media screen and (min-width: 921px) {
-    .head ul li a{
+	.head ul li a{
 		display: inline-block;
-		text-align: center;	
+		text-align: center;
 		color: #fff;
-		padding: 0.23rem 0.12rem;	
+		padding: 0.23rem 0.12rem;
 		font-size: 0.26rem;
 		font-weight: normal;
 	}
@@ -960,8 +1030,13 @@ img.rebtn:active,img.rebtn:hover{
 		/*padding: 0.4rem 0*/
 		cursor: pointer;
 	}
+	ul.col-3 li a{
+		width: 4.0rem;
+	}
+
 	.modboxs1 .box{
-		width: 8%;
+		/*width: 8%;*/
+		width: 5%;
 	}
 	button.circlefff{
 		/*margin: 4%;*/
@@ -970,7 +1045,7 @@ img.rebtn:active,img.rebtn:hover{
 		border-radius: 100%;
 		background: #fff;
 		color: #90a4cc;
-		font-size: 0.30rem;
+		font-size: 0.50rem;
 	}
 	.text.vote label{
 		font-size: 0.26rem;
@@ -978,6 +1053,9 @@ img.rebtn:active,img.rebtn:hover{
 	.text.vote p{
 		font-size: 0.20rem;
 	}
+}
+select.single.error{
+	border-color: red !important;
 }
 /*div垂直水平正居中*/
 .maindiv{
