@@ -52,7 +52,7 @@
 								<tr>
 									<!--客观题-->
 									<th>NO.</th>
-									<th>Name</th>
+									<!--<th>Name</th>-->
 									<th>Type</th>
 									<th ng-show="answerType=='1'">Correct</th>
 									<th ng-show="answerType=='1'">Answer</th>
@@ -65,7 +65,7 @@
 							<tbody>
 								<tr ng-repeat="item in oneanswerLists track by $index">
 									<td>{{item.questionId}}</td>
-									<td>{{item.question}}</td>
+									<!--<td>{{item.question}}</td>-->
 									<td>{{item.questionType|questionType}}</td>
 									<td ng-show="answerType=='1'">{{item.trueAnswer|AnswerType}}</td>
 									<td ng-show="answerType=='1'">{{item.answer|AnswerType}}</td>
