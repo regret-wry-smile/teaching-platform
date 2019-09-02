@@ -28,36 +28,35 @@ public class QuestionInfoSql {
 		}
 		List<String> sqls = new ArrayList<String>();
 		String sql = "";
-		String testId = "";
+		String testId = com.ejet.core.util.StringUtils.getUUID();
 		String subject = "";
 		for (int i = 2; i < rowList.size(); i++) {
 			if(i < 3){
 				subject = (String) rowList.get(0).get(1);
 				String testName = (String)rowList.get(1).get(1);
 				String describes = (String)rowList.get(2).get(1);
-				testId =  com.ejet.core.util.StringUtils.getUUID();
 				sqls.add("delete from test_paper where test_id = '"+ rowList.get(i).get(1)+"'"); //删除原来的试卷
 				sqls.add("delete from question_info where test_id = '"+ rowList.get(i).get(1)+"'"); //删除原来的题目
 				sqls.add("insert into test_paper (subject,test_id,test_name,describe,atype) values('"+subject+"','"+
 						testId+"','"+testName+"','"+describes+"','0')"); //新增试卷信息
 			}else{
 				String range = " ";
-				if(rowList.get(i).size() == 6){
-					range = (String) rowList.get(i).get(4);
+				if(rowList.get(i).size() == 5){
+					range = (String) rowList.get(i).get(3);
 				}
 				//0单选；1多选；2判断；3数字；4主观题
-				String type = (String) rowList.get(i).get(2);
+				String type = (String) rowList.get(i).get(1);
 				String  trueAnswer = "";
 				String score = "";
-				trueAnswer = (String) rowList.get(i).get(3);
+				trueAnswer = (String) rowList.get(i).get(2);
 				switch (type) {
 				case "single":
 					type = "0";
-					score = (String) rowList.get(i).get(5);
+					score = (String) rowList.get(i).get(4);
 					break;
 				case "multiple":
 					type = "1";
-					score = (String) rowList.get(i).get(5);
+					score = (String) rowList.get(i).get(4);
 					break;
 				case "T/F":
 					type = "2";
@@ -66,11 +65,11 @@ public class QuestionInfoSql {
 					}else if("F".equals(trueAnswer)){
 						trueAnswer = "false";
 					}
-					score = (String) rowList.get(i).get(4);
+					score = (String) rowList.get(i).get(3);
 					break;
 				case "digital":
 					type = "3";
-					score = (String) rowList.get(i).get(5);
+					score = (String) rowList.get(i).get(4);
 					break;
 				default:
 					result.setRet(Constant.ERROR);
@@ -85,8 +84,8 @@ public class QuestionInfoSql {
 					return result;
 				}
 				//插入题目信息
-				sql = "insert into question_info (test_id,question_id,question,question_type,true_answer,range,score,status) values('"+testId+"','"+
-						rowList.get(i).get(0)+"','"+rowList.get(i).get(1)+"','"+type+"','"+trueAnswer+"','"+range+"','"+score+"','1')";
+				sql = "insert into question_info (test_id,question_id,question_type,true_answer,range,score,status) values('"+testId+"','"+
+						rowList.get(i).get(0)+"','"+type+"','"+trueAnswer+"','"+range+"','"+score+"','1')";
 				sqls.add(sql);
 			}
 		}
@@ -105,12 +104,17 @@ public class QuestionInfoSql {
 		List<String> questionIds = new ArrayList<String>();
 		
 		for (int i = 0; i < rowList.size(); i++) {
-			if(i <3 ){
-				if (rowList.get(i).size()!=2) {
-					result.setMessage("Line"+(i+1)+"paper information error！");
+			if(i ==0 ){
+				if(rowList.get(i).size() != 3){
+					result.setMessage("Line"+(1)+"paper information error！");
 					return result;
 				}
-			}else{
+			}else if (i <3 && i>0) {
+				if (rowList.get(i).size() != 2) {
+					result.setMessage("Line" + (1) + "paper information error！");
+					return result;
+				}
+			} else {
 				String range = "";
 				//0单选；1多选；2判断；3数字；4主观题
 				List<Object> list = rowList.get(i);
@@ -124,8 +128,8 @@ public class QuestionInfoSql {
                      return result;
                 }
 				questionIds.add(questionId);
-				String type = (String) list.get(2);
-				String trueAnswer = (String) list.get(3);
+				String type = (String) list.get(1);
+				String trueAnswer = (String) list.get(2);
 				switch (type) {
 				case "single":
 				    if (StringUtils.isEmpty(trueAnswer)) {
@@ -136,14 +140,14 @@ public class QuestionInfoSql {
                         result.setMessage("Line"+(i+3)+"single cannot be a multi-choice answer！");
                         return result;
                     }
-                    if(StringUtils.isEmpty(rowList.get(i).get(4))){
+                    if(StringUtils.isEmpty(rowList.get(i).get(3))){
                     	result.setMessage("Line"+(i+3)+"lacks the range of questions！");
 					}
-					if(rowList.get(i).size() != 6){
+					if(rowList.get(i).size() != 5){
 						result.setMessage("Line"+(i+3)+"missing the score！");
 						return result;
 					}
-					range = (String) rowList.get(i).get(4);
+					range = (String) rowList.get(i).get(3);
 					if (!verifySingleRange(range)) {
 						result.setMessage("Line"+(i+3)+"answer range format error！");
 						return result;
@@ -154,11 +158,11 @@ public class QuestionInfoSql {
 					}
 					break;
 				case "multiple":
-					if(rowList.get(i).size() != 6){
+					if(rowList.get(i).size() != 5){
 						result.setMessage("Line"+(i+3)+"Column number format error！");
 						return result;
 					}
-					range = (String) rowList.get(i).get(4);
+					range = (String) rowList.get(i).get(3);
 					if (!verifyMultipleRange(range)) {
 						result.setMessage("Line"+(i+3)+"answer range format error！");
 						return result;
@@ -169,7 +173,7 @@ public class QuestionInfoSql {
 					}
 					break;
 				case "T/F":
-					if(rowList.get(i).size() != 5){
+					if(rowList.get(i).size() != 4){
 						result.setMessage("Line"+(i+3)+"Column number format error！");
 						return result;
 					}
@@ -179,7 +183,7 @@ public class QuestionInfoSql {
 					}
 					break;
 				case "digital":
-					range = (String) rowList.get(i).get(4);
+					range = (String) rowList.get(i).get(3);
 					if (!verifyNumRange(range)) {
 						result.setMessage("Line"+(i+3)+"answer range format error！");
 						return result;

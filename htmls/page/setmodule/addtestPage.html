@@ -82,7 +82,7 @@
 					<select class="single" select ng-model="testInfo.range" defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'&&testInfo.selLetter==1" ng-change="changeRange(testInfo.range)">
 						<option value="A-D">A-D</option>
 						<option value="A-F">A-F</option>
-						</select>
+					</select>
 					<select class="single" select ng-model="testInfo.range" defalutvalue='testInfo.range1' ng-if="testInfo.questionType=='-1'&&testInfo.selLetter==0" ng-change="changeRange(testInfo.range)">
 						<option value="A-D">A-D</option>
 					</select>
@@ -147,13 +147,13 @@
 				</div>
 				<span ng-show="myForm.questionId.$invalid" class="warning">*</span>
 			</div>
-			<div class="form-group">
-				<label for="firstname" class="col-sm-3 control-label">Subject Content</label>
-				<div class="col-sm-8">
-					<textarea class="form-control" cols="3" placeholder="Please enter no more than 200 characters" ng-model="testInfo.question" maxlength="100"></textarea>
-				</div>
-				<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>
-			</div>
+			<!--<div class="form-group">-->
+				<!--<label for="firstname" class="col-sm-3 control-label">Subject Content</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<textarea class="form-control" cols="3" placeholder="Please enter no more than 200 characters" ng-model="testInfo.question" maxlength="100"></textarea>-->
+				<!--</div>-->
+				<!--<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>-->
+			<!--</div>-->
 			<div class="form-group">
 				<label for="firstname" class="col-sm-3 control-label">Answer Type</label>
 				<div class="col-sm-8">
@@ -252,13 +252,13 @@
 				</div>
 				<span ng-show="myForm.questionId.$invalid" class="warning">*</span>
 			</div>
-			<div class="form-group">
-				<label for="firstname" class="col-sm-3 control-label">Subject Content</label>
-				<div class="col-sm-8">
-					<textarea class="form-control" cols="3" placeholder="Please enter no more than 200 characters" ng-model="testInfo.question" maxlength="100"></textarea>
-				</div>
-				<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>
-			</div>
+			<!--<div class="form-group">-->
+				<!--<label for="firstname" class="col-sm-3 control-label">Subject Content</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<textarea class="form-control" cols="3" placeholder="Please enter no more than 200 characters" ng-model="testInfo.question" maxlength="100"></textarea>-->
+				<!--</div>-->
+				<!--<span ng-show="myForm.devicenum.$invalid" class="warning">*</span>-->
+			<!--</div>-->
 			<div class="form-group">
 				<label for="firstname" class="col-sm-3 control-label">Answer Type</label>
 				<div class="col-sm-8">
@@ -370,13 +370,13 @@
 			<table class="table table-stripe subject text-left">
 				<thead>
 				<tr>
-					<th style="width: 5%;">NO.</th>
-					<th style="width: 10%;">Question ID</th>
-					<th style="width: 15%;">Question Content</th>
+					<th style="width: 10%;">NO.</th>
+					<th style="width: 15%;">Question ID</th>
+					<!--<th style="width: 15%;">Question Content</th>-->
 					<th style="width: 15%;">Answer Type</th>
-					<th style="width: 10%;">Answer</th>
-					<th style="width: 10%;">Score</th>
-					<th style="width: 10%;">Operation</th>
+					<th style="width: 12%;">Answer</th>
+					<th style="width: 12%;">Score</th>
+					<th style="width: 10%;">operation</th>
 					<th style="width: 10%;"class="pr1">Select All
 						<label style="margin-bottom: 0;"><input type="checkbox" class="allCheck" ng-model="selected" ng-change="selectAll()"></label></th>
 				</tr>
@@ -386,12 +386,12 @@
 				<table class="table table-stripe subject text-left">
 					<tbody>
 					<tr ng-repeat="item in subjectList track by $index" ng-click="$event.stopPropagation();">
-						<td style="width: 5%;">{{$index+1}}</td>
 						<td style="width: 10%;">{{$index+1}}</td>
-						<td style="width: 15%;">{{item.question}}</td>
+						<td style="width: 15%;">{{$index+1}}</td>
+						<!--<td style="width: 15%;">{{item.question}}</td>-->
 						<td style="width: 15%;">{{item.questionType|questionType}}</td>
-						<td style="width: 10%;">{{item.trueAnswer|AnswerType}}</td>
-						<td style="width: 10%;">{{item.score}}</td>
+						<td style="width: 12%;">{{item.trueAnswer|AnswerType}}</td>
+						<td style="width: 12%;">{{item.score}}</td>
 						<td style="width: 10%;">
 							<a href="javascript:;" class="edit mr5" ng-click="editSuject(item)" ng-show="item.questionType!='4'">edit</a>
 							<!--<a href="javascript:;" class="del" ng-click="delSuject(quesitem)">删除</a>-->
