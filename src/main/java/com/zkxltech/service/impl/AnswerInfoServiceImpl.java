@@ -12,6 +12,7 @@ import com.zkxltech.domain.*;
 import com.zkxltech.service.AnswerInfoService;
 import com.zkxltech.sql.ClassHourSql;
 import com.zkxltech.sql.RecordSql;
+import com.zkxltech.sql.TestPaperSql;
 import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.EquipmentStatusThread;
 import com.zkxltech.thread.SingleAnswerThread;
@@ -26,7 +27,7 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
     private static final Logger log = LoggerFactory.getLogger(AnswerInfoServiceImpl.class);
 	private Result result;
 	private RecordSql recordSql = new RecordSql();
-	private ClassHourSql classHourSql = new ClassHourSql();
+	private TestPaperSql testPaperSql = new TestPaperSql();
 	private static BaseThread equipmentStatusThread;
     
 	@Override
@@ -149,12 +150,12 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 					recordSql.deleteRecord(recordParam);
 
 					//更新试卷答题时间
-					ClassHour classHour = new ClassHour();
-					classHour.setClassHourId(Global.getClassHour().getClassHourId());
-					List<ClassHour> classHours = (List<ClassHour>) classHourSql.selectClassHour(classHour).getItem();
-					for (ClassHour classHour1 : classHours) {
-						classHour1.setStartTime(com.ejet.core.util.StringUtils.formatDateTime(new Date()));
-						classHourSql.updateTestPaper(classHour1);
+					TestPaper testPaper = new TestPaper();
+					testPaper.setTestId((String) testId);
+					List<TestPaper> testPapers = (List<TestPaper>) testPaperSql.selectTestPaper(testPaper).getItem();
+					for (TestPaper testPaper1 : testPapers) {
+						testPaper1.setAnswerTime(com.ejet.core.util.StringUtils.formatDateTime(new Date()));
+						testPaperSql.updateTestPaper(testPaper1);
 					}
 
 

@@ -114,7 +114,7 @@ public class RecordServiceImpl implements RecordService{
                      String date = format.format(new Date());
                      fileName += classInfo.getClassName()+classHour.getSubjectName()+classHour.getClassHourName()+date+".xls";
                      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                     dates = "Create time:"+date+"  Response time:"+classHours.get(0).getStartTime();
+                     dates = "Create time:"+date+"  Response time:"+testPapers.get(0).getAnswerTime();
                     //FIXEME 列数 = 6 + 该试卷的所有题目个数
                     QuestionInfoSql questionInfoSql = new QuestionInfoSql();
                     QuestionInfo questionInfo = new QuestionInfo();
@@ -293,23 +293,8 @@ public class RecordServiceImpl implements RecordService{
                         BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
                         return ;
                     }
-                    //查询课程的开始时间
-                    ClassHourSql classHourSql = new ClassHourSql();
-                    ClassHour classHour = new ClassHour();
-                    classHour.setClassHourId(record.getClassHourId());
-                    r = classHourSql.selectClassHour(classHour);
-                    if (r.getRet().equals(Constant.ERROR)) {
-                        BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
-                        return;
-                    }
-                    List<ClassHour>  classHours = (List<ClassHour>) r.getItem();
-                    classHour = classHours.get(0);
-                    if (classHour == null) {
-                        r.setMessage("The class information was not found");
-                        BrowserManager.refreSelectRecord(JSONObject.fromObject(r).toString());
-                        return;
-                    }
-                    //查试卷的详情
+
+                    //查试卷的详情及作答时间
                     TestPaperSql testPaperSql = new TestPaperSql();
                     TestPaper testPaper = new TestPaper();
                     testPaper.setTestId(record.getTestId());
@@ -374,13 +359,18 @@ public class RecordServiceImpl implements RecordService{
                                 }
 							}
                         }
+
+                        //查询作答时间
+
+
                         Record resultRocord = new Record();
                         resultRocord.setStudentId((String)key);
                         resultRocord.setStudentName(list.get(0).getStudentName());
                         resultRocord.setScore(String.valueOf(score));
                         resultRocord.setPercentage(b);
                         resultRocord.setTestName(testPaper.getTestName());
-                        resultRocord.setTime(classHour.getStartTime());
+
+                        resultRocord.setTime(testPaper.getAnswerTime());
                         result.add(resultRocord);
                     }
                     if (!ListUtils.isEmpty(result)) {
