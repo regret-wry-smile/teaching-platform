@@ -533,6 +533,7 @@ public class QuestionInfoSql {
         List<String> sqls = new ArrayList<String>();
         for(int i = 0; i < questionInfos.size(); i++) {
             QuestionInfo questionInfo = questionInfos.get(i);
+            questionInfo.setQuestionId((i+1)+"");
             StringBuilder sqlBuilder = new StringBuilder();
             if (StringUtils.isEmpty(questionInfo.getId()) || "null".equals(questionInfo.getId())){
                 //插入题目信息
@@ -540,7 +541,7 @@ public class QuestionInfoSql {
                         questionInfo.getQuestionId()+"','"+questionInfo.getQuestion()+"','"+questionInfo.getQuestionType()+"','"+questionInfo.getTrueAnswer()+"','"+questionInfo.getRange()+"','"+questionInfo.getScore()+"')");
             }else {
                 //更新题目信息
-                sqlBuilder.append("update question_info set question = '"+questionInfo.getQuestion()+"',question_type = '"+questionInfo.getQuestionType()+"',true_answer ='"+
+                sqlBuilder.append("update question_info set question_id = '"+questionInfo.getQuestionId()+"',question = '"+questionInfo.getQuestion()+"',question_type = '"+questionInfo.getQuestionType()+"',true_answer ='"+
                         questionInfo.getTrueAnswer()+"',range = '"+questionInfo.getRange()+"',score = '"+questionInfo.getScore()+"' where id = '" +questionInfo.getId()+"'");
             }
             sqls.add(sqlBuilder.toString());

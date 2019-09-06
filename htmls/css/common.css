@@ -1036,7 +1036,8 @@ img.rebtn:active,img.rebtn:hover{
 
 	.modboxs1 .box{
 		/*width: 8%;*/
-		width: 5%;
+		min-width: 5%;
+		width: auto;
 	}
 	button.circlefff{
 		/*margin: 4%;*/

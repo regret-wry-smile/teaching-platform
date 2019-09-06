@@ -10,6 +10,7 @@ import com.ejet.core.util.constant.Global;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.domain.*;
 import com.zkxltech.service.AnswerInfoService;
+import com.zkxltech.sql.ClassHourSql;
 import com.zkxltech.sql.RecordSql;
 import com.zkxltech.thread.BaseThread;
 import com.zkxltech.thread.EquipmentStatusThread;
@@ -19,15 +20,13 @@ import com.zkxltech.ui.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AnswerInfoServiceImpl implements AnswerInfoService{
     private static final Logger log = LoggerFactory.getLogger(AnswerInfoServiceImpl.class);
 	private Result result;
 	private RecordSql recordSql = new RecordSql();
+	private ClassHourSql classHourSql = new ClassHourSql();
 	private static BaseThread equipmentStatusThread;
     
 	@Override
@@ -148,7 +147,17 @@ public class AnswerInfoServiceImpl implements AnswerInfoService{
 					recordParam.setTestId((String)testId);
 					recordParam.setClassHourId(Global.getClassHour().getClassHourId());
 					recordSql.deleteRecord(recordParam);
-					
+
+					//更新试卷答题时间
+					ClassHour classHour = new ClassHour();
+					classHour.setClassHourId(Global.getClassHour().getClassHourId());
+					List<ClassHour> classHours = (List<ClassHour>) classHourSql.selectClassHour(classHour).getItem();
+					for (ClassHour classHour1 : classHours) {
+						classHour1.setStartTime(com.ejet.core.util.StringUtils.formatDateTime(new Date()));
+						classHourSql.updateTestPaper(classHour1);
+					}
+
+
 					result =recordSql.insertRecords(records); //将缓存中数据保存到数据库
 					if (Constant.ERROR.equals(result.getRet())) {
 						BrowserManager.showMessage(false, "Failed to save response record！");

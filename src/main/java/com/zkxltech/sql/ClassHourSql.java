@@ -133,7 +133,7 @@ public class ClassHourSql {
 	 * */
 	public Result updateTestPaper(ClassHour classHour) throws IllegalArgumentException, IllegalAccessException{
 		StringBuilder sqlBuilder = new StringBuilder();
-		sqlBuilder.append("update answer_info");
+		sqlBuilder.append("update class_hour");
 		Field[] files = dbHelper.getFields(classHour);
 		int index = 0;
 		for (int i = 1; i < files.length; i++) {
@@ -149,6 +149,6 @@ public class ClassHourSql {
 			}
 		}
 		sqlBuilder.append(" where id = '"+classHour.getId()+"'");
-		return dbHelper.onUpdate(sqlBuilder.toString(), classHour);
+		return dbHelper.onUpdate(sqlBuilder.toString(), null);
 	}
 }
