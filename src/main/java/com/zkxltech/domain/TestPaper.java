@@ -22,6 +22,10 @@ public class TestPaper {
 	 */
 	private String describe;
 	/**
+	 * 作答时间
+	 */
+	private String answer_time;
+	/**
 	 * 试卷备注(保留字段)
 	 */
 	private String remark;
@@ -57,7 +61,13 @@ public class TestPaper {
 	public void setDescribe(String describe) {
 		this.describe = describe;
 	}
-	
+	public String getAnswer_time() {
+		return answer_time;
+	}
+	public void setAnswer_time(String answer_time) {
+		this.answer_time = answer_time;
+	}
+
 	public String getRemark() {
 		return remark;
 	}
