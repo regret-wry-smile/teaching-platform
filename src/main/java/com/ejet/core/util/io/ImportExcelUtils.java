@@ -134,7 +134,7 @@ public class ImportExcelUtils {
                         cols--;
                     }
                 }  
-                if (li.size()==cols) {
+                if (li.size()==cols && cols != 0) {
                 	list.add(li);  
 				}
             }  

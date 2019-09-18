@@ -41,7 +41,7 @@
 		}
 		//禁止滚动
 		$("body").addClass("scroll-off");
-		var mask = '<div class="mask" ele="full_screen"><div>数据加载中...</div></div>';
+		var mask = '<div class="mask" ele="full_screen"><div>Data loading...</div></div>';
 		$("body").append(mask);
 		clearTimeout(cache["full_screen"]);
 		if(timeout && timeout > 0){
@@ -62,7 +62,7 @@
 			return;
 		}
 		//添加遮罩元素
-		var mask = '<div class="mask" ele='+ele_id+' style="width: '+$(ele_id).width()+'px !important; height: '+$(ele_id).height()+'px !important; left: '+$(ele_id).offset().left+'px !important; top: '+$(ele_id).offset().top+'px !important;"><div>数据加载中...</div></div>';
+		var mask = '<div class="mask" ele='+ele_id+' style="width: '+$(ele_id).width()+'px !important; height: '+$(ele_id).height()+'px !important; left: '+$(ele_id).offset().left+'px !important; top: '+$(ele_id).offset().top+'px !important;"><div>Data loading...</div></div>';
 		$("body").append(mask);
 		clearTimeout(cache[ele_id]);
 		if(timeout && timeout > 0){

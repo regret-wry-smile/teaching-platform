@@ -139,7 +139,7 @@ public class RecordServiceImpl implements RecordService{
                     columnName[0] = "Keypad ID";columnName[1] = "Student ID";columnName[2] = "Name";
                     columnName[3] = "Score";columnName[4] = "Correct";columnName[5] = "Ranking";
                     for (int i = 6; i < columnName.length; i++) {
-                        columnName[i] = "Topic"+(i-5);
+                        columnName[i] = "Q"+(i-5);
                     }
                     List<List<Object>> lists = new ArrayList<List<Object>>();
                     //FIXME 获取所有学生信息
@@ -243,7 +243,7 @@ public class RecordServiceImpl implements RecordService{
                             lists.get(i).set(5,String.valueOf(rank));
                         }
                     }
-                    String flieUrl = System.getProperty("user.dir").replaceAll("\\\\", "/") + "/"+"excels/";
+                    String flieUrl = System.getProperty("user.dir").replaceAll("\\\\", "/") + "/"+"Record/";
                     SXSSFWorkbook wb = ExportExcel.ExportWithResponse("Schedule Of Grades", titleName,testName ,dates,className, studentSum, testName, columnNumber, columnWidth, columnName , lists);
                     File file = new File(flieUrl);
                     if (!file.exists()) {
@@ -477,7 +477,7 @@ public class RecordServiceImpl implements RecordService{
         return r;
     }
     public void openFile() throws IOException{
-        String flieUrl = System.getProperty("user.dir").replaceAll("\\\\", "/") + "/"+"excels/";
+        String flieUrl = System.getProperty("user.dir").replaceAll("\\\\", "/") + "/"+"Record/";
         Desktop.getDesktop().open(new File(flieUrl));
     }
     
