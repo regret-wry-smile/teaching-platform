@@ -58,11 +58,11 @@ public class QuestionInfoSql {
 					type = "1";
 					score = (String) rowList.get(i).get(4);
 					break;
-				case "T/F":
+				case "Y/N":
 					type = "2";
-					if ("T".equals(trueAnswer)) {
+					if ("Y".equals(trueAnswer)) {
 						trueAnswer = "true";
-					}else if("F".equals(trueAnswer)){
+					}else if("N".equals(trueAnswer)){
 						trueAnswer = "false";
 					}
 					score = (String) rowList.get(i).get(3);
@@ -297,7 +297,7 @@ public class QuestionInfoSql {
 		if (StringUtils.isEmpty(answer)) {
 			return false;
 		}
-		return "T".equals(answer) || "F".equals(answer);
+		return "Y".equals(answer) || "N".equals(answer);
 	}
 	
 	/**
