@@ -394,10 +394,10 @@ app.controller('stopSingeAnswerCtrl', function($scope, $rootScope, toastr, $wind
 			} else if ($scope.answerType == 'number') {
 				rangeList = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 			} else if ($scope.answerType == 'judge') {
-				rangeList = ["TRUE", "FALSE"];
+				rangeList = ["YES", "NO"];
 				$scope.resultmap = {
-					"TRUE": $scope.resultmap["true"],
-					"FALSE": $scope.resultmap["false"]
+					"YES": $scope.resultmap["true"],
+					"NO": $scope.resultmap["false"]
 				}
 			} else if ($scope.answerType == 'vote'){
                 rangeList = ["Agree", "Disagree","Abstain"];
@@ -547,7 +547,7 @@ app.controller('stopSingeAnswerCtrl', function($scope, $rootScope, toastr, $wind
 					if (datavalue == params.name) {
 						option.series[0].data[params.dataIndex].itemStyle.normal.color = '#5ed6be';
 						if ($scope.answerType == 'judge') {
-							if (datavalue == "TRUE") {
+							if (datavalue == "YES") {
 								datavalue = "true";
 							} else {
 								datavalue = "false";
@@ -1013,7 +1013,7 @@ app.filter('questionType', function() {
 		switch (questionType) {
             case '2':
             {
-                statename = 'T/F';
+                statename = 'Y/N';
                 break;
             }
             case '0':
@@ -1046,12 +1046,12 @@ app.filter('AnswerType', function() {
 		switch (AnswerType) {
 			case 'true':
 				{
-					statename = '√';
+					statename = 'YES';
 					break;
 				}
 			case 'false':
 				{
-					statename = '×';
+					statename = 'NO';
 					break;
 				}
 			default:

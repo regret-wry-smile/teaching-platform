@@ -200,9 +200,9 @@ public class RecordServiceImpl implements RecordService{
                             if ( answer == null ||answer.equals("null") || answer.equals("")) {
                                 answer = "";
                             }else if("true".equals(answer)){
-                            	answer = "√";
+                            	answer = "YES";
                             }else if("false".equals(answer)){
-                            	answer = "×";
+                            	answer = "NO";
                             }
                             map.put("answer", answer);
                             map.put("result", result);

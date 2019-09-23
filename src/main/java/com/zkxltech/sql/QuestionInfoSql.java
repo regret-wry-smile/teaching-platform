@@ -61,9 +61,9 @@ public class QuestionInfoSql {
 				case "Y/N":
 					type = "2";
 					if ("Y".equals(trueAnswer)) {
-						trueAnswer = "true";
+						trueAnswer = "YES";
 					}else if("N".equals(trueAnswer)){
-						trueAnswer = "false";
+						trueAnswer = "NO";
 					}
 					score = (String) rowList.get(i).get(3);
 					break;
@@ -172,7 +172,7 @@ public class QuestionInfoSql {
 						return result;
 					}
 					break;
-				case "T/F":
+				case "Y/N":
 					if(rowList.get(i).size() != 4){
 						result.setMessage("Line"+(i+3)+"Column number format error！");
 						return result;

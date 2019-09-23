@@ -556,7 +556,7 @@ app.filter('questionType', function() {
 		switch(questionType) {
 			case '2':
 				{
-					statename = 'T/F';
+					statename = 'Y/N';
 					break;
 				}
 			case '0':
@@ -587,14 +587,14 @@ app.filter('AnswerType', function() {
 	return function(AnswerType) {
 		var statename = '';
 		switch(AnswerType) {
-			case 'T':
+			case 'Y':
 				{
-					statename = '√';
+					statename = 'YES';
 					break;
 				}
-			case 'F':
+			case 'N':
 				{
-					statename = '×';
+					statename = 'NO';
 					break;
 				}
 			default:
