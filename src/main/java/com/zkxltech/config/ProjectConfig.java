@@ -48,6 +48,10 @@ public class ProjectConfig {
 	 * 默认班级成员数
 	 */
 	private String members;
+	/**
+	 * 设备编号
+	 */
+	private String device_id;
 
 	public String getApp_type() {
 		return app_type;
@@ -126,5 +130,13 @@ public class ProjectConfig {
 
 	public void setMembers(String members) {
 		this.members = members;
+	}
+
+	public String getDevice_id() {
+		return device_id;
+	}
+
+	public void setDevice_id(String device_id) {
+		this.device_id = device_id;
 	}
 }

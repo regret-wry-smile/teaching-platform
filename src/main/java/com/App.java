@@ -1,15 +1,23 @@
 package com;
 
+import com.ejet.core.util.PropertyUtils;
+import com.ejet.core.util.constant.Constant;
 import com.ejet.core.util.io.IOUtils;
 import com.zkxltech.config.ConfigConstant;
 import com.zkxltech.config.Global;
+import com.zkxltech.device.DeviceComm;
 import com.zkxltech.domain.Result;
 import com.zkxltech.domain.StudentInfo;
+import com.zkxltech.service.impl.EquipmentServiceImpl;
 import com.zkxltech.service.impl.StudentInfoServiceImpl;
+import com.zkxltech.ui.util.StringUtils;
+import net.sf.json.JSONObject;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -81,6 +89,28 @@ public class App {
 	}
 	
 	public static void queryBindInfo() {
+	    //获取当前接收器的编号
+		Result get_device_info = EquipmentServiceImpl.getInstance().get_device_info();
+		Object item = get_device_info.getItem();
+		if (StringUtils.isEmpty(item)) {
+            logger.error("设备故障");
+		}
+		JSONObject jo = JSONObject.fromObject(item);
+		String newDevice = jo.getString("device_id");
+		//判断接收器是否一致
+		String oldDevice = PropertyUtils.getProtertyValue(ConfigConstant.getProjectfile(),"device_id");
+		//否 -调用清除白名单接口
+		if (!newDevice.equals(oldDevice)){
+            try {
+                PropertyUtils.WriteProperties(ConfigConstant.getProjectfile(),"device_id",newDevice);
+                //清除白名单
+                DeviceComm.clearWl();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+		}
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
